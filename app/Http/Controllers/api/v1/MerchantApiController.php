@@ -115,6 +115,7 @@ class MerchantApiController extends Controller
     {
 
 
+
         $validator = Validator::make($req->all(), [
             'accountNumber' => 'required',
             'amount' => 'required',
@@ -132,6 +133,8 @@ class MerchantApiController extends Controller
             if ($mode == strtoupper("live")) {
                 $merchantInfo = ClientInfo::where('api_secrete_key', $req->bearerToken())->first();
 
+
+                // Start E-Store
                 if (isset($req->route) && $req->route == 'estore') {
 
                     if (isset($merchantInfo) == true) {
@@ -390,7 +393,7 @@ class MerchantApiController extends Controller
                                         }
                                     } else {
                                         // Currency converter
-                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode, 'API PS_Users');
+                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->conversionamount, $thisuser->currencyCode, 'API PS_Users');
                                         $mywallet_balance = $this->convertCurrency($thismerchant->currencyCode, $thisuser->wallet_balance, $thisuser->currencyCode);
                                         $myCurrency = $thismerchant->currencyCode;
 
@@ -405,7 +408,7 @@ class MerchantApiController extends Controller
                                             // Continue with payment
                                             $paymentToken = "wallet-" . date('dmY') . time();
 
-                                            $wallet_balance = $thisuser->wallet_balance - $req->amount;
+                                            $wallet_balance = $thisuser->wallet_balance - $req->conversionamount;
 
                                             $approve_commission = "Yes";
 
@@ -444,18 +447,18 @@ class MerchantApiController extends Controller
 
 
                                                 // Insert Statement
-                                                $activity = "Payment of " . $thisuser->currencyCode . " " . number_format($req->amount, 2) . " to " . $thismerchant->businessname . " for " . $service . " on PaySprint estore.";
+                                                $activity = "Payment of " . $thisuser->currencyCode . " " . number_format($req->conversionamount, 2) . " to " . $thismerchant->businessname . " for " . $service . " on PaySprint estore.";
                                                 $credit = 0;
-                                                $debit = number_format($req->amount, 2);
+                                                $debit = number_format($req->conversionamount, 2);
                                                 $reference_code = $paymentToken;
                                                 $balance = 0;
                                                 $trans_date = date('Y-m-d');
                                                 $wallet_status = "Delivered";
-                                                $action = "Wallet debit (test)";
+                                                $action = "Wallet debit (live)";
                                                 $regards = $thismerchant->ref_code;
 
 
-                                                $statement_route = "wallet test";
+                                                $statement_route = "wallet live";
 
                                                 // Send Money to Escrow account and delete items in cart, also update the payment status of order
                                                 $escrowBalance = $thismerchant->escrow_balance + $amount;
@@ -636,7 +639,10 @@ class MerchantApiController extends Controller
                         $status = 400;
                         $resData = ['data' => [], 'message' => $error, 'status' => $status];
                     }
-                } else {
+                }
+
+                    // End Estore
+                else {
 
 
                     if (isset($merchantInfo) == true) {
@@ -1005,6 +1011,8 @@ class MerchantApiController extends Controller
 
                 $merchantInfo = ClientInfo::where('api_secrete_key', $req->bearerToken())->first();
 
+
+                // Start E-store
                 if (isset($req->route) && $req->route == 'estore') {
 
                     if (isset($merchantInfo) == true) {
@@ -1274,9 +1282,16 @@ class MerchantApiController extends Controller
                                         }
                                     } else {
                                         // Currency converter
-                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $thisuser->currencyCode, 'API PS_Users');
+                                        $amount = $this->convertCurrency($thismerchant->currencyCode, $req->conversionamount, $thisuser->currencyCode, 'API PS_Users');
                                         $mywallet_balance = $this->convertCurrency($thismerchant->currencyCode, $thisuser->wallet_balance, $thisuser->currencyCode);
                                         $myCurrency = $thismerchant->currencyCode;
+
+
+                                        // dd([
+                                        //     'amount' => $amount,
+                                        //     'mywallet_balance' => $mywallet_balance,
+                                        //     'request' => $req->all()
+                                        // ]);
 
 
                                         if ($mywallet_balance < $amount) {
@@ -1289,7 +1304,7 @@ class MerchantApiController extends Controller
                                             // Continue with payment
                                             $paymentToken = "wallet-" . date('dmY') . time();
 
-                                            $wallet_balance = $thisuser->wallet_balance - $req->amount;
+                                            $wallet_balance = $thisuser->wallet_balance - $req->conversionamount;
 
                                             $approve_commission = "Yes";
 
@@ -1327,9 +1342,9 @@ class MerchantApiController extends Controller
 
 
                                                 // Insert Statement
-                                                $activity = "Payment of " . $thisuser->currencyCode . " " . number_format($req->amount, 2) . " to " . $thismerchant->businessname . " for " . $service . " on PaySprint estore.";
+                                                $activity = "Payment of " . $thisuser->currencyCode . " " . number_format($req->conversionamount, 2) . " to " . $thismerchant->businessname . " for " . $service . " on PaySprint estore.";
                                                 $credit = 0;
-                                                $debit = number_format($req->amount, 2);
+                                                $debit = number_format($req->conversionamount, 2);
                                                 $reference_code = $paymentToken;
                                                 $balance = 0;
                                                 $trans_date = date('Y-m-d');
@@ -1518,7 +1533,10 @@ class MerchantApiController extends Controller
                         $status = 400;
                         $resData = ['data' => [], 'message' => $error, 'status' => $status];
                     }
-                } else {
+                }
+
+                // End E-store
+                else {
 
 
                     if (isset($merchantInfo) == true) {

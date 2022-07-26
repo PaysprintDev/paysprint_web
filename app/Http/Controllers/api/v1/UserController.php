@@ -463,7 +463,7 @@ class UserController extends Controller
         }
         if ($request->hasFile('incorporation_doc_front')) {
             $this->uploadDocument($user->id, $request->file('incorporation_doc_front'), 'document/incorporation_doc_front', 'incorporation_doc_front');
-            $this->createNotification($user->refCode, "Incorporation document successfully uploaded");
+            $this->createNotification($user->refCode, "Document successfully uploaded");
             $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded your document.");
         }
         // if($request->hasFile('incorporation_doc_back')){

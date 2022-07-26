@@ -19,7 +19,11 @@ use App\User as User;
 
 use App\PromoDate;
 
+use App\SpecialpromoReport;
+
 use App\ClaimedPoints;
+
+use App\SpecialPromo;
 
 use App\EscrowAccount;
 
@@ -12515,19 +12519,125 @@ class AdminController extends Controller
             return redirect()->route('AdminLogin');
         }
     }
+
+
+    //view for special promo users
+    public function specialPromoUsers(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $otherPays = DB::table('invoice_payment')
+                    ->select(DB::raw('invoice_payment.transactionid, invoice_payment.name, invoice_payment.email, import_excel.amount as invoice_amount, invoice_payment.invoice_no, invoice_payment.service, invoice_payment.created_at as transaction_date, import_excel.description as description, invoice_payment.remaining_balance as runningbalance, invoice_payment.amount as amount_paid, import_excel.status, invoice_payment.mystatus'))->distinct()
+                    ->join('import_excel', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')
+                    ->where('import_excel.uploaded_by', session('user_id'))
+                    ->orderBy('invoice_payment.created_at', 'DESC')->get();
+            }
+
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $servicetypes = $this->getServiceTypes();
+
+            $data = [
+                'promo' => PromoDate::get(),
+
+            ];
+
+
+            return view('walletcredit.specialpromousers')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+    //promo participants
+    public function promoParticipants(Request $req, $id)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $otherPays = DB::table('invoice_payment')
+                    ->select(DB::raw('invoice_payment.transactionid, invoice_payment.name, invoice_payment.email, import_excel.amount as invoice_amount, invoice_payment.invoice_no, invoice_payment.service, invoice_payment.created_at as transaction_date, import_excel.description as description, invoice_payment.remaining_balance as runningbalance, invoice_payment.amount as amount_paid, import_excel.status, invoice_payment.mystatus'))->distinct()
+                    ->join('import_excel', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')
+                    ->where('import_excel.uploaded_by', session('user_id'))
+                    ->orderBy('invoice_payment.created_at', 'DESC')->get();
+            }
+
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $servicetypes = $this->getServiceTypes();
+
+            $data = [
+                'promo' => SpecialPromo::where('special_promo_id', $id)->where('activated', 'yes')->get(),
+                'promodata' => PromoDate::where('id', $id)->first()
+            ];
+
+            // dd($data['promo']);
+
+            return view('walletcredit.promoparticipants')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
     //  inserting promo date to database
     public function insertPromoDate(Request $req)
     {
         $validation = $req->validate([
             'startdate' => 'required',
             'enddate' => 'required',
-            'amount' => 'required'
+            'amount' => 'required',
+            'promo_details' => 'required'
         ]);
 
         PromoDate::insert([
             'start_date' => $req->startdate,
             'end_date' => $req->enddate,
-            'amount' => $req->amount
+            'amount' => $req->amount,
+            'promo_details' => $req->promo_details
         ]);
 
         return back()->with("msg", "<div class='alert alert-success'>Promo Date Successfully Created</div> ");
@@ -12539,14 +12649,16 @@ class AdminController extends Controller
         $validation = $req->validate([
             'startdate' => 'required',
             'enddate' => 'required',
-            'amount' => 'required'
+            'amount' => 'required',
+            'promo_details' => 'required'
         ]);
 
 
         PromoDate::where('id', $id)->update([
             'start_date' => $req->startdate,
             'end_date' => $req->enddate,
-            'amount' => $req->amount
+            'amount' => $req->amount,
+            'promo_details' => $req->promo_details
         ]);
 
         return redirect()->route('promo date')->with("msg", "<div class='alert alert-success'>Promo Date Successfully Updated</div> ");
@@ -12560,7 +12672,33 @@ class AdminController extends Controller
 
         return redirect()->route('promo date')->with("msg", "<div class='alert alert-success'>Promo Date Successfully Deleted</div> ");
     }
-    //   edit promo code
+
+    //join Promo
+    public function joinPromo(Request $req, $id)
+    {
+
+        $userid = Auth::id();
+        $user = User::where('id', $userid)->first();
+        $email = $user->email;
+        $existinguser = SpecialPromo::where('user_id', $userid)->where('special_promo_id', $id)->first();
+
+        //$existeduserid = $existinguser['special_promo_id'];
+        //dd($existeduserid);
+        if ($existinguser) {
+            return back()->with("msg", "<div class='alert alert-danger'>You are already participating in the promo</div> ");
+        }
+
+        SpecialPromo::create([
+            'user_id' => $userid,
+            'email' => $email,
+            'activated' => 'yes',
+            'special_promo_id' => $id,
+        ]);
+
+        return back()->with("msg", "<div class='alert alert-success'>You have successfully joined the Special-Promo Program.  You can now start referring families and friends from today to earn additional referral points to your Refer+Earn Points Account. </div> ");
+    }
+
+    //  edit promo code
     public function editPromoDate(Request $req, $id)
     {
 
@@ -13137,6 +13275,107 @@ class AdminController extends Controller
         $this->deletePromoUser($user->email);
 
         return redirect()->route('promo users')->with("msg", "<div class='alert alert-success'>Wallet Top-up Successfully</div>");
+    }
+
+    //topping refereral point
+    public function topupReferralPoint(Request $req)
+    {
+
+        // dd($req->all());
+
+        $validation = $req->validate([
+            'userid' => 'required',
+            'topup_point' => 'required',
+            'topup_reason' => 'required',
+            'promoid' => 'required',
+        ]);
+
+        $user = $this->getUserBalance($req->userid);
+        $reason = $req->topup_reason;
+        $referralpointbalance = $user->referral_points;
+
+
+        $totalpoint =  $referralpointbalance + $req->topup_point;
+
+        User::where('id', $req->userid)->update([
+            'referral_points' => $totalpoint
+        ]);
+
+        SpecialPromo::where('user_id', $req->userid)->update([
+            'activated' => 'Credited with Special Promo Point'
+        ]);
+
+        SpecialpromoReport::insert([
+            'user_id' => $req->userid,
+            'promo_id' => $req->promoid,
+            'Total point credited' => $req->topup_point,
+        ]);
+
+
+        // Send Mail...
+
+
+
+        // Send SMS
+
+        $message = 'Congratulations!, You have received a Referral Point credit of ' . number_format($req->topup_point, 2) . ' from PaySprint for participating in our ' . $reason . 'Your Referral Points balance is ' . $totalpoint . '. Thanks for Choosing PaySprint.';
+
+        $this->name = $user->name;
+        // $this->email = "youngskima@gmail.com";
+        $this->to = $user->email;
+        $this->subject = "PaySprint Referral Point Credit for " . $reason;
+
+        $this->message = $message;
+
+
+        $this->sendEmail(
+            $this->to,
+            "Referral Point Credit"
+        );
+        $this->createNotification($user->ref_code, $message);
+        $activity = 'Referral Point Credit of ' . $req->topup_point . 'added to referral point for participating in the  ' . $reason;
+        $credit = $req->topup_point;
+        $debit = 0;
+        $reference_number = "promo-" . date('dmY') . time();
+        $balance = 0;
+        $trans_date = date('Y-m-d');
+        $status = "Delivered";
+        $action = "Referral Point Credit";
+        $regards = $user->ref_code;
+        $statement_route = "Promo";
+
+        // Senders statement
+        $this->insStatement($user->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $user->country, 0);
+
+
+
+        $usersPhone = User::where('email', $user->email)->where('telephone', 'LIKE', '%+%')->first();
+
+        if (isset($usersPhone)) {
+
+            $recipients = $user->telephone;
+        } else {
+            $recipients = "+" . $user->code . $user->telephone;
+        }
+
+
+
+        if ($user->country == "Nigeria") {
+
+            $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+            $this->sendSms(
+                $message,
+                $correctPhone
+            );
+        } else {
+            $this->sendMessage($message, $recipients);
+        }
+
+
+
+
+        return redirect()->route('promo participant')->with("msg", "<div class='alert alert-success'>Referral Point credited Successfully</div>");
     }
 
     //view report

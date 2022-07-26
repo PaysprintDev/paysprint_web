@@ -267,6 +267,9 @@
                                     {{ Auth::user()->accountType != 'Individual' ? 'href=' . route('merchant profile') : 'href=' . route('referral link') }}>Share
                                     Referral Link</a>
                             </li>
+                            <li>
+                                <a href="{{ route('special promo') }}">Check Out Special Promo</a>
+                            </li>
                             {{-- <li><a href="https://exbc.ca/Product">Goto EXBC</a></li> --}}
                             <li><a href="{{ route('logout') }}"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>

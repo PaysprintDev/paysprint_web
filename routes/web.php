@@ -100,9 +100,9 @@ Route::get('suspendedaccountlist', 'CheckSetupController@suspendedAccountList');
 Route::get('upgradedaccountlist', 'CheckSetupController@upgradedAccounts');
 
 // Statement Mail SendMail
-Route::get('mailstatement' , 'SendGridController@cronToCustomersOnCustomerStatement');
+Route::get('mailstatement', 'SendGridController@cronToCustomersOnCustomerStatement');
 Route::get('rewardpoint', 'SendGridController@cronToCustomersOnRewardStatement');
-Route::get('mailtocustomer','SendGridController@cronToPublicizeMerchantToConsumer');
+Route::get('mailtocustomer', 'SendGridController@cronToPublicizeMerchantToConsumer');
 
 // Update BVN List
 Route::get('bvnlistupdate', 'CheckSetupController@bvnListUpdate');
@@ -244,6 +244,8 @@ Route::prefix('service')->group(function () {
 Route::prefix('merchant')->group(function () {
 	Route::get('/services/{id}', ['uses' => 'ServiceController@merchantPlatformService', 'as' => 'merchant platform service']);
 	Route::get('/pricing/{id}', ['uses' => 'ServiceController@merchantPlatformPricing', 'as' => 'merchant platform pricing']);
+
+	Route::post('/contactus/{id}', ['uses' => 'ServiceController@contactMerchant', 'as' => 'contact merchant']);
 });
 
 // Virtual Account Flutterwave
@@ -1046,6 +1048,7 @@ Route::post('/uploadpromousers', ['uses' => 'AdminController@uploadPromoUsers', 
 Route::get('/promousers', ['uses' => 'AdminController@promoUsers', 'as' => 'promo users']);
 Route::get('/promoreport', ['uses' => 'AdminController@promoReport', 'as' => 'promo report']);
 Route::post('/topup', ['uses' => 'AdminController@topUpWallet', 'as' => 'top up']);
+Route::post('/topupreferrralpoint', ['uses' => 'AdminController@topupReferralPoint', 'as' => 'topup referral point']);
 Route::get('/viewreport', ['uses' => 'AdminController@viewReport', 'as' => 'view report']);
 Route::get('/referralclaim', ['uses' => 'AdminController@referralClaim', 'as' => 'referral claim']);
 Route::get('/referralreport', ['uses' => 'AdminController@referralReport', 'as' => 'referral report']);
@@ -1063,6 +1066,10 @@ Route::post('/promodate', ['uses' => 'AdminController@insertPromoDate', 'as' => 
 Route::get('/editpromodate/{id}', ['uses' => 'AdminController@editPromoDate', 'as' => 'edit promo']);
 Route::post('/updatepromodate{id}', ['uses' => 'AdminController@updatePromoDate', 'as' => 'update promo date']);
 Route::get('/deletepromodate/{id}', ['uses' => 'AdminController@deletePromoDate', 'as' => 'delete promo']);
+Route::get('/joinpromo/{id}', ['uses' => 'AdminController@joinPromo', 'as' => 'join promo']);
+Route::get('/specialpromos', ['uses' => 'HomeController@specialPromo', 'as' => 'special promo']);
+Route::get('/specialpromousers', ['uses' => 'AdminController@specialPromoUsers', 'as' => 'special promo users']);
+Route::get('/promoparticipant/{id}', ['uses' => 'AdminController@promoParticipants', 'as' => 'promo participant']);
 
 
 

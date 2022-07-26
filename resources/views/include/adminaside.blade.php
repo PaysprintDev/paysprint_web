@@ -565,6 +565,8 @@
                                      
                                     <li title="prepaid Card"><a href="{{ route('promo date')}}"><i
                                                     class="fa fa-circle-o text-red"></i>Special Promo</a></li>
+                                    <li title="prepaid Card"><a href="{{ route('special promo users')}}"><i
+                                                    class="fa fa-circle-o text-red"></i>Special Promo Report</a></li>
                                  </ul>
                              </li>
                          @endif
