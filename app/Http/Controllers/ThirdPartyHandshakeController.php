@@ -22,12 +22,13 @@ class ThirdPartyHandshakeController extends Controller
     {
         try {
             $record = new AdminController();
+            $documentRecord = new api\v1\UserController();
+
 
             // Get bearer...
             $bearer = ClientInfo::where('api_secrete_key', $req->bearerToken())->first();
 
             $ref_code = mt_rand(0000000, 9999999);
-            $businessName = $req->businessName != '' ? $req->businessName : $req->firstname . ' ' . $req->lastname;
             $avatar = 'https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg';
 
             $dummy = [
@@ -37,7 +38,6 @@ class ThirdPartyHandshakeController extends Controller
                 'ref_code' => $ref_code,
                 'country' => $req->country,
                 'telephone' => $req->telephone,
-                'businessname' => $req->businessName,
                 'wallet_balance' => 0.00
             ];
 
@@ -46,6 +46,7 @@ class ThirdPartyHandshakeController extends Controller
             $req['invited_userId'] = $bearer->user_id;
 
             if (getallheaders()["dev_mode"] != 'test') {
+
                 ThirdPartyHandshake::updateOrCreate(['email' => $req->email], $req->all());
             }
 
@@ -118,8 +119,6 @@ class ThirdPartyHandshakeController extends Controller
 
 
 
-
-
                     // Add to generate link
                     $refGen = ReferralGenerate::where('ref_code', $bearer->user_id)->first();
 
@@ -173,10 +172,36 @@ class ThirdPartyHandshakeController extends Controller
                         $currencySymbol = $mycode->currencySymbol;
 
 
-                        $data = ['code' => $mycode->callingCode, 'ref_code' => $ref_code, 'businessname' => $businessName, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => $generatedPassword, 'address' => '', 'telephone' => $getanonuser->telephone, 'city' => '', 'state' => '', 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => '', 'zip' => '', 'api_token' => $api_token, 'wallet_balance' => $getanonuser->wallet_balance, 'dayOfBirth' => '', 'monthOfBirth' => '', 'yearOfBirth' => '', 'platform' => $bearer->business_name . ' api', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $bearer->user_id, 'knowAboutUs' => $bearer->business_name . ' api', 'accountPurpose' => $bearer->business_name . ' api transaction', 'transactionSize' => '', 'sourceOfFunding' => $bearer->business_name . ' api', 'avatar' => $avatar];
+                        $data = ['code' => $mycode->callingCode, 'ref_code' => $ref_code, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => $generatedPassword, 'address' => '', 'telephone' => $getanonuser->telephone, 'city' => '', 'state' => '', 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Individual", 'corporationType' => '', 'zip' => '', 'wallet_balance' => $getanonuser->wallet_balance, 'dayOfBirth' => '', 'monthOfBirth' => '', 'yearOfBirth' => '', 'platform' => $bearer->business_name . ' api', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $bearer->user_id, 'knowAboutUs' => $bearer->business_name . ' api', 'accountPurpose' => $bearer->business_name . ' api transaction', 'transactionSize' => '', 'sourceOfFunding' => $bearer->business_name . ' api', 'avatar' => $avatar];
 
                         if (getallheaders()["dev_mode"] != 'test') {
                             User::updateOrCreate(['email' => $getanonuser->email], $data);
+
+                            // Update file upload...
+                            $user = User::where('email', $getanonuser->email)->first();
+
+                            if ($req->hasFile('national_id_card')) {
+                                $documentRecord->uploadDocument($user->id, $req->file('national_id_card'), 'document/'.$bearer->business_name.'/nin_front', 'nin_front');
+
+                                $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your national identity card.", $bearer->business_name . ' api');
+                            }
+
+                            if ($req->hasFile('drivers_license')) {
+                                $documentRecord->uploadDocument($user->id, $req->file('drivers_license'), 'document/'.$bearer->business_name.'/drivers_license_front', 'drivers_license_front');
+                                $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your drivers license.", $bearer->business_name . ' api');
+                            }
+
+                            if ($req->hasFile('international_passport')) {
+                                $documentRecord->uploadDocument($user->id, $req->file('international_passport'), 'document/'.$bearer->business_name.'/international_passport_front', 'international_passport_front');
+                                $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your international passport.", $bearer->business_name . ' api');
+                            }
+
+                            if ($req->hasFile('utility_bill')) {
+                                $documentRecord->uploadDocument($user->id, $req->file('utility_bill'), 'document/'.$bearer->business_name.'/incorporation_doc_front', 'incorporation_doc_front');
+                                $documentRecord->createNotification($user->ref_code, "Document successfully uploaded");
+                                $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your document.", $bearer->business_name . ' api');
+                            }
+
                         }
 
 
@@ -216,7 +241,7 @@ class ThirdPartyHandshakeController extends Controller
                                 $record->to = $req->email;
                                 $record->subject = "Welcome to PaySprint";
 
-                                $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, Pay received Invoice or Utility bills, but you will not be able to withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at <a href='" . route('AdminLogin') . "'>www.paysprint.ca/AdminLogin</a> with the information below <hr><br> Username: <strong>" . $generatedUsername . "</strong> <br> Password: <strong>" . $req->firstname . "</strong> <hr> <br> b. Go to profile page, update your profile information and upload documents required. <br> All other features would be enabled for you as soon as the Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
+                                $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, Pay received Invoice or Utility bills, but you will not be able to withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at <a href='" . route('login') . "'>www.paysprint.ca/login</a> with the information below <hr><br> Email: <strong>" . $req->email . "</strong> <br> Password: <strong>" . $req->firstname . "</strong> <hr> <br> All other features would be enabled for you as soon as the Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
 
 
                                 $record->message = '<p>' . $message . '</p>';
@@ -279,14 +304,14 @@ class ThirdPartyHandshakeController extends Controller
                         }
 
 
-                        if (getallheaders()["dev_mode"] != 'test') {
-                            // Insert
-                            $insClient = ClientInfo::insert(['user_id' => $newRefcode, 'business_name' => $businessName, 'address' => '', 'corporate_type' => '', 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'email' => $req->email, 'country' => $req->country, 'state' => '', 'city' => '', 'zip_code' => '', 'industry' => '', 'telephone' => $req->telephone, 'website' => '', 'api_secrete_key' => md5(uniqid($generatedUsername, true)) . date('dmY') . time(), 'type_of_service' => '']);
+                        // if (getallheaders()["dev_mode"] != 'test') {
+                        //     // Insert
+                        //     $insClient = ClientInfo::insert(['user_id' => $newRefcode, 'business_name' => $businessName, 'address' => '', 'corporate_type' => '', 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'email' => $req->email, 'country' => $req->country, 'state' => '', 'city' => '', 'zip_code' => '', 'industry' => '', 'telephone' => $req->telephone, 'website' => '', 'api_secrete_key' => md5(uniqid($generatedUsername, true)) . date('dmY') . time(), 'type_of_service' => '']);
 
-                            $insAdmin = Admin::insert(['user_id' => $newRefcode, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $generatedUsername, 'password' => $generatedPassword, 'role' => 'Merchant', 'email' => $req->email]);
-                        } else {
-                            $insAdmin = ['user_id' => $newRefcode, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $generatedUsername, 'password' => $generatedPassword, 'role' => 'Merchant', 'email' => $req->email];
-                        }
+                        //     $insAdmin = Admin::insert(['user_id' => $newRefcode, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $generatedUsername, 'password' => $generatedPassword, 'role' => 'Merchant', 'email' => $req->email]);
+                        // } else {
+                        //     $insAdmin = ['user_id' => $newRefcode, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $generatedUsername, 'password' => $generatedPassword, 'role' => 'Merchant', 'email' => $req->email];
+                        // }
 
 
 
@@ -308,19 +333,21 @@ class ThirdPartyHandshakeController extends Controller
                             $phoneCode = "1";
                         }
 
-                        $data = ['code' => $mycode->callingCode, 'ref_code' => $newRefcode, 'businessname' => $businessName, 'name' => $req->firstname . ' ' . $req->lastname, 'email' => $req->email, 'password' => $generatedPassword, 'address' => '', 'telephone' => $req->telephone, 'city' => '', 'state' => '', 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => '', 'zip' => '', 'api_token' => $api_token, 'dayOfBirth' => '', 'monthOfBirth' => '', 'yearOfBirth' => '', 'platform' => $bearer->business_name . ' api', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $bearer->user_id, 'knowAboutUs' => $bearer->business_name . ' api', 'accountPurpose' => $bearer->business_name . ' api transaction', 'transactionSize' => '', 'sourceOfFunding' => $bearer->business_name . ' api', 'avatar' => $avatar];
+                        $data = ['code' => $phoneCode, 'ref_code' => $newRefcode, 'name' => $req->firstname . ' ' . $req->lastname, 'email' => $req->email, 'password' => $generatedPassword, 'address' => '', 'telephone' => $req->telephone, 'city' => '', 'state' => '', 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Individual", 'corporationType' => '', 'zip' => '', 'dayOfBirth' => '', 'monthOfBirth' => '', 'yearOfBirth' => '', 'platform' => $bearer->business_name . ' api', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $bearer->user_id, 'knowAboutUs' => $bearer->business_name . ' api', 'accountPurpose' => $bearer->business_name . ' api transaction', 'transactionSize' => '', 'sourceOfFunding' => $bearer->business_name . ' api', 'avatar' => $avatar];
 
                         if (getallheaders()["dev_mode"] != 'test') {
                             User::updateOrCreate(['email' => $req->email], $data);
+
+
+
                         }
 
 
-                        if (isset($insAdmin)) {
 
                             $getMerchant = User::where('ref_code', $newRefcode)->first();
 
 
-                            $this->slack("New merchant registration via " . $bearer->business_name . " api as: " . $req->firstname . ' ' . $req->lastname . " from " . $req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                            $this->slack("New consumer registration via " . $bearer->business_name . " api as: " . $req->firstname . ' ' . $req->lastname . " from " . $req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                             $countryApproval = AllCountries::where('name', $req->country)->where('approval', 1)->first();
 
@@ -331,6 +358,33 @@ class ThirdPartyHandshakeController extends Controller
 
                                 if (getallheaders()["dev_mode"] != 'test') {
                                     User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'countryapproval' => 1, 'bvn_verification' => 1, 'transactionRecordId' => NULL]);
+
+
+                                    // Update file upload...
+                            $user = User::where('email', $req->email)->first();
+
+
+                            if ($req->hasFile('national_id_card')) {
+                                $documentRecord->uploadDocument($user->id, $req->file('national_id_card'), 'document/'.$bearer->business_name.'/nin_front', 'nin_front');
+
+                                $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your national identity card.", $bearer->business_name . ' api');
+                            }
+
+                            if ($req->hasFile('drivers_license')) {
+                                $documentRecord->uploadDocument($user->id, $req->file('drivers_license'), 'document/'.$bearer->business_name.'/drivers_license_front', 'drivers_license_front');
+                                $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your drivers license.", $bearer->business_name . ' api');
+                            }
+
+                            if ($req->hasFile('international_passport')) {
+                                $documentRecord->uploadDocument($user->id, $req->file('international_passport'), 'document/'.$bearer->business_name.'/international_passport_front', 'international_passport_front');
+                                $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your international passport.", $bearer->business_name . ' api');
+                            }
+
+                            if ($req->hasFile('utility_bill')) {
+                                $documentRecord->uploadDocument($user->id, $req->file('utility_bill'), 'document/'.$bearer->business_name.'/incorporation_doc_front', 'incorporation_doc_front');
+                                $documentRecord->createNotification($user->ref_code, "Document successfully uploaded");
+                                $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your document.", $bearer->business_name . ' api');
+                            }
                                 }
 
 
@@ -341,7 +395,7 @@ class ThirdPartyHandshakeController extends Controller
                                 $record->to = $req->email;
                                 $record->subject = "Welcome to PaySprint";
 
-                                $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, Pay received Invoice or Utility bills, but you will not be able to withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at <a href='" . route('AdminLogin') . "'>www.paysprint.ca/AdminLogin</a> with the information below <hr><br> Username: <strong>" . $generatedUsername . "</strong> <br> Password: <strong>" . $req->firstname . "</strong> <hr> <br> b. Go to profile page, update your profile information and upload documents required. <br> All other features would be enabled for you as soon as the Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
+                                $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, Pay received Invoice or Utility bills, but you will not be able to withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at <a href='" . route('login') . "'>www.paysprint.ca/login</a> with the information below <hr><br> Email: <strong>" . $req->email . "</strong> <br> Password: <strong>" . $req->firstname . "</strong> <hr> <br> All other features would be enabled for you as soon as the Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
 
 
                                 $record->message = '<p>' . $message . '</p>';
@@ -380,7 +434,6 @@ class ThirdPartyHandshakeController extends Controller
                                     User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 0, 'transactionRecordId' => NULL]);
                                 }
                             }
-                        }
                     }
                 }
             }

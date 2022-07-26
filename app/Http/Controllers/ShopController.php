@@ -880,7 +880,7 @@ class ShopController extends Controller
 
                 // Generate OTP...
 
-                $code = mt_rand(0000, 9999);
+                $code = mt_rand(1111, 9999);
 
                 $link = route('verify delivery', 'otp=' . $code . '&orderId=' . $req->orderId);
 
