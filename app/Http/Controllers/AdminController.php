@@ -12623,6 +12623,7 @@ class AdminController extends Controller
     }
 
 
+
     //  inserting promo date to database
     public function insertPromoDate(Request $req)
     {
