@@ -2439,7 +2439,7 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
         // Log::info('Monthly Transaction Statement: '.$this->name."\n Message: ".$message);
 
-        $this->slack('Monthly Transaction Statement: ' . $this->name . "\n Message: " . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+        $this->slack('Monthly Transaction Statement Mail Sent to: ' . $this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
     }
 
 

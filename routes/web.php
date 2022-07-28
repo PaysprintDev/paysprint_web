@@ -139,6 +139,10 @@ Route::get('numberofwithdrawalsformerchant', 'CheckSetupController@updateMerchan
 Route::get('reversal', 'CheckSetupController@reverseFund');
 
 
+Route::get('creditsubscription', 'MonthlySubController@creditSubAccount');
+Route::get('correctstatement', 'MonthlySubController@correctStatementRecord');
+
+
 
 
 // Generate Shop Links...
@@ -765,9 +769,11 @@ Route::prefix('Admin/performance/report')->group(function () {
 Route::prefix('Admin/overview/report')->group(function () {
 
 	Route::get('business', ['uses' => 'AdminController@businessReport', 'as' => 'business report']);
+	Route::get('revenue', ['uses' => 'AdminController@revenueReport', 'as' => 'revenue report']);
 	Route::get('accountreport', ['uses' => 'AdminController@accountReport', 'as' => 'account report']);
 	Route::get('invoicecommission', ['uses' => 'AdminController@invoiceCommissionReport', 'as' => 'invoice commission']);
 	Route::get('businessreport', ['uses' => 'AdminController@getBusinessReport', 'as' => 'get business report']);
+	Route::get('revenuereport', ['uses' => 'AdminController@getRevenueReport', 'as' => 'get revenue report']);
 	Route::get('inflow', ['uses' => 'AdminController@inflowReport', 'as' => 'inflow reports']);
 	Route::get('inflowbycountry', ['uses' => 'AdminController@inflowByCountryReport', 'as' => 'inflow by country']);
 	Route::post('getinflowrecord', ['uses' => 'AdminController@getInflowRecord', 'as' => 'get inflow record']);
@@ -788,6 +794,7 @@ Route::prefix('Admin/overview/report')->group(function () {
 
 	// Report Details
 	Route::get('netamounttowallet', ['uses' => 'AdminController@netAmountToWallet', 'as' => 'net amount to wallet']);
+	Route::get('netfxamounttowallet', ['uses' => 'AdminController@netFxAmountToWallet', 'as' => 'net fx amount to wallet']);
 	Route::get('chargeonaddmoney', ['uses' => 'AdminController@chargeOnAddMoney', 'as' => 'charge on add money']);
 	Route::get('amountwithdrawnfromwallet', ['uses' => 'AdminController@amountWithdrawnFromWallet', 'as' => 'amount withdrawn from wallet']);
 	Route::get('chargesonwithdrawal', ['uses' => 'AdminController@chargesOnWithdrawals', 'as' => 'charges on withdrawal']);
@@ -1070,6 +1077,7 @@ Route::get('/joinpromo/{id}', ['uses' => 'AdminController@joinPromo', 'as' => 'j
 Route::get('/specialpromos', ['uses' => 'HomeController@specialPromo', 'as' => 'special promo']);
 Route::get('/specialpromousers', ['uses' => 'AdminController@specialPromoUsers', 'as' => 'special promo users']);
 Route::get('/promoparticipant/{id}', ['uses' => 'AdminController@promoParticipants', 'as' => 'promo participant']);
+Route::get('/mobilemoneyproviders', ['uses' => 'DusupayController@mobileMoneyProviders', 'as' => 'mobile money providers']);
 
 
 

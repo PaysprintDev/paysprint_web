@@ -4,19 +4,19 @@
 
 
 <?php use \App\Http\Controllers\User; ?>
-<?php use \App\Http\Controllers\Statement; ?>
-<?php use \App\Http\Controllers\MonthlyFee; ?>
+<?php use \App\Http\Controllers\OrganizationPay; ?>
+<?php use \App\Http\Controllers\ClientInfo; ?>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         Business Report
+         Revenue Report
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Business Report</li>
+        <li class="active">Revenue Report</li>
       </ol>
     </section>
 
@@ -34,7 +34,7 @@
 
               <h3 class="box-title">&nbsp;</h3> <br>
 
-              <form action="{{ route('get business report') }}" method="GET">
+              <form action="{{ route('get revenue report') }}" method="GET">
                   @csrf
             <div class="row">
                 <div class="col-md-12">
@@ -309,64 +309,7 @@
             </div>
             <!-- /.box-header -->
 
-            <div class="box-body table table-responsive">
 
-              <table class="table table-bordered table-striped" id="example3">
-
-                <thead>
-                    <tr>
-                        <th>S/N</th>
-                        <th>Name</th>
-                        <th>Amount</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    @if (count($data['result']) > 0)
-
-                        @php
-                            $i = 1;
-                            $total = 0;
-                        @endphp
-
-                        @foreach ($data['result'] as $item)
-                            <tr>
-                                <td>{{ $i++ }}</td>
-                                <td>{{ $item->name }}</td>
-                                <td style="color: green; font-weight: bold; ">{{ "+".$item->currencyCode.' '.number_format($item->credit, 2) }}</td>
-                                <td>{{ date('d-m-Y', strtotime($item->trans_date)) }}</td>
-                            </tr>
-
-                            @php
-                            $total += $item->credit;
-                        @endphp
-
-                        @endforeach
-
-                    @else
-                        <tr>
-                            <td colspan="4" align="center">No record for this period</td>
-                        </tr>
-                    @endif
-
-                    @isset($total)
-                    <tfoot>
-                    <tr>
-                        <td></td>
-                        <td style="font-weight: bold; color: black;">Total: </td>
-                        <td style="font-weight: bold; color: black; font-size: 24px;">{{ '+'.$item->currencyCode.' '.number_format($total, 2) }}</td>
-                        <td></td>
-
-                    </tr>
-                </tfoot>
-                @endisset
-
-                </tbody>
-
-              </table>
-            </div>
 
             <!-- /.box-body -->
           </div>

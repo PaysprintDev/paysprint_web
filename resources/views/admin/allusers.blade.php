@@ -76,7 +76,7 @@
                                 <tbody>
 
 
-                                    @if ($allusersdata = \App\User::where('country', Request::get('country'))->get())
+                                    @if ($allusersdata = \App\User::where('country', Request::get('country'))->paginate(100))
 
 
                                         @if (count($allusersdata) > 0)
@@ -383,6 +383,16 @@
 
                                 </tbody>
                             </table>
+
+                            <nav aria-label="...">
+                                        <ul class="pagination pagination-md">
+
+                                            <li class="page-item">
+                                                {{ $allusersdata->appends(['country' => Request::get('country')])->links() }}
+
+                                            </li>
+                                        </ul>
+                                    </nav>
                         </div>
                         <!-- /.box-body -->
                     </div>

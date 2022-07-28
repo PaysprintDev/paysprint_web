@@ -12,11 +12,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         Business Report
+         Revenue Report
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Business Report</li>
+        <li class="active">Revenue Report</li>
       </ol>
     </section>
 
@@ -34,7 +34,7 @@
 
               <h3 class="box-title">&nbsp;</h3> <br>
 
-              <form action="{{ route('get business report') }}" method="GET">
+              <form action="{{ route('get revenue report') }}" method="GET">
                   @csrf
             <div class="row">
                 <div class="col-md-12">
