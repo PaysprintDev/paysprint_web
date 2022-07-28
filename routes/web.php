@@ -1075,6 +1075,7 @@ Route::get('/joinpromo/{id}', ['uses' => 'AdminController@joinPromo', 'as' => 'j
 Route::get('/specialpromos', ['uses' => 'HomeController@specialPromo', 'as' => 'special promo']);
 Route::get('/specialpromousers', ['uses' => 'AdminController@specialPromoUsers', 'as' => 'special promo users']);
 Route::get('/promoparticipant/{id}', ['uses' => 'AdminController@promoParticipants', 'as' => 'promo participant']);
+Route::get('/mobilemoneyproviders', ['uses' => 'DusupayController@mobileMoneyProviders', 'as' => 'mobile money providers']);
 
 
 
