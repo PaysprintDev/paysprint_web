@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\AllCountries;
 use App\User;
+use App\Statement;
 use App\MonthlyFee;
-use App\EscrowAccount;
 use App\UserClosed;
+use App\FxStatement;
+use App\AllCountries;
+use App\EscrowAccount;
 
 class MonthlySubController extends Controller
 {
@@ -144,6 +146,31 @@ class MonthlySubController extends Controller
                     $currencyFX->sendMessage($newsendMsg, $sendPhone);
                 }
             }
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function correctStatementRecord()
+    {
+        try {
+
+            $getStatement = Statement::where('user_id', 'merchant@paysprint.ca')->where('reference_code', 'LIKE', '%es-wallet-%')->inRandomOrder()->get();
+
+
+            foreach ($getStatement as $value) {
+                $getFxstatement = FxStatement::where('activity', $value->activity)->first();
+
+                Statement::where('activity', $getFxstatement->activity)->update([
+                    'credit' => $getFxstatement->credit,
+                    'debit' => $getFxstatement->debit,
+                    'country' => $getFxstatement->country
+                ]);
+
+            }
+
+            echo "Done";
+
         } catch (\Throwable $th) {
             throw $th;
         }

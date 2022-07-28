@@ -13,11 +13,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-         Business Report
+         Revenue Report
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Business Report</li>
+        <li class="active">Revenue Report</li>
       </ol>
     </section>
 
@@ -35,7 +35,7 @@
 
               <h3 class="box-title">&nbsp;</h3> <br>
 
-              <form action="{{ route('get business report') }}" method="GET">
+              <form action="{{ route('get revenue report') }}" method="GET">
                   @csrf
             <div class="row">
                 <div class="col-md-12">
@@ -290,7 +290,7 @@
 
             <br>
                 </div>
-                
+
                 <div class="col-md-6">
                     <label for="start">Start Date</label>
                   <input type="date" name="start" class="form-control" id="start">
@@ -315,7 +315,7 @@
               <table class="table table-bordered table-striped" id="example3">
 
                 @if($currency = \App\User::where('country', Request::get('country'))->first())
-                
+
                     @php
                         $currency = $currency->currencyCode;
                     @endphp
@@ -325,7 +325,7 @@
 
                 <?php $expected = 0; $actual= 0;?>
 
-                
+
 
                     {{-- Added Money --}}
                     @if($addedAmount = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%Added%')->sum('credit'))
@@ -471,7 +471,7 @@
 
                         @else
 
-                        
+
                         @php
                             $addedAmount = 0;
                             $creditAmount = 0;
@@ -506,23 +506,23 @@
                     <tr>
                         <td colspan="3">&nbsp;</td>
                     </tr>
-                    
+
                     <tr>
                         <td colspan="3"><strong>Added Money (Inflow)</strong></td>
                     </tr>
-                    
+
                     <tr>
                         <td>Net Amount To Wallet by Gateway(+)</td>
                         <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($addedAmount, 2) }}</td>
                         <td><a href="{{ route('net amount to wallet', 'country='.Request::get('country').'&start='.Request::get('start').'&end='.Request::get('end')) }}" class="btn btn-primary" type="button">View details</a></td>
                     </tr>
 
-                    
-                    
+
+
                     <tr>
                         <td colspan="3"><strong>PaySprint</strong></td>
                     </tr>
-                    
+
                     <tr>
                         <td>Credit/Debit Card</td>
                         <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($creditAmount, 2) }}</td>
@@ -534,7 +534,7 @@
                         <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($prepaidAmount, 2) }}</td>
                         <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
                     </tr>
-                    
+
                     <tr>
                         <td>Bank Account</td>
                         <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($bankAmount, 2) }}</td>
@@ -546,7 +546,7 @@
                         <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($transferAmount, 2) }}</td>
                         <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
                     </tr> --}}
-                    
+
                     <tr>
                         <td colspan="3">&nbsp;</td>
                     </tr>
@@ -561,7 +561,7 @@
                     <tr>
                         <td colspan="3"><strong>PaySprint</strong></td>
                     </tr>
-                    
+
                     <tr>
                         <td>Credit/Debit Card</td>
                         <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($creditcardchargefeeforaddedmoney, 2) }}</td>
@@ -574,7 +574,7 @@
                         <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($prepaidcardchargefeeforaddedmoney, 2) }}</td>
                         <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
                     </tr>
-                    
+
                     <tr>
                         <td>Bank Account</td>
                         <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($bankchargefeeforaddedmoney, 2) }}</td>
@@ -588,7 +588,7 @@
                     <tr>
                         <td colspan="3"><strong>Withdrawal (Outflow)</strong></td>
                     </tr>
-                    
+
                     <tr>
                         <td>Withdraw from Wallet By Gateway (-)</td>
                         <td style="font-weight: 900; color: red;">{{ $currency.' '.number_format($withdrawAmount, 2) }}</td>
@@ -598,7 +598,7 @@
                     <tr>
                         <td colspan="3"><strong>PaySprint</strong></td>
                     </tr>
-                    
+
                     <tr>
                         <td>Credit/Debit Card</td>
                         <td style="font-weight: 900; color: red;">{{ $currency.' '.number_format($cardwithdrawAmount, 2) }}</td>
@@ -611,13 +611,13 @@
                         <td style="font-weight: 900; color: red;">{{ $currency.' '.number_format($prepaidwithdrawAmount, 2) }}</td>
                         <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
                     </tr>
-                    
+
                     <tr>
                         <td>Bank Account</td>
                         <td style="font-weight: 900; color: red;">{{ $currency.' '.number_format($bankwithdrawAmount, 2) }}</td>
                         <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
                     </tr>
-                    
+
                     <tr>
                         <td colspan="3">&nbsp;</td>
                     </tr>
@@ -631,7 +631,7 @@
                     <tr>
                         <td colspan="3"><strong>PaySprint</strong></td>
                     </tr>
-                    
+
                     <tr>
                         <td>Credit/Debit Card</td>
                         <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($creditchargefeeforwithdrawmoney, 2) }}</td>
@@ -643,7 +643,7 @@
                         <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($prepaidchargefeeforwithdrawmoney, 2) }}</td>
                         <td><a href="#" class="btn btn-primary" type="button">View details</a></td>
                     </tr>
-                    
+
                     <tr>
                         <td>Bank Account</td>
                         <td style="font-weight: 900; color: green;">{{ $currency.' '.number_format($bankchargefeeforwithdrawmoney, 2) }}</td>
@@ -657,7 +657,7 @@
                     <tr>
                         <td colspan="3"><strong>Wallet Maintenance</strong></td>
                     </tr>
-                    
+
                     <tr>
                         <td>Maintenace Fee (-)</td>
                         <td style="font-weight: 900; color: red;">{{ $currency.' '.number_format($maintenacefee, 2) }}</td>
@@ -671,7 +671,7 @@
                     <tr>
                         <td colspan="3"><strong>Closed Account Balance</strong></td>
                     </tr>
-                    
+
                     <tr>
                         <td>Wallet Balance (-)</td>
                         <td style="font-weight: 900; color: red;">{{ $currency.' '.number_format($closedWalletFee, 2) }}</td>
@@ -685,7 +685,7 @@
                     <tr>
                         <td colspan="3"><strong>Expected Balance</strong></td>
                     </tr>
-                    
+
                     <tr>
                         <td>Expected Balance (+)</td>
                         <td colspan="2" style="font-weight: 900; color: green;">{{ $currency.' '.number_format($expected, 2) }}</td>
@@ -698,12 +698,12 @@
                     <tr>
                         <td colspan="3"><strong>Charge Balance</strong></td>
                     </tr>
-                    
+
                     <tr>
                         <td>Charge Balance (+)</td>
                         <td colspan="2" style="font-weight: 900; color: green;">{{ $currency.' '.number_format($actual, 2) }}</td>
                     </tr>
-                    
+
                 </tbody>
 
               </table>

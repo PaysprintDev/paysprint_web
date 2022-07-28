@@ -140,6 +140,7 @@ Route::get('reversal', 'CheckSetupController@reverseFund');
 
 
 Route::get('creditsubscription', 'MonthlySubController@creditSubAccount');
+Route::get('correctstatement', 'MonthlySubController@correctStatementRecord');
 
 
 
@@ -793,6 +794,7 @@ Route::prefix('Admin/overview/report')->group(function () {
 
 	// Report Details
 	Route::get('netamounttowallet', ['uses' => 'AdminController@netAmountToWallet', 'as' => 'net amount to wallet']);
+	Route::get('netfxamounttowallet', ['uses' => 'AdminController@netFxAmountToWallet', 'as' => 'net fx amount to wallet']);
 	Route::get('chargeonaddmoney', ['uses' => 'AdminController@chargeOnAddMoney', 'as' => 'charge on add money']);
 	Route::get('amountwithdrawnfromwallet', ['uses' => 'AdminController@amountWithdrawnFromWallet', 'as' => 'amount withdrawn from wallet']);
 	Route::get('chargesonwithdrawal', ['uses' => 'AdminController@chargesOnWithdrawals', 'as' => 'charges on withdrawal']);
