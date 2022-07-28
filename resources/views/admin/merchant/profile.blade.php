@@ -65,7 +65,7 @@
                                                     <a href="{{ route('merchant profile') }}">Identity Verification</a>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    {!! $data['getuserDetail']->approval > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                                    {!! $data['getuserDetail']->approval > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" :null !!}
                                                 </div>
                                             </div>
 
@@ -80,7 +80,7 @@
                                                         Card/Bank Account </a>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    {!! count($data['getCard']) > 0 || count($data['getBank']) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                                    {!! count($data['getCard']) > 0 || count($data['getBank']) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" :null !!}
                                                 </div>
                                             </div>
 
@@ -93,7 +93,7 @@
                                                     <a href="{{ route('merchant profile') }}">Set Transaction Pin </a>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    {!! $data['getuserDetail']->transaction_pin != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                                    {!! $data['getuserDetail']->transaction_pin != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" :null !!}
                                                 </div>
                                             </div>
 
@@ -106,7 +106,7 @@
                                                     <a href="{{ route('merchant profile') }}">Set Security Question </a>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    {!! $data['getuserDetail']->securityQuestion != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                                    {!! $data['getuserDetail']->securityQuestion != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" :null !!}
                                                 </div>
                                             </div>
 
@@ -123,7 +123,7 @@
                                                         </a>
                                                     </div>
                                                     <div class="col-md-2">
-                                                        {!! $data['getuserDetail']->bvn_verification != null || $data['getuserDetail']->bvn_verification != 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                                        {!! $data['getuserDetail']->bvn_verification != null || $data['getuserDetail']->bvn_verification != 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" :null !!}
                                                     </div>
                                                 </div>
 
@@ -140,7 +140,7 @@
                                                     <a href="{{ route('setup tax') }}">Set Up Tax </a>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    {!! count($data['getTax']) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                                    {!! count($data['getTax']) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" :null !!}
                                                 </div>
                                             </div>
 
@@ -155,10 +155,13 @@
                                     <div class="card-header"
                                         style="background-color: green; color: white; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
                                         Required Documents
-                                        @if ($data['getuserDetail']->incorporation_doc_front == null || $data['getuserDetail']->directors_document == null || $data['getuserDetail']->shareholders_document == null || $data['getuserDetail']->proof_of_identity_1 == null || $data['getuserDetail']->proof_of_identity_2 == null || $data['getuserDetail']->aml_policy == null || $data['getuserDetail']->compliance_audit_report == null || $data['getuserDetail']->organizational_chart == null || $data['getuserDetail']->financial_license == null)
+                                        @if ($data['getuserDetail']->incorporation_doc_front == null && $data['getuserDetail']->directors_document == null && $data['getuserDetail']->shareholders_document == null && $data['getuserDetail']->proof_of_identity_1 == null && $data['getuserDetail']->proof_of_identity_2 == null && $data['getuserDetail']->aml_policy == null && $data['getuserDetail']->compliance_audit_report == null && $data['getuserDetail']->organizational_chart == null && $data['getuserDetail']->financial_license == null)
                                             <a href="javascript:void()" type="button"
                                                 class="btn btn-danger fa-blink">Incomplete</a>
+
+                                         
                                         @endif
+
                                     </div>
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item" title="Articles of Incorporation">
@@ -168,7 +171,7 @@
                                                         Incorporation</a>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    {!! $data['getuserDetail']->incorporation_doc_front != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                                    {!! $data['getuserDetail']->incorporation_doc_front != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : null !!}
                                                 </div>
                                             </div>
 
@@ -180,7 +183,7 @@
                                                     <a href="{{ route('merchant profile') }}">Register of Directors</a>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    {!! $data['getuserDetail']->directors_document != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                                    {!! $data['getuserDetail']->directors_document != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : null !!}
                                                 </div>
                                             </div>
 
@@ -194,7 +197,7 @@
                                                         Shareholders</a>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    {!! $data['getuserDetail']->shareholders_document != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                                    {!! $data['getuserDetail']->shareholders_document != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" :null !!}
                                                 </div>
                                             </div>
 
@@ -208,7 +211,7 @@
                                                         Director</a>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    {!! $data['getuserDetail']->proof_of_identity_1 != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                                    {!! $data['getuserDetail']->proof_of_identity_1 != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" :null !!}
                                                 </div>
                                             </div>
 
@@ -225,7 +228,7 @@
                                                         UBO</a>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    {!! $data['getuserDetail']->proof_of_identity_2 != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                                    {!! $data['getuserDetail']->proof_of_identity_2 != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" :null !!}
                                                 </div>
                                             </div>
 
@@ -240,7 +243,7 @@
                                                         Procedures</a>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    {!! $data['getuserDetail']->aml_policy != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                                    {!! $data['getuserDetail']->aml_policy != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" :null !!}
                                                 </div>
                                             </div>
 
@@ -255,7 +258,7 @@
                                                         Audit Report</a>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    {!! $data['getuserDetail']->compliance_audit_report != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                                    {!! $data['getuserDetail']->compliance_audit_report != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" :null !!}
                                                 </div>
                                             </div>
 
@@ -270,7 +273,7 @@
                                                     <a href="{{ route('merchant profile') }}">Organizational Chart</a>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    {!! $data['getuserDetail']->organizational_chart != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                                    {!! $data['getuserDetail']->organizational_chart != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" :null !!}
                                                 </div>
                                             </div>
 
@@ -285,13 +288,28 @@
                                                         License</a>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    {!! $data['getuserDetail']->financial_license != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                                    {!! $data['getuserDetail']->financial_license != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" :null !!}
                                                 </div>
                                             </div>
 
 
 
                                         </li>
+                                        <li class="list-group-item" title="Other Documents">
+
+                                            <div class="row">
+                                                <div class="col-md-10">
+                                                    <a href="{{ route('merchant profile') }}">Other Documents</a>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    {!! $data['getuserDetail']->other_documents != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" :null !!}
+                                                </div>
+                                            </div>
+
+
+
+                                        </li>
+                                        
                                     </ul>
                                 </div>
                             </div>
@@ -750,6 +768,17 @@
                                             <small class="text-danger"><strong>Proof of Financial
                                                     License</strong></small>
                                             <input type="file" class="form-control" name="financial_license">
+                                        </div>
+                                    </div>
+
+                                    
+                                    <div class="form-group">
+                                        <label for="inputCorporationDocument"
+                                            class="col-sm-3 control-label">&nbsp;</label>
+
+                                        <div class="col-sm-9">
+                                            <small class="text-danger"><strong>Other Documents</strong></small>
+                                            <input type="file" class="form-control" name="other_douments">
                                         </div>
                                     </div>
 

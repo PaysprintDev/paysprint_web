@@ -625,7 +625,7 @@
 
 
                 <div class="form-group has-feedback">
-                    <label for=" describe_purpose">Purpose of opening the Account (please describe the purpose)</label>
+                    <label for=" describe_purpose"><span class="reqField">*</span> Purpose of opening the Account (please describe the purpose)</label>
                     <div class="row">
                         <div class="col-xs-12">
                             <textarea type="text" name="describe_purpose" id="describe_purpose" class="form-control" placeholder=""></textarea>
@@ -1013,6 +1013,9 @@
                 return false;
             } else if ($('#how_your_heard_about_us').val() == "") {
                 swal('Oops!', 'Please tell us how you know about us', 'warning');
+                return false;
+            } else if ($('#describe_purpose').val() == "") {
+                swal('Oops!', 'Please tell us the purpose of opening the account', 'warning');
                 return false;
             } else if ($('#size_of_transaction').val() == "") {
                 swal('Oops!', 'Please tell us how you know about us', 'warning');
