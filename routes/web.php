@@ -768,9 +768,11 @@ Route::prefix('Admin/performance/report')->group(function () {
 Route::prefix('Admin/overview/report')->group(function () {
 
 	Route::get('business', ['uses' => 'AdminController@businessReport', 'as' => 'business report']);
+	Route::get('revenue', ['uses' => 'AdminController@revenueReport', 'as' => 'revenue report']);
 	Route::get('accountreport', ['uses' => 'AdminController@accountReport', 'as' => 'account report']);
 	Route::get('invoicecommission', ['uses' => 'AdminController@invoiceCommissionReport', 'as' => 'invoice commission']);
 	Route::get('businessreport', ['uses' => 'AdminController@getBusinessReport', 'as' => 'get business report']);
+	Route::get('revenuereport', ['uses' => 'AdminController@getRevenueReport', 'as' => 'get revenue report']);
 	Route::get('inflow', ['uses' => 'AdminController@inflowReport', 'as' => 'inflow reports']);
 	Route::get('inflowbycountry', ['uses' => 'AdminController@inflowByCountryReport', 'as' => 'inflow by country']);
 	Route::post('getinflowrecord', ['uses' => 'AdminController@getInflowRecord', 'as' => 'get inflow record']);
