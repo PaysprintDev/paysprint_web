@@ -1,5 +1,19 @@
 @extends('layouts.newpage.app')
 
+<style>
+    .eclipse-slider img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-left: 3px;
+    margin-bottom: 3px;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: rgb(213, 213, 213);
+    cursor: pointer;
+}
+</style>
+
 @section('content')
     <!-- Hero Area -->
     <!-- Hero Area -->
@@ -590,6 +604,35 @@
         </div>
     </div>
     <!-- Content section 3 -->
+
+    <!-- Available countries -->
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-5 col-lg-6 col-md-8">
+                <div class="section-title text-center mb-13 mb-lg-21">
+                    <h2 class="title gr-text-4 mb-6">Avaliable Countries</h2>
+                  
+                </div>
+            </div>
+        </div>
+          <div class="row">
+
+            @if (count($data['availablecountry']))
+
+            @foreach ($data['availablecountry'] as $country)
+            <div id="eclipse6">
+                <div class="eclipse-slider">
+                    <div> <img src="{{$country->logo}}" alt={{$country->name}} title={{$country->name}} ></div>
+                   
+                </div>
+          </div>
+
+                
+            @endforeach
+                
+            @endif
+       
+        </div>
 
 
 

@@ -104,6 +104,10 @@ Route::get('mailstatement', 'SendGridController@cronToCustomersOnCustomerStateme
 Route::get('rewardpoint', 'SendGridController@cronToCustomersOnRewardStatement');
 Route::get('mailtocustomer', 'SendGridController@cronToPublicizeMerchantToConsumer');
 
+// country flag
+Route::get('countryflag', 'CountryFlagController@displayCountryFlag');
+
+
 // Update BVN List
 Route::get('bvnlistupdate', 'CheckSetupController@bvnListUpdate');
 
