@@ -13,7 +13,7 @@ use App\EscrowAccount;
 class MonthlySubController extends Controller
 {
 
-    public function creditSubAccount()
+    public function ____creditSubAccount()
     {
 
 
@@ -101,22 +101,22 @@ class MonthlySubController extends Controller
 
                     $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your current fx wallet balance is " . $myaccount->currencyCode . ' ' . number_format($fxBalance, 2) . ".";
 
-                    // $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+                    $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
-                    // if (isset($usergetPhone)) {
+                    if (isset($usergetPhone)) {
 
-                    //     $sendPhone = $thisuser->telephone;
-                    // } else {
-                    //     $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                    // }
+                        $sendPhone = $thisuser->telephone;
+                    } else {
+                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                    }
 
-                    // if ($thisuser->country == "Nigeria") {
+                    if ($thisuser->country == "Nigeria") {
 
-                    //     $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                    //     $currencyFX->sendSms($sendMsg, $correctPhone);
-                    // } else {
-                    //     $currencyFX->sendMessage($sendMsg, $sendPhone);
-                    // }
+                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                        $currencyFX->sendSms($sendMsg, $correctPhone);
+                    } else {
+                        $currencyFX->sendMessage($sendMsg, $sendPhone);
+                    }
 
                     // Log Activities here
                     $currencyFX->createNotification($thisuser->ref_code, $sendMsg);
@@ -151,7 +151,123 @@ class MonthlySubController extends Controller
         }
     }
 
-    public function correctStatementRecord()
+
+    public function monthlycreditAccount($country, $amount, $name, $accountType)
+    {
+        try {
+
+            $currencyFX = new CurrencyFxController();
+
+            $thisuser = User::where('email', 'merchant@paysprint.ca')->first();
+
+
+            $allcountry = AllCountries::where('name', $country)->first();
+
+            // Check Escrow wallet
+            $checkAccount = EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $allcountry->currencyCode)->first();
+
+            // Create New Wallet
+            if (!$checkAccount) {
+                // Create the wallet
+                $escrowID = 'ES_' . uniqid() . '_' . strtoupper(date('D'));
+                // Check if ID exists
+                $checkExists = EscrowAccount::where('escrow_id', $escrowID)->first();
+
+                if (isset($checkExists)) {
+                    $escrowID = 'ES_' . uniqid() . '_' . strtoupper(date('D'));
+                }
+
+                $query = [
+                    'user_id' => $thisuser->id,
+                    'escrow_id' => $escrowID,
+                    'currencyCode' => $allcountry->currencyCode,
+                    'currencySymbol' => $allcountry->currencySymbol,
+                    'wallet_balance' => "0.00",
+                    'country' => $country,
+                    'active' => "false"
+                ];
+
+                EscrowAccount::insert($query);
+            }
+
+
+                        // Fund Wallet
+
+            $myaccount = EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $allcountry->currencyCode)->first();
+
+
+            $transaction_id = "es-wallet-" . date('dmY') . time();
+
+
+            $activity = "Added " . $myaccount->currencyCode . '' . number_format($amount, 2) . " monthly subscription fee from {$name}, with {$accountType} account to your FX Wallet.";
+            $credit = $amount;
+            $debit = 0;
+            $reference_code = $transaction_id;
+            $balance = 0;
+            $trans_date = date('Y-m-d');
+            $status = "Delivered";
+            $action = "Escrow Wallet credit";
+            $regards = $thisuser->ref_code;
+            $statement_route = "escrow wallet";
+
+            $fxBalance = $myaccount->wallet_balance + $amount;
+
+            EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $allcountry->currencyCode)->update(['wallet_balance' => $fxBalance]);
+
+            $currencyFX->insFXStatement($myaccount->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $myaccount->country, 'confirmed');
+
+            $currencyFX->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $country);
+
+            $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your current fx wallet balance on {$myaccount->currencyCode} is " . $myaccount->currencyCode . ' ' . number_format($fxBalance, 2) . ".";
+
+            $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+            if (isset($usergetPhone)) {
+
+                $sendPhone = $thisuser->telephone;
+            } else {
+                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+            }
+
+            if ($thisuser->country == "Nigeria") {
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                $currencyFX->sendSms($sendMsg, $correctPhone);
+            } else {
+                $currencyFX->sendMessage($sendMsg, $sendPhone);
+            }
+
+            $today = date('Y-m-d');
+
+
+            $recMessage = "<p>This is a confirmation that your PaySprint FX wallet on {$myaccount->currencyCode} has been top-up and received from {$name}, with {$accountType} account. The subscription next renewal date is ".date('d-m-Y', strtotime($today. "+28 days")).".</p>";
+
+            $currencyFX->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $sendMsg);
+
+            $currencyFX->name = $thisuser->name;
+            $currencyFX->email = $thisuser->email;
+            $currencyFX->subject = $activity;
+
+            $currencyFX->message = '<p>' . $recMessage . '</p><p>You now have <strong>' . $myaccount->currencyCode . ' ' . number_format($fxBalance, 2) . '</strong> balance in your account</p>';
+
+            $currencyFX->monthlyChargeInsert($thisuser->ref_code, $myaccount->country, $amount, $myaccount->currencyCode);
+
+            $currencyFX->slack($sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+
+            $currencyFX->sendEmail($thisuser->email, "Fund remittance");
+
+
+            echo "Done";
+
+
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function ___correctStatementRecord()
     {
         try {
 
@@ -164,7 +280,8 @@ class MonthlySubController extends Controller
                 Statement::where('activity', $getFxstatement->activity)->update([
                     'credit' => $getFxstatement->credit,
                     'debit' => $getFxstatement->debit,
-                    'country' => $getFxstatement->country
+                    'country' => $getFxstatement->country,
+                    'action' => "Escrow Wallet credit"
                 ]);
 
             }
@@ -176,3 +293,9 @@ class MonthlySubController extends Controller
         }
     }
 }
+
+
+// UPDATE statement SET country = 'Nigeria' WHERE user_id = 'merchant@paysprint.ca' AND activity LIKE '%Added NGN%';
+// UPDATE statement SET country = 'United States' WHERE user_id = 'merchant@paysprint.ca' AND activity LIKE '%Added USD%';
+// UPDATE statement SET country = 'United Kingdom' WHERE user_id = 'merchant@paysprint.ca' AND activity LIKE '%Added GBP%';
+// SELECT * FROM `statement` WHERE user_id = 'merchant@paysprint.ca' AND activity LIKE '%Added USD%';

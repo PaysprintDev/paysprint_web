@@ -567,8 +567,12 @@ your PaySprint Account.You need to provide the outstanding information and compl
                 $country = $key->country;
                 $email = $key->email;
 
-                // Update Statememt country
-                Statement::where('user_id', $email)->update(['country' => $country]);
+                if($email != 'merchant@paysprint.ca'){
+                    // Update Statememt country
+                    Statement::where('user_id', $email)->update(['country' => $country]);
+                }
+
+
             }
         } else {
             // Do nothing

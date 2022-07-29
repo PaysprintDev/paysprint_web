@@ -2396,6 +2396,10 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
     function grantImt(id) {
+
+        // Open Modal, ask for permission to accept Inbound, Outbound or Both...
+
+
         var route = "{{ URL('Ajax/accesstousepaysprintimt') }}";
 
         swal({

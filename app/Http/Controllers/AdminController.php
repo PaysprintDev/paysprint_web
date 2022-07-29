@@ -14404,7 +14404,7 @@ class AdminController extends Controller
         $data = DB::table('users')
             ->join('statement', 'users.email', '=', 'statement.user_id')
             ->where('statement.country', $country)
-            ->where('statement.activity', 'LIKE', '%Monthly Subscription%')
+            ->where('statement.action', 'Escrow Wallet credit')
             ->whereBetween('trans_date', [$start, $end])
             ->orderBy('statement.created_at', 'DESC')
             ->get();
@@ -17757,9 +17757,30 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         if (isset($check)) {
 
             if ($check->imt == "true") {
-                AllCountries::where('id', $req->country_id)->update(['imt' => "false"]);
+                AllCountries::where('id', $req->country_id)->update(['imt' => "false", 'inbound' => 'false', 'outbound' => 'false']);
                 $resData = "Access Denied!";
-            } else {
+            }
+            elseif($check->inbound == "true"){
+                AllCountries::where('id', $req->country_id)->update(['inbound' => 'false']);
+                $resData = "Inbound Access Denied!";
+            }
+            elseif($check->outbound == "true"){
+                AllCountries::where('id', $req->country_id)->update(['outbound' => 'false']);
+                $resData = "Outbound Access Denied!";
+            }
+            elseif($req->imt_state == "both"){
+                AllCountries::where('id', $req->country_id)->update(['imt' => "true", 'inbound' => 'true', 'outbound' => 'true']);
+                $resData = "Access Granted!";
+            }
+            elseif($req->imt_state == "inbound"){
+                AllCountries::where('id', $req->country_id)->update(['imt' => "false", 'inbound' => 'true', 'outbound' => 'false']);
+                $resData = "Access Granted!";
+            }
+            elseif($req->imt_state == "outbound"){
+                AllCountries::where('id', $req->country_id)->update(['imt' => "false", 'inbound' => 'false', 'outbound' => 'true']);
+                $resData = "Access Granted!";
+            }
+            else {
                 AllCountries::where('id', $req->country_id)->update(['imt' => "true"]);
                 $resData = "Access Granted!";
             }

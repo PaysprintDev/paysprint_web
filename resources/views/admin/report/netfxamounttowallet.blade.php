@@ -316,7 +316,7 @@
                 <thead>
                     <tr>
                         <th>S/N</th>
-                        <th>Name</th>
+                        <th>Activity</th>
                         <th>Amount</th>
                         <th>Date</th>
                     </tr>
@@ -326,6 +326,20 @@
 
                     @if (count($data['result']) > 0)
 
+                    {{-- GEt The country code... --}}
+
+                    @if($userCountry = \App\User::where('country', Request::get('country'))->first())
+                        @php
+                            $currencyCode = $userCountry->currencyCode;
+                        @endphp
+
+                        @else
+
+                        @php
+                            $currencyCode = $item->currencyCode;
+                        @endphp
+                    @endif
+
                         @php
                             $i = 1;
                             $total = 0;
@@ -334,8 +348,8 @@
                         @foreach ($data['result'] as $item)
                             <tr>
                                 <td>{{ $i++ }}</td>
-                                <td>{{ $item->name }}</td>
-                                <td style="color: green; font-weight: bold; ">{{ "+".$item->currencyCode.' '.number_format($item->credit, 2) }}</td>
+                                <td>{{ $item->activity }}</td>
+                                <td style="color: green; font-weight: bold; ">{{ "+".$currencyCode.' '.number_format($item->credit, 2) }}</td>
                                 <td>{{ date('d-m-Y', strtotime($item->trans_date)) }}</td>
                             </tr>
 
@@ -356,7 +370,7 @@
                     <tr>
                         <td></td>
                         <td style="font-weight: bold; color: black;">Total: </td>
-                        <td style="font-weight: bold; color: black; font-size: 24px;">{{ '+'.$item->currencyCode.' '.number_format($total, 2) }}</td>
+                        <td style="font-weight: bold; color: black; font-size: 24px;">{{ '+'.$currencyCode.' '.number_format($total, 2) }}</td>
                         <td></td>
 
                     </tr>

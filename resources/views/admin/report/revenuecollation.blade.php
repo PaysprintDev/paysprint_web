@@ -327,7 +327,7 @@
 
 
                     {{-- Added Money --}}
-                    @if($addedAmount = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('activity', 'LIKE', '%account to your FX Wallet.%')->sum('credit'))
+                    @if($addedAmount = \App\Statement::where('country', Request::get('country'))->whereBetween('trans_date', [Request::get('start'), Request::get('end')])->where('action', 'Escrow Wallet credit')->sum('credit'))
                         @php
                             $addedAmount = $addedAmount;
                         @endphp

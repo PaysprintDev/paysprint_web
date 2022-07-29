@@ -2231,6 +2231,9 @@
 
 
     function grantImt(id) {
+
+        // Open Modal, ask for permission to accept Inbound, Outbound or Both...
+
         var route = "{{ URL('Ajax/accesstousepaysprintimt') }}";
 
         swal({
