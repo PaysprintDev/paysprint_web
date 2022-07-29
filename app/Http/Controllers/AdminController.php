@@ -17756,9 +17756,17 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
         if (isset($check)) {
 
-            if ($check->imt == "true") {
+            if ($check->imt == "true" && $req->imt_state == "both") {
                 AllCountries::where('id', $req->country_id)->update(['imt' => "false", 'inbound' => 'false', 'outbound' => 'false']);
                 $resData = "Access Denied!";
+            }
+            elseif($check->inbound == "true" && $req->imt_state == "inbound"){
+                AllCountries::where('id', $req->country_id)->update(['inbound' => 'false']);
+                $resData = "Inbound Access Denied!";
+            }
+            elseif($check->outbound == "true" && $req->imt_state == "outbound"){
+                AllCountries::where('id', $req->country_id)->update(['outbound' => 'false']);
+                $resData = "Outbound Access Denied!";
             }
             elseif($check->inbound == "true"){
                 AllCountries::where('id', $req->country_id)->update(['inbound' => 'false']);

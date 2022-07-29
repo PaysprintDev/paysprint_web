@@ -327,7 +327,7 @@
                                 class="btn btn-warning btn-block">Send Money (Local) <i class="fas fa-paper-plane"></i></a>
                         </div>
 
-                        @if ($imt = \App\AllCountries::where('name', session('country'))->where('imt', 'true')->first())
+                        @if ($imt = \App\AllCountries::where('name', session('country'))->where('imt', 'true')->orWhere('outbound', 'true')->first())
                             <div class="col-md-4 mb-3 sendMoney">
                                 <a style="font-size: 14px; font-weight: bold; color: white; background: purple"
                                     type="button"

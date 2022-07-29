@@ -238,7 +238,7 @@ class GooglePaymentController extends Controller
                                             $respaction = 'error';
 
                                             return redirect()->back()->with($respaction, $response);
-                                        } elseif ((isset($imtCountry) && $imtCountry->imt == "false" && $client->country != $user->country)) {
+                                        } elseif ((isset($imtCountry) && $imtCountry->imt == "false" && $client->country != $user->country) || (isset($imtCountry) && $imtCountry->outbound == "false" && $client->country != $user->country)) {
                                             $resData = ['res' => 'International money transfer is not yet available to ' . $imtCountry->name, 'message' => 'error', 'title' => 'Oops!'];
 
                                             $response = 'International money transfer is not yet available to ' . $imtCountry->name;
@@ -966,7 +966,7 @@ class GooglePaymentController extends Controller
                                 $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => URL('payment/sendmoney/' . $checkExist->ref_code . '?country=' . $thisuser->country)];
 
                                 return $this->returnJSON($resData, $status);
-                            } elseif (isset($imtCountry) && $imtCountry->imt == "false" && $req->country != $thisuser->country) {
+                            } elseif (isset($imtCountry) && $imtCountry->imt == "false" && $req->country != $thisuser->country || isset($imtCountry) && $imtCountry->outbound == "false" && $req->country != $thisuser->country) {
 
                                 $response = 'International money transfer is not yet available to ' . $imtCountry->name;
                                 $data = [];

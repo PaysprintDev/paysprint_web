@@ -85,9 +85,9 @@
                             <form action="{{ route('grant imt') }}" method="POST" id="grantimtform{{ $data->id }}">
                             @csrf
                             <input type="hidden" value="{{ $data->id }}" name="country_id">
-                            <input type="hidden" value="both" name="imt_state">
+                            <input type="hidden" value="" name="imt_state" id="imt_state{{ $data->id }}">
                             <td>
-                                <button type="button" class="btn {{ ($data->imt == "true") ? 'btn-danger' : 'btn-primary' }}" onclick="grantImt('{{ $data->id }}')">{{ ($data->imt == "true") ? "Disable IMT" : "Grant IMT" }}</button>
+                                <button type="button" class="btn {{ ($data->imt == "true" || $data->inbound == "true" || $data->outbound == "true") ? 'btn-danger' : 'btn-primary' }}" onclick="grantImt('{{ $data->id }}')">{{ ($data->imt == "true" || $data->inbound == "true" || $data->outbound == "true") ? "Disable IMT" : "Grant IMT" }}</button>
                             </td>
 
                             </form>
