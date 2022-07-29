@@ -611,7 +611,7 @@
             <div class="col-xl-5 col-lg-6 col-md-8">
                 <div class="section-title text-center mb-13 mb-lg-21">
                     <h2 class="title gr-text-4 mb-6">Avaliable Countries</h2>
-                  
+
                 </div>
             </div>
         </div>
@@ -622,16 +622,16 @@
             @foreach ($data['availablecountry'] as $country)
             <div id="eclipse6">
                 <div class="eclipse-slider">
-                    <div> <img src="{{$country->logo}}" alt={{$country->name}} title={{$country->name}} ></div>
-                   
+                    <div> <img src="{{$country->logo}}" alt="{{$country->name}}" title="{{$country->name}}" ></div>
+
                 </div>
           </div>
 
-                
+
             @endforeach
-                
+
             @endif
-       
+
         </div>
 
 
