@@ -257,10 +257,14 @@ class HomeController extends Controller
 
     public function merchantIndex()
     {
+        $allcountry = AllCountries::where('approval', 1)->get();
 
         $this->page = 'Merchant';
+        $data = [
+            'availablecountry' => $allcountry
+        ];
 
-        return view('main.newpage.shade-pro.merchantindex')->with(['pages' => $this->page]);
+        return view('main.newpage.shade-pro.merchantindex')->with(['pages' => $this->page, 'data'=> $data]);
     }
 
     public function index()

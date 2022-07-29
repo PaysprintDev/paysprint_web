@@ -247,7 +247,8 @@ class SendGridController extends Controller
               
                 $user_id=$merchants->user_id;
                 $name = $merchants->business_name;
-                $address = $merchants->address;{
+                $address = $merchants->address;
+                $state=$merchants->state;{
 
                
                 // $logo = $merchants->logo;
@@ -340,6 +341,7 @@ class SendGridController extends Controller
                     "user_id" => $user_id,
                     "name"  => $name,
                     "address" => $address,
+                    "state" => $state,
                     "logo" =>$logo,
                     "description" => $description,
                     "industry" => $industry,
