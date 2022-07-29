@@ -2548,6 +2548,10 @@ class CurrencyFxController extends Controller
     public function checkImt($country){
         $imtCountry = AllCountries::where('name', $country)->first();
 
+        if($imtCountry->outbound == "true" || $imtCountry->imt == "true"){
+            return "true";
+        }
+
         return $imtCountry->imt;
     }
 }
