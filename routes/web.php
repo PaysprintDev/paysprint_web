@@ -404,6 +404,8 @@ Route::prefix('mywallet')->group(function () {
 	Route::get('requestrefund', ['uses' => 'HomeController@requestForRefund', 'as' => 'request for refund']);
 	Route::get('notifications', ['uses' => 'HomeController@allNotifications', 'as' => 'notifications']);
 	Route::get('paymentgateway', ['uses' => 'HomeController@paymentGateway', 'as' => 'payment gateway']);
+	Route::post('addmobilemoney', ['uses' => 'HomeController@addMobileMoney', 'as' => 'mobile money']);
+	Route::post('withdrawmobilemoney', ['uses' => 'DusupayController@withdrawMobileMoney', 'as' => 'withdraw mobile']);
 });
 
 Route::get('merchantcategory', ['uses' => 'HomeController@merchantCategory', 'as' => 'merchant category']);

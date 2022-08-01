@@ -95,7 +95,7 @@ trait DusuPay
 
 
 
-    public function doPost()
+    public function doDusupayPost()
     {
 
         $curl = curl_init();

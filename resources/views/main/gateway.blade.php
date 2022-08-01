@@ -55,7 +55,6 @@
         .fas {
             font-size: 12px;
         }
-
     </style>
 
 </head>
@@ -74,14 +73,16 @@
                 <div class="card ">
                     <div class="card-header">
                         <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
-
+                            {!! session('msg') !!}
 
                             <!-- Credit card form tabs -->
                             <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
                                 <li class="nav-item"> <a data-toggle="pill" href="{{ route('my account') }}"
                                         class="nav-link active "> <i class="fas fa-home"></i> Go Back </a> </li>
-                                {{-- <li class="nav-item"> <a data-toggle="pill" href="#paypal" class="nav-link "> <i class="fab fa-paypal mr-2"></i> Debit Card </a> </li>
-                                <li class="nav-item"> <a data-toggle="pill" href="#net-banking" class="nav-link "> <i class="fas fa-mobile-alt mr-2"></i> EXBC Card </a> </li> --}}
+                                {{-- <li class="nav-item"> <a data-toggle="pill" href="#paypal" class="nav-link "> <i
+                                            class="fab fa-paypal mr-2"></i> Debit Card </a> </li>
+                                <li class="nav-item"> <a data-toggle="pill" href="#net-banking" class="nav-link "> <i
+                                            class="fas fa-mobile-alt mr-2"></i> EXBC Card </a> </li> --}}
                             </ul>
                         </div> <!-- End -->
                         <!-- Credit card form content -->
@@ -92,72 +93,116 @@
 
                                 <center>
                                     <div class="row">
+                                        @if($data['paymentgateway']->gateway =='Dusupay')
 
-                                        @if (Auth::user()->country != 'Nigeria')
-                                            <div
-                                                @if (Auth::user()->country != 'Canada') class="col-md-6 mb-3" @else class="col-md-3 mb-3" @endif>
-                                                <strong>
-                                                    <a type="button" class="btn btn-warning"
-                                                        style="color: purple; font-weight: bold; background-color: #fff !important;"
-                                                        href="{{ route('Add card', 'card=Credit Card') }}"><img
-                                                            src="https://img.icons8.com/fluent/53/000000/credit-card-cash-withdrawal.png"
-                                                            title="Credit Card" /> <i class="fas fa-plus-square"
-                                                            title="Credit Card"
-                                                            style="font-size: 16px; color: black"></i><br><br>
-                                                        Credit Card</a>
-                                                </strong>
+                                        <div class="col-md-12">
+                                            <form action="{{ route('mobile money') }}" method="post">
+                                                @csrf
+                                                <div class="form-group col-md-12">
+                                                    <label for="paymentmethod" style="font-weight: bold">PAYMENT
+                                                        METHOD<label>
+                                                </div>
+                                                <input type="text" name="account_type" value="Mobile Money" id="paymentmethod" class="form-control" readonly>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-12 mt-2">
+                                                <label for="paymentmethod" style="font-weight: bold">PAYMENT
+                                                    PROVIDER<label>
                                             </div>
+                                            <select name="provider" class="form-control">
+                                                @if(count($data['providers']) > 0)
+                                                @foreach ( $data['providers'] as $providers)
+                                                <option value="{{ $providers->id }}">{{ $providers->name }}</option>
+                                                @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-12 mt-2">
+                                                <label for="paymentmethod" style="font-weight: bold">MOBILE MONEY
+                                                    ACCOUNT NUMBER<label>
+                                            </div>
+                                            <input type="text" name="account_number" id="paymentmethod"
+                                                class="form-control"
+                                                placeholder="Please Enter Your Mobile Money Account Number">
+                                        </div>
+
+                                        <input type="hidden" name="code" value="{{$data['paymentgateway']->code }}">
+
+                                        <div class="col-md-12 mt-2">
+                                            <button type="submit" class="btn btn-success mt-2 form-control">Add Account
+                                                Details</button>
+                                        </div>
+                                        </form>
+
+                                        @else
+
+                                        <!-- start-->
+                                        @if (Auth::user()->country != 'Nigeria')
+                                        <div @if (Auth::user()->country != 'Canada') class="col-md-6 mb-3" @else
+                                            class="col-md-3 mb-3" @endif>
+                                            <strong>
+                                                <a type="button" class="btn btn-warning"
+                                                    style="color: purple; font-weight: bold; background-color: #fff !important;"
+                                                    href="{{ route('Add card', 'card=Credit Card') }}"><img
+                                                        src="https://img.icons8.com/fluent/53/000000/credit-card-cash-withdrawal.png"
+                                                        title="Credit Card" /> <i class="fas fa-plus-square"
+                                                        title="Credit Card"
+                                                        style="font-size: 16px; color: black"></i><br><br>
+                                                    Credit Card</a>
+                                            </strong>
+                                        </div>
                                         @endif
 
 
                                         @if (Auth::user()->country == 'Canada')
-                                            <div class="col-md-3 mb-3">
-                                                <strong>
-                                                    <a type="button" class="btn btn-warning"
-                                                        style="color: purple; font-weight: bold; background-color: #fff !important; font-size: 15px;"
-                                                        href="{{ route('Add card', 'card=Debit Card') }}"><img
-                                                            src="https://img.icons8.com/color/53/000000/bank-card-front-side.png"
-                                                            title="Debit VISA/Mastercard" /> <i
-                                                            class="fas fa-plus-square" title="Debit VISA/Mastercard"
-                                                            style="font-size: 16px; color: black"></i><br><br>
-                                                        Debit VISA/Mastercard</a>
-                                                </strong>
-                                            </div>
-                                            <div class="col-md-3 mb-3">
-                                                <strong>
-                                                    <a type="button" class="btn btn-warning"
-                                                        style="color: purple; font-weight: bold; background-color: #fff !important;"
-                                                        href="{{ route('Add card', 'card=Prepaid Card') }}"> <img
-                                                            src="https://img.icons8.com/cotton/53/000000/bank-cards--v2.png"
-                                                            title="Prepaid Card" /> <i class="fas fa-plus-square"
-                                                            title="Prepaid Card"
-                                                            style="font-size: 16px; color: black"></i><br><br>Prepaid
-                                                        Card</a>
-                                                </strong>
-                                            </div>
+                                        <div class="col-md-3 mb-3">
+                                            <strong>
+                                                <a type="button" class="btn btn-warning"
+                                                    style="color: purple; font-weight: bold; background-color: #fff !important; font-size: 15px;"
+                                                    href="{{ route('Add card', 'card=Debit Card') }}"><img
+                                                        src="https://img.icons8.com/color/53/000000/bank-card-front-side.png"
+                                                        title="Debit VISA/Mastercard" /> <i class="fas fa-plus-square"
+                                                        title="Debit VISA/Mastercard"
+                                                        style="font-size: 16px; color: black"></i><br><br>
+                                                    Debit VISA/Mastercard</a>
+                                            </strong>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <strong>
+                                                <a type="button" class="btn btn-warning"
+                                                    style="color: purple; font-weight: bold; background-color: #fff !important;"
+                                                    href="{{ route('Add card', 'card=Prepaid Card') }}"> <img
+                                                        src="https://img.icons8.com/cotton/53/000000/bank-cards--v2.png"
+                                                        title="Prepaid Card" /> <i class="fas fa-plus-square"
+                                                        title="Prepaid Card"
+                                                        style="font-size: 16px; color: black"></i><br><br>Prepaid
+                                                    Card</a>
+                                            </strong>
+                                        </div>
                                         @endif
 
 
                                         @if (Auth::user()->country == 'Nigeria')
-                                            <div class="col-md-6 mb-3">
-                                                <strong>
-                                                    <a type="button" class="btn btn-warning"
-                                                        style="color: purple; font-weight: bold; background-color: #fff !important; font-size: 15px;"
-                                                        href="{{ route('Add card', 'card=Debit Card') }}"><img
-                                                            src="https://img.icons8.com/color/53/000000/bank-card-front-side.png"
-                                                            title="Debit VISA/Mastercard" /> <i
-                                                            class="fas fa-plus-square" title="Debit VISA/Mastercard"
-                                                            style="font-size: 16px; color: black"></i><br><br>
-                                                        Debit VISA/Mastercard</a>
-                                                </strong>
-                                            </div>
+                                        <div class="col-md-6 mb-3">
+                                            <strong>
+                                                <a type="button" class="btn btn-warning"
+                                                    style="color: purple; font-weight: bold; background-color: #fff !important; font-size: 15px;"
+                                                    href="{{ route('Add card', 'card=Debit Card') }}"><img
+                                                        src="https://img.icons8.com/color/53/000000/bank-card-front-side.png"
+                                                        title="Debit VISA/Mastercard" /> <i class="fas fa-plus-square"
+                                                        title="Debit VISA/Mastercard"
+                                                        style="font-size: 16px; color: black"></i><br><br>
+                                                    Debit VISA/Mastercard</a>
+                                            </strong>
+                                        </div>
                                         @endif
 
 
 
 
-                                        <div
-                                            @if (Auth::user()->country != 'Canada') class="col-md-6 mb-3" @else class="col-md-3 mb-3" @endif>
+                                        <div @if (Auth::user()->country != 'Canada') class="col-md-6 mb-3" @else
+                                            class="col-md-3 mb-3" @endif>
                                             <strong>
 
                                                 <a type="button" class="btn btn-warning"
@@ -170,6 +215,8 @@
                                                     Account</a>
                                             </strong>
                                         </div>
+                                        @endif
+                                        <!--end -->
                                     </div>
 
 
@@ -198,7 +245,8 @@
 
 
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"
-                        integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
+                integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG"
+                crossorigin="anonymous">
             </script>
             <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 
