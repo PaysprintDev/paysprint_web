@@ -87,7 +87,7 @@
                                     <tbody>
 
 
-                                        @if ($allusersdata = \App\User::where('country', Request::get('country'))->where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->orderBy('nin_front', 'DESC')->get())
+                                        @if ($allusersdata = \App\User::where('country', Request::get('country'))->where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->orderBy('nin_front', 'DESC')->paginate(100))
 
 
                                             @if (count($allusersdata) > 0)
@@ -500,6 +500,17 @@
                                 </form>
 
                             </table>
+
+
+                            <nav aria-label="...">
+                                        <ul class="pagination pagination-md">
+
+                                            <li class="page-item">
+                                                {{ $allusersdata->appends(['country' => Request::get('country')])->links() }}
+
+                                            </li>
+                                        </ul>
+                                    </nav>
                         </div>
                         <!-- /.box-body -->
                     </div>

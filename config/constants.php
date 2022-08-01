@@ -13,9 +13,9 @@ return [
         'api_key' => env('sendgrid_api__key'),
         'from' => env('MAIL_FROM_ADDRESS'),
         'from_name' => 'PaySprint',
-        'refer_earn' => " d-e395d0c9d765423a91afe82f58822771",
+        'refer_earn' => "d-e395d0c9d765423a91afe82f58822771",
         'customer_statement' => "d-7f88c5270e9f4d848800252afa4228e4",
         'virtual_account' => "d-2a2c67d548e3423eaff7a2b7c79fd960",
-        'publicize_merchant' => "d-00d2a801feb9448d8fc8579cce05526a",
+        'publicize_merchant' => "d-170c383925bf41dc923dd19e282c98b5",
     ]
 ];

@@ -148,6 +148,9 @@ class MaintenanceFeeCharge extends Controller
     public function renewSubscription()
     {
         try {
+
+            $creditOwner = new MonthlySubController();
+
             $todaysDate = Carbon::now()->toDateTimeString();
 
             $getUsers = UpgradePlan::where('expire_date', '<=', $todaysDate)->where('plan', 'classic')->get();
@@ -213,6 +216,9 @@ class MaintenanceFeeCharge extends Controller
                         $recMessage = "<p>This is a confirmation that your PaySprint Account has been renewed. The subscription  next renewal date is ".date('d-m-Y', strtotime($today. "+28 days")).".</p><p>Your current plan is CLASSIC PLAN. </p>";
 
                         $this->insStatement($users->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
+
+
+                        $creditOwner->monthlycreditAccount($users->country, $amount, $users->name, $users->accountType);
 
                         $this->createNotification($users->ref_code, "Hello " . strtoupper($users->name) . ", " . $sendMsg);
 

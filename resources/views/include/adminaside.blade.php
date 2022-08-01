@@ -298,6 +298,13 @@
                              </a>
 
                          </li>
+                         <li>
+                             <a href="{{ route('revenue report') }}">
+                                 <i class="fa fa-book"></i>
+                                 <span>Revenue Report</span>
+                             </a>
+
+                         </li>
 
                          <li>
                              <a href="{{ route('account report') }}">
@@ -519,7 +526,7 @@
                                     <ul class="treeview-menu">
                                         <li title="prepaid Card"><a href="{{ route('claim reward') }}"><i
                                                  class="fa fa-circle-o text-red"></i>Points Claimed</a></li>
-                                     
+
                                      <li title="prepaid Card"><a href="{{ route('successful point claim') }}"><i
                                                  class="fa fa-circle-o text-red"></i>Successful Points Claims</a></li>
                                     </ul>
@@ -560,9 +567,9 @@
                                     </ul>
                                     </li>
                                      <!-- Report ends -->
-                                     
-                                     
-                                     
+
+
+
                                     <li title="prepaid Card"><a href="{{ route('promo date')}}"><i
                                                     class="fa fa-circle-o text-red"></i>Special Promo</a></li>
                                     <li title="prepaid Card"><a href="{{ route('special promo users')}}"><i

@@ -78,7 +78,7 @@
                                 <tbody>
 
 
-                                    @if ($allusersdata = \App\User::where([['country', '=', Request::get('country')], ['account_check', '=', 1]])->orderBy('lastUpdated', 'DESC')->get())
+                                    @if ($allusersdata = \App\User::where([['country', '=', Request::get('country')], ['account_check', '=', 1]])->orderBy('lastUpdated', 'DESC')->paginate(100))
 
 
 
@@ -115,8 +115,8 @@
                                                         @if ($datainfo->avatar != null)
                                                             <small style="font-weight: bold;">
                                                                 Selfie : @if ($datainfo->avatar != null)
-                                                                    <a href="{{ $datainfo->avatar }}"
-                                                                        target="_blank">View Avatar</a>
+                                                                    <a href="{{ $datainfo->avatar }}" target="_blank">View
+                                                                        Avatar</a>
                                                                 @endif
                                                             </small>
 
@@ -465,8 +465,7 @@
 
 
                                                 <form action="{{ route('upload user doc') }}" method="POST"
-                                                    enctype="multipart/form-data"
-                                                    id="uploadthisform{{ $datainfo->id }}">
+                                                    enctype="multipart/form-data" id="uploadthisform{{ $datainfo->id }}">
                                                     @csrf
                                                     <!-- Modal -->
                                                     <div class="modal fade" id="launchFileUpload{{ $datainfo->id }}"
@@ -513,11 +512,19 @@
 
                                                 {{-- End Modal --}}
                                             @endforeach
-                                        @else
+
+
+
+
+                                            @else
                                             <tr>
                                                 <td colspan="11" align="center">No record available</td>
                                             </tr>
                                         @endif
+
+
+
+
                                     @else
                                         @if (count($allusers) > 0)
                                             <?php $i = 1; ?>
@@ -637,8 +644,20 @@
 
 
 
+
+
                                 </tbody>
                             </table>
+
+                            <nav aria-label="...">
+                                        <ul class="pagination pagination-md">
+
+                                            <li class="page-item">
+                                                {{ $allusersdata->appends(['country' => Request::get('country')])->links() }}
+
+                                            </li>
+                                        </ul>
+                                    </nav>
                         </div>
                         <!-- /.box-body -->
                     </div>

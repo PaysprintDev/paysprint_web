@@ -567,8 +567,12 @@ your PaySprint Account.You need to provide the outstanding information and compl
                 $country = $key->country;
                 $email = $key->email;
 
-                // Update Statememt country
-                Statement::where('user_id', $email)->update(['country' => $country]);
+                if($email != 'merchant@paysprint.ca'){
+                    // Update Statememt country
+                    Statement::where('user_id', $email)->update(['country' => $country]);
+                }
+
+
             }
         } else {
             // Do nothing
@@ -2439,7 +2443,7 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
         // Log::info('Monthly Transaction Statement: '.$this->name."\n Message: ".$message);
 
-        $this->slack('Monthly Transaction Statement: ' . $this->name . "\n Message: " . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+        $this->slack('Monthly Transaction Statement Mail Sent to: ' . $this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
     }
 
 

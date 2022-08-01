@@ -289,7 +289,7 @@
 
             <br>
                 </div>
-                
+
                 <div class="col-md-6">
                     <label for="start">Start Date</label>
                   <input type="date" name="start" class="form-control" id="start">
@@ -321,7 +321,7 @@
                         <th>Date</th>
                     </tr>
                 </thead>
-                    
+
                 <tbody>
 
                     @if (count($data['result']) > 0)
@@ -344,7 +344,7 @@
                         @endphp
 
                         @endforeach
-                        
+
                     @else
                         <tr>
                             <td colspan="4" align="center">No record for this period</td>

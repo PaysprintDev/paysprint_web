@@ -754,7 +754,7 @@
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
 
@@ -867,11 +867,11 @@
 
       </div>
         <div class="modal-body">
-           
+
             <div class="box-body table table-responsive">
                 <table class="table table-striped table-bordered">
                   <tbody>
-                      
+
                       <tr>
                         <td colspan="2">
                           <input type="hidden" name="my_id" id="my_id" value="">
@@ -885,7 +885,7 @@
                       </tr>
                   </tbody>
                 </table>
-                
+
             </div>
         </div>
 
@@ -947,7 +947,7 @@
               </thead>
 
                 <tbody id="remittancedetails"></tbody>
-                
+
             </table>
 
             <table class="table table-striped table-bordered">
@@ -959,12 +959,12 @@
                   <th>Net Remittance</th>
                 </tr>
               </thead>
-              
+
                 <tbody id="remittancecalcdetails"></tbody>
-                
+
             </table>
           </div>
-            
+
       </div>
       <div class="modal-footer activation">
           <center><button class="btn btn-danger btn-block" onclick="PrintDiv2('print_statement')">Print</button></center>
@@ -999,9 +999,9 @@
 
       </div>
         <div class="modal-body">
-           
+
             <div class="box-body">
-              
+
               <div class="row">
                 <div class="col-md-12">
                   @if(count($transCost) > 0)
@@ -1025,7 +1025,7 @@
                     <input type="number" name="fixed" id="fixed" class="form-control" placeholder="0.3">
                   </div>
                 </div>
-              </div>                
+              </div>
             </div>
         </div>
 
@@ -1044,3 +1044,46 @@
 {{-- Create Transaction Fee End --}}
 
 @endif
+
+
+
+{{-- Create Transaction Fee Start --}}
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary disp-0" id="imtRequest" data-toggle="modal" data-target="#imtrequestmodal">
+  Create imt request
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="imtrequestmodal" tabindex="-1" role="dialog" aria-labelledby="imtrequestmodalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close_trans">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h5 class="modal-title" id="exampleModalLongTitle">Set IMT Boundary</h5>
+
+      </div>
+        <div class="modal-body">
+            <div class="box-body">
+                <input type="hidden" name="imt_id" value="">
+                <select name="imt_options" id="imt_options" class="form-control">
+                    <option value="">Select an option</option>
+                    <option value="inbound">Inbound</option>
+                    <option value="outbound">Outbound</option>
+                    <option value="both">Inbound and Outbound</option>
+                </select>
+            </div>
+        </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" onclick="imtRequestBtn()">Submit</button>
+        <img src="https://cdn.dribbble.com/users/608059/screenshots/2032455/spinner.gif" class="spinner disp-0" style="width: auto; height: 50px;">
+      </div>
+
+    </div>
+  </div>
+</div>

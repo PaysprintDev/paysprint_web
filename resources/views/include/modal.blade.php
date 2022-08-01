@@ -6,7 +6,7 @@
 <button type="button" class="btn btn-primary disp-0" data-toggle="modal" data-target="#exampleModalCenter" id="sendMoney">
     Launch demo modal
   </button>
-  
+
   <!-- Modal -->
   <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -16,7 +16,7 @@
                 <span aria-hidden="true">&times;</span>
               </button>
           <h3 class="modal-title" id="exampleModalCenterTitle">Money Transfer</h3>
-          
+
         </div>
         {{--  <div class="modal-body">
           <center><h4>How would you like to send Money</h4></center>
@@ -34,13 +34,13 @@
 
               @if (Auth::check() == true)
 
-              @if ($imt = \App\AllCountries::where('name', Auth::user()->country)->where('imt', "true")->first())
-                
+              @if ($imt = \App\AllCountries::where('name', Auth::user()->country)->where('imt', "true")->orWhere('outbound', 'true')->first())
+
                 @if (isset($imt))
                     <div class="col-md-6">
                       <a href="{{ url('payorganization?type='.base64_encode('international')) }}" title="International">
                         <img src="https://img.icons8.com/cotton/64/000000/worldwide-location.png"/>
-                        
+
                       </a>
                     </div>
                 @else
@@ -48,10 +48,10 @@
                 <div class="col-md-6">
                     <a href="javascript:void()" onclick="comingSoon()" title="International">
                       <img src="https://img.icons8.com/cotton/64/000000/worldwide-location.png"/>
-                      
+
                     </a>
                   </div>
-                    
+
                 @endif
 
                 @else
@@ -59,24 +59,24 @@
                 <div class="col-md-6">
                     <a href="javascript:void()" onclick="comingSoon()" title="International">
                       <img src="https://img.icons8.com/cotton/64/000000/worldwide-location.png"/>
-                      
+
                     </a>
                   </div>
-                  
+
               @endif
 
-              
-                  
+
+
               @else
                   <div class="col-md-6">
                     <a href="javascript:void()" onclick="comingSoon()" title="International">
                       <img src="https://img.icons8.com/cotton/64/000000/worldwide-location.png"/>
-                      
+
                     </a>
                   </div>
               @endif
 
-              
+
 
 
             </center>
@@ -96,7 +96,7 @@
 <button type="button" class="btn btn-primary disp-0" data-toggle="modal" data-target="#examplePasswordCenter" id="password">
     Launch demo modal
   </button>
-  
+
   <!-- Modal -->
   <div class="modal fade" id="examplePasswordCenter" tabindex="-1" role="dialog" aria-labelledby="examplePasswordCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -106,7 +106,7 @@
                 <span aria-hidden="true">&times;</span>
               </button>
           <h5 class="modal-title" id="examplePasswordCenterTitle">Reset Password</h5>
-          
+
         </div>
          <div class="modal-body">
             <form action="#" method="post" id="formElemresetPassword">
@@ -138,7 +138,7 @@
               </div>
 
             </form>
-        </div> 
+        </div>
       </div>
     </div>
   </div>
@@ -148,7 +148,7 @@
 <button type="button" class="btn btn-primary disp-0" data-toggle="modal" data-target="#exampleTransactionCenter" id="transaction">
     Launch demo modal
   </button>
-  
+
   <!-- Modal -->
   <div class="modal fade" id="exampleTransactionCenter" tabindex="-1" role="dialog" aria-labelledby="exampleTransactionCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -158,7 +158,7 @@
                 <span aria-hidden="true">&times;</span>
               </button>
           <h5 class="modal-title" id="exampleTransactionCenterTitle">Reset Transaction Pin</h5>
-          
+
         </div>
          <div class="modal-body">
 
@@ -192,7 +192,7 @@
 
           </form>
 
-        </div> 
+        </div>
       </div>
     </div>
   </div>

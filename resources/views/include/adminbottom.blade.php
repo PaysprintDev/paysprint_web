@@ -2396,6 +2396,11 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
     function grantImt(id) {
+
+        // Open Modal, ask for permission to accept Inbound, Outbound or Both...
+
+
+
         var route = "{{ URL('Ajax/accesstousepaysprintimt') }}";
 
         swal({
@@ -2407,10 +2412,26 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    $("#grantimtform" + id).submit();
+
+                    $('#imtRequest').click();
+
+                    $("input[name='imt_id']").val(id);
+
 
                 }
             });
+    }
+
+
+    function imtRequestBtn()
+    {
+        var imt_options = $('#imt_options').val();
+        var country_id = $("input[name='imt_id']").val();
+
+        $("input[name='imt_state']").val(imt_options);
+
+        $("#grantimtform" + country_id).submit();
+
     }
 
 

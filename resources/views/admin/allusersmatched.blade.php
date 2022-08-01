@@ -82,7 +82,7 @@
                                         ['accountLevel', '>=', 2],
                                         ['approval', '>=', 1],
                                         ['account_check', '=', 0],
-                                    ])->get())
+                                    ])->paginate(100))
 
 
                                         @if (count($allusersdata) > 0)
@@ -457,6 +457,17 @@
 
                                 </tbody>
                             </table>
+
+<nav aria-label="...">
+                                        <ul class="pagination pagination-md">
+
+                                            <li class="page-item">
+                                                {{ $allusersdata->appends(['country' => Request::get('country')])->links() }}
+
+                                            </li>
+                                        </ul>
+                                    </nav>
+
                         </div>
                         <!-- /.box-body -->
                     </div>

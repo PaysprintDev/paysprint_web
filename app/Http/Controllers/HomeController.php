@@ -179,6 +179,8 @@ class HomeController extends Controller
 
     public function homePage()
     {
+
+       
         // To get the actual link from users click
 
         // $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -215,11 +217,16 @@ class HomeController extends Controller
                 return redirect()->route('dashboard');
             }
         } else {
+
+            $allcountry = AllCountries::where('approval', 1)->get();
+
+            
             $this->page = 'Homepage';
             $this->name = '';
             $view = 'main.newpage.shade-pro.index';
             $data = [
-                'continent' => $this->timezone[0]
+                'continent' => $this->timezone[0],
+                'availablecountry' => $allcountry
             ];
         }
 
@@ -256,14 +263,20 @@ class HomeController extends Controller
 
     public function merchantIndex()
     {
+        $allcountry = AllCountries::where('approval', 1)->get();
 
         $this->page = 'Merchant';
+        $data = [
+            'availablecountry' => $allcountry
+        ];
 
-        return view('main.newpage.shade-pro.merchantindex')->with(['pages' => $this->page]);
+        return view('main.newpage.shade-pro.merchantindex')->with(['pages' => $this->page, 'data'=> $data]);
     }
 
     public function index()
     {
+
+       
 
 
         // dd($req->session());

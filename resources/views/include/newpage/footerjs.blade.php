@@ -28,6 +28,14 @@
 
         location.href = "/merchant-pricing?country=" + country;
     });
+
+
+    $('#eclipse6').eclipse({
+            margin: 20,
+            autoplay: true,
+            interval: 2000,
+            autoControl: true
+    })
 </script>
 
 

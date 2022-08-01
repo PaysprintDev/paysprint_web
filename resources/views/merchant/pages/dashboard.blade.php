@@ -172,7 +172,7 @@
 
 
                                 @if (Auth::check() == true)
-                                    @if ($imt = \App\AllCountries::where('name', Auth::user()->country)->where('imt', 'true')->first())
+                                    @if ($imt = \App\AllCountries::where('name', Auth::user()->country)->where('imt', 'true')->orWhere('outbound', 'true')->first())
                                         @if (isset($imt))
                                             <div class="col-md-6 mb-3 sendMoney">
                                                 <a type="button" href="javascript:void()" class="btn btn-primary btn-block"
@@ -269,7 +269,7 @@
 
 
                                 @if (Auth::check() == true)
-                                    @if ($imt = \App\AllCountries::where('name', Auth::user()->country)->where('imt', 'true')->first())
+                                    @if ($imt = \App\AllCountries::where('name', Auth::user()->country)->where('imt', 'true')->orWhere('outbound', 'true')->first())
                                         @if (isset($imt))
                                             <div class="col-md-6 mb-3 sendMoney">
                                                 <a type="button"
