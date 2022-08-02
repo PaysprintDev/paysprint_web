@@ -12,6 +12,48 @@
     background-color: rgb(213, 213, 213);
     cursor: pointer;
 }
+.topnav .search-container {
+  float: right;
+}
+
+.topnav input[type=text] {
+  padding: 6px;
+  margin-top: 8px;
+  font-size: 17px;
+  border: 1px;
+}
+
+.topnav .search-container button {
+  float: right;
+  padding: 6px 10px;
+  margin-top: 8px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border:1px;
+  cursor: pointer;
+}
+
+.topnav .search-container button:hover {
+  background: #ffe29f;
+}
+
+@media screen and (max-width: 600px) {
+  .topnav .search-container {
+    float: none;
+  }
+  .topnav a, .topnav input[type=text], .topnav .search-container button {
+    float: none;
+    display: block;
+    text-align: left;
+    width: 100%;
+    margin: 0;
+    padding: 14px;
+  }
+  .topnav input[type=text] {
+    border: 1px solid #ffe29f;  
+  }
+}
 </style>
 
 @section('content')
@@ -747,6 +789,10 @@
             <div class="col-xl-5 col-lg-6 col-md-8">
                 <h2 class="title gr-text-4 mb-8">Avaliable in {{count($data['availablecountry'])}} Countries</h2>
             </div>
+      
+        
+
+         
         </div>
           <div class="row mx-auto">
 
@@ -755,7 +801,7 @@
             @foreach ($data['availablecountry'] as $country)
             <div id="eclipse6">
                 <div class="eclipse-slider">
-                    <div> <img src="{{$country->logo}}" alt="{{$country->name}}" title="{{$country->name}}" ></div>
+                    <div class="countrylist"> <img src="{{$country->logo}}" alt="{{$country->name}}" title="{{$country->name}}" ></div>
 
                 </div>
           </div>
@@ -765,4 +811,7 @@
 
         </div>
     </div>
+
+
+
 @endsection
