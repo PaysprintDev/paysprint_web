@@ -980,6 +980,11 @@ Route::prefix('Admin/')->group(function () {
 	Route::post('createspecialinfoactivity', ['uses' => 'AdminController@createSpecialInfoActivity', 'as' => 'create special information']);
 	Route::post('deletespecialactivity', ['uses' => 'AdminController@deleteSpecialInfoActivity', 'as' => 'delete special activity']);
 	Route::get('allcountries', ['uses' => 'AdminController@allCountries', 'as' => 'all countries']);
+	Route::get('countrypaymentgateway', ['uses' => 'AdminController@allCountriesPaymentGateway', 'as' => 'create payment gateway']);
+	Route::post('countrypaymentgateway', ['uses' => 'AdminController@storeCountryPaymentGateway', 'as' => 'store payment gateway']);
+	Route::post('editcountrypaymentgateway', ['uses' => 'AdminController@editCountryPaymentGateway', 'as' => 'edit payment gateway']);
+	Route::post('deletecountrypaymentgateway', ['uses' => 'AdminController@deleteCountryPaymentGateway', 'as' => 'delete payment gateway']);
+	Route::post('updatecountrygateway', ['uses' => 'AdminController@updateCountryGateway', 'as' => 'update country gateway']);
 
 
 	Route::get('sendmessage', ['uses' => 'AdminController@sendUserMessage', 'as' => 'send message']);

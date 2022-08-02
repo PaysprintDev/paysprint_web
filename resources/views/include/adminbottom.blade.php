@@ -5059,6 +5059,52 @@ swal({
             });
         }
     }
+
+
+
+    function handleClick(val, item, id){
+        if(val === 'edit'){
+            $('#formId').val(id);
+            $('#name').val(item);
+            $('#submitBtn').removeClass('btn-primary');
+            $('#submitBtn').addClass('btn-success');
+            $('#submitBtn').text('Update');
+            $('#myForm').attr('action', "{{ route('edit payment gateway') }}");
+
+        }
+        else{
+             swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                       $('#formId').val(id);
+
+                       $('#myForm').attr('action', "{{ route('delete payment gateway') }}");
+
+                       $('form#myForm').submit();
+
+                    }
+                });
+        }
+    }
+
+
+    function changeGateway(id){
+        $('#myBtn'+id).text('Update gateway').removeClass('btn-success').addClass('btn-danger').attr('onclick', `updateGateway(${id})`);
+
+        $('#mycountrygatewayform'+id).removeClass('disp-0');
+        $('#currId'+id).addClass('disp-0');
+    }
+
+    function updateGateway(id){
+        $('#mycountrygatewayform'+id).submit();
+    }
+
 </script>
 
 </body>
