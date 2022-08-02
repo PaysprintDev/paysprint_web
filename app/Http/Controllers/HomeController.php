@@ -17,6 +17,8 @@ use App\Events\Event;
 
 use App\User as User;
 
+use App\DusuProviders;
+
 use App\ClaimedPoints;
 
 use App\HistoryReport;
@@ -101,6 +103,8 @@ use Illuminate\Support\Facades\Log;
 
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Validator;
+
 use Illuminate\Support\Facades\Hash;
 
 
@@ -123,6 +127,8 @@ use Illuminate\Support\Facades\Storage;
 use App\InvoicePayment as InvoicePayment;
 
 use App\PromoDate;
+
+use App\MobileMoney;
 
 use App\SpecialPromo;
 
@@ -1320,14 +1326,51 @@ class HomeController extends Controller
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
             'cardIssuer' => $this->getCardIssuer(),
-            'continent' => $this->timezone[0]
+            'continent' => $this->timezone[0],
+            'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
+            'providers' => $this->dusuProvider(),
+
         );
 
+        // dd($data['providers']);
 
         return view('main.gateway')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
+    //Dusu providers
+    public function dusuProvider()
+    {
+        $country = AllCountries::where('name', Auth::user()->country)->first();
+        $code = $country->code;
+        $providers = DusuProviders::where('country_code', $code)->first();
+        $data = json_decode($providers->result);
+        return $data;
+    }
 
+    //add mobile money details
+    public function addmobileMoney(Request $req)
+    {
+
+
+        $id = Auth::id();
+
+        $validation = Validator::make($req->all(), [
+            'account_type' => 'required',
+            'provider' => 'required',
+            'account_number' => 'required',
+            'code' => 'required'
+        ]);
+
+        MobileMoney::create([
+            'user_id' => $id,
+            'account_type' => $req->account_type,
+            'provider' => $req->provider,
+            'account_number' => $req->account_number,
+            'code' => $req->code
+        ]);
+
+        return back()->with("msg", "<div class='alert alert-success'>Mobile Money Account Number Added Successfully</div>");
+    }
 
     public function requestExbcCard(Request $req)
     {
@@ -1544,9 +1587,12 @@ class HomeController extends Controller
             'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
-            'continent' => $this->timezone[0]
+            'continent' => $this->timezone[0],
+            'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
+            'providers' => MobileMoney::where('user_id', Auth::id())->get(),
         );
 
+        // dd($data['providers']);
 
         return view('main.withdrawmoney')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
@@ -2048,7 +2094,7 @@ class HomeController extends Controller
     public function statement(Request $req)
     {
 
-        
+
 
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
@@ -5693,6 +5739,7 @@ class HomeController extends Controller
     public function convertCurrencyRate($foreigncurrency, $localcurrency, $amount)
     {
 
+
         // Get Markup
         $markuppercent = $this->markupPercentage();
 
@@ -5725,6 +5772,9 @@ class HomeController extends Controller
         curl_close($curl);
 
         $result = json_decode($response);
+
+
+       
 
 
 
