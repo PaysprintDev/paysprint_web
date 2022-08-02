@@ -180,7 +180,7 @@ class HomeController extends Controller
     public function homePage()
     {
 
-       
+
         // To get the actual link from users click
 
         // $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -220,7 +220,7 @@ class HomeController extends Controller
 
             $allcountry = AllCountries::where('approval', 1)->get();
 
-            
+
             $this->page = 'Homepage';
             $this->name = '';
             $view = 'main.newpage.shade-pro.index';
@@ -240,11 +240,11 @@ class HomeController extends Controller
     public function searchCountry(Request $req){
         // dd($req->all());
         $search = $req->search;
-  
+
         $posts = AllCountries::query()->where('approval', 1,)->where ('name', 'LIKE', '%'.$search.'%') ->first();
 
-        
-        
+
+
         return view('main.displaycountry', compact('posts'));
     }
 
@@ -286,7 +286,7 @@ class HomeController extends Controller
     public function index()
     {
 
-       
+
 
 
         // dd($req->session());
@@ -3848,8 +3848,8 @@ class HomeController extends Controller
             $this->page = 'community';
             $this->name = session('name');
             $this->email = session('email');
-          
-         
+
+
         }
         $data = [
             'continent' => $this->timezone[0],
@@ -5599,6 +5599,7 @@ class HomeController extends Controller
 
 
 
+
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
 
@@ -5626,6 +5627,7 @@ class HomeController extends Controller
 
 
 
+
             /*
 
                 Calculation
@@ -5633,7 +5635,6 @@ class HomeController extends Controller
                 x = Variable * Amount;
                 y = Fixed + x;
             */
-
 
 
 
@@ -5655,6 +5656,7 @@ class HomeController extends Controller
                         $y = $data->fixed + $x;
 
                         $collection = $y;
+
                     } else {
 
                         if ($req->structure == "Withdrawal") {
@@ -5713,6 +5715,7 @@ class HomeController extends Controller
                 $amountReceive = $req->amount - $collection;
 
                 $state = "commission available";
+
             } else {
                 $amountReceive = $req->amount;
                 $state = "commission unavailable";
@@ -5747,6 +5750,8 @@ class HomeController extends Controller
 
         $availableWalletBalance = $thisuser->wallet_balance - $available;
 
+
+
         if ($availableWalletBalance <= $amountReceive) {
 
             if ($thisuser->accountType == "Individual") {
@@ -5755,7 +5760,7 @@ class HomeController extends Controller
                 $route = route('merchant add money');
             }
 
-            $walletCheck = 'Wallet Balance: <strong>' . $req->localcurrency . number_format($wallet, 2) . '</strong>. <br> Available Wallet Balance: <strong>' . $req->localcurrency . number_format($availableWalletBalance, 2) . '</strong>. <br> Insufficient balance. <a href="' . $route . '">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
+            $walletCheck = 'Wallet Balance: <strong>' . $req->localcurrency . number_format($wallet, 4) . '</strong>. <br> Available Wallet Balance: <strong>' . $req->localcurrency . number_format($availableWalletBalance, 4) . '</strong>. <br> Insufficient balance. <a href="' . $route . '">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
         }
         // }
 
@@ -5824,7 +5829,7 @@ class HomeController extends Controller
         $result = json_decode($response);
 
 
-       
+
 
 
 

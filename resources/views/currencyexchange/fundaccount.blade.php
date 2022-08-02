@@ -158,7 +158,7 @@
                                                 </div>
                                                 <div class="col-md-12">
                                                     <h4>
-                                                        {{ Auth::user()->currencySymbol . '' . number_format(Auth::user()->wallet_balance, 2) }}
+                                                        {{ Auth::user()->currencySymbol . '' . number_format(Auth::user()->wallet_balance, 4) }}
                                                     </h4>
                                                 </div>
                                             </div>

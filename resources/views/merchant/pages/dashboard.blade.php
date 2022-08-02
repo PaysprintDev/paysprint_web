@@ -48,7 +48,7 @@
                                     <div class="round-box">
                                         <p style="font-size: 30px;">{{ Auth::user()->currencySymbol }}</p>
                                     </div>
-                                    <h5>{{ number_format(Auth::user()->wallet_balance, 2) }}</h5>
+                                    <h5>{{ number_format(Auth::user()->wallet_balance, 4) }}</h5>
                                     <p>Wallet Balance</p>
 
                                     &nbsp;
