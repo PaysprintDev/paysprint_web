@@ -65,6 +65,10 @@
                                        <a class="nav-link" href="{{ route('AdminLogin') }}" role="button"
                                            aria-expanded="false">LOGIN</a>
                                    </li>
+                                   <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('display country') }}" role="button"
+                                        aria-expanded="false">SEARCH COUNTRY</a>
+                                </li>
 
                                    <li class="nav-item">
                                        <a class="nav-link" href="{{ route('AdminRegister') }}" role="button"
@@ -238,9 +242,14 @@
                        </li>
 
                        <li class="nav-item">
-                           <a class="nav-link" href="{{ route('register') }}" role="button"
-                               aria-expanded="false">SIGN UP FOR FREE</a>
+                           <a class="nav-link" href="{{ route('display country') }}" role="button"
+                               aria-expanded="false">SEARCH COUNTRY</a>
                        </li>
+
+                       <li class="nav-item">
+                        <a class="nav-link" href="{{ route('register') }}" role="button"
+                            aria-expanded="false">SIGN UP FOR FREE</a>
+                    </li>
 
 
                        <li class="nav-item">

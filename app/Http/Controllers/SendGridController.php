@@ -218,7 +218,7 @@ class SendGridController extends Controller
 
                 $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
                         // dd($response);
-                echo $response;
+                echo 'done';
             }
         }
         } catch (\Throwable $th) {
