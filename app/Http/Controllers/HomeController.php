@@ -3791,7 +3791,7 @@ class HomeController extends Controller
                     'availablecountry' => $allcountry
                 );
             } else {
-                $this->page = 'community';
+                $this->page = 'country list';
                 $this->name = '';
                 $data = [
                     'continent' => $this->timezone[0],
@@ -3799,7 +3799,7 @@ class HomeController extends Controller
                 ];
             }
         } else {
-            $this->page = 'community';
+            $this->page = 'list country';
             $this->name = session('name');
             $this->email = session('email');
           

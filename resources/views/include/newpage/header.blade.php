@@ -18,8 +18,8 @@
 
                        <a @guest href="{{ route('merchant home') }}" @endguest @auth
                        href="{{ route('merchant home') }}" @endauth><img
-                           src="https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
-                           class="light-version-logo " style="width: 300px; height: inherit;"></a>
+                           src="{{asset('images/paysprint_logo/merchant.png')}}"
+                           class="light-version-logo " style="width: 200px; height: inherit;"></a>
 
                    {{-- <a href="https://shade.uxtheme.net/shade-pro">
               <!-- light version logo (logo must be black)-->
@@ -198,8 +198,8 @@
 
                    <a @guest href="{{ route('home') }}" @endguest @auth href="{{ route('user home') }}"
                    @endauth><img
-                       src="https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png"
-                       class="light-version-logo " style="width: 300px; height: inherit;"></a>
+                       src="{{asset('images/paysprint_logo/money-transfer.png')}}"
+                       class="light-version-logo " style="width: 200px; height: inherit;"></a>
 
                {{-- <a href="https://shade.uxtheme.net/shade-pro">
               <!-- light version logo (logo must be black)-->

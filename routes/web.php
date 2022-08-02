@@ -232,7 +232,7 @@ Route::get('payorganization', ['uses' => 'HomeController@payOrganization', 'as' 
 
 Route::get('contact', ['uses' => 'HomeController@contact', 'as' => 'contact']);
 
-Route::get('displaycountry', ['uses' => 'HomeController@displayCountry', 'as' => 'display country']);
+Route::get('countrylist', ['uses' => 'HomeController@displayCountry', 'as' => 'display country']);
 
 
 
