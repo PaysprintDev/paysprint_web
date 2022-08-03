@@ -668,6 +668,8 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::get('cardrequestprocessedbycountry', ['uses' => 'AdminController@cardRequestProcessedByCountry', 'as' => 'card processed by country']);
 	Route::get('bankrequestprocessedbycountry', ['uses' => 'AdminController@bankRequestProcessedByCountry', 'as' => 'bank processed by country']);
 
+	Route::get('mobilemoneyrequestprocessedbycountry', ['uses' => 'AdminController@mobilemoneyRequestProcessedByCountry', 'as' => 'mobilemoney processed by country']);
+
 
 	// Pending Transfers
 
@@ -691,6 +693,8 @@ Route::prefix('Admin/wallet')->group(function () {
 
 	Route::get('refundmoneyrequestbycountry', ['uses' => 'AdminController@refundMoneyRequestByCountry', 'as' => 'refund details by country']);
 	Route::get('processedrefund', ['uses' => 'AdminController@processedRefundMoneyRequest', 'as' => 'refund processed']);
+
+	Route::get('processedmobilemoney', ['uses' => 'AdminController@processedMobileMoneyRequest', 'as' => 'mobilemoney processed']);
 
 
 	Route::get('bankrequestprocessed', ['uses' => 'AdminController@bankRequestProcessed', 'as' => 'processed payment']);

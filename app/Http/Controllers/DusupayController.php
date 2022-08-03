@@ -1429,7 +1429,7 @@ class DusupayController extends Controller
                                                         ]);
                                                         $transaction_id = "wallet-" . date('dmY') . time();
 
-                                                        $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->provider, 'amountToSend' => $req->amount, 'country' => $thisuser->country]);
+                                                        $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->payment_type, 'amountToSend' => $req->amount, 'country' => $thisuser->country]);
 
                                                         // Update Statement
 

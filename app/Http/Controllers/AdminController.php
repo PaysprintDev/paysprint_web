@@ -7720,13 +7720,12 @@ class AdminController extends Controller
 
     public function storeCountryPaymentGateway(Request $req)
     {
-        try{
+        try {
 
             PlatformPaymentGateway::updateOrCreate(['name' => $req->name], ['name' => $req->name]);
 
-             return redirect()->back()->with('success', 'Payment gateway created!');
-        }
-        catch(\Throwable $th){
+            return redirect()->back()->with('success', 'Payment gateway created!');
+        } catch (\Throwable $th) {
             return redirect()->back()->with('error', $th->getMessage());
         }
     }
@@ -7734,13 +7733,12 @@ class AdminController extends Controller
 
     public function editCountryPaymentGateway(Request $req)
     {
-        try{
+        try {
 
             PlatformPaymentGateway::where('id', $req->id)->update(['name' => $req->name]);
 
-             return redirect()->back()->with('success', 'Payment gateway updated!');
-        }
-        catch(\Throwable $th){
+            return redirect()->back()->with('success', 'Payment gateway updated!');
+        } catch (\Throwable $th) {
             return redirect()->back()->with('error', $th->getMessage());
         }
     }
@@ -7748,13 +7746,12 @@ class AdminController extends Controller
 
     public function deleteCountryPaymentGateway(Request $req)
     {
-        try{
+        try {
 
             PlatformPaymentGateway::where('id', $req->id)->delete();
 
-             return redirect()->back()->with('success', 'Payment gateway deleted!');
-        }
-        catch(\Throwable $th){
+            return redirect()->back()->with('success', 'Payment gateway deleted!');
+        } catch (\Throwable $th) {
             return redirect()->back()->with('error', $th->getMessage());
         }
     }
@@ -7762,13 +7759,12 @@ class AdminController extends Controller
 
     public function updateCountryGateway(Request $req)
     {
-        try{
+        try {
 
             AllCountries::where('id', $req->countryId)->update(['gateway' => $req->paymentGateway]);
 
-             return redirect()->back()->with('success', 'Payment gateway updated!');
-        }
-        catch(\Throwable $th){
+            return redirect()->back()->with('success', 'Payment gateway updated!');
+        } catch (\Throwable $th) {
             return redirect()->back()->with('error', $th->getMessage());
         }
     }
@@ -8707,6 +8703,65 @@ class AdminController extends Controller
         }
     }
 
+    public function processedMobileMoneyRequest(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'bankProcessedWithdrawal' => $this->mobilemoneyProcessedRequest(),
+            );
+
+            // dd($data);
+
+
+            return view('admin.wallet.mobilemoneyprocessedwithdrawal')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
 
     public function cardrequestwithdrawalbycountry(Request $req)
     {
@@ -8884,6 +8939,63 @@ class AdminController extends Controller
         }
     }
 
+    public function mobilemoneyRequestProcessedByCountry(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'bankRequestProceesedbycountry' => $this->requestFromBankProceesedByCountry($req->get('country')),
+            );
+
+
+
+            return view('admin.wallet.mobilemoneyrequestprocessedbycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
 
 
     public function pendingTransferByCountry(Request $req)
@@ -10644,6 +10756,14 @@ class AdminController extends Controller
     {
 
         $data = BankWithdrawal::where('status', 'PROCESSED')->orderBy('created_at', 'DESC')->groupBy('country')->get();
+
+        return $data;
+    }
+
+    public function mobilemoneyProcessedRequest()
+    {
+
+        $data = BankWithdrawal::where('status', 'PROCESSED')->where('bank_id', 'Mobile Money')->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }
@@ -17587,7 +17707,7 @@ class AdminController extends Controller
         $currency = $userdetails->currencyCode;
         $amount = (float)$data->amountToSend;
 
-        $provider = $data->bank_id;
+        $provider = $mobiledetails->provider;
         $accountnumber = $mobiledetails->account_number;
         $accountname = $userdetails->name;
         $reference = $data->transaction_id;

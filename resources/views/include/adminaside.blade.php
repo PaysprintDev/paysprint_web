@@ -591,6 +591,9 @@
                     <li title="Processed Refunds"><a href="{{ route('refund processed') }}"><i
                                 class="fa fa-circle-o text-red"></i> Processed Refunds</a></li>
 
+                    <li title="Mobile Money"><a href="{{ route('mobilemoney processed') }}"><i
+                                class="fa fa-circle-o text-red"></i>
+                            Mobile Money</a></li>
                 </ul>
             </li>
 
