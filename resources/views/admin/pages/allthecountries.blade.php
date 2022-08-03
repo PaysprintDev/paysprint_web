@@ -54,43 +54,64 @@
                   <th>Status</th>
                   <th>Action</th>
                   <th>&nbsp;</th>
+                  <th>&nbsp;</th>
                 </tr>
                 </thead>
                 <tbody>
                     @if (count($data['allthecountries']) > 0)
                     <?php $i = 1;?>
-                        @foreach ($data['allthecountries'] as $data)
+                        @foreach ($data['allthecountries'] as $item)
                         <tr>
                             <td>{{ $i++ }}</td>
 
-                            <td>{{ $data->name }}</td>
-                            <td>{{ $data->code }}</td>
-                            <td>{{ $data->gateway }}</td>
-                            <td>{{ strtoupper($data->inbound) }}</td>
-                            <td>{{ strtoupper($data->outbound) }}</td>
-                            <td>{{ strtoupper($data->imt) }}</td>
-                            <td style="{{ ($data->approval == 1) ? "color: green;" : "color: red;" }} font-weight: bold;">{{ ($data->approval == 1) ? "Access Granted" : "Not Granted Access" }}</td>
+                            <td>{{ $item->name }}</td>
+                            <td>{{ $item->code }}</td>
+                            <td>
+                                <span id="currId{{ $item->id }}">{{ $item->gateway }}</span>
 
-                            <form action="{{ route('grant country') }}" method="POST" id="grantform{{ $data->id }}">
+                                <form action="{{ route('update country gateway') }}" method="POST" id="mycountrygatewayform{{ $item->id }}" class="disp-0">
                                 @csrf
-                                <input type="hidden" value="{{ $data->id }}" name="country_id">
+                                <input type="hidden" name="countryId" value="{{ $item->id }}">
+                                    <select name="paymentGateway" id="paymentGateway{{ $item->id }}" class="form-control">
+                                    <option value="">Select gateway</option>
+                                    @if (count($data['allpaymentgateway']) > 0)
+                                        @foreach ($data['allpaymentgateway'] as $paymentGateway)
+                                            <option value="{{ $paymentGateway->name }}"  {{ ($item->gateway === $paymentGateway->name) ? 'selected="selected"' : '' }}>{{ $paymentGateway->name}}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                </form>
+
+                            </td>
+                            <td>{{ strtoupper($item->inbound) }}</td>
+                            <td>{{ strtoupper($item->outbound) }}</td>
+                            <td>{{ strtoupper($item->imt) }}</td>
+                            <td style="{{ ($item->approval == 1) ? "color: green;" : "color: red;" }} font-weight: bold;">{{ ($item->approval == 1) ? "Access Granted" : "Not Granted Access" }}</td>
+
+                            <form action="{{ route('grant country') }}" method="POST" id="grantform{{ $item->id }}">
+                                @csrf
+                                <input type="hidden" value="{{ $item->id }}" name="country_id">
 
                                 <td>
-                                    <button type="button" class="btn {{ ($data->approval == 1) ? 'btn-danger' : 'btn-primary' }}" onclick="grantCountry('{{ $data->id }}')">{{ ($data->approval == 1) ? "Disable Access" : "Grant Access" }}</button>
+                                    <button type="button" class="btn {{ ($item->approval == 1) ? 'btn-danger' : 'btn-primary' }}" onclick="grantCountry('{{ $item->id }}')">{{ ($item->approval == 1) ? "Disable Access" : "Grant Access" }}</button>
                                 </td>
 
                             </form>
 
 
-                            <form action="{{ route('grant imt') }}" method="POST" id="grantimtform{{ $data->id }}">
+                            <form action="{{ route('grant imt') }}" method="POST" id="grantimtform{{ $item->id }}">
                             @csrf
-                            <input type="hidden" value="{{ $data->id }}" name="country_id">
-                            <input type="hidden" value="" name="imt_state" id="imt_state{{ $data->id }}">
+                            <input type="hidden" value="{{ $item->id }}" name="country_id">
+                            <input type="hidden" value="" name="imt_state" id="imt_state{{ $item->id }}">
                             <td>
-                                <button type="button" class="btn {{ ($data->imt == "true" || $data->inbound == "true" || $data->outbound == "true") ? 'btn-danger' : 'btn-primary' }}" onclick="grantImt('{{ $data->id }}')">{{ ($data->imt == "true" || $data->inbound == "true" || $data->outbound == "true") ? "Disable IMT" : "Grant IMT" }}</button>
+                                <button type="button" class="btn {{ ($item->imt == "true" || $item->inbound == "true" || $item->outbound == "true") ? 'btn-danger' : 'btn-primary' }}" onclick="grantImt('{{ $item->id }}')">{{ ($item->imt == "true" || $item->inbound == "true" || $item->outbound == "true") ? "Disable IMT" : "Grant IMT" }}</button>
                             </td>
 
                             </form>
+
+                            <td>
+                                <button class="btn btn-success" onclick="changeGateway('{{ $item->id }}')" id="myBtn{{ $item->id }}">Edit Gateway</button>
+                            </td>
 
 
                         </tr>

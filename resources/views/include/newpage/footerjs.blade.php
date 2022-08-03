@@ -1,4 +1,6 @@
 </div>
+
+
 <!-- Vendor Scripts -->
 <script src="{{ asset('newpage/js/vendor.min.js') }}"></script>
 <!-- Plugin's Scripts -->
@@ -18,6 +20,10 @@
 
 
 <script>
+
+
+
+
     $('#pricing_country').change(function() {
         var country = $('#pricing_country').val();
 
@@ -35,7 +41,11 @@
             autoplay: true,
             interval: 2000,
             autoControl: true
-    })
+    });
+
+
+
+   
 </script>
 
 

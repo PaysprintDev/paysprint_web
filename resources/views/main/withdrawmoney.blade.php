@@ -104,7 +104,7 @@
                                                 <div class="col-md-12">
                                                     <h4>
                                                         {{ $data['currencyCode']->currencySymbol . '' .
-                                                        number_format(Auth::user()->wallet_balance, 2) }}
+                                                        number_format(Auth::user()->wallet_balance, 4) }}
                                                     </h4>
                                                 </div>
                                             </div>
@@ -316,7 +316,7 @@
                                                 <div class="col-md-12">
                                                     <h4>
                                                         {{ $data['currencyCode']->currencySymbol . '' .
-                                                        number_format(Auth::user()->wallet_balance, 2) }}
+                                                        number_format(Auth::user()->wallet_balance, 4) }}
                                                     </h4>
                                                 </div>
                                             </div>
@@ -672,7 +672,7 @@
 
             $('#provider').change(function() {
 
-                
+
                 if ($("#amount").val() != "") {
                     runCommission();
                 }
@@ -797,7 +797,6 @@
 
                         success: function(result) {
 
-                            console.log(result);
 
                             var totalCharge;
 

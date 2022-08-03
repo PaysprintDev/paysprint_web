@@ -95,7 +95,7 @@
                                                     </div>
                                                     <div class="col-md-12">
                                                         <h4>
-                                                            {{ $data['currencyCode']->currencySymbol . '' . number_format(Auth::user()->wallet_balance, 2) }}
+                                                            {{ $data['currencyCode']->currencySymbol . '' . number_format(Auth::user()->wallet_balance, 4) }}
                                                         </h4>
                                                     </div>
                                                 </div>

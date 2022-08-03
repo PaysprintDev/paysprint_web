@@ -26,7 +26,8 @@ use App\Http\Controllers\WalletCreditController;
 // });
 
 
-
+// search country
+Route::post('search', ['uses' => 'HomeController@searchCountry', 'as' => 'search']);
 
 // App Logger
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
@@ -106,6 +107,8 @@ Route::get('mailtocustomer', 'SendGridController@cronToPublicizeMerchantToConsum
 
 // country flag
 Route::get('countryflag', 'CountryFlagController@displayCountryFlag');
+
+
 
 
 // Update BVN List
@@ -228,6 +231,9 @@ Route::get('Statement', ['uses' => 'HomeController@statement', 'as' => 'statemen
 Route::get('payorganization', ['uses' => 'HomeController@payOrganization', 'as' => 'payorganization']);
 
 Route::get('contact', ['uses' => 'HomeController@contact', 'as' => 'contact']);
+
+Route::get('displaycountry', ['uses' => 'HomeController@displayCountry', 'as' => 'display country']);
+
 
 
 Route::prefix('developers')->group(function () {
@@ -914,7 +920,6 @@ Route::prefix('Admin/')->group(function () {
 
 
 
-
 	Route::get('pricingsetup', ['uses' => 'AdminController@pricingSetup', 'as' => 'pricing setup']);
 	Route::get('pricingsetupbycountry', ['uses' => 'AdminController@pricingSetupByCountry', 'as' => 'pricing setup by country']);
 
@@ -986,6 +991,11 @@ Route::prefix('Admin/')->group(function () {
 	Route::post('createspecialinfoactivity', ['uses' => 'AdminController@createSpecialInfoActivity', 'as' => 'create special information']);
 	Route::post('deletespecialactivity', ['uses' => 'AdminController@deleteSpecialInfoActivity', 'as' => 'delete special activity']);
 	Route::get('allcountries', ['uses' => 'AdminController@allCountries', 'as' => 'all countries']);
+	Route::get('countrypaymentgateway', ['uses' => 'AdminController@allCountriesPaymentGateway', 'as' => 'create payment gateway']);
+	Route::post('countrypaymentgateway', ['uses' => 'AdminController@storeCountryPaymentGateway', 'as' => 'store payment gateway']);
+	Route::post('editcountrypaymentgateway', ['uses' => 'AdminController@editCountryPaymentGateway', 'as' => 'edit payment gateway']);
+	Route::post('deletecountrypaymentgateway', ['uses' => 'AdminController@deleteCountryPaymentGateway', 'as' => 'delete payment gateway']);
+	Route::post('updatecountrygateway', ['uses' => 'AdminController@updateCountryGateway', 'as' => 'update country gateway']);
 
 
 	Route::get('sendmessage', ['uses' => 'AdminController@sendUserMessage', 'as' => 'send message']);
@@ -1078,6 +1088,7 @@ Route::get('/successfulpointclaim', ['uses' => 'AdminController@successfulPointC
 Route::post('/deleteclaim/{id}', ['uses' => 'AdminController@deleteClaim', 'as' => 'delete claim']);
 Route::post('/restoreclaim/{id}', ['uses' => 'AdminController@restoreClaim', 'as' => 'restore claim']);
 Route::get('/suspendedreferralclaim', ['uses' => 'AdminController@suspendedReferralClaim', 'as' => 'suspended referral claim']);
+
 Route::get('/promodate', ['uses' => 'AdminController@promoDate', 'as' => 'promo date']);
 Route::post('/promodate', ['uses' => 'AdminController@insertPromoDate', 'as' => 'insert promo date']);
 Route::get('/editpromodate/{id}', ['uses' => 'AdminController@editPromoDate', 'as' => 'edit promo']);

@@ -1056,18 +1056,18 @@ your PaySprint Account.You need to provide the outstanding information and compl
     public function updateExbcAccount()
     {
         // Create Statement And Credit EXBC account holder
-        // $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
-        $exbcMerchant = User::where('email', 'tochukwumar@gmail.com')->first();
+        // $exbcMerchant = User::where('email', 'bambo@vimfile.com')->first();
+        $exbcMerchant = User::where('email', 'bambo@vimfile.com')->first();
 
         if (isset($exbcMerchant)) {
 
 
-            // $transaction_id = "wallet-".date('dmY').time();
-            $transaction_id = "esytiw0o2f";
+            $transaction_id = "wallet-".date('dmY').time();
+            // $transaction_id = "esytiw0o2f";
 
             // $activity = "Added ".$exbcMerchant->currencyCode.''.number_format(20, 2)." to your Wallet to load EXBC Prepaid Card";
-            $activity = "Added " . $exbcMerchant->currencyCode . '' . number_format(983.5, 2) . " to Wallet including a fee charge of " . $exbcMerchant->currencyCode . '' . number_format(16.5, 2) . " was deducted from your Debit Card";
-            $credit = 983.5;
+            $activity = "Refund reversal of " . $exbcMerchant->currencyCode . '' . number_format(30, 2) . " for BUSINESS PROMOTION successfully processed to your PaySprint wallet.";
+            $credit = 30;
             $debit = 0;
             $reference_code = $transaction_id;
             $balance = 0;
@@ -1077,9 +1077,9 @@ your PaySprint Account.You need to provide the outstanding information and compl
             $regards = $exbcMerchant->ref_code;
             $statement_route = "wallet";
 
-            $merchantwalletBal = $exbcMerchant->wallet_balance + 983.5;
+            $merchantwalletBal = $exbcMerchant->wallet_balance + 30;
 
-            User::where('email', 'tochukwumar@gmail.com')->update([
+            User::where('email', 'bambo@vimfile.com')->update([
                 'wallet_balance' => $merchantwalletBal
             ]);
 
@@ -1088,11 +1088,11 @@ your PaySprint Account.You need to provide the outstanding information and compl
             // Senders statement
             $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country);
 
-            $this->getfeeTransaction($reference_code, $exbcMerchant->ref_code, 1000, 16.5, 983.5);
+            $this->getfeeTransaction($reference_code, $exbcMerchant->ref_code, 30, 0, 30);
 
             // $sendMerchantMsg = "Hi ".$exbcMerchant->name.", ".$exbcMerchant->currencyCode." 20.00 was added to your wallet to load EXBC Prepaid Card. Your new wallet balance is ".$exbcMerchant->currencyCode.' '.number_format($merchantwalletBal, 2).". Thanks.";
 
-            $sendMerchantMsg = 'You have added ' . $exbcMerchant->currencyCode . ' ' . number_format(983.5, 2) . ' (Gross Amount of ' . $exbcMerchant->currencyCode . ' ' . number_format(1000, 2) . ' less transaction fee ' . $exbcMerchant->currencyCode . ' ' . number_format(16.5, 2) . ') to your wallet with PaySprint. You now have ' . $exbcMerchant->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
+            $sendMerchantMsg = 'Refund reversal of ' . $exbcMerchant->currencyCode . ' ' . number_format(30, 2) . ' for BUSINESS PROMOTION successfully processed to your wallet with PaySprint. You now have ' . $exbcMerchant->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
             $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg);
 
@@ -1101,7 +1101,7 @@ your PaySprint Account.You need to provide the outstanding information and compl
             $gateway = ucfirst($getGateway->gateway);
 
 
-            $message = 'You have successfully added ' . $exbcMerchant->currencyCode . ' ' . number_format(983.5, 2) . ' to your wallet';
+            $message = 'Refund reversal of ' . $exbcMerchant->currencyCode . ' ' . number_format(30, 2) . ' for BUSINESS PROMOTION successfully processed to your wallet.';
 
             $this->keepRecord($reference_code, $message, "Success", $gateway, $exbcMerchant->country);
 

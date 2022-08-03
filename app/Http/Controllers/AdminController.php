@@ -2,40 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Collection;
-
 use Session;
+
 use App\MarkUp;
 use App\Points;
+use App\PromoDate;
+use App\watchlist;
+
 use Carbon\Carbon;
 
 use App\Tax as Tax;
-
 use App\FxStatement;
-use App\Traits\MyFX;
-use App\InvestorPost;
+use App\SurveyExcel;
 //Session
-use App\User as User;
+use App\Traits\MyFX;
 
-use App\PromoDate;
-
-use App\SpecialpromoReport;
-
-use App\ClaimedPoints;
+use App\InvestorPost;
 
 use App\SpecialPromo;
+
+use App\SurveyReport;
+
+use App\User as User;
+
+use App\Walletcredit;
+
+use App\ClaimedPoints;
 
 use App\EscrowAccount;
 
 use App\HistoryReport;
 
-use App\ReferredUsers;
-
 use App\ReferralClaim;
 
-use App\Walletcredit;
-
-use App\watchlist;
+use App\ReferredUsers;
 
 use App\DusupaymentReferences;
 
@@ -57,14 +57,18 @@ use App\AddBank as AddBank;
 
 use App\AddCard as AddCard;
 
+use App\SpecialpromoReport;
+
 use App\Traits\FlagPayment;
 
 use App\Traits\GenerateOtp;
-
 use App\Traits\PointsClaim;
+
 use App\Traits\SpecialInfo;
 
 use Illuminate\Http\Request;
+
+use App\Imports\SurveyImport;
 
 use App\Traits\AccountNotify;
 
@@ -80,57 +84,52 @@ use App\Traits\PaysprintPoint;
 
 use App\AnonUsers as AnonUsers;
 
+use App\PlatformPaymentGateway;
+
 use App\Statement as Statement;
 
 use App\Traits\PaystackPayment;
 
 use App\CardIssuer as CardIssuer;
-
 use App\ClientInfo as ClientInfo;
-
 use App\Createpost as Createpost;
-
 use App\MonthlyFee as MonthlyFee;
 use App\SuperAdmin as SuperAdmin;
 use App\UserClosed as UserClosed;
+use Illuminate\Support\Collection;
+
 use Illuminate\Support\Facades\DB;
+
 use App\CashAdvance as CashAdvance;
 use App\CreateEvent as CreateEvent;
+
 use App\CrossBorder as CrossBorder;
 
 use App\ImportExcel as ImportExcel;
 
 use App\ServiceType as ServiceType;
+
 use App\Traits\MailChimpNewsLetter;
 
 use App\UpgradePlan as UpgradePlan;
-
 use Illuminate\Support\Facades\Log;
-
-use Illuminate\Support\Facades\Validation;
-
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Support\Facades\Hash;
+
 use Illuminate\Support\Facades\Mail;
+
 use Maatwebsite\Excel\Facades\Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
-
 use App\AllCountries as AllCountries;
 
 use App\CcWithdrawal as CcWithdrawal;
 use App\DeletedCards as DeletedCards;
 use App\Epaywithdraw as Epaywithdraw;
-
 use App\InAppMessage as InAppMessage;
+
 use App\MailCampaign as MailCampaign;
 use App\PricingSetup as PricingSetup;
 use App\Exports\WalletStatementExport;
-
-use App\SurveyExcel;
-use App\SurveyReport;
-use App\MobileMoney;
-use App\Imports\SurveyImport;
 
 use App\CollectionFee as CollectionFee;
 
@@ -144,6 +143,8 @@ use App\BankWithdrawal as BankWithdrawal;
 
 use App\InvoicePayment as InvoicePayment;
 
+use Illuminate\Support\Facades\Validation;
+
 use App\ImportExcelLink as ImportExcelLink;
 
 use App\MerchantService as MerchantService;
@@ -153,7 +154,6 @@ use App\MonerisActivity as MonerisActivity;
 use App\OrganizationPay as OrganizationPay;
 
 use App\SupportActivity as SupportActivity;
-
 use App\TransactionCost as TransactionCost;
 use App\BVNVerificationList as BVNVerificationList;
 
@@ -7643,8 +7643,10 @@ class AdminController extends Controller
             $allusers = $this->allUsers();
 
             $data = array(
-                'allthecountries' => $this->getAllCountries()
+                'allthecountries' => $this->getAllCountries(),
+                'allpaymentgateway' => $this->getAllPaymentGateway()
             );
+
 
 
 
@@ -7653,6 +7655,123 @@ class AdminController extends Controller
             return redirect()->route('AdminLogin');
         }
     }
+
+
+
+    public function allCountriesPaymentGateway(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'allpaymentgateway' => $this->getAllPaymentGateway()
+            );
+
+
+
+            return view('admin.pages.allgatewaylist')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+    public function storeCountryPaymentGateway(Request $req)
+    {
+        try{
+
+            PlatformPaymentGateway::updateOrCreate(['name' => $req->name], ['name' => $req->name]);
+
+             return redirect()->back()->with('success', 'Payment gateway created!');
+        }
+        catch(\Throwable $th){
+            return redirect()->back()->with('error', $th->getMessage());
+        }
+    }
+
+
+    public function editCountryPaymentGateway(Request $req)
+    {
+        try{
+
+            PlatformPaymentGateway::where('id', $req->id)->update(['name' => $req->name]);
+
+             return redirect()->back()->with('success', 'Payment gateway updated!');
+        }
+        catch(\Throwable $th){
+            return redirect()->back()->with('error', $th->getMessage());
+        }
+    }
+
+
+    public function deleteCountryPaymentGateway(Request $req)
+    {
+        try{
+
+            PlatformPaymentGateway::where('id', $req->id)->delete();
+
+             return redirect()->back()->with('success', 'Payment gateway deleted!');
+        }
+        catch(\Throwable $th){
+            return redirect()->back()->with('error', $th->getMessage());
+        }
+    }
+
+
+    public function updateCountryGateway(Request $req)
+    {
+        try{
+
+            AllCountries::where('id', $req->countryId)->update(['gateway' => $req->paymentGateway]);
+
+             return redirect()->back()->with('success', 'Payment gateway updated!');
+        }
+        catch(\Throwable $th){
+            return redirect()->back()->with('error', $th->getMessage());
+        }
+    }
+
+
 
 
 
@@ -7728,6 +7847,14 @@ class AdminController extends Controller
     public function getAllCountries()
     {
         $data = AllCountries::orderBy('approval', 'DESC')->get();
+
+        return $data;
+    }
+
+
+    public function getAllPaymentGateway()
+    {
+        $data = PlatformPaymentGateway::orderBy('created_at', 'DESC')->get();
 
         return $data;
     }
@@ -12698,6 +12825,9 @@ class AdminController extends Controller
             return redirect()->route('AdminLogin');
         }
     }
+
+
+  
 
 
     //view for special promo users
