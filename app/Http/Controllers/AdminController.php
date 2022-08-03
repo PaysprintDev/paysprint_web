@@ -131,6 +131,8 @@ use App\MailCampaign as MailCampaign;
 use App\PricingSetup as PricingSetup;
 use App\Exports\WalletStatementExport;
 
+use App\MobileMoney;
+
 use App\CollectionFee as CollectionFee;
 
 use App\Notifications as Notifications;
@@ -12827,7 +12829,7 @@ class AdminController extends Controller
     }
 
 
-  
+
 
 
     //view for special promo users
