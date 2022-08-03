@@ -180,7 +180,7 @@ class HomeController extends Controller
     public function homePage()
     {
 
-       
+
         // To get the actual link from users click
 
         // $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -220,7 +220,7 @@ class HomeController extends Controller
 
             $allcountry = AllCountries::where('approval', 1)->get();
 
-            
+
             $this->page = 'Homepage';
             $this->name = '';
             $view = 'main.newpage.shade-pro.index';
@@ -270,13 +270,13 @@ class HomeController extends Controller
             'availablecountry' => $allcountry
         ];
 
-        return view('main.newpage.shade-pro.merchantindex')->with(['pages' => $this->page, 'data'=> $data]);
+        return view('main.newpage.shade-pro.merchantindex')->with(['pages' => $this->page, 'data' => $data]);
     }
 
     public function index()
     {
 
-       
+
 
 
         // dd($req->session());
@@ -1354,6 +1354,9 @@ class HomeController extends Controller
 
         $id = Auth::id();
 
+        $userdetails = User::where('id', $id)->first();
+        $name = $userdetails->name;
+
         $validation = Validator::make($req->all(), [
             'account_type' => 'required',
             'provider' => 'required',
@@ -1367,6 +1370,15 @@ class HomeController extends Controller
             'provider' => $req->provider,
             'account_number' => $req->account_number,
             'code' => $req->code
+        ]);
+
+        AddBank::create([
+            'user_id' => $id,
+            'bankName' => $req->provider,
+            'accountName' => $name,
+            'accountNumber' => $req->account_number,
+            'country' => $userdetails->country
+
         ]);
 
         return back()->with("msg", "<div class='alert alert-success'>Mobile Money Account Number Added Successfully</div>");
@@ -5774,7 +5786,7 @@ class HomeController extends Controller
         $result = json_decode($response);
 
 
-       
+
 
 
 

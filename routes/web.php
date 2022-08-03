@@ -636,13 +636,17 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::get('/user-purchase-statement', ['uses' => 'AdminController@userWalletPurchaseStatement', 'as' => 'user purchase statement']);
 	Route::get('/user-wallet-purchase', ['uses' => 'AdminController@userWalletPurchase', 'as' => 'users wallet purchase']);
 	Route::get('bankrequestwithdrawal', ['uses' => 'AdminController@bankRequestWithdrawal', 'as' => 'bank request withdrawal']);
+	Route::get('mobilemoneyrequestwithdrawal', ['uses' => 'AdminController@mobilemoneyRequestWithdrawal', 'as' => 'mobilemoney request withdrawal']);
 
 	Route::get('merchantbankdetails', ['uses' => 'AdminController@merchantBanksDetails', 'as' => 'merchant banking details']);
 
 	Route::get('merchantbankdetailsbycountry', ['uses' => 'AdminController@merchantBankDetailsByCountry', 'as' => 'merchant bank details by country']);
 
 	Route::get('purchaserequestreturn', ['uses' => 'AdminController@purchaseRefundReturn', 'as' => 'purchase refund request']);
+
 	Route::get('bankrequestwithdrawalbycountry', ['uses' => 'AdminController@bankRequestWithdrawalByCountry', 'as' => 'bank withdrawal by country']);
+
+	Route::get('mobilemoneyrequestwithdrawalbycountry', ['uses' => 'AdminController@mobilemoneyRequestWithdrawalByCountry', 'as' => 'mobilemoney withdrawal by country']);
 	Route::get('returnwithdrawal/{id}', ['uses' => 'AdminController@returnWithdrawal', 'as' => 'return withdrawal request']);
 	Route::get('returnbankwithdrawal/{id}', ['uses' => 'AdminController@returnBankWithdrawal', 'as' => 'return bank withdrawal request']);
 	Route::get('cardrequestwithdrawal', ['uses' => 'AdminController@cardRequestWithdrawal', 'as' => 'card request withdrawal']);
@@ -1266,7 +1270,11 @@ Route::group(['prefix' => 'Ajax'], function () {
 
 
 	Route::post('checkverification', ['uses' => 'AdminController@ajaxCheckVerification', 'as' => 'Ajaxcheckverification']);
+
 	Route::post('paybankwithdrawal', ['uses' => 'AdminController@ajaxpayBankWithdrawal', 'as' => 'Ajaxpaybankwithdrawal']);
+
+	Route::post('paymobilemoneywithdrawal/{id}', ['uses' => 'AdminController@ajaxpayMobileMoneyWithdrawal', 'as' => 'Ajaxpaymobilemoneywithdrawal']);
+
 	Route::post('paycardwithdrawal', ['uses' => 'AdminController@ajaxpayCardWithdrawal', 'as' => 'Ajaxpaycardwithdrawal']);
 	Route::post('flagguser', ['uses' => 'AdminController@ajaxflagUser', 'as' => 'Ajaxflagguser']);
 

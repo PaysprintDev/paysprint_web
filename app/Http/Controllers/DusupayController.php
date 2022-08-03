@@ -1021,7 +1021,7 @@ class DusupayController extends Controller
 
                     if (in_array('withdraw money', $checkIdv['access'])) {
                         // Check number of withdrawal
-                        if ($thisuser->number_of_withdrawals >= 6) {
+                        if ($thisuser->number_of_withdrawals >= 20) {
 
                             if ($thisuser->accountType == "Merchant") {
                                 $message = "You have already made withdrawal this week. Try again next week";
@@ -1427,6 +1427,9 @@ class DusupayController extends Controller
                                                             'withdrawal_per_week' => $withdrawal_per_week,
                                                             'withdrawal_per_month' => $withdrawal_per_month,
                                                         ]);
+                                                        $transaction_id = "wallet-" . date('dmY') . time();
+
+                                                        $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->provider, 'amountToSend' => $req->amount, 'country' => $thisuser->country]);
 
                                                         // Update Statement
 
@@ -1457,11 +1460,11 @@ class DusupayController extends Controller
                                                         $this->email = $thisuser->email;
                                                         $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " has been Withdrawn from your Wallet with PaySprint";
 
-                                                        $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+                                                        $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . '</strong> is successful. The withdrawal will take up to 24hrs before it reflects in your mobile money ' . ' ' . $req->account_number . ' </p><p>You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
 
 
 
-                                                        $sendMsg = '<p>The withdrawal of ' . $req->currencyCode . ' ' . $req->amount . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. </p><p>You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+                                                        $sendMsg = '<p>The withdrawal of ' . $req->currencyCode . ' ' . $req->amount . '</strong> is successful. The withdrawal will take up to 24hrs before it reflects in your mobile money ' . '' . $req->account_number . ' </p><p>You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
 
                                                         $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
