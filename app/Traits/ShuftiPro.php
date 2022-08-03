@@ -17,8 +17,8 @@ trait ShuftiPro
         $dob = "1995-10-10";
         $name = json_encode([
             'first_name' => 'John',
-            'middle_name' => 'John',
-            'first_name' => 'John',
+            'middle_name' => 'Carter',
+            'last_name' => 'Doe',
         ]);
 
         $this->shuftiProUrl = config("constants.shuftipro.baseurl");

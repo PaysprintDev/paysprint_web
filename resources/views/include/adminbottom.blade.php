@@ -7,123 +7,127 @@
 
 
 @if (Session::has('username') == true)
-    @if (session('loginCount') < 1)
-        <script src="{{ asset('hopscotch/dist/js/hopscotch.js') }}"></script>
+@if (session('loginCount') < 1) <script src="{{ asset('hopscotch/dist/js/hopscotch.js') }}">
+    </script>
     @endif
-@endif
+    @endif
 
-<!-- Tour Guide plugin -->
-<script src="{{ asset('js/my_first_tour.js') }}"></script>
+    <!-- Tour Guide plugin -->
+    <script src="{{ asset('js/my_first_tour.js') }}"></script>
 
-<script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
-integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
-crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+        integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<!-- jQuery UI 1.11.4 -->
-<script src="{{ asset('ext/bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
-<script src="{{ asset('merchantassets/assets/js/dropzone/dropzone.js') }}"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-    $.widget.bridge('uibutton', $.ui.button);
-</script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="{{ asset('ext/bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('merchantassets/assets/js/dropzone/dropzone.js') }}"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+        $.widget.bridge('uibutton', $.ui.button);
+    </script>
 
-<!-- bootstrap js-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="{{ asset('ext/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <!-- bootstrap js-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="{{ asset('ext/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 
-<!-- Morris.js charts -->
-<script src="{{ asset('ext/bower_components/raphael/raphael.min.js') }}"></script>
-<script src="{{ asset('ext/bower_components/morris.js/morris.min.js') }}"></script>
+    <!-- Morris.js charts -->
+    <script src="{{ asset('ext/bower_components/raphael/raphael.min.js') }}"></script>
+    <script src="{{ asset('ext/bower_components/morris.js/morris.min.js') }}"></script>
 
-<!-- DataTables -->
-{{-- <script src="{{ asset('ext/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script> --}}
-{{-- <script src="{{ asset('ext/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script> --}}
+    <!-- DataTables -->
+    {{-- <script src="{{ asset('ext/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script> --}}
+    {{-- <script src="{{ asset('ext/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    --}}
 
-<!-- Sparkline -->
-<script src="{{ asset('ext/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js') }}"></script>
+    <!-- Sparkline -->
+    <script src="{{ asset('ext/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js') }}"></script>
 
-<!-- jvectormap -->
-<script src="{{ asset('ext/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
-<script src="{{ asset('ext/plugins/jvectormap/jquery-jvectormap-world-mill-en.js') }}"></script>
+    <!-- jvectormap -->
+    <script src="{{ asset('ext/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
+    <script src="{{ asset('ext/plugins/jvectormap/jquery-jvectormap-world-mill-en.js') }}"></script>
 
-<!-- jQuery Knob Chart -->
-<script src="{{ asset('ext/bower_components/jquery-knob/dist/jquery.knob.min.js') }}"></script>
+    <!-- jQuery Knob Chart -->
+    <script src="{{ asset('ext/bower_components/jquery-knob/dist/jquery.knob.min.js') }}"></script>
 
-<!-- daterangepicker -->
-<script src="{{ asset('ext/bower_components/moment/min/moment.min.js') }}"></script>
-<script src="{{ asset('ext/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+    <!-- daterangepicker -->
+    <script src="{{ asset('ext/bower_components/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset('ext/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
 
-<!-- iCheck 1.0.1 -->
-<script src="{{ asset('ext/plugins/iCheck/icheck.min.js') }}"></script>
+    <!-- iCheck 1.0.1 -->
+    <script src="{{ asset('ext/plugins/iCheck/icheck.min.js') }}"></script>
 
 
-<!-- bootstrap color picker -->
-<script src="{{ asset('ext/bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js') }}">
-</script>
+    <!-- bootstrap color picker -->
+    <script src="{{ asset('ext/bower_components/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js') }}">
+    </script>
 
-<!-- Summer Note -->
-<script type="text/javascript">
-    $(document).ready(function() {
+    <!-- Summer Note -->
+    <script type="text/javascript">
+        $(document).ready(function() {
 
         $('.summernote').summernote();
 
     });
-</script>
+    </script>
 
-<!-- bootstrap time picker -->
-<script src="{{ asset('ext/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
+    <!-- bootstrap time picker -->
+    <script src="{{ asset('ext/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
 
-<!-- datepicker -->
-<script src="{{ asset('ext/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
-<!-- Bootstrap WYSIHTML5 -->
-<script src="{{ asset('ext/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>
+    <!-- datepicker -->
+    <script src="{{ asset('ext/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
+    <!-- Bootstrap WYSIHTML5 -->
+    <script src="{{ asset('ext/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>
 
-<!-- Slimscroll -->
-<script src="{{ asset('ext/bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
-<!-- FastClick -->
-<script src="{{ asset('ext/bower_components/fastclick/lib/fastclick.js') }}"></script>
+    <!-- Slimscroll -->
+    <script src="{{ asset('ext/bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <!-- FastClick -->
+    <script src="{{ asset('ext/bower_components/fastclick/lib/fastclick.js') }}"></script>
 
-<!-- AdminLTE App -->
-<script src="{{ asset('ext/dist/js/adminlte.min.js') }}"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{ asset('ext/dist/js/pages/dashboard.js') }}"></script>
+    <!-- AdminLTE App -->
+    <script src="{{ asset('ext/dist/js/adminlte.min.js') }}"></script>
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+    <script src="{{ asset('ext/dist/js/pages/dashboard.js') }}"></script>
 
-<!-- Select2 -->
-<script src="{{ asset('ext/bower_components/select2/dist/js/select2.full.min.js') }}"></script>
+    <!-- Select2 -->
+    <script src="{{ asset('ext/bower_components/select2/dist/js/select2.full.min.js') }}"></script>
 
-<!-- InputMask -->
-<script src="{{ asset('ext/plugins/input-mask/jquery.inputmask.js') }}"></script>
-<script src="{{ asset('ext/plugins/input-mask/jquery.inputmask.date.extensions.js') }}"></script>
-<script src="{{ asset('ext/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
+    <!-- InputMask -->
+    <script src="{{ asset('ext/plugins/input-mask/jquery.inputmask.js') }}"></script>
+    <script src="{{ asset('ext/plugins/input-mask/jquery.inputmask.date.extensions.js') }}"></script>
+    <script src="{{ asset('ext/plugins/input-mask/jquery.inputmask.extensions.js') }}"></script>
 
-<!-- AdminLTE for demo purposes -->
-<script src="{{ asset('ext/dist/js/demo.js') }}"></script>
-{{-- <script src="{{ asset('ext/dist/js/main.js') }}"></script> --}}
+    <!-- AdminLTE for demo purposes -->
+    <script src="{{ asset('ext/dist/js/demo.js') }}"></script>
+    {{-- <script src="{{ asset('ext/dist/js/main.js') }}"></script> --}}
 
-<script src="{{ asset('js/country-state-select.js') }}"></script>
-
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.25/b-1.7.1/b-html5-1.7.1/datatables.min.js">
-</script>
+    <script src="{{ asset('js/country-state-select.js') }}"></script>
 
 
-{{-- <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script> --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script> --}}
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script> --}}
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script> --}}
-{{-- <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script> --}}
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/dt-1.10.25/b-1.7.1/b-html5-1.7.1/datatables.min.js">
+    </script>
 
 
-@if (session('role') != 'Super')
+    {{-- <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script> --}}
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script> --}}
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script> --}}
+    {{-- <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script> --}}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+
+
+    @if (session('role') != 'Super')
     <!--Start of Tawk.to Script-->
     <script type="text/javascript">
         var Tawk_API = Tawk_API || {},
@@ -139,21 +143,21 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         })();
     </script>
     <!--End of Tawk.to Script-->
-@endif
+    @endif
 
 
 
 
-<!-- CK Editor -->
-<script src="{{ asset('ext/bower_components/ckeditor/ckeditor.js') }}"></script>
+    <!-- CK Editor -->
+    <script src="{{ asset('ext/bower_components/ckeditor/ckeditor.js') }}"></script>
 
 
-<script src="{{ asset('pace/pace.min.js') }}"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="{{ asset('ext/documentation/docs.js') }}"></script>
+    <script src="{{ asset('pace/pace.min.js') }}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="{{ asset('ext/documentation/docs.js') }}"></script>
 
-<script>
-    $(document).ready(function() {
+    <script>
+        $(document).ready(function() {
         $('#example4').DataTable({
             'pageLength': 200,
         });
@@ -164,10 +168,10 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
     });
-</script>
+    </script>
 
-<script>
-    $(function() {
+    <script>
+        $(function() {
         $('#example1').DataTable({
             'pageLength': 200,
         });
@@ -2456,8 +2460,8 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     });
 
 
-    function payBank(id) {
-        var route = "{{ URL('Ajax/paybankwithdrawal') }}";
+    function payMobileMoney(id) {
+        var route = "{{ URL('paymobilemoneywithdrawal') }}";
         var thisdata = {
             id: id
         };
@@ -4910,6 +4914,26 @@ swal({
 
     }
 
+    function processMobileMoney(id) {
+
+        swal({
+        title: "Are you sure?",
+        text: "Do you want to process this transaction?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+        $('#processmobilemoney' + id).submit();
+        }
+        });
+
+
+        }
+
+
+
     function deleteClaim(id) {
 
 swal({
@@ -5107,6 +5131,6 @@ swal({
 
 </script>
 
-</body>
+    </body>
 
-</html>
+    </html>
