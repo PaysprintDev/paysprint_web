@@ -11,23 +11,53 @@ trait ShuftiPro
     public $shuftiProPost;
 
 
-    public function amlBackgroundCheck(String $dob, Object $name)
+    public function amlBackgroundCheck(String $dob, array $name, String $reference, String $email, String $country)
     {
-
-        $dob = "1995-10-10";
-        $name = json_encode([
-            'first_name' => 'John',
-            'middle_name' => 'Carter',
-            'last_name' => 'Doe',
-        ]);
 
         $this->shuftiProUrl = config("constants.shuftipro.baseurl");
         $this->shuftiProPost = json_encode([
             "background_checks" => [
                 "dob" => $dob,
                 "name" => $name
-            ]
+            ],
+            "reference"    => $reference,
+            "email" => $email,
+            "country" => $country
         ]);
+
+
+
+        $result = $this->shuftiProPostCurl();
+
+        return $result;
+    }
+
+
+    public function kycCheck(String $dob, array $name, String $reference, String $email, String $country)
+    {
+
+        $this->shuftiProUrl = config("constants.shuftipro.baseurl");
+        $this->shuftiProPost = json_encode([
+            "reference"    => $reference,
+            "email" => $email,
+            "country" => $country,
+            "language" => "EN",
+            "verification_mode" => "any",
+            "ttl" => 60,
+            "background_checks" => [
+                "dob" => $dob,
+                "name" => $name
+            ],
+
+        ]);
+
+
+
+
+        $result = $this->shuftiProPostCurl();
+
+
+        return $result;
     }
 
 

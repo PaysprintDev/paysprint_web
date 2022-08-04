@@ -109,6 +109,11 @@ Route::get('mailtocustomer', 'SendGridController@cronToPublicizeMerchantToConsum
 Route::get('countryflag', 'CountryFlagController@displayCountryFlag');
 
 
+// AML Background Check
+Route::get('amlcheck', 'ShuftiProController@callAmlCheck');
+Route::get('kyccheck', 'ShuftiProController@callKycCheck');
+
+Route::get('checkcharge', 'MonerisController@chargeForShuftiProVerification');
 
 
 // Update BVN List

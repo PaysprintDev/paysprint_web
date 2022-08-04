@@ -4633,6 +4633,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             }
                         }
 
+
+
+
                         $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
 
                         $data = $userInfo;
@@ -4647,6 +4650,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                         // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
+                        $this->chargeForShuftiProVerification($thisuser->ref_code);
+
                         $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                         $this->sendEmail($this->email, "Fund remittance");
@@ -4654,6 +4659,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . "</p><p>Status: Successful</p>";
 
                         $this->notifyAdmin($gateway . " inflow", $adminMessage);
+
+
+
+
                     } else {
 
 
@@ -4983,6 +4992,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                     // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
+                                    $this->chargeForShuftiProVerification($thisuser->ref_code);
+
                                     $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                     $monerisactivity = $thisuser->name . ' ' . $sendMsg;
@@ -5090,7 +5101,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $this->updatePoints($thisuser->id, 'Add money');
 
 
-
+                                    $this->chargeForShuftiProVerification($thisuser->ref_code);
                                     // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
                                     $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
@@ -5210,6 +5221,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                 // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
+                                $this->chargeForShuftiProVerification($thisuser->ref_code);
+
                                 $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                 $monerisactivity = $thisuser->name . ' ' . $sendMsg;
@@ -5252,6 +5265,82 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
         return $this->returnJSON($resData, $status);
     }
+
+
+
+
+    // Charge money for shufti pro verification
+
+    public function chargeForShuftiProVerification($ref_code)
+    {
+
+        $shuftiPro = new ShuftiProController();
+        $converter = new CurrencyConverterApiController();
+
+        // Shuftipro charge in USD 0.9;
+        $charge = 0.9;
+
+        $checkStatus = $shuftiPro->shuftiProPaymentVerification($ref_code);
+
+        if ($checkStatus === false) {
+
+            $getUser = User::where('ref_code', $ref_code)->first();
+            // Update Wallet Balance
+
+            // Convert to currency charge...
+
+            $deductValue = $converter->randomCurrencyConverter($getUser->currencyCode, $charge);
+
+
+            if((float)$getUser->wallet_balance > $deductValue)
+            {
+            $walletBalance = $getUser->wallet_balance - $deductValue;
+            User::where('ref_code', $ref_code)->update(['wallet_balance' => $walletBalance, 'shuftiproservice' => 1]);
+
+            $activity = "Anti-Money Laundry (AML) Fee Charge of " . $getUser->currencyCode . '' . number_format($deductValue, 2) . " was deducted from your Wallet";
+            $credit = 0;
+            $debit = $deductValue;
+            $reference_number = "wallet-" . date('dmY') . time();
+            $balance = 0;
+            $trans_date = date('Y-m-d');
+            $status = "Delivered";
+            $action = "Wallet debit";
+            $regards = $getUser->ref_code;
+            $statement_route = "wallet";
+
+            // Senders statement
+            $this->insStatement($getUser->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $getUser->country, 0);
+
+            $this->getfeeTransaction($reference_number, $getUser->ref_code, $deductValue, 0, $deductValue);
+
+            $sendMsg = $activity . '. You have ' . $getUser->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
+
+            $userPhone = User::where('email', $getUser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+            if (isset($userPhone)) {
+
+                $sendPhone = $getUser->telephone;
+            } else {
+                $sendPhone = "+" . $getUser->code . $getUser->telephone;
+            }
+
+            if ($getUser->country == "Nigeria") {
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                $this->sendSms($sendMsg, $correctPhone);
+            } else {
+                $this->sendMessage($sendMsg, $sendPhone);
+            }
+
+
+
+            }
+
+
+
+        }
+    }
+
 
     public function moneyWithdrawal(Request $req)
     {

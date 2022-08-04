@@ -115,7 +115,7 @@ class UserController extends Controller
 
             if (isset($newcustomer)) {
 
-                $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid() . md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode->currencyCode, 'currencySymbol' => $mycode->currencySymbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth, 'cardRequest' => 0, 'platform' => 'mobile', 'accountLevel' => 2, 'zip' => $request->zipcode, 'withdrawal_per_transaction' => $transactionLimit]);
+                $user = User::create(['code' => $newcustomer->code, 'ref_code' => $newcustomer->ref_code, 'name' => $newcustomer->name, 'email' => $newcustomer->email, 'password' => Hash::make($request->password), 'address' => $newcustomer->address, 'city' => $request->city, 'state' => $request->state, 'country' => $newcustomer->country, 'accountType' => 'Individual', 'api_token' => uniqid() . md5($request->email), 'telephone' => $newcustomer->telephone, 'wallet_balance' => $newcustomer->wallet_balance, 'approval' => 0, 'currencyCode' => $mycode->currencyCode, 'currencySymbol' => $mycode->currencySymbol, 'dayOfBirth' => $request->dayOfBirth, 'monthOfBirth' => $request->monthOfBirth, 'yearOfBirth' => $request->yearOfBirth, 'cardRequest' => 0, 'platform' => 'mobile', 'accountLevel' => 2, 'zip' => $request->zipcode, 'withdrawal_per_transaction' => $transactionLimit, 'shuftiproservice' => 0]);
 
                 $getMoney = Statement::where('user_id', $newcustomer->email)->get();
 
@@ -156,7 +156,9 @@ class UserController extends Controller
                     'cardRequest' => 0,
                     'platform' => 'mobile',
                     'accountLevel' => 2,
-                    'withdrawal_per_transaction' => $transactionLimit
+                    'withdrawal_per_transaction' => $transactionLimit,
+                    'shuftiproservice' => 0
+
                 ]);
             }
 
@@ -246,24 +248,42 @@ class UserController extends Controller
                 $this->sendEmail($this->email, "Fund remittance");
 
 
-                if($request->country == "India"){
+                if ($request->country == "India") {
 
                     $this->name = $request->firstname . ' ' . $request->lastname;
                     // $this->email = "bambo@vimfile.com";
                     $this->email = $request->email;
                     $this->subject = "Special Notice";
 
-                    $mailmessage = "Dear ".$request->firstname.", If you are presenting India Aadhaar Card as the form of identification, kindly upload your India Permanent Account Number card as well using same icon.Thanks";
+                    $mailmessage = "Dear " . $request->firstname . ", If you are presenting India Aadhaar Card as the form of identification, kindly upload your India Permanent Account Number card as well using same icon.Thanks";
 
                     $this->message = '<p>' . $mailmessage . '</p>';
 
 
                     $this->sendEmail($this->email, "Fund remittance");
-
-
-
                 }
 
+
+                $dob = $getcurrentUser->yearOfBirth . "-" . $getcurrentUser->monthOfBirth . "-" . $getcurrentUser->dayOfBirth;
+
+                $thisusersname = explode(" ", $getcurrentUser->name);
+
+                $getUsername = [
+                    'first_name' => $thisusersname[0],
+                    'middle_name' => '',
+                    'last_name' => $thisusersname[1],
+                ];
+
+                $shuftiVerify = new \App\Http\Controllers\ShuftiProController();
+
+                $checkAmlVerification = $shuftiVerify->callAmlCheck($getcurrentUser->ref_code, $dob, $getUsername, $getcurrentUser->email, $countryApproval->code);
+
+
+                if ($checkAmlVerification->event !== 'verification.accepted') {
+                    User::where('id', $getcurrentUser->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
+                } else {
+                    User::where('id', $getcurrentUser->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
+                }
             } else {
 
                 $message = "error";
@@ -275,6 +295,9 @@ class UserController extends Controller
 
                 User::where('id', $getcurrentUser->id)->update(['accountLevel' => 0, 'countryapproval' => 0, 'transactionRecordId' => NULL]);
             }
+
+
+
 
 
             $this->mailListCategorize($request->firstname . ' ' . $request->lastname, $request->email, $request->address, $request->telephone, "New Consumers", $request->country, 'Subscription');
@@ -512,7 +535,7 @@ class UserController extends Controller
                 // Check merchant test mode
                 $client = ClientInfo::where('user_id', $thisuser->ref_code)->first();
 
-                if(isset($client) && $client->accountMode == "test"){
+                if (isset($client) && $client->accountMode == "test") {
                     $data = [];
                     $status = 400;
                     $message = 'You are in test mode';
@@ -533,8 +556,7 @@ class UserController extends Controller
                     $amount = $getSub->fixed;
                     $today = date('Y-m-d');
 
-                    $recMessage = "<p>This is a confirmation that your PaySprint Account has been upgraded to a Paid Plan. Your subscription would be renewed at the next billing cycle ".date('d-m-Y', strtotime($today. "+28 days")).".</p><p>If this was a mistake, kindly login to your PaySprint Account to downgrade the Account.</p><p>Your current plan is CLASSIC PAID PLAN and </p>";
-
+                    $recMessage = "<p>This is a confirmation that your PaySprint Account has been upgraded to a Paid Plan. Your subscription would be renewed at the next billing cycle " . date('d-m-Y', strtotime($today . "+28 days")) . ".</p><p>If this was a mistake, kindly login to your PaySprint Account to downgrade the Account.</p><p>Your current plan is CLASSIC PAID PLAN and </p>";
                 } else {
                     $plan = 'basic';
                     $planName = 'Free Forever';
@@ -638,7 +660,7 @@ class UserController extends Controller
     public function getMySubscription(Request $request)
     {
 
-        try{
+        try {
             $thisuser = User::where('api_token', $request->bearerToken())->first();
 
             $data = UpgradePlan::where('userId', $thisuser->ref_code)->first();
@@ -646,9 +668,7 @@ class UserController extends Controller
 
             $status = 200;
             $message = 'Success';
-
-        }
-         catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             $data = [];
             $status = 400;
             $message = $th->getMessage();
@@ -1650,8 +1670,9 @@ class UserController extends Controller
     }
 
 
-    public function acquiredPoints(Request $req){
-        try{
+    public function acquiredPoints(Request $req)
+    {
+        try {
 
             $thisuser = User::where('api_token', $req->bearerToken())->first();
 
@@ -1659,8 +1680,7 @@ class UserController extends Controller
 
             $status = 200;
             $message = "Success";
-        }
-        catch(\Throwable $th){
+        } catch (\Throwable $th) {
             $data = [];
             $status = 400;
             $message = $th->getMessage();
@@ -1677,70 +1697,67 @@ class UserController extends Controller
 
         try {
 
-         $thisuser = User::where('api_token', $req->bearerToken())->first();
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
 
             // Get Bill
-        $getPoint = Points::where('user_id', $thisuser->id)->first();
+            $getPoint = Points::where('user_id', $thisuser->id)->first();
 
 
 
-        if (isset($getPoint)) {
+            if (isset($getPoint)) {
 
-            if ($thisuser->accountType == "Merchant") {
+                if ($thisuser->accountType == "Merchant") {
 
-                $max = 7000;
-            } else {
+                    $max = 7000;
+                } else {
 
-                $max = 5000;
-            }
-
-
-            $totPointLeft = $getPoint->points_acquired - $max;
-
-            $pointtoget = $max - $getPoint->points_acquired;
-
-            // Process claims and update user
-
-            if ($getPoint->points_acquired >= $max) {
-
-                // This is when you can claim points...
-                Points::where('user_id', $thisuser->id)->update(['add_money' => 0, 'send_money' => 0, 'receive_money' => 0, 'pay_invoice' => 0, 'pay_bills' => 0, 'create_and_send_invoice' => 0, 'active_rental_property' => 0, 'quick_set_up' => 0, 'identity_verification' => 0, 'business_verification' => 0, 'promote_business' => 0, 'activate_ordering_system' => 0, 'identify_verification' => 0, 'activate_rpm' => 0, 'activate_currency_exchange' => 0, 'activate_cash_advance' => 0, 'activate_crypto_currency_account' => 0, 'approved_customers' => 0, 'approved_merchants' => 0, 'points_acquired' => $totPointLeft, 'current_point' => $getPoint->points_acquired]);
+                    $max = 5000;
+                }
 
 
+                $totPointLeft = $getPoint->points_acquired - $max;
 
-                ClaimedPoints::updateOrCreate(['user_id' => $thisuser->id], [
-                    'user_id' => $thisuser->id,
-                    'points_acquired' => $getPoint->points_acquired,
-                    'points_left' => $totPointLeft,
-                    'status' => 'pending'
-                ]);
+                $pointtoget = $max - $getPoint->points_acquired;
 
-                HistoryReport::insert([
-                    'user_id' => Auth::user()->id,
-                    'points' => $getPoint->points_acquired,
-                    'point_activity' => "You have claimed " . $getPoint->points_acquired . " points today " . date('d/m/y')
+                // Process claims and update user
 
-                ]);
+                if ($getPoint->points_acquired >= $max) {
 
-                $data = $getPoint;
-                $status = 200;
-                $message = 'Your points claimed has been submitted successfully. The reward will be processed within the next 24hrs';
+                    // This is when you can claim points...
+                    Points::where('user_id', $thisuser->id)->update(['add_money' => 0, 'send_money' => 0, 'receive_money' => 0, 'pay_invoice' => 0, 'pay_bills' => 0, 'create_and_send_invoice' => 0, 'active_rental_property' => 0, 'quick_set_up' => 0, 'identity_verification' => 0, 'business_verification' => 0, 'promote_business' => 0, 'activate_ordering_system' => 0, 'identify_verification' => 0, 'activate_rpm' => 0, 'activate_currency_exchange' => 0, 'activate_cash_advance' => 0, 'activate_crypto_currency_account' => 0, 'approved_customers' => 0, 'approved_merchants' => 0, 'points_acquired' => $totPointLeft, 'current_point' => $getPoint->points_acquired]);
 
+
+
+                    ClaimedPoints::updateOrCreate(['user_id' => $thisuser->id], [
+                        'user_id' => $thisuser->id,
+                        'points_acquired' => $getPoint->points_acquired,
+                        'points_left' => $totPointLeft,
+                        'status' => 'pending'
+                    ]);
+
+                    HistoryReport::insert([
+                        'user_id' => Auth::user()->id,
+                        'points' => $getPoint->points_acquired,
+                        'point_activity' => "You have claimed " . $getPoint->points_acquired . " points today " . date('d/m/y')
+
+                    ]);
+
+                    $data = $getPoint;
+                    $status = 200;
+                    $message = 'Your points claimed has been submitted successfully. The reward will be processed within the next 24hrs';
+                } else {
+
+                    $data = [];
+                    $status = 200;
+                    $message = 'You need to have ' . $pointtoget . ' to be able to claim reward';
+                }
             } else {
 
                 $data = [];
                 $status = 200;
-                $message = 'You need to have ' . $pointtoget . ' to be able to claim reward';
+                $message = 'You do not have any acquired points';
             }
-        } else {
-
-            $data = [];
-            $status = 200;
-            $message = 'You do not have any acquired points';
-        }
-
-        }
-        catch(\Throwable $th){
+        } catch (\Throwable $th) {
             $data = [];
             $status = 400;
             $message = $th->getMessage();
@@ -1749,12 +1766,6 @@ class UserController extends Controller
         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
-
-
-
-
-
-
     }
 
 

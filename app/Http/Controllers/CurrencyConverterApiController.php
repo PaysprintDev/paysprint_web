@@ -97,11 +97,11 @@ class CurrencyConverterApiController extends Controller
                 } else {
                     // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
                     $convertLocal = $amount / $result->quotes->$localCurrency;
-                    // Converting your USD value to other currency ie CAD * Y 
+                    // Converting your USD value to other currency ie CAD * Y
                     $convRate = $result->quotes->$currency * $convertLocal;
                 }
 
-                
+
 
 
 
@@ -133,7 +133,7 @@ class CurrencyConverterApiController extends Controller
                 }
 
 
-                
+
             } else {
                 // This amount is the amount in dollars
                 $convRate = $result->quotes->$currency * $amount;
@@ -228,7 +228,7 @@ class CurrencyConverterApiController extends Controller
         //         $convertLocal = $amount / $result->quotes->$currency;
         //     }
 
-        //     // Converting your USD value to other currency ie CAD * Y 
+        //     // Converting your USD value to other currency ie CAD * Y
         //     $convRate = $result->quotes->$localCurrency * $convertLocal;
 
 
@@ -311,5 +311,61 @@ class CurrencyConverterApiController extends Controller
 
 
         return $this->returnJSON($resData, 200);
+    }
+
+
+
+
+    // Get Random conversion...
+    public function randomCurrencyConverter($currencyVal, $amountVal)
+    {
+
+        $amount = $amountVal;
+        $localCurrency = 'USD' . $currencyVal;
+
+        $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'http://api.currencylayer.com/live?access_key=' . $access_key,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $result = json_decode($response);
+
+
+
+        if ($result->success == true) {
+
+            if ($currencyVal != "USD") {
+
+                $convRate = $amount * $result->quotes->$localCurrency;
+
+            } else {
+                $convRate = $amount;
+            }
+        } else {
+            $convRate = "Sorry we can not process your transaction this time, try again later!.";
+        }
+
+
+        $amountConvert = $convRate;
+
+
+        return $amountConvert;
     }
 }
