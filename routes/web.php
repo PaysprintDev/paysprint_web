@@ -418,6 +418,8 @@ Route::prefix('mywallet')->group(function () {
 	Route::get('requestrefund', ['uses' => 'HomeController@requestForRefund', 'as' => 'request for refund']);
 	Route::get('notifications', ['uses' => 'HomeController@allNotifications', 'as' => 'notifications']);
 	Route::get('paymentgateway', ['uses' => 'HomeController@paymentGateway', 'as' => 'payment gateway']);
+	Route::post('addmobilemoney', ['uses' => 'HomeController@addMobileMoney', 'as' => 'mobile money']);
+	Route::post('withdrawmobilemoney', ['uses' => 'DusupayController@withdrawMobileMoney', 'as' => 'withdraw mobile']);
 });
 
 Route::get('merchantcategory', ['uses' => 'HomeController@merchantCategory', 'as' => 'merchant category']);
@@ -640,13 +642,17 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::get('/user-purchase-statement', ['uses' => 'AdminController@userWalletPurchaseStatement', 'as' => 'user purchase statement']);
 	Route::get('/user-wallet-purchase', ['uses' => 'AdminController@userWalletPurchase', 'as' => 'users wallet purchase']);
 	Route::get('bankrequestwithdrawal', ['uses' => 'AdminController@bankRequestWithdrawal', 'as' => 'bank request withdrawal']);
+	Route::get('mobilemoneyrequestwithdrawal', ['uses' => 'AdminController@mobilemoneyRequestWithdrawal', 'as' => 'mobilemoney request withdrawal']);
 
 	Route::get('merchantbankdetails', ['uses' => 'AdminController@merchantBanksDetails', 'as' => 'merchant banking details']);
 
 	Route::get('merchantbankdetailsbycountry', ['uses' => 'AdminController@merchantBankDetailsByCountry', 'as' => 'merchant bank details by country']);
 
 	Route::get('purchaserequestreturn', ['uses' => 'AdminController@purchaseRefundReturn', 'as' => 'purchase refund request']);
+
 	Route::get('bankrequestwithdrawalbycountry', ['uses' => 'AdminController@bankRequestWithdrawalByCountry', 'as' => 'bank withdrawal by country']);
+
+	Route::get('mobilemoneyrequestwithdrawalbycountry', ['uses' => 'AdminController@mobilemoneyRequestWithdrawalByCountry', 'as' => 'mobilemoney withdrawal by country']);
 	Route::get('returnwithdrawal/{id}', ['uses' => 'AdminController@returnWithdrawal', 'as' => 'return withdrawal request']);
 	Route::get('returnbankwithdrawal/{id}', ['uses' => 'AdminController@returnBankWithdrawal', 'as' => 'return bank withdrawal request']);
 	Route::get('cardrequestwithdrawal', ['uses' => 'AdminController@cardRequestWithdrawal', 'as' => 'card request withdrawal']);
@@ -661,6 +667,8 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::get('cardrequestwithdrawalbycountry', ['uses' => 'AdminController@cardRequestWithdrawalByCountry', 'as' => 'card withdraw by country']);
 	Route::get('cardrequestprocessedbycountry', ['uses' => 'AdminController@cardRequestProcessedByCountry', 'as' => 'card processed by country']);
 	Route::get('bankrequestprocessedbycountry', ['uses' => 'AdminController@bankRequestProcessedByCountry', 'as' => 'bank processed by country']);
+
+	Route::get('mobilemoneyrequestprocessedbycountry', ['uses' => 'AdminController@mobilemoneyRequestProcessedByCountry', 'as' => 'mobilemoney processed by country']);
 
 
 	// Pending Transfers
@@ -685,6 +693,8 @@ Route::prefix('Admin/wallet')->group(function () {
 
 	Route::get('refundmoneyrequestbycountry', ['uses' => 'AdminController@refundMoneyRequestByCountry', 'as' => 'refund details by country']);
 	Route::get('processedrefund', ['uses' => 'AdminController@processedRefundMoneyRequest', 'as' => 'refund processed']);
+
+	Route::get('processedmobilemoney', ['uses' => 'AdminController@processedMobileMoneyRequest', 'as' => 'mobilemoney processed']);
 
 
 	Route::get('bankrequestprocessed', ['uses' => 'AdminController@bankRequestProcessed', 'as' => 'processed payment']);
@@ -985,6 +995,11 @@ Route::prefix('Admin/')->group(function () {
 	Route::post('createspecialinfoactivity', ['uses' => 'AdminController@createSpecialInfoActivity', 'as' => 'create special information']);
 	Route::post('deletespecialactivity', ['uses' => 'AdminController@deleteSpecialInfoActivity', 'as' => 'delete special activity']);
 	Route::get('allcountries', ['uses' => 'AdminController@allCountries', 'as' => 'all countries']);
+	Route::get('countrypaymentgateway', ['uses' => 'AdminController@allCountriesPaymentGateway', 'as' => 'create payment gateway']);
+	Route::post('countrypaymentgateway', ['uses' => 'AdminController@storeCountryPaymentGateway', 'as' => 'store payment gateway']);
+	Route::post('editcountrypaymentgateway', ['uses' => 'AdminController@editCountryPaymentGateway', 'as' => 'edit payment gateway']);
+	Route::post('deletecountrypaymentgateway', ['uses' => 'AdminController@deleteCountryPaymentGateway', 'as' => 'delete payment gateway']);
+	Route::post('updatecountrygateway', ['uses' => 'AdminController@updateCountryGateway', 'as' => 'update country gateway']);
 
 
 	Route::get('sendmessage', ['uses' => 'AdminController@sendUserMessage', 'as' => 'send message']);
@@ -1270,7 +1285,11 @@ Route::group(['prefix' => 'Ajax'], function () {
 
 
 	Route::post('checkverification', ['uses' => 'AdminController@ajaxCheckVerification', 'as' => 'Ajaxcheckverification']);
+
 	Route::post('paybankwithdrawal', ['uses' => 'AdminController@ajaxpayBankWithdrawal', 'as' => 'Ajaxpaybankwithdrawal']);
+
+	Route::post('paymobilemoneywithdrawal/{id}', ['uses' => 'AdminController@ajaxpayMobileMoneyWithdrawal', 'as' => 'Ajaxpaymobilemoneywithdrawal']);
+
 	Route::post('paycardwithdrawal', ['uses' => 'AdminController@ajaxpayCardWithdrawal', 'as' => 'Ajaxpaycardwithdrawal']);
 	Route::post('flagguser', ['uses' => 'AdminController@ajaxflagUser', 'as' => 'Ajaxflagguser']);
 

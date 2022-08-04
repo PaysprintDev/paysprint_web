@@ -26,7 +26,7 @@
                         <br>
                         <div class="col-md-12">
                             <h3>
-                                {{ $data['currencyCode']->currencySymbol . '' . number_format(Auth::user()->wallet_balance, 2) }}
+                                {{ $data['currencyCode']->currencySymbol . '' . number_format(Auth::user()->wallet_balance, 4) }}
                             </h3>
                         </div>
                     </div>
@@ -140,7 +140,7 @@
     <div class="row">
         <div class="col-md-12">
           <p>Hello</p> <i class="fa-solid fa-circle-check"></i>
-        </div> 
+        </div>
     </div>
     </div>
 </section>

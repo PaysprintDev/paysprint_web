@@ -17,6 +17,8 @@ use App\Events\Event;
 
 use App\User as User;
 
+use App\DusuProviders;
+
 use App\ClaimedPoints;
 
 use App\HistoryReport;
@@ -101,6 +103,8 @@ use Illuminate\Support\Facades\Log;
 
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Validator;
+
 use Illuminate\Support\Facades\Hash;
 
 
@@ -123,6 +127,8 @@ use Illuminate\Support\Facades\Storage;
 use App\InvoicePayment as InvoicePayment;
 
 use App\PromoDate;
+
+use App\MobileMoney;
 
 use App\SpecialPromo;
 
@@ -174,7 +180,7 @@ class HomeController extends Controller
     public function homePage()
     {
 
-       
+
         // To get the actual link from users click
 
         // $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -214,7 +220,7 @@ class HomeController extends Controller
 
             $allcountry = AllCountries::where('approval', 1)->get();
 
-            
+
             $this->page = 'Homepage';
             $this->name = '';
             $view = 'main.newpage.shade-pro.index';
@@ -234,11 +240,11 @@ class HomeController extends Controller
     public function searchCountry(Request $req){
         // dd($req->all());
         $search = $req->search;
-  
+
         $posts = AllCountries::query()->where('approval', 1,)->where ('name', 'LIKE', '%'.$search.'%') ->first();
 
-        
-        
+
+
         return view('main.displaycountry', compact('posts'));
     }
 
@@ -274,13 +280,13 @@ class HomeController extends Controller
             'availablecountry' => $allcountry
         ];
 
-        return view('main.newpage.shade-pro.merchantindex')->with(['pages' => $this->page, 'data'=> $data]);
+        return view('main.newpage.shade-pro.merchantindex')->with(['pages' => $this->page, 'data' => $data]);
     }
 
     public function index()
     {
 
-       
+
 
 
         // dd($req->session());
@@ -1330,14 +1336,63 @@ class HomeController extends Controller
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
             'cardIssuer' => $this->getCardIssuer(),
-            'continent' => $this->timezone[0]
+            'continent' => $this->timezone[0],
+            'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
+            'providers' => $this->dusuProvider(),
+
         );
 
+        // dd($data['providers']);
 
         return view('main.gateway')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
+    //Dusu providers
+    public function dusuProvider()
+    {
+        $country = AllCountries::where('name', Auth::user()->country)->first();
+        $code = $country->code;
+        $providers = DusuProviders::where('country_code', $code)->first();
+        $data = json_decode($providers->result);
+        return $data;
+    }
 
+    //add mobile money details
+    public function addmobileMoney(Request $req)
+    {
+
+
+        $id = Auth::id();
+
+        $userdetails = User::where('id', $id)->first();
+        $name = $userdetails->name;
+
+        $validation = Validator::make($req->all(), [
+            'account_type' => 'required',
+            'provider' => 'required',
+            'account_number' => 'required',
+            'code' => 'required'
+        ]);
+
+        MobileMoney::create([
+            'user_id' => $id,
+            'account_type' => $req->account_type,
+            'provider' => $req->provider,
+            'account_number' => $req->account_number,
+            'code' => $req->code
+        ]);
+
+        AddBank::create([
+            'user_id' => $id,
+            'bankName' => $req->provider,
+            'accountName' => $name,
+            'accountNumber' => $req->account_number,
+            'country' => $userdetails->country
+
+        ]);
+
+        return back()->with("msg", "<div class='alert alert-success'>Mobile Money Account Number Added Successfully</div>");
+    }
 
     public function requestExbcCard(Request $req)
     {
@@ -1554,9 +1609,12 @@ class HomeController extends Controller
             'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
-            'continent' => $this->timezone[0]
+            'continent' => $this->timezone[0],
+            'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
+            'providers' => MobileMoney::where('user_id', Auth::id())->get(),
         );
 
+        // dd($data['providers']);
 
         return view('main.withdrawmoney')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
@@ -2058,7 +2116,7 @@ class HomeController extends Controller
     public function statement(Request $req)
     {
 
-        
+
 
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
@@ -3802,8 +3860,8 @@ class HomeController extends Controller
             $this->page = 'list country';
             $this->name = session('name');
             $this->email = session('email');
-          
-         
+
+
         }
         $data = [
             'continent' => $this->timezone[0],
@@ -5553,6 +5611,7 @@ class HomeController extends Controller
 
 
 
+
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
 
@@ -5580,6 +5639,7 @@ class HomeController extends Controller
 
 
 
+
             /*
 
                 Calculation
@@ -5587,7 +5647,6 @@ class HomeController extends Controller
                 x = Variable * Amount;
                 y = Fixed + x;
             */
-
 
 
 
@@ -5609,6 +5668,7 @@ class HomeController extends Controller
                         $y = $data->fixed + $x;
 
                         $collection = $y;
+
                     } else {
 
                         if ($req->structure == "Withdrawal") {
@@ -5667,6 +5727,7 @@ class HomeController extends Controller
                 $amountReceive = $req->amount - $collection;
 
                 $state = "commission available";
+
             } else {
                 $amountReceive = $req->amount;
                 $state = "commission unavailable";
@@ -5701,6 +5762,8 @@ class HomeController extends Controller
 
         $availableWalletBalance = $thisuser->wallet_balance - $available;
 
+
+
         if ($availableWalletBalance <= $amountReceive) {
 
             if ($thisuser->accountType == "Individual") {
@@ -5709,7 +5772,7 @@ class HomeController extends Controller
                 $route = route('merchant add money');
             }
 
-            $walletCheck = 'Wallet Balance: <strong>' . $req->localcurrency . number_format($wallet, 2) . '</strong>. <br> Available Wallet Balance: <strong>' . $req->localcurrency . number_format($availableWalletBalance, 2) . '</strong>. <br> Insufficient balance. <a href="' . $route . '">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
+            $walletCheck = 'Wallet Balance: <strong>' . $req->localcurrency . number_format($wallet, 4) . '</strong>. <br> Available Wallet Balance: <strong>' . $req->localcurrency . number_format($availableWalletBalance, 4) . '</strong>. <br> Insufficient balance. <a href="' . $route . '">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
         }
         // }
 
@@ -5743,6 +5806,7 @@ class HomeController extends Controller
     public function convertCurrencyRate($foreigncurrency, $localcurrency, $amount)
     {
 
+
         // Get Markup
         $markuppercent = $this->markupPercentage();
 
@@ -5775,6 +5839,9 @@ class HomeController extends Controller
         curl_close($curl);
 
         $result = json_decode($response);
+
+
+
 
 
 

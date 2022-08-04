@@ -49,7 +49,7 @@
 
     <link rel="stylesheet" href="{{ asset('ext/plugins/countrycode/css/jquery.ccpicker.css') }}">
 
-    
+
 
     <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
@@ -57,7 +57,7 @@
 
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 
-   
+
 
 
     <script>

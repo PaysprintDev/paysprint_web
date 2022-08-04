@@ -6098,6 +6098,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     $checkIdv = $this->checkUsersPassAccount($thisuser->id);
 
 
+
+
                     if (in_array('withdraw money', $checkIdv['access'])) {
                         // Check number of withdrawal
                         if ($thisuser->number_of_withdrawals >= 1) {

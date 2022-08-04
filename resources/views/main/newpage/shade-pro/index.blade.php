@@ -51,7 +51,7 @@
     padding: 14px;
   }
   .topnav input[type=text] {
-    border: 1px solid #ffe29f;  
+    border: 1px solid #ffe29f;
   }
 }
 </style>
@@ -122,7 +122,7 @@
                             @auth
                                 <a href="{{ route('my account') }}" class="btn btn-warning with-icon gr-hover-y">Wallet
                                     balance -
-                                    {{ Auth::user()->currencySymbol . '' . number_format(Auth::user()->wallet_balance, 2) }}<i
+                                    {{ Auth::user()->currencySymbol . '' . number_format(Auth::user()->wallet_balance, 4) }}<i
                                         class="icon icon-tail-right font-weight-bold"></i></a>
                             @endauth
 
@@ -647,7 +647,7 @@
     </div>
     <!-- Content section 3 -->
 
-   
+
     <div class="feature-section pt-14 pt-lg-21 pb-7 bg-default-8">
         <div class="container">
             <div class="row justify-content-center">
@@ -789,10 +789,10 @@
             <div class="col-xl-5 col-lg-6 col-md-8">
                 <h2 class="title gr-text-4 mb-8">Avaliable in {{count($data['availablecountry'])}} Countries</h2>
             </div>
-      
-        
 
-         
+
+
+
         </div>
           <div class="row mx-auto">
 

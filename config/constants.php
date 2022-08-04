@@ -17,5 +17,13 @@ return [
         'customer_statement' => "d-7f88c5270e9f4d848800252afa4228e4",
         'virtual_account' => "d-2a2c67d548e3423eaff7a2b7c79fd960",
         'publicize_merchant' => "d-170c383925bf41dc923dd19e282c98b5",
-    ]
+    ],
+    'shuftipro' => [
+        'baseurl' => 'https://api.shuftipro.com',
+        'client_id' => env('SHUFTI_PRO_CLIENT_ID'),
+        'current_secret_key' => env('SHUFTI_PRO_CURRENT_SECRET_KEY'),
+        'new_secret_key' => env('SHUFTI_PRO_NEW_SECRET_KEY'),
+        'basic_auth' => env('SHUFTI_PRO_BASIC_AUTH'),
+    ],
+
 ];

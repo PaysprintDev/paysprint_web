@@ -45,6 +45,30 @@ trait DusuPay
         return $data;
     }
 
+    public function mobileMoneyWithdrawal($currency, $amount, $provider, $accountnumber, $accountname, $reference, $id)
+    {
+        $this->Dusuurl = $this->DusuBaseUrl . "/payouts";
+
+        $this->DusuCurlPost = json_encode([
+            "api_key" => env('DUSU_PAY_DEV_KEY_ID'),
+            "currency" =>  $currency,
+            "amount" => $amount,
+            "method" => "MOBILE_MONEY",
+            "provider_id" => $provider,
+            "account_number" => $accountnumber,
+            "account_name" => $accountname,
+            "merchant_reference" => $reference,
+            "narration" => "Payout to Mobile Money from Paysprint",
+            "extra_params" => [
+                "user_id" => $id
+            ]
+        ]);
+
+        $data = $this->mobileMoneyWithdrawalPoint();
+
+        return $data;
+    }
+
 
 
     public function getProviders($code, $currencyCode)
@@ -95,7 +119,7 @@ trait DusuPay
 
 
 
-    public function doPost()
+    public function doDusupayPost()
     {
 
         $curl = curl_init();
@@ -196,6 +220,34 @@ trait DusuPay
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                'secret-key: SECK-2022f6da520945cbf9693f7ff0817d5d3',
+                'Content-Type: application/json'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return json_decode($response);
+    }
+
+    //dusu mobile money withdrawal
+    public function mobileMoneyWithdrawalPoint()
+    {
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $this->Dusuurl,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $this->DusuCurlPost,
             CURLOPT_HTTPHEADER => array(
                 'secret-key: SECK-2022f6da520945cbf9693f7ff0817d5d3',
                 'Content-Type: application/json'

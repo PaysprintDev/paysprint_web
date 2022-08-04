@@ -26,7 +26,7 @@
                         <br>
                         <div class="col-md-12">
                             <h3>
-                                {{ $data['currencyCode']->currencySymbol . '' . number_format(Auth::user()->wallet_balance, 2) }}
+                                {{ $data['currencyCode']->currencySymbol . '' . number_format(Auth::user()->wallet_balance, 4) }}
                             </h3>
                         </div>
                     </div>
@@ -170,23 +170,23 @@
                         <td>{{ $specialpromo->start_date }}</td>
                         <td>{{ $specialpromo->end_date }}</td>
                         <td>
-                            
- 
+
+
                             @if (new DateTime(date('Y-m-d')) <= new DateTime($specialpromo->end_date))
                                  <a href="{{ route('join promo',$specialpromo->id) }}" class="btn btn-success {{ $exist ? 'disabled' : '' }}" >{{ $exist ? 'Joined' : 'Join Promo' }}</a>
                             @else
                              <a href="javascript:void()" class="btn btn-danger">Promo Ended</a>
-                           
+
                             @endif
-                                
+
                         </td>
                     </tr>
                 @endforeach
-                 
+
                    @else
                    <tr>
                     <td colspan="5" style="text-align: center">
-                         <div class="col-md-12 text-center"> No Promo available</div> 
+                         <div class="col-md-12 text-center"> No Promo available</div>
                     </td>
                    </tr>
                 @endif

@@ -159,7 +159,7 @@
                                             <a href="javascript:void()" type="button"
                                                 class="btn btn-danger fa-blink">Incomplete</a>
 
-                                         
+
                                         @endif
 
                                     </div>
@@ -309,7 +309,7 @@
 
 
                                         </li>
-                                        
+
                                     </ul>
                                 </div>
                             </div>
@@ -771,7 +771,7 @@
                                         </div>
                                     </div>
 
-                                    
+
                                     <div class="form-group">
                                         <label for="inputCorporationDocument"
                                             class="col-sm-3 control-label">&nbsp;</label>
@@ -787,7 +787,7 @@
                                     <div class="form-group">
                                         <div class="col-sm-offset-3 col-sm-9">
                                             <div class="row">
-                                                <div class="col-md-6">
+                                                <div @if (env('APP_ENV') === 'local') class="col-md-6" @else class="col-md-12" @endif>
                                                     <button type="button" class="btn btn-primary btn-block"
                                                         onclick="handShake('merchantbusiness')"
                                                         id="updatemyBusinessProfile">Update Business</button>
@@ -795,17 +795,19 @@
                                                 <div class="col-md-6">
 
 
-                                                    @if ($data['getbusinessDetail']->promote_business == 0)
+                                                    @if (env('APP_ENV') === 'local')
+                                                        @if ($data['getbusinessDetail']->promote_business == 0)
                                                         <button type="button" class="btn btn-danger btn-block"
                                                             onclick="handShake('promotebusiness')"
                                                             id="promoteMyBusiness">Promote Business</button>
-                                                    @elseif($data['getbusinessDetail']->push_notification == 0)
-                                                        <button type="button" class="btn btn-success btn-block"
-                                                            onclick="handShake('broadcastbusiness')"
-                                                            id="broadcastMyBusiness">Broadcast Business</button>
-                                                    @else
-                                                        <button type="button" class="btn btn-success btn-block"
-                                                            disabled>Broadcast Business</button>
+                                                        @elseif($data['getbusinessDetail']->push_notification == 0)
+                                                            <button type="button" class="btn btn-success btn-block"
+                                                                onclick="handShake('broadcastbusiness')"
+                                                                id="broadcastMyBusiness">Broadcast Business</button>
+                                                        @else
+                                                            <button type="button" class="btn btn-success btn-block"
+                                                                disabled>Broadcast Business</button>
+                                                        @endif
                                                     @endif
 
 
