@@ -24,9 +24,7 @@
                 $usersName = strlen(session('firstname') . ' ' . session('lastname')) < 15 ? session('firstname') . ' '
                     . session('lastname') : substr(session('firstname') . ' ' . session('lastname'), 0, 15) . '***' ;
                     $usersBusiness=strlen(session('businessname')) < 15 ? session('businessname') :
-                    substr(session('businessname'), 0, 15) . '***' ;
-                @endphp
-                <p>{{ session('businessname') != null ?
+                    substr(session('businessname'), 0, 15) . '***' ; @endphp <p>{{ session('businessname') != null ?
                     $usersBusiness : $usersName }}</p>
                     @if (session('role') != 'Super' && session('role') != 'Access to Level 1 only' && session('role') !=
                     'Access to Level 1 and 2 only' && session('role') != 'Customer Marketing')
@@ -593,6 +591,9 @@
                     <li title="Processed Refunds"><a href="{{ route('refund processed') }}"><i
                                 class="fa fa-circle-o text-red"></i> Processed Refunds</a></li>
 
+                    <li title="Mobile Money"><a href="{{ route('mobilemoney processed') }}"><i
+                                class="fa fa-circle-o text-red"></i>
+                            Mobile Money</a></li>
                 </ul>
             </li>
 
