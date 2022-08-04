@@ -23,8 +23,10 @@ trait ShuftiPro
 
         $this->shuftiProUrl = config("constants.shuftipro.baseurl");
         $this->shuftiProPost = json_encode([
-            "dob" => $dob,
-            "name" => $name
+            "background_checks" => [
+                "dob" => $dob,
+                "name" => $name
+            ]
         ]);
     }
 

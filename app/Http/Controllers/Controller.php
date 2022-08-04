@@ -151,6 +151,7 @@ class Controller extends BaseController
     public function platformcurrencyConvert()
     {
 
+
         // Get Markup
         $markuppercent = $this->markupPercentage();
 
@@ -182,6 +183,7 @@ class Controller extends BaseController
 
         $result = json_decode($response);
 
+
         $query = [];
         $official = [];
         $countryQuery = [];
@@ -197,7 +199,10 @@ class Controller extends BaseController
             $official[] = $value;
         }
 
+
+
         $countryRec = ConversionCountry::orderBy('id', 'ASC')->get();
+
 
 
         foreach ($countryRec as $country) {
@@ -210,8 +215,16 @@ class Controller extends BaseController
             'official' => $official,
         ];
 
+
+
         for ($i = 0; $i < count($countryQuery); $i++) {
-            ConversionCountry::where('country', $dataInfo['country'][$i])->update(['rate' => $dataInfo['query'][$i], 'official' => $dataInfo['official'][$i]]);
+
+            if($dataInfo['country'][$i] != "Zimbabwean Dollar"){
+                // Zimbabwean Dollar
+                ConversionCountry::where('country', $dataInfo['country'][$i])->update(['rate' => $dataInfo['query'][$i], 'official' => $dataInfo['official'][$i]]);
+            }
+
+
         }
 
 
