@@ -17698,12 +17698,9 @@ class AdminController extends Controller
     public function ajaxpayMobileMoneyWithdrawal(Request $req, $id)
     {
 
-
-
         $data = BankWithdrawal::where('id', $req->id)->first();
         $userdetails = User::where('ref_code', $data->ref_code)->first();
-        $mobiledetails = MobileMoney::where('id', $userdetails->id)->where('provider', $data->bank_id)->first();
-
+        $mobiledetails = MobileMoney::where('id', $userdetails->id)->first();
         $currency = $userdetails->currencyCode;
         $amount = (float)$data->amountToSend;
 
