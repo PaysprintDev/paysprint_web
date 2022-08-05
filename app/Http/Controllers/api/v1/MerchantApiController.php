@@ -3429,7 +3429,7 @@ class MerchantApiController extends Controller
             $convertLocal = $amount / $result->quotes->$localCurrency;
 
             // Converting your USD value to other currency ie CAD * Y
-            $convRate = $result->quotes->$currency * $convertLocal;
+            $convRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
 
             $message = 'success';
         } else {

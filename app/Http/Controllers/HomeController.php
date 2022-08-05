@@ -4613,8 +4613,8 @@ class HomeController extends Controller
                         $this->sendEmail($this->email, "Fund remittance");
                     }
 
-
-                    $dob = Auth::user()->yearOfBirth . "-" . Auth::user()->monthOfBirth . "-" . Auth::user()->dayOfBirth;
+                    if(env('APP_ENV') === 'local'){
+                        $dob = Auth::user()->yearOfBirth . "-" . Auth::user()->monthOfBirth . "-" . Auth::user()->dayOfBirth;
 
                     $thisusersname = explode(" ", Auth::user()->name);
 
@@ -4634,6 +4634,10 @@ class HomeController extends Controller
                     } else {
                         User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
                     }
+                    }
+
+
+
                 } else {
 
                     $message = "error";
@@ -5857,9 +5861,7 @@ class HomeController extends Controller
             // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
             $convertLocal = ($amount / $result->quotes->$localCurrency);
 
-
-
-            $convRate = $result->quotes->$currency * $convertLocal;
+            $convRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }

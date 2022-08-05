@@ -263,8 +263,8 @@ class UserController extends Controller
                     $this->sendEmail($this->email, "Fund remittance");
                 }
 
-
-                $dob = $getcurrentUser->yearOfBirth . "-" . $getcurrentUser->monthOfBirth . "-" . $getcurrentUser->dayOfBirth;
+                if(env('APP_ENV') === 'local'){
+                    $dob = $getcurrentUser->yearOfBirth . "-" . $getcurrentUser->monthOfBirth . "-" . $getcurrentUser->dayOfBirth;
 
                 $thisusersname = explode(" ", $getcurrentUser->name);
 
@@ -284,6 +284,8 @@ class UserController extends Controller
                 } else {
                     User::where('id', $getcurrentUser->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
                 }
+                }
+
             } else {
 
                 $message = "error";

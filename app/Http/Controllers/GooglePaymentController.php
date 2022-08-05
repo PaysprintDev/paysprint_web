@@ -1323,8 +1323,7 @@ class GooglePaymentController extends Controller
             // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
             $convertLocal = ($amount / $result->quotes->$localCurrency);
 
-
-            $convRate = $result->quotes->$currency * $convertLocal;
+            $convRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }

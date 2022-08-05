@@ -1006,6 +1006,8 @@ Route::prefix('Admin/')->group(function () {
 	Route::post('deletecountrypaymentgateway', ['uses' => 'AdminController@deleteCountryPaymentGateway', 'as' => 'delete payment gateway']);
 	Route::post('updatecountrygateway', ['uses' => 'AdminController@updateCountryGateway', 'as' => 'update country gateway']);
 
+	Route::get('allpaiduserlist', ['uses' => 'AdminController@allPaidUserList', 'as' => 'all paid user list']);
+	Route::get('allfreeuserlist', ['uses' => 'AdminController@allFreeUserList', 'as' => 'all free user list']);
 
 	Route::get('sendmessage', ['uses' => 'AdminController@sendUserMessage', 'as' => 'send message']);
 	Route::post('sendusermessage', ['uses' => 'AdminController@sendNewUserMessage', 'as' => 'send user message']);
