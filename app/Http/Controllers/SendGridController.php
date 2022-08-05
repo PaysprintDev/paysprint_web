@@ -63,18 +63,21 @@ class SendGridController extends Controller
 
             $thisuser=User::take(2)->get();
              $promodate=PromoDate::first();
+      
             //  dd($promodate);
             
-              $startdate = $promodate->start_date;
-              $enddate = $promodate->end_date;
+            
     
         if (count($thisuser) > 0) {
 
             $setPointClaimed = 0;
+            
 
             foreach ($thisuser as $user) {
+                $totalreferred  = User::where('referred_by',$user->ref_code)->count('referred_by');
+
                 $username = explode(" ", $user->name);
-                $referreduser = $user->referral_by;
+                $referreduser = $totalreferred;
                 $referralpoint = $user->referral_points;
 
                 $point= ReferralClaim::where('user_id', $user->id)->first();
@@ -94,7 +97,7 @@ class SendGridController extends Controller
 
                 $data = [
                     "name"  => $username[0],
-                    "message" => "<p><strong>Here is the Summary of Your Refer and Earn Points for the month:</strong></p><br>
+                    "message" => "<p><strong>Here is the Summary of Your Refer and Earn Points:</strong></p><br>
                     <table>
                     <tr>
                       <td>Total Users Referred</td>
@@ -114,7 +117,19 @@ class SendGridController extends Controller
                      </tr>
                     
                     </table><hr/><br>",
-                    "promotion" => "<p><strong>PaySprint Special Promo: </strong></p><br>
+
+                ];
+
+                if ($promodate){
+
+                    $startdate = $promodate->start_date;
+                    $enddate = $promodate->end_date;
+                    $promodetails = $promodate->promo_details;
+
+
+                    $data["promotion"] = "
+                    <img src='https://paysprint.ca/images/paysprint_logo/specialpromologo.png' alt='promo' width='300' height='200'>
+                    <p><strong>PaySprint Special Promo: </strong></p><br>
                     <table>
                     <tr>
                         <td>Promo Start Date:</td>
@@ -125,16 +140,22 @@ class SendGridController extends Controller
                         <td>Promo End Date:</td>
                         <td> $enddate</td>
                     </tr>
-                  
-                    
-                    </table>"
-            
-                ];
+                     <br>
+                    <tbody>
+                    <tr>
+                      <td <div><p><strong>How the promo works :</strong></p></div>
+                      <div><p>$promodetails</p></div>
+                      </td>
+                    </tr>
+                    </tbody>
+                    </table>
+                  ";
+                }
 
                 $template_id = config('constants.sendgrid.refer_earn');
 
                 $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
-                        dd($response);
+                        // dd($response);
                 // echo $response;
             }
         }
@@ -173,6 +194,7 @@ class SendGridController extends Controller
               
                 $redeemed_point = $setCurrentBalance;
                 $total_point = $aquired_point + $redeemed_point;
+                $point_balance=$total_point-$aquired_point;
                
                 $credit_total=Walletcredit::where('user_id', $user->id)->first();
                 if(isset($credit_total)){
@@ -202,7 +224,7 @@ class SendGridController extends Controller
                     </tr>
                     <tr>
                       <td>Total Reward Points Balance - </td>
-                      <td>$total_point-$aquired_point</td>
+                      <td>$point_balance</td>
                     </tr>
                     <br>
                      <tr>
