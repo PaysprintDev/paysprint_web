@@ -115,6 +115,7 @@ class SendGridController extends Controller
                       <td>Referral Points Balance-</td>
                       <td>$referralbalance</td>
                      </tr>
+                     <p>Redeem Your Referral Points when you have more than 500 points and above for a wallet of [Currency, Subscription Plan]</p>
                     
                     </table><hr/><br>",
 
@@ -173,7 +174,7 @@ class SendGridController extends Controller
        
         try {
 
-            $thisuser=User::get();
+            $thisuser=User::take(2)->get();
          
     
          if (count($thisuser) > 0) {
@@ -184,6 +185,7 @@ class SendGridController extends Controller
 
             foreach ($thisuser as $user) {
                 $username = explode(" ", $user->name);
+                $currency = $user->currencySymbol;
                 $points=Points::where('user_id', $user->id)->first();
                 if(isset($points)){
                     $setPointAquired = $points->points_acquired;
@@ -203,8 +205,8 @@ class SendGridController extends Controller
                 $credit_balance = $setCreditClaimed;
 
                
-               $receiver = $user->email;
-           
+            //    $receiver = $user->email;
+            $receiver = "olasunkanmimunirat@gmail.com";
                
                
                 $date=date('d/M/Y', strtotime($user->created_at));
@@ -230,7 +232,9 @@ class SendGridController extends Controller
                      <tr>
                        <td>Total Reward Point Credit Received</td>
                        <td>$credit_balance</td>
-                      </tr>
+                      </tr><br>
+                     <p style='background-color:#e6dfdf;padding:2px 2px 2px 2px;'><strong>Redeem Your Reward Points for $currency, Amount) Wallet Credit when you accumulate [Reward points].</strong></p>
+                     
                    
                    
                   </table>",

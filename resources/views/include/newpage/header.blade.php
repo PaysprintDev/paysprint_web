@@ -78,7 +78,7 @@
 
                                    <li class="nav-item">
                                        <a class="nav-link" href="{{ route('home') }}"
-                                           style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ 'Are you a CONSUMER? ' . strtoupper(' CLICK HERE') }}</a>
+                                           style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ 'Personal Account? ' . strtoupper(' CLICK HERE') }}</a>
                                    </li>
 
                                @endguest
@@ -254,7 +254,7 @@
 
                        <li class="nav-item">
                            <a class="nav-link" href="{{ route('merchant home') }}"
-                               style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ 'Are you a Merchant? ' . strtoupper(' CLICK HERE') }}</a>
+                               style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ 'Business Account? ' . strtoupper(' CLICK HERE') }}</a>
                        </li>
 
 
