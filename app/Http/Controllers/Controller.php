@@ -137,7 +137,10 @@ class Controller extends BaseController
         if ($result->success == true) {
             // This amount is in dollars
             // $convRate = ($amount / $result->quotes->$currency) * $markValue;
-            $convRate = ($amount / $result->quotes->$currency);
+
+
+
+            $convRate = ($amount / ($currency !== 'USDUSD' ? $result->quotes->$currency : 1));
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }

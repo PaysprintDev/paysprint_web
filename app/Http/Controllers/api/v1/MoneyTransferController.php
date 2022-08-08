@@ -668,13 +668,13 @@ class MoneyTransferController extends Controller
                                             // $this->to = "bambo@vimfile.com";
                                             $this->to = $receiver->email;
                                             $this->name = $sender->name;
-                                            $this->coy_name = $receiver->name;
+                                            $this->coy_name = ($receiver->accountType == 'Individual' ? $receiver->name : $receiver->businessname);
                                             // $this->email = "bambo@vimfile.com";
                                             $this->email = $sender->email;
                                             $this->amount = $req->currency . " " . $req->amount;
                                             $this->paypurpose = $service;
                                             $this->subject = "Payment Received from " . $sender->name . " for " . $service;
-                                            $this->subject2 = "Your Payment to " . $receiver->name . " was successfull";
+                                            $this->subject2 = "Your Payment to " . $this->coy_name . " was successfull";
 
                                             // Mail to receiver
                                             $this->sendEmail($this->to, "Payment Received");
@@ -685,7 +685,7 @@ class MoneyTransferController extends Controller
 
 
                                             // Insert Statement
-                                            $activity = "Transfer of " . $req->currency . " " . number_format($req->amount, 2) . " to " . $receiver->name . " for " . $service . " on PaySprint Wallet.";
+                                            $activity = "Transfer of " . $req->currency . " " . number_format($req->amount, 2) . " to " . $this->coy_name . " for " . $service . " on PaySprint Wallet.";
                                             $credit = 0;
                                             $debit = $req->amount;
                                             $reference_code = $paymentToken;
@@ -703,12 +703,12 @@ class MoneyTransferController extends Controller
                                                 $recWallet = $receiver->wallet_balance + $req->amount;
                                                 $walletstatus = "Delivered";
 
-                                                $recMsg = "Hi " . $receiver->name . ", You have received " . $req->currency . ' ' . number_format($req->amount, 2) . " in your PaySprint wallet for " . $service . " from " . $sender->name . ". You now have " . $req->currency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
+                                                $recMsg = "Hi " . $this->coy_name . ", You have received " . $req->currency . ' ' . number_format($req->amount, 2) . " in your PaySprint wallet for " . $service . " from " . $sender->name . ". You now have " . $req->currency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
                                             } else {
                                                 $recWallet = $receiver->wallet_balance;
                                                 $walletstatus = "Pending";
 
-                                                $recMsg = "Hi " . $receiver->name . ", You have received " . $req->currency . ' ' . number_format($req->amount, 2) . " for " . $service . " from " . $sender->name . ". Your wallet balance is " . $req->currency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
+                                                $recMsg = "Hi " . $this->coy_name . ", You have received " . $req->currency . ' ' . number_format($req->amount, 2) . " for " . $service . " from " . $sender->name . ". Your wallet balance is " . $req->currency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
                                             }
 
                                             // User::where('ref_code', $req->accountNumber)->update(['wallet_balance' => $recWallet]);
@@ -769,7 +769,7 @@ class MoneyTransferController extends Controller
                                             $this->updatePoints($sender->id, 'Send money');
 
 
-                                            Log::info("Sent money from " . $sender->name . " to " . $receiver->name . ". This is a test environment");
+                                            Log::info("Sent money from " . $sender->name . " to " . $this->coy_name . ". This is a test environment");
 
                                             // $this->createNotification($receiver->ref_code, $recMsg);
 
@@ -939,13 +939,13 @@ class MoneyTransferController extends Controller
                                                         // $this->to = "bambo@vimfile.com";
                                                         $this->to = $receiver->email;
                                                         $this->name = $sender->name;
-                                                        $this->coy_name = $receiver->name;
+                                                        $this->coy_name = ($receiver->accountType == 'Individual' ? $receiver->name : $receiver->businessname);
                                                         // $this->email = "bambo@vimfile.com";
                                                         $this->email = $sender->email;
                                                         $this->amount = $receiver->currencyCode . " " . $dataInfo;
                                                         $this->paypurpose = $service;
                                                         $this->subject = "Payment Received from " . $sender->name . " for " . $service;
-                                                        $this->subject2 = "Your Payment to " . $receiver->name . " was successfull";
+                                                        $this->subject2 = "Your Payment to " . $this->coy_name . " was successfull";
 
                                                         // Mail to receiver
                                                         $this->sendEmail($this->to, "Payment Received");
@@ -956,7 +956,7 @@ class MoneyTransferController extends Controller
 
 
                                                         // Insert Statement
-                                                        $activity = "Transfer of " . $receiver->currencyCode . " " . number_format($dataInfo, 2) . " to " . $receiver->name . " for " . $service . " on PaySprint Wallet.";
+                                                        $activity = "Transfer of " . $receiver->currencyCode . " " . number_format($dataInfo, 2) . " to " . $this->coy_name . " for " . $service . " on PaySprint Wallet.";
                                                         $credit = 0;
                                                         $debit = $req->amount;
                                                         $reference_code = $paymentToken;
@@ -974,12 +974,12 @@ class MoneyTransferController extends Controller
                                                             $recWallet = $receiver->wallet_balance + $dataInfo;
                                                             $walletstatus = "Delivered";
 
-                                                            $recMsg = "Hi " . $receiver->name . ", You have received " . $receiver->currencyCode . ' ' . number_format($dataInfo, 2) . " in your PaySprint wallet for " . $service . " from " . $sender->name . ". You now have " . $receiver->currencyCode . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
+                                                            $recMsg = "Hi " . $this->coy_name . ", You have received " . $receiver->currencyCode . ' ' . number_format($dataInfo, 2) . " in your PaySprint wallet for " . $service . " from " . $sender->name . ". You now have " . $receiver->currencyCode . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
                                                         } else {
                                                             $recWallet = $receiver->wallet_balance;
                                                             $walletstatus = "Pending";
 
-                                                            $recMsg = "Hi " . $receiver->name . ", You have received " . $receiver->currencyCode . ' ' . number_format($dataInfo, 2) . " for " . $service . " from " . $sender->name . ". Your wallet balance is " . $receiver->currencyCode . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
+                                                            $recMsg = "Hi " . $this->coy_name . ", You have received " . $receiver->currencyCode . ' ' . number_format($dataInfo, 2) . " for " . $service . " from " . $sender->name . ". Your wallet balance is " . $receiver->currencyCode . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
                                                         }
 
                                                         User::where('ref_code', $req->accountNumber)->update(['wallet_balance' => $recWallet]);
@@ -1417,7 +1417,7 @@ class MoneyTransferController extends Controller
                 $convertLocal = $amount / $result->quotes->$localCurrency;
 
 
-                $actualRate = $result->quotes->$currency * $convertLocal;
+                $actualRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
                 $convRate = $actualRate * 95/100;
 
 

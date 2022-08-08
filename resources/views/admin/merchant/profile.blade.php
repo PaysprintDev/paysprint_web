@@ -794,7 +794,7 @@
                                                 </div>
                                                 <div class="col-md-6">
 
-
+                                                {{-- TODO:: Work on the Promote Button and put the needed information --}}
                                                     @if (env('APP_ENV') === 'local')
                                                         @if ($data['getbusinessDetail']->promote_business == 0)
                                                         <button type="button" class="btn btn-danger btn-block"

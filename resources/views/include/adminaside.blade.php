@@ -339,12 +339,22 @@
 
                 @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only' || session('role')
                 == 'Access to Level 1 only')
-            <li>
-                <a href="{{ route('all countries') }}">
-                    <i class="fa fa-book"></i>
-                    <span>All Countries</span>
-                </a>
 
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-book"></i>
+                    <span>Country Information</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li title="All Countries"><a href="{{ route('all countries') }}"><i
+                                class="fa fa-circle-o text-red"></i> All Countries</a></li>
+                    <li title="Payment Gateway"><a href="{{ route('create payment gateway') }}"><i class="fa fa-circle-o text-red"></i>
+                            Payment Gateway</a></li>
+
+                </ul>
             </li>
 
 

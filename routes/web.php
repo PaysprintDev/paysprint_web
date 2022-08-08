@@ -109,6 +109,11 @@ Route::get('mailtocustomer', 'SendGridController@cronToPublicizeMerchantToConsum
 Route::get('countryflag', 'CountryFlagController@displayCountryFlag');
 
 
+// AML Background Check
+Route::get('amlcheck', 'ShuftiProController@callAmlCheck');
+Route::get('kyccheck', 'ShuftiProController@callKycCheck');
+
+Route::get('checkcharge', 'MonerisController@chargeForShuftiProVerification');
 
 
 // Update BVN List
@@ -232,7 +237,7 @@ Route::get('payorganization', ['uses' => 'HomeController@payOrganization', 'as' 
 
 Route::get('contact', ['uses' => 'HomeController@contact', 'as' => 'contact']);
 
-Route::get('displaycountry', ['uses' => 'HomeController@displayCountry', 'as' => 'display country']);
+Route::get('countrylist', ['uses' => 'HomeController@displayCountry', 'as' => 'display country']);
 
 
 
@@ -1005,6 +1010,8 @@ Route::prefix('Admin/')->group(function () {
 	Route::post('deletecountrypaymentgateway', ['uses' => 'AdminController@deleteCountryPaymentGateway', 'as' => 'delete payment gateway']);
 	Route::post('updatecountrygateway', ['uses' => 'AdminController@updateCountryGateway', 'as' => 'update country gateway']);
 
+	Route::get('allpaiduserlist', ['uses' => 'AdminController@allPaidUserList', 'as' => 'all paid user list']);
+	Route::get('allfreeuserlist', ['uses' => 'AdminController@allFreeUserList', 'as' => 'all free user list']);
 
 	Route::get('sendmessage', ['uses' => 'AdminController@sendUserMessage', 'as' => 'send message']);
 	Route::post('sendusermessage', ['uses' => 'AdminController@sendNewUserMessage', 'as' => 'send user message']);

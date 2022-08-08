@@ -386,13 +386,13 @@ class GooglePaymentController extends Controller
                                                 // $this->to = "bambo@vimfile.com";
                                                 $this->to = $client->email;
                                                 $this->name = $user->name;
-                                                $this->coy_name = $client->name;
+                                                $this->coy_name = ($client->accountType == "Individual" ? $client->name : $client->businessname);
                                                 // $this->email = "bambo@vimfile.com";
                                                 $this->email = $user->email;
                                                 $this->amount = $req->currency . ' ' . number_format($dataInfo, 2);
                                                 $this->paypurpose = $service;
                                                 $this->subject = "Payment Received from " . $user->name . " for " . $service;
-                                                $this->subject2 = "Your Payment to " . $client->name . " was successfull";
+                                                $this->subject2 = "Your Payment to " . $this->coy_name . " was successfull";
 
 
 
@@ -405,8 +405,8 @@ class GooglePaymentController extends Controller
 
 
                                                 // Insert Statement
-                                                // $activity = $req->payment_method." transfer of ".$req->currency.' '.number_format($req->amount, 2)." to ".$client->name." for ".$service;
-                                                $activity = $req->payment_method . " transfer of " . $req->currency . ' ' . number_format($dataInfo, 2) . " to " . $client->name . " for " . $service;
+                                                // $activity = $req->payment_method." transfer of ".$req->currency.' '.number_format($req->amount, 2)." to ".$this->coy_name." for ".$service;
+                                                $activity = $req->payment_method . " transfer of " . $req->currency . ' ' . number_format($dataInfo, 2) . " to " . $this->coy_name . " for " . $service;
                                                 $credit = 0;
                                                 // $debit = $req->conversionamount + $req->commissiondeduct;
                                                 // $debit = $dataInfo;
@@ -429,12 +429,12 @@ class GooglePaymentController extends Controller
                                                     $recWallet = $client->wallet_balance + $dataInfo;
                                                     $walletstatus = "Delivered";
 
-                                                    $recMsg = "Hi " . $client->name . ", You have received " . $req->currency . ' ' . number_format($dataInfo, 2) . " in your PaySprint wallet for " . $service . " from " . $user->name . ". You now have " . $req->currency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
+                                                    $recMsg = "Hi " . $this->coy_name . ", You have received " . $req->currency . ' ' . number_format($dataInfo, 2) . " in your PaySprint wallet for " . $service . " from " . $user->name . ". You now have " . $req->currency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
                                                 } else {
                                                     $recWallet = $client->wallet_balance;
                                                     $walletstatus = "Pending";
 
-                                                    $recMsg = "Hi " . $client->name . ", You have received " . $req->currency . ' ' . number_format($dataInfo, 2) . " for " . $service . " from " . $user->name . ". Your wallet balance is " . $req->currency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
+                                                    $recMsg = "Hi " . $this->coy_name . ", You have received " . $req->currency . ' ' . number_format($dataInfo, 2) . " for " . $service . " from " . $user->name . ". Your wallet balance is " . $req->currency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
                                                 }
 
 
@@ -1323,8 +1323,7 @@ class GooglePaymentController extends Controller
             // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
             $convertLocal = ($amount / $result->quotes->$localCurrency);
 
-
-            $convRate = $result->quotes->$currency * $convertLocal;
+            $convRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }

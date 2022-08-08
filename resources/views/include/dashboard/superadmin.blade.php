@@ -241,6 +241,52 @@
 </div>
 
 
+{{-- Paid Plans --}}
+<div class="col-lg-3 col-xs-6">
+    <!-- small box -->
+    <div class="small-box bg-blue">
+        <div class="inner">
+            <h3>
+                {{ $data['paiduserscount'] }}
+            </h3>
+
+            <p>Paid Users</p>
+        </div>
+        <div class="icon">
+            <i class="ion ion-pie-graph"></i>
+        </div>
+        <a href="{{ route('all paid user list') }}" class="small-box-footer">View All <i
+                class="fa fa-arrow-circle-right"></i></a>
+    </div>
+</div>
+
+
+{{-- End Paid Plans --}}
+
+
+{{-- Paid Plans --}}
+<div class="col-lg-3 col-xs-6">
+    <!-- small box -->
+    <div class="small-box bg-blue">
+        <div class="inner">
+            <h3>
+                {{ $data['freeuserscount'] }}
+            </h3>
+
+            <p>Free Users</p>
+        </div>
+        <div class="icon">
+            <i class="ion ion-pie-graph"></i>
+        </div>
+        <a href="{{ route('all free user list') }}" class="small-box-footer">View All <i
+                class="fa fa-arrow-circle-right"></i></a>
+    </div>
+</div>
+
+
+{{-- End Paid Plans --}}
+
+
 <div class="col-lg-3 col-xs-6">
     <!-- small box -->
     <div class="small-box bg-purple">
