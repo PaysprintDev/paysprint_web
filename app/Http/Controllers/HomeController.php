@@ -161,7 +161,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback','displayCountry', 'searchCountry']]);
+        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback', 'displayCountry', 'searchCountry']]);
 
         $location = $this->myLocation();
 
@@ -237,11 +237,12 @@ class HomeController extends Controller
         return view($view)->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
-    public function searchCountry(Request $req){
+    public function searchCountry(Request $req)
+    {
         // dd($req->all());
         $search = $req->search;
 
-        $posts = AllCountries::query()->where('approval', 1,)->where ('name', 'LIKE', '%'.$search.'%') ->first();
+        $posts = AllCountries::query()->where('approval', 1,)->where('name', 'LIKE', '%' . $search . '%')->first();
 
 
 
@@ -1236,6 +1237,166 @@ class HomeController extends Controller
         return view('main.myaccount')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
+    public function choosePayment(Request $req)
+    {
+
+
+        if (Auth::user()->accountType == "Individual") {
+            if ($req->session()->has('email') == false) {
+                if (Auth::check() == true) {
+                    $this->page = 'My Wallet';
+                    $this->name = Auth::user()->name;
+                    $this->email = Auth::user()->email;
+                } else {
+                    $this->page = 'My Wallet';
+                    $this->name = '';
+                }
+            } else {
+                $this->page = 'My Wallet';
+                $this->name = session('name');
+                $this->email = session('email');
+            }
+
+
+            $data = array(
+                'currencyCode' => $this->getCountryCode(Auth::user()->country),
+                'getCard' => $this->getUserCard(),
+                'getBank' => $this->getUserBankDetail(),
+                'walletStatement' => $this->walletStatement(),
+                'continent' => $this->timezone[0],
+                'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
+                'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
+                'partner' => $this->getPartners(),
+            );
+        } else {
+            return redirect()->route('dashboard');
+        }
+
+        return view('main.choosepayment')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+    public function chooseWithdrawal(Request $req)
+    {
+
+
+        if (Auth::user()->accountType == "Individual") {
+            if ($req->session()->has('email') == false) {
+                if (Auth::check() == true) {
+                    $this->page = 'My Wallet';
+                    $this->name = Auth::user()->name;
+                    $this->email = Auth::user()->email;
+                } else {
+                    $this->page = 'My Wallet';
+                    $this->name = '';
+                }
+            } else {
+                $this->page = 'My Wallet';
+                $this->name = session('name');
+                $this->email = session('email');
+            }
+
+
+            $data = array(
+                'currencyCode' => $this->getCountryCode(Auth::user()->country),
+                'getCard' => $this->getUserCard(),
+                'getBank' => $this->getUserBankDetail(),
+                'walletStatement' => $this->walletStatement(),
+                'continent' => $this->timezone[0],
+                'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
+                'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
+                'partner' => $this->getPartners(),
+            );
+        } else {
+            return redirect()->route('dashboard');
+        }
+
+        return view('main.choosewithdraw')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+    public function partnerPayment(Request $req)
+    {
+        if (Auth::user()->accountType == "Individual") {
+            if ($req->session()->has('email') == false) {
+                if (Auth::check() == true) {
+                    $this->page = 'My Wallet';
+                    $this->name = Auth::user()->name;
+                    $this->email = Auth::user()->email;
+                } else {
+                    $this->page = 'My Wallet';
+                    $this->name = '';
+                }
+            } else {
+                $this->page = 'My Wallet';
+                $this->name = session('name');
+                $this->email = session('email');
+            }
+
+
+            $data = array(
+                'currencyCode' => $this->getCountryCode(Auth::user()->country),
+                'getCard' => $this->getUserCard(),
+                'getBank' => $this->getUserBankDetail(),
+                'walletStatement' => $this->walletStatement(),
+                'continent' => $this->timezone[0],
+                'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
+                'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
+                'partner' => $this->getPartners(),
+            );
+        } else {
+            return redirect()->route('dashboard');
+        }
+
+        return view('main.partnerpayment')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+    public function partnerWithdrawal(Request $req)
+    {
+        if (Auth::user()->accountType == "Individual") {
+            if ($req->session()->has('email') == false) {
+                if (Auth::check() == true) {
+                    $this->page = 'My Wallet';
+                    $this->name = Auth::user()->name;
+                    $this->email = Auth::user()->email;
+                } else {
+                    $this->page = 'My Wallet';
+                    $this->name = '';
+                }
+            } else {
+                $this->page = 'My Wallet';
+                $this->name = session('name');
+                $this->email = session('email');
+            }
+
+
+            $data = array(
+                'currencyCode' => $this->getCountryCode(Auth::user()->country),
+                'getCard' => $this->getUserCard(),
+                'getBank' => $this->getUserBankDetail(),
+                'walletStatement' => $this->walletStatement(),
+                'continent' => $this->timezone[0],
+                'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
+                'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
+                'partner' => $this->getPartners(),
+            );
+        } else {
+            return redirect()->route('dashboard');
+        }
+
+        return view('main.partnerwithdrawal')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function getPartners()
+    {
+        $data = AllCountries::where('name', Auth::user()->country)->first();
+        $partner = json_decode($data->partner);
+        return $partner;
+    }
+
 
     public function expressResponseback(Request $req)
     {
@@ -1342,6 +1503,7 @@ class HomeController extends Controller
 
         );
 
+
         // dd($data['providers']);
 
         return view('main.gateway')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -1350,11 +1512,16 @@ class HomeController extends Controller
     //Dusu providers
     public function dusuProvider()
     {
-        $country = AllCountries::where('name', Auth::user()->country)->first();
-        $code = $country->code;
-        $providers = DusuProviders::where('country_code', $code)->first();
-        $data = json_decode($providers->result);
-        return $data;
+        $country = AllCountries::where('name', Auth::user()->country)->where('gateway', 'Dusupay')->first();
+
+        if (isset($country)) {
+            $code = $country->code;
+            $providers = DusuProviders::where('country_code', $code)->first();
+
+            $data = json_decode($providers->result);
+
+            return $data;
+        }
     }
 
     //add mobile money details
@@ -1618,6 +1785,8 @@ class HomeController extends Controller
 
         return view('main.withdrawmoney')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
+
+
 
 
     public function addBankDetail(Request $req)
@@ -3833,7 +4002,8 @@ class HomeController extends Controller
         return view('main.developer.community')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
-    public function displayCountry(Request $req){
+    public function displayCountry(Request $req)
+    {
         $community = Community::orderBy('created_at', 'DESC')->paginate(5);
         $allcountry = AllCountries::where('approval', 1)->get();
         // dd($allcountry);
@@ -3860,15 +4030,13 @@ class HomeController extends Controller
             $this->page = 'community';
             $this->name = session('name');
             $this->email = session('email');
-
-
         }
         $data = [
             'continent' => $this->timezone[0],
             'community' => $community,
             'availablecountry' => $allcountry
         ];
-    //    dd($data);
+        //    dd($data);
 
         return view('main.displaycountry')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
@@ -5668,7 +5836,6 @@ class HomeController extends Controller
                         $y = $data->fixed + $x;
 
                         $collection = $y;
-
                     } else {
 
                         if ($req->structure == "Withdrawal") {
@@ -5727,7 +5894,6 @@ class HomeController extends Controller
                 $amountReceive = $req->amount - $collection;
 
                 $state = "commission available";
-
             } else {
                 $amountReceive = $req->amount;
                 $state = "commission unavailable";
@@ -5807,6 +5973,7 @@ class HomeController extends Controller
     {
 
 
+
         // Get Markup
         $markuppercent = $this->markupPercentage();
 
@@ -5840,20 +6007,17 @@ class HomeController extends Controller
 
         $result = json_decode($response);
 
-
-
-
-
-
         if ($result->success == true) {
 
             // Conversion Rate USD to Local currency
             // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
             $convertLocal = ($amount / $result->quotes->$localCurrency);
 
+            if ($currency != "USDUSD") {
+                $convRate = $result->quotes->$currency * $convertLocal;
+            }
 
-
-            $convRate = $result->quotes->$currency * $convertLocal;
+            $convRate = 1 * $convertLocal;
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }

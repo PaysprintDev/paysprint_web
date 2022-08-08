@@ -152,7 +152,7 @@ class DusupayController extends Controller
 
     public function mobileMoneyProviders()
     {
-        $code = 'cm';
+        $code = 'ug';
         $data = $this->mobileMoney($code);
 
         DusuProviders::updateOrCreate(['country_code' => $code], ['country_code' => $code, 'result' => json_encode($data->data)]);
@@ -1021,7 +1021,7 @@ class DusupayController extends Controller
 
                     if (in_array('withdraw money', $checkIdv['access'])) {
                         // Check number of withdrawal
-                        if ($thisuser->number_of_withdrawals >= 20) {
+                        if ($thisuser->number_of_withdrawals >= 1) {
 
                             if ($thisuser->accountType == "Merchant") {
                                 $message = "You have already made withdrawal this week. Try again next week";
