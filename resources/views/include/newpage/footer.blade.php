@@ -161,7 +161,7 @@
                                 <li class="py-2"><a
                                         class="gr-text-9 text-primary font-weight-bold hover-underline active"
                                         href="javascript:void()"><i class="fa fa-map-marker" aria-hidden="true"></i>
-                                        PaySprint,
+                                        PaySprint International<br>
                                         10 George St. North, Brampton. ON. L6X1R2. Canada</a></li>
                             </ul>
                         </div>
