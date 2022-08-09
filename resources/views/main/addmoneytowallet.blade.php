@@ -20,21 +20,21 @@
 
 
     @if ($data['paymentgateway']->gateway == 'Stripe')
-        <script src="https://js.stripe.com/v3/"></script>
-        <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
     @endif
 
     @if ($data['paymentgateway']->gateway == 'PayPal')
 
-        @if (env('APP_ENV') == 'local')
-            <script
-                        src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_LOCAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}">
-            </script>
-        @else
-            <script
-                        src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}">
-            </script>
-        @endif
+    @if (env('APP_ENV') == 'local')
+    <script
+        src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_LOCAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}">
+    </script>
+    @else
+    <script
+        src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}">
+    </script>
+    @endif
 
 
     @endif
@@ -69,7 +69,6 @@
         .disp-0 {
             display: none !important;
         }
-
     </style>
 
 </head>
@@ -103,8 +102,8 @@
                                     @csrf
 
 
-                                    <div
-                                        @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group" @else class="form-group disp-0" @endif>
+                                    <div @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group" @else
+                                        class="form-group disp-0" @endif>
                                         <label for="gateway">
                                             {{-- <h6>Select Card Type/ Bank Account</h6> --}}
                                             <h6>Select Payment Gateway</h6>
@@ -124,8 +123,8 @@
                                         </div>
                                     </div>
 
-                                    <div
-                                        @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group" @else class="form-group disp-0" @endif>
+                                    <div @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group" @else
+                                        class="form-group disp-0" @endif>
                                         <label for="card_type">
                                             <h6>Select Card Type/ Bank Account</h6>
                                         </label>
@@ -136,7 +135,7 @@
                                             <select name="card_type" id="card_type" class="form-control" required>
                                                 <option value="Debit Card" selected>Select option</option>
                                                 @if (Auth::user()->country != 'Nigeria')
-                                                    <option value="Credit Card">Credit Card</option>
+                                                <option value="Credit Card">Credit Card</option>
                                                 @endif
                                                 <option value="Debit Card">Debit VISA/Mastercard</option>
                                                 {{-- <option value="Google Pay">Google Pay</option> --}}
@@ -148,8 +147,8 @@
                                     </div>
 
 
-                                    <div
-                                        @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group selectCard" @else class="form-group selectCard disp-0" @endif>
+                                    <div @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group
+                                        selectCard" @else class="form-group selectCard disp-0" @endif>
                                         <label for="card_id">
                                             <h6>Select Card</h6>
                                         </label>
@@ -162,12 +161,13 @@
                                                 <option value="NULL">Select option</option>
                                                 {{-- @if (count($data['getCard']) > 0)
 
-                                                    @foreach ($data['getCard'] as $mycard)
-                                                    <option value="{{ $mycard->id }}">{!! wordwrap($mycard->card_number, 4, '-', true).' - ['.$mycard->card_provider.']' !!}</option>
-                                                    @endforeach
+                                                @foreach ($data['getCard'] as $mycard)
+                                                <option value="{{ $mycard->id }}">{!! wordwrap($mycard->card_number, 4,
+                                                    '-', true).' - ['.$mycard->card_provider.']' !!}</option>
+                                                @endforeach
 
                                                 @else
-                                                    <option value="">Add a new card</option>
+                                                <option value="">Add a new card</option>
                                                 @endif --}}
 
                                             </select>
@@ -201,8 +201,8 @@
                                             <input type="hidden" name="paymentToken" class="form-control"
                                                 id="paymentToken" value="" readonly>
 
-                                            <input type="hidden" name="mode" class="form-control" id="mode"
-                                                value="live" readonly>
+                                            <input type="hidden" name="mode" class="form-control" id="mode" value="live"
+                                                readonly>
 
                                         </div>
                                     </div>
@@ -257,11 +257,11 @@
                                     </div>
 
                                     @if ($data['paymentgateway']->gateway == 'Stripe')
-                                        <div class="form-group"> <label for="card-elemet">
-                                                <h6>Card Detail</h6>
-                                            </label>
-                                            <div id="card-element"></div>
-                                        </div>
+                                    <div class="form-group"> <label for="card-elemet">
+                                            <h6>Card Detail</h6>
+                                        </label>
+                                        <div id="card-element"></div>
+                                    </div>
                                     @endif
 
 
@@ -272,46 +272,47 @@
                                     {{-- @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3) --}}
 
 
-                                    @if ($data['paymentgateway']->gateway == 'PayStack' || $data['paymentgateway']->gateway == 'Express Payment Solution')
-                                        {{-- <div class="card-footer"> <a type="button" id="epsButton" href="" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </a></div> --}}
+                                    @if ($data['paymentgateway']->gateway == 'PayStack' ||
+                                    $data['paymentgateway']->gateway == 'Express Payment Solution')
+                                    {{-- <div class="card-footer"> <a type="button" id="epsButton" href=""
+                                            class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </a>
+                                    </div> --}}
 
 
-                                        <div class="card-footer"> <button type="button"
-                                                onclick="payWithEPS('{{ Auth::user()->email }}')"
-                                                class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
-                                                Confirm
-                                            </button></div>
-                                        
+                                    <div class="card-footer"> <button type="button"
+                                            onclick="payWithEPS('{{ Auth::user()->email }}')"
+                                            class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                            Confirm
+                                        </button></div>
+
                                     @elseif($data['paymentgateway']->gateway == 'Dusupay')
-                                    <div class="card-footer"> 
-                                    <button type="button"
-                                        onclick="payWithDusupay('{{ Auth::user()->email }}')"
-                                        class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
-                                        Confirm
-                                    </button>
-                                     </div>
+                                    <div class="card-footer">
+                                        <button type="button" onclick="payWithDusupay('{{ Auth::user()->email }}')"
+                                            class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                            Confirm
+                                        </button>
+                                    </div>
 
                                     @elseif($data['paymentgateway']->gateway == 'Stripe')
-                                        <div class="card-footer"> <button type="submit"
-                                                class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Pay
-                                                Now</button></div>
+                                    <div class="card-footer"> <button type="submit"
+                                            class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Pay
+                                            Now</button></div>
                                     @elseif($data['paymentgateway']->gateway == 'PayPal')
-                                        {{-- PayPal --}}
-                                        <div class="card-footer" id="paypal-button-container"></div>
+                                    {{-- PayPal --}}
+                                    <div class="card-footer" id="paypal-button-container"></div>
                                     @else
-                                        <div class="card-footer"> <button type="button"
-                                                onclick="handShake('addmoney')"
-                                                class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
-                                                Confirm
-                                            </button></div>
+                                    <div class="card-footer"> <button type="button" onclick="handShake('addmoney')"
+                                            class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                            Confirm
+                                        </button></div>
                                     @endif
 
                                     {{-- @else
-                                        <div class="card-footer"> <button type="button"
-                                                onclick="restriction('addmoney', '{{ Auth::user()->name }}')"
-                                                class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
-                                                Confirm
-                                            </button></div>
+                                    <div class="card-footer"> <button type="button"
+                                            onclick="restriction('addmoney', '{{ Auth::user()->name }}')"
+                                            class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                            Confirm
+                                        </button></div>
 
                                     @endif --}}
 
@@ -348,7 +349,7 @@
 
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"
-                integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
+            integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
         </script>
 
         <script src="{{ asset('pace/pace.min.js') }}"></script>
@@ -856,6 +857,8 @@
 
                         var response= await axios(config);
 
+                        
+
                         return response.data.data[0].id;
                         
                     } catch (error) {
@@ -921,9 +924,10 @@ var config = {
     data: data
 };
 
+console.log(config);
 const response = await axios(config);
 
-console.log(response);
+
 
 $('.cardSubmit').text('Confirm');
 
@@ -1321,8 +1325,8 @@ swal('Oops!', error.response.data.message, 'error');
 
 
         @if ($data['paymentgateway']->gateway == 'PayPal')
-            <script>
-                // Paypal Integration Start
+        <script>
+            // Paypal Integration Start
 
                 paypal.Buttons({
 
@@ -1368,14 +1372,14 @@ swal('Oops!', error.response.data.message, 'error');
 
 
                 // PayPal Integration End
-            </script>
+        </script>
         @endif
 
 
 
         @if ($data['paymentgateway']->gateway == 'Stripe')
-            <script>
-                // Stripe Integration Starts
+        <script>
+            // Stripe Integration Starts
 
 
 
@@ -1508,7 +1512,7 @@ swal('Oops!', error.response.data.message, 'error');
 
 
                 // Stripe Integration Ends
-            </script>
+        </script>
         @endif
 
 

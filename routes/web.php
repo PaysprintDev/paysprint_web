@@ -417,12 +417,16 @@ Route::prefix('mywallet')->group(function () {
 	Route::get('editcard/{id}', ['uses' => 'HomeController@editCard', 'as' => 'Edit card']);
 	Route::get('editbank/{id}', ['uses' => 'HomeController@editBank', 'as' => 'Edit bank']);
 	Route::get('addmoney', ['uses' => 'HomeController@addMoney', 'as' => 'Add Money']);
+	Route::get('choosepayment', ['uses' => 'HomeController@choosePayment', 'as' => 'Choose Payment']);
+	Route::get('choosewithdrawal', ['uses' => 'HomeController@chooseWithdrawal', 'as' => 'Choose Withdraw']);
 	Route::get('processmoney', ['uses' => 'HomeController@processMoney', 'as' => 'Process Money']);
 	Route::get('withdrawmoney', ['uses' => 'HomeController@withdrawMoney', 'as' => 'Withdraw Money']);
 	Route::get('addbank', ['uses' => 'HomeController@addBankDetail', 'as' => 'Add bank detail']);
 	Route::get('requestrefund', ['uses' => 'HomeController@requestForRefund', 'as' => 'request for refund']);
 	Route::get('notifications', ['uses' => 'HomeController@allNotifications', 'as' => 'notifications']);
 	Route::get('paymentgateway', ['uses' => 'HomeController@paymentGateway', 'as' => 'payment gateway']);
+	Route::get('partnerpayment', ['uses' => 'HomeController@partnerPayment', 'as' => 'partner payment']);
+	Route::get('partnerwithdrawal', ['uses' => 'HomeController@partnerWithdrawal', 'as' => 'partner withdrawal']);
 	Route::post('addmobilemoney', ['uses' => 'HomeController@addMobileMoney', 'as' => 'mobile money']);
 	Route::post('withdrawmobilemoney', ['uses' => 'DusupayController@withdrawMobileMoney', 'as' => 'withdraw mobile']);
 });

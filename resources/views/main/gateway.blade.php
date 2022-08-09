@@ -88,6 +88,8 @@
                         <!-- Credit card form content -->
                         <div class="tab-content">
 
+
+
                             <!-- credit card info-->
                             <div id="credit-card" class="tab-pane fade show active pt-3">
 
@@ -102,7 +104,8 @@
                                                     <label for="paymentmethod" style="font-weight: bold">PAYMENT
                                                         METHOD<label>
                                                 </div>
-                                                <input type="text" name="account_type" value="Mobile Money" id="paymentmethod" class="form-control" readonly>
+                                                <input type="text" name="account_type" value="Mobile Money"
+                                                    id="paymentmethod" class="form-control" readonly>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group col-md-12 mt-2">
@@ -139,6 +142,7 @@
 
                                         <!-- start-->
                                         @if (Auth::user()->country != 'Nigeria')
+
                                         <div @if (Auth::user()->country != 'Canada') class="col-md-6 mb-3" @else
                                             class="col-md-3 mb-3" @endif>
                                             <strong>

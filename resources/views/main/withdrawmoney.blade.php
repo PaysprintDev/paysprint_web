@@ -299,7 +299,6 @@
                                     </div>
                                 </form>
                                 @endforeach
-                                @endif
                                 @else
                                 <!--else starts-->
                                 <form role="form" action="#" method="POST" id="formElem">
@@ -630,7 +629,7 @@
                             </div>
 
                             @endif
-
+                        @endif
                         </div> <!-- End -->
 
                     </div>

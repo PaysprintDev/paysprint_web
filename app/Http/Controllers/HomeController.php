@@ -1237,6 +1237,166 @@ class HomeController extends Controller
         return view('main.myaccount')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
+    public function choosePayment(Request $req)
+    {
+
+
+        if (Auth::user()->accountType == "Individual") {
+            if ($req->session()->has('email') == false) {
+                if (Auth::check() == true) {
+                    $this->page = 'My Wallet';
+                    $this->name = Auth::user()->name;
+                    $this->email = Auth::user()->email;
+                } else {
+                    $this->page = 'My Wallet';
+                    $this->name = '';
+                }
+            } else {
+                $this->page = 'My Wallet';
+                $this->name = session('name');
+                $this->email = session('email');
+            }
+
+
+            $data = array(
+                'currencyCode' => $this->getCountryCode(Auth::user()->country),
+                'getCard' => $this->getUserCard(),
+                'getBank' => $this->getUserBankDetail(),
+                'walletStatement' => $this->walletStatement(),
+                'continent' => $this->timezone[0],
+                'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
+                'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
+                'partner' => $this->getPartners(),
+            );
+        } else {
+            return redirect()->route('dashboard');
+        }
+
+        return view('main.choosepayment')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+    public function chooseWithdrawal(Request $req)
+    {
+
+
+        if (Auth::user()->accountType == "Individual") {
+            if ($req->session()->has('email') == false) {
+                if (Auth::check() == true) {
+                    $this->page = 'My Wallet';
+                    $this->name = Auth::user()->name;
+                    $this->email = Auth::user()->email;
+                } else {
+                    $this->page = 'My Wallet';
+                    $this->name = '';
+                }
+            } else {
+                $this->page = 'My Wallet';
+                $this->name = session('name');
+                $this->email = session('email');
+            }
+
+
+            $data = array(
+                'currencyCode' => $this->getCountryCode(Auth::user()->country),
+                'getCard' => $this->getUserCard(),
+                'getBank' => $this->getUserBankDetail(),
+                'walletStatement' => $this->walletStatement(),
+                'continent' => $this->timezone[0],
+                'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
+                'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
+                'partner' => $this->getPartners(),
+            );
+        } else {
+            return redirect()->route('dashboard');
+        }
+
+        return view('main.choosewithdraw')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+    public function partnerPayment(Request $req)
+    {
+        if (Auth::user()->accountType == "Individual") {
+            if ($req->session()->has('email') == false) {
+                if (Auth::check() == true) {
+                    $this->page = 'My Wallet';
+                    $this->name = Auth::user()->name;
+                    $this->email = Auth::user()->email;
+                } else {
+                    $this->page = 'My Wallet';
+                    $this->name = '';
+                }
+            } else {
+                $this->page = 'My Wallet';
+                $this->name = session('name');
+                $this->email = session('email');
+            }
+
+
+            $data = array(
+                'currencyCode' => $this->getCountryCode(Auth::user()->country),
+                'getCard' => $this->getUserCard(),
+                'getBank' => $this->getUserBankDetail(),
+                'walletStatement' => $this->walletStatement(),
+                'continent' => $this->timezone[0],
+                'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
+                'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
+                'partner' => $this->getPartners(),
+            );
+        } else {
+            return redirect()->route('dashboard');
+        }
+
+        return view('main.partnerpayment')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+    public function partnerWithdrawal(Request $req)
+    {
+        if (Auth::user()->accountType == "Individual") {
+            if ($req->session()->has('email') == false) {
+                if (Auth::check() == true) {
+                    $this->page = 'My Wallet';
+                    $this->name = Auth::user()->name;
+                    $this->email = Auth::user()->email;
+                } else {
+                    $this->page = 'My Wallet';
+                    $this->name = '';
+                }
+            } else {
+                $this->page = 'My Wallet';
+                $this->name = session('name');
+                $this->email = session('email');
+            }
+
+
+            $data = array(
+                'currencyCode' => $this->getCountryCode(Auth::user()->country),
+                'getCard' => $this->getUserCard(),
+                'getBank' => $this->getUserBankDetail(),
+                'walletStatement' => $this->walletStatement(),
+                'continent' => $this->timezone[0],
+                'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
+                'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
+                'partner' => $this->getPartners(),
+            );
+        } else {
+            return redirect()->route('dashboard');
+        }
+
+        return view('main.partnerwithdrawal')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+
+    public function getPartners()
+    {
+        $data = AllCountries::where('name', Auth::user()->country)->first();
+        $partner = json_decode($data->partner);
+        return $partner;
+    }
+
 
     public function expressResponseback(Request $req)
     {
@@ -1343,6 +1503,7 @@ class HomeController extends Controller
 
         );
 
+
         // dd($data['providers']);
 
         return view('main.gateway')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -1351,11 +1512,16 @@ class HomeController extends Controller
     //Dusu providers
     public function dusuProvider()
     {
-        $country = AllCountries::where('name', Auth::user()->country)->first();
-        $code = $country->code;
-        $providers = DusuProviders::where('country_code', $code)->first();
-        $data = json_decode($providers->result);
-        return $data;
+        $country = AllCountries::where('name', Auth::user()->country)->where('gateway', 'Dusupay')->first();
+
+        if (isset($country)) {
+            $code = $country->code;
+            $providers = DusuProviders::where('country_code', $code)->first();
+
+            $data = json_decode($providers->result);
+
+            return $data;
+        }
     }
 
     //add mobile money details
@@ -1619,6 +1785,8 @@ class HomeController extends Controller
 
         return view('main.withdrawmoney')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
+
+
 
 
     public function addBankDetail(Request $req)
@@ -4613,31 +4781,28 @@ class HomeController extends Controller
                         $this->sendEmail($this->email, "Fund remittance");
                     }
 
-                    if(env('APP_ENV') === 'local'){
+                    if (env('APP_ENV') === 'local') {
                         $dob = Auth::user()->yearOfBirth . "-" . Auth::user()->monthOfBirth . "-" . Auth::user()->dayOfBirth;
 
-                    $thisusersname = explode(" ", Auth::user()->name);
+                        $thisusersname = explode(" ", Auth::user()->name);
 
-                    $getUsername = [
-                        'first_name' => $thisusersname[0],
-                        'middle_name' => '',
-                        'last_name' => $thisusersname[1],
-                    ];
+                        $getUsername = [
+                            'first_name' => $thisusersname[0],
+                            'middle_name' => '',
+                            'last_name' => $thisusersname[1],
+                        ];
 
-                    $shuftiVerify = new ShuftiProController();
+                        $shuftiVerify = new ShuftiProController();
 
-                    $checkAmlVerification = $shuftiVerify->callAmlCheck(Auth::user()->ref_code, $dob, $getUsername, Auth::user()->email, $countryApproval->code);
+                        $checkAmlVerification = $shuftiVerify->callAmlCheck(Auth::user()->ref_code, $dob, $getUsername, Auth::user()->email, $countryApproval->code);
 
 
-                    if ($checkAmlVerification->event !== 'verification.accepted') {
-                        User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
-                    } else {
-                        User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
+                        if ($checkAmlVerification->event !== 'verification.accepted') {
+                            User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
+                        } else {
+                            User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
+                        }
                     }
-                    }
-
-
-
                 } else {
 
                     $message = "error";
@@ -5817,6 +5982,7 @@ class HomeController extends Controller
     {
 
 
+
         // Get Markup
         $markuppercent = $this->markupPercentage();
 
@@ -5850,16 +6016,17 @@ class HomeController extends Controller
 
         $result = json_decode($response);
 
-
-
-
-
-
         if ($result->success == true) {
 
             // Conversion Rate USD to Local currency
             // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
             $convertLocal = ($amount / $result->quotes->$localCurrency);
+
+            if ($currency != "USDUSD") {
+                $convRate = $result->quotes->$currency * $convertLocal;
+            }
+
+            $convRate = 1 * $convertLocal;
 
             $convRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
         } else {
