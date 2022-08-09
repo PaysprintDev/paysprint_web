@@ -19,7 +19,7 @@ use App\Mail\sendEmail;
 trait DusuPay
 {
 
-    public $DusuBaseUrl = "https://sandbox.dusupay.com/v1";
+    public $DusuBaseUrl = "https://api.dusupay.com/v1";
     public $Dusuurl;
     public $DusuCurlPost;
 
@@ -30,14 +30,14 @@ trait DusuPay
         $this->Dusuurl = $this->DusuBaseUrl . "/collections";
 
         $this->DusuCurlPost = json_encode([
-            'api_key' => env('DUSU_PAY_DEV_KEY_ID'),
+            'api_key' => env('DUSU_PAY_PROD_KEY_ID'),
             'currency' => $currencyCode,
             'amount' => $amount,
             'method' => 'CARD',
             'provider_id' => 'local_ngn',
             'merchant_reference' => 'Payment to Paysprint Limited',
             'narration' => $reason,
-            "redirect_url" => 'https://localhost:8000'
+            "redirect_url" => 'https://paysprint.ca'
         ]);
 
         $data = $this->doPost();
@@ -50,7 +50,7 @@ trait DusuPay
         $this->Dusuurl = $this->DusuBaseUrl . "/payouts";
 
         $this->DusuCurlPost = json_encode([
-            "api_key" => env('DUSU_PAY_DEV_KEY_ID'),
+            "api_key" => env('DUSU_PAY_PROD_KEY_ID'),
             "currency" =>  $currency,
             "amount" => $amount,
             "method" => "MOBILE_MONEY",
@@ -74,11 +74,11 @@ trait DusuPay
     public function getProviders($code, $currencyCode)
     {
 
-        $this->Dusuurl = $this->DusuBaseUrl . "/payment-options/collection/card/" . $code . "?api_key=PUBK-2022ea52d25cf3defae72e56b0d88b200";
+        $this->Dusuurl = $this->DusuBaseUrl . "/payment-options/collection/card/" . $code . "?api_key=PUBK-202249daf4a7c0b83a91aecd47971f7a4";
 
 
         $this->DusuCurlPost = json_encode([
-            'api_key' => env('DUSU_PAY_DEV_KEY_ID'),
+            'api_key' => env('DUSU_PAY_PROD_KEY_ID'),
             'transaction_type' => 'COLLECTION',
             'method' => 'CARD',
             'country' => $currencyCode
@@ -93,10 +93,10 @@ trait DusuPay
 
     public function getBankCode($code)
     {
-        $this->Dusuurl = $this->DusuBaseUrl . "/payment-options/payout/bank/" . $code . "?api_key=PUBK-2022ea52d25cf3defae72e56b0d88b200";
+        $this->Dusuurl = $this->DusuBaseUrl . "/payment-options/payout/bank/" . $code . "?api_key=PUBK-202249daf4a7c0b83a91aecd47971f7a4";
 
         $this->DusuCurlPost = json_encode([
-            'api_key' => env('DUSU_PAY_DEV_KEY_ID'),
+            'api_key' => env('DUSU_PAY_PROD_KEY_ID'),
             'method' => 'PAYOUT',
             'country_code' => $code
         ]);
@@ -108,11 +108,9 @@ trait DusuPay
 
     public function mobileMoney($countrycode)
     {
-        $this->Dusuurl = $this->DusuBaseUrl . "/payment-options/payout/mobile_money/" . $countrycode . "?api_key=PUBK-2022ea52d25cf3defae72e56b0d88b200";
+        $this->Dusuurl = $this->DusuBaseUrl . "/payment-options/payout/mobile_money/" . $countrycode . "?api_key=PUBK-202249daf4a7c0b83a91aecd47971f7a4";
 
         $data = $this->mobileMoneyCode();
-
-
 
         return $data;
     }
@@ -149,7 +147,6 @@ trait DusuPay
 
     public function dusuGet()
     {
-
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -164,7 +161,7 @@ trait DusuPay
             CURLOPT_POSTFIELDS => $this->DusuCurlPost,
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'secret-key:SECK-2022f6da520945cbf9693f7ff0817d5d3',
+                'secret-key:SECK-20225840bc56aa220ac49e8077cdea819',
             ),
         ));
 
@@ -193,7 +190,7 @@ trait DusuPay
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_POSTFIELDS => $this->DusuCurlPost,
             CURLOPT_HTTPHEADER => array(
-                'secret-key: SECK-2022f6da520945cbf9693f7ff0817d5d3',
+                'secret-key: SECK-20225840bc56aa220ac49e8077cdea819',
                 'Content-Type: application/json'
             ),
         ));
@@ -221,7 +218,7 @@ trait DusuPay
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'GET',
             CURLOPT_HTTPHEADER => array(
-                'secret-key: SECK-2022f6da520945cbf9693f7ff0817d5d3',
+                'secret-key: SECK-20225840bc56aa220ac49e8077cdea819',
                 'Content-Type: application/json'
             ),
         ));
@@ -249,7 +246,7 @@ trait DusuPay
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => $this->DusuCurlPost,
             CURLOPT_HTTPHEADER => array(
-                'secret-key: SECK-2022f6da520945cbf9693f7ff0817d5d3',
+                'secret-key: SECK-20225840bc56aa220ac49e8077cdea819',
                 'Content-Type: application/json'
             ),
         ));

@@ -27,7 +27,8 @@
                         <br>
                         <div class="col-md-12">
                             <h3>
-                                {{ $data['currencyCode']->currencySymbol . '' . number_format(Auth::user()->wallet_balance, 4) }}
+                                {{ $data['currencyCode']->currencySymbol . '' .
+                                number_format(Auth::user()->wallet_balance, 4) }}
                             </h3>
                         </div>
                     </div>
@@ -140,61 +141,61 @@
     <div class="container">
 
         @isset($data['specialInfo'])
-            <div class="row">
-                <div class="alert alert-success show" role="alert">
-                    <strong>
-                        <h5>*** Special Information ***</h5>
-                    </strong>
-                    <hr>
-                    <p>
-                        {{ $data['specialInfo']->information }}
-                    </p>
+        <div class="row">
+            <div class="alert alert-success show" role="alert">
+                <strong>
+                    <h5>*** Special Information ***</h5>
+                </strong>
+                <hr>
+                <p>
+                    {{ $data['specialInfo']->information }}
+                </p>
 
 
-                </div>
             </div>
+        </div>
         @endisset
 
 
 
         @if (Auth::user()->approval == 0 || Auth::user()->accountLevel == 0)
-            <div class="row">
-                <div class="alert alert-danger alert-dismissible show" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+        <div class="row">
+            <div class="alert alert-danger alert-dismissible show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
 
-                    <p>
-                        <strong>Welcome {{ Auth::user()->name }}!</strong> <br> Our system is yet to complete your
-                        registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or
-                        Bank Statement that matches your name with the current address and also take a Selfie of
-                        yourself (if using the mobile app) and <a href="{{ route('profile') }}"
-                            style="font-weight: bold; text-decoration: underline">upload in your profile setting</a> to
-                        complete the verification process. <a href="{{ route('contact') }}"
-                            style="font-weight: bold; text-decoration: underline">Kindly contact the admin using the
-                            contact us form if you require further assistance. Thank You</a>
-                    </p>
+                <p>
+                    <strong>Welcome {{ Auth::user()->name }}!</strong> <br> Our system is yet to complete your
+                    registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or
+                    Bank Statement that matches your name with the current address and also take a Selfie of
+                    yourself (if using the mobile app) and <a href="{{ route('profile') }}"
+                        style="font-weight: bold; text-decoration: underline">upload in your profile setting</a> to
+                    complete the verification process. <a href="{{ route('contact') }}"
+                        style="font-weight: bold; text-decoration: underline">Kindly contact the admin using the
+                        contact us form if you require further assistance. Thank You</a>
+                </p>
 
 
 
-                </div>
             </div>
+        </div>
         @endif
 
 
 
         @if (Auth::user()->country == 'Canada' && Auth::user()->accountType == 'Merchant')
-            <div class="row">
-                <div class="alert alert-info" role="alert">
+        <div class="row">
+            <div class="alert alert-info" role="alert">
 
-                    <p>
-                        <strong>Hey {{ Auth::user()->businessname }}!</strong> <br> You are eligible for a cash
-                        advance. <a href="{{ route('cash advance') }}"
-                            style="font-weight: bold; text-decoration: underline">Click here to continue</a>
-                    </p>
+                <p>
+                    <strong>Hey {{ Auth::user()->businessname }}!</strong> <br> You are eligible for a cash
+                    advance. <a href="{{ route('cash advance') }}"
+                        style="font-weight: bold; text-decoration: underline">Click here to continue</a>
+                </p>
 
-                </div>
             </div>
+        </div>
         @endif
 
         <div class="row">
@@ -211,49 +212,50 @@
                             </form>
 
                             @if (Auth::user()->plan == 'basic')
-                                <button class="btn btn-primary" onclick="changeMyPlan('changeplan')"
-                                    id="cardSubmit">Upgrade
-                                    Account</button>
+                            <button class="btn btn-primary" onclick="changeMyPlan('changeplan')" id="cardSubmit">Upgrade
+                                Account</button>
                             @else
-                                @if (Auth::user()->country == 'Canada' || Auth::user()->country == 'United States')
-                                    <button class="btn btn-danger" onclick="changeMyPlan('changeplan')"
-                                        id="cardSubmit">Downgrade
-                                        Account</button>
+                            @if (Auth::user()->country == 'Canada' || Auth::user()->country == 'United States')
+                            <button class="btn btn-danger" onclick="changeMyPlan('changeplan')"
+                                id="cardSubmit">Downgrade
+                                Account</button>
 
-                                    @isset($data['myplan'])
-                                        <br>
-                                        <br>
-                                        <p class="text-info">Next Renewal:
-                                            {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}</p>
+                            @isset($data['myplan'])
+                            <br>
+                            <br>
+                            <p class="text-info">Next Renewal:
+                                {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}</p>
 
-                                        @php
-                                            $expire = date('Y-m-d', strtotime($data['myplan']->expire_date));
-                                            $now = time();
-                                            $your_date = strtotime($expire);
-                                            $datediff = $your_date - $now;
-                                        @endphp
+                            @php
+                            $expire = date('Y-m-d', strtotime($data['myplan']->expire_date));
+                            $now = time();
+                            $your_date = strtotime($expire);
+                            $datediff = $your_date - $now;
+                            @endphp
 
-                                        <p class="text-danger">
-                                            {{ round($datediff / (60 * 60 * 24)) > 1 ? round($datediff / (60 * 60 * 24)) . 'days' : round($datediff / (60 * 60 * 24)) . 'day' }}
-                                            left</p>
-                                    @endisset
-                                @else
-                                    @isset($data['myplan'])
-                                        <p class="text-info">Next Renewal:
-                                            {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}</p>
+                            <p class="text-danger">
+                                {{ round($datediff / (60 * 60 * 24)) > 1 ? round($datediff / (60 * 60 * 24)) . 'days' :
+                                round($datediff / (60 * 60 * 24)) . 'day' }}
+                                left</p>
+                            @endisset
+                            @else
+                            @isset($data['myplan'])
+                            <p class="text-info">Next Renewal:
+                                {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}</p>
 
-                                        @php
-                                            $expire = date('Y-m-d', strtotime($data['myplan']->expire_date));
-                                            $now = time();
-                                            $your_date = strtotime($expire);
-                                            $datediff = $your_date - $now;
-                                        @endphp
+                            @php
+                            $expire = date('Y-m-d', strtotime($data['myplan']->expire_date));
+                            $now = time();
+                            $your_date = strtotime($expire);
+                            $datediff = $your_date - $now;
+                            @endphp
 
-                                        <p class="text-danger">
-                                            {{ round($datediff / (60 * 60 * 24)) > 1 ? round($datediff / (60 * 60 * 24)) . 'days' : round($datediff / (60 * 60 * 24)) . 'day' }}
-                                            left</p>
-                                    @endisset
-                                @endif
+                            <p class="text-danger">
+                                {{ round($datediff / (60 * 60 * 24)) > 1 ? round($datediff / (60 * 60 * 24)) . 'days' :
+                                round($datediff / (60 * 60 * 24)) . 'day' }}
+                                left</p>
+                            @endisset
+                            @endif
                             @endif
 
                             <hr>
@@ -285,67 +287,66 @@
             </div>
 
             @if (Auth::user()->plan == 'classic')
-                <div class="col-md-4">
-                    <div class="card" style="width: 100%;">
+            <div class="col-md-4">
+                <div class="card" style="width: 100%;">
 
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                Trade FX with PaySprint <br><br>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            Trade FX with PaySprint <br><br>
 
-                                @if ($data['imtAccess']->imt == 'false' || $data['imtAccess']->outbound == 'false')
-                                    <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit"
-                                        disabled>PaySprint
-                                        FX</a>
+                            @if ($data['imtAccess']->imt == 'false' || $data['imtAccess']->outbound == 'false')
+                            <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit"
+                                disabled>PaySprint
+                                FX</a>
 
-                                    <hr>
+                            <hr>
 
-                                    <a href="#">COMING SOON!!!</a>
-                                @else
-                                    <a type="button" class="btn btn-primary"
-                                        href="{{ route('paysprint currency exchange') }}" id="cardSubmit">PaySprint
-                                        FX</a>
+                            <a href="#">COMING SOON!!!</a>
+                            @else
+                            <a type="button" class="btn btn-primary" href="{{ route('paysprint currency exchange') }}"
+                                id="cardSubmit">PaySprint
+                                FX</a>
 
-                                    <hr>
+                            <hr>
 
-                                    <a href="#">Learn more about trading on PaySprint</a>
-                                @endif
-                            </li>
+                            <a href="#">Learn more about trading on PaySprint</a>
+                            @endif
+                        </li>
 
-                        </ul>
-                    </div>
+                    </ul>
                 </div>
+            </div>
 
-                @else
+            @else
 
-                <div class="col-md-4">
-                    <div class="card" style="width: 100%;">
+            <div class="col-md-4">
+                <div class="card" style="width: 100%;">
 
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                Trade FX with PaySprint <br><br>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            Trade FX with PaySprint <br><br>
 
-                                @if ($data['imtAccess']->imt == 'false' || $data['imtAccess']->outbound == 'false')
-                                    <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit"
-                                        disabled>PaySprint
-                                        FX</a>
+                            @if ($data['imtAccess']->imt == 'false' || $data['imtAccess']->outbound == 'false')
+                            <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit"
+                                disabled>PaySprint
+                                FX</a>
 
-                                    <hr>
+                            <hr>
 
-                                    <a href="#">COMING SOON!!!</a>
-                                @else
-                                    <a type="button" class="btn btn-primary"
-                                        href="javascript:void(0)" id="cardSubmit">PaySprint
-                                        FX</a>
+                            <a href="#">COMING SOON!!!</a>
+                            @else
+                            <a type="button" class="btn btn-primary" href="javascript:void(0)" id="cardSubmit">PaySprint
+                                FX</a>
 
-                                    <hr>
+                            <hr>
 
-                                    <a href="#">Availaible on CLASSIC plan</a>
-                                @endif
-                            </li>
+                            <a href="#">Availaible on CLASSIC plan</a>
+                            @endif
+                        </li>
 
-                        </ul>
-                    </div>
+                    </ul>
                 </div>
+            </div>
 
             @endif
 
@@ -370,63 +371,64 @@
 
 
                                     @if (count($data['sendReceive']) > 0)
-                                        @foreach ($data['sendReceive'] as $sendRecData)
-                                            <tr>
-                                                <td><i
-                                                        class="fas fa-circle {{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}"></i>
-                                                </td>
-                                                <td>
+                                    @foreach ($data['sendReceive'] as $sendRecData)
+                                    <tr>
+                                        <td><i
+                                                class="fas fa-circle {{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}"></i>
+                                        </td>
+                                        <td>
 
 
 
-                                                    <div class="row">
-                                                        <div class="col-md-12" style="text-align: left;">
-                                                            {!! $sendRecData->activity !!}
-                                                        </div>
-                                                        <div class="col-md-12" style="text-align: left;">
-                                                            <small>
-                                                                {{ $sendRecData->reference_code }}
-                                                            </small><br>
-                                                            <small>
-                                                                {{ date('d/m/Y h:i a', strtotime($sendRecData->created_at)) }}
-                                                            </small>
+                                            <div class="row">
+                                                <div class="col-md-12" style="text-align: left;">
+                                                    {!! $sendRecData->activity !!}
+                                                </div>
+                                                <div class="col-md-12" style="text-align: left;">
+                                                    <small>
+                                                        {{ $sendRecData->reference_code }}
+                                                    </small><br>
+                                                    <small>
+                                                        {{ date('d/m/Y h:i a', strtotime($sendRecData->created_at)) }}
+                                                    </small>
 
-                                                            @if ($sendRecData->auto_deposit == 'off')
-                                                                <br>
-                                                                <small>
-                                                                    <input type="hidden" name="reference_code"
-                                                                        id="reference_code"
-                                                                        value="{{ $sendRecData->reference_code }}">
+                                                    @if ($sendRecData->auto_deposit == 'off')
+                                                    <br>
+                                                    <small>
+                                                        <input type="hidden" name="reference_code" id="reference_code"
+                                                            value="{{ $sendRecData->reference_code }}">
 
-                                                                    <small><span class='badge badge-danger'
-                                                                            style='cursor: pointer;'
-                                                                            onclick="shakeHand('claimmoney', '{{ $sendRecData->reference_code }}')">Pending
-                                                                            - Add to wallet <img
-                                                                                src="https://img.icons8.com/officel/16/000000/spinner-frame-4.png"
-                                                                                class="fa-spin disp-0"
-                                                                                id="btn{{ $sendRecData->reference_code }}" /></span></small>
+                                                        <small><span class='badge badge-danger' style='cursor: pointer;'
+                                                                onclick="shakeHand('claimmoney', '{{ $sendRecData->reference_code }}')">Pending
+                                                                - Add to wallet <img
+                                                                    src="https://img.icons8.com/officel/16/000000/spinner-frame-4.png"
+                                                                    class="fa-spin disp-0"
+                                                                    id="btn{{ $sendRecData->reference_code }}" /></span></small>
 
 
-                                                                </small>
-                                                            @endif
+                                                    </small>
+                                                    @endif
 
-                                                        </div>
-                                                    </div>
+                                                </div>
+                                            </div>
 
-                                                </td>
+                                        </td>
 
 
 
-                                                <td style="font-weight: 700"
-                                                    class="{{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}">
-                                                    {{ $sendRecData->credit != 0 ? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2) : '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
+                                        <td style="font-weight: 700"
+                                            class="{{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}">
+                                            {{ $sendRecData->credit != 0 ? '+' . $data['currencyCode']->currencySymbol .
+                                            number_format($sendRecData->credit, 2) : '-' .
+                                            $data['currencyCode']->currencySymbol . number_format($sendRecData->debit,
+                                            2) }}
+                                        </td>
+                                    </tr>
+                                    @endforeach
                                     @else
-                                        <tr>
-                                            <td colspan="3" align="center">No record</td>
-                                        </tr>
+                                    <tr>
+                                        <td colspan="3" align="center">No record</td>
+                                    </tr>
                                     @endif
 
 
@@ -458,113 +460,125 @@
 
                                     @if (isset($data['payInvoice']))
 
-                                        @foreach (json_decode($data['payInvoice']) as $payInv)
-                                            {{-- {{ dd($payInv) }} --}}
+                                    @foreach (json_decode($data['payInvoice']) as $payInv)
+                                    {{-- {{ dd($payInv) }} --}}
 
 
-                                            {{-- Get Merchant Currency --}}
+                                    {{-- Get Merchant Currency --}}
 
-                                            @if ($merchant = \App\User::where('ref_code', $payInv->uploaded_by)->first())
-                                                @if ($payInv->invoiced_currency != null)
-                                                    @php
-                                                        $currencySymb = $payInv->invoiced_currency_symbol;
-                                                    @endphp
-                                                @else
-                                                    @php
-                                                        $currencySymb = $merchant->currencySymbol;
-                                                    @endphp
-                                                @endif
-
-
-
-                                                @php
-                                                    $countryBase = $merchant->country;
-                                                @endphp
-                                            @else
-                                                @php
-                                                    $currencySymb = $data['currencyCode']->currencySymbol;
-                                                    $countryBase = Auth::user()->country;
-                                                @endphp
-                                            @endif
+                                    @if ($merchant = \App\User::where('ref_code', $payInv->uploaded_by)->first())
+                                    @if ($payInv->invoiced_currency != null)
+                                    @php
+                                    $currencySymb = $payInv->invoiced_currency_symbol;
+                                    @endphp
+                                    @else
+                                    @php
+                                    $currencySymb = $merchant->currencySymbol;
+                                    @endphp
+                                    @endif
 
 
-                                            <tr>
-                                                <td><i class="fas fa-circle"></i></td>
-                                                <td>
 
+                                    @php
+                                    $countryBase = $merchant->country;
+                                    @endphp
+                                    @else
+                                    @php
+                                    $currencySymb = $data['currencyCode']->currencySymbol;
+                                    $countryBase = Auth::user()->country;
+                                    @endphp
+                                    @endif
+
+
+                                    <tr>
+                                        <td><i class="fas fa-circle"></i></td>
+                                        <td>
+
+                                            
+                                            <div class="row">
+                                                <div class="col-md-12" style="text-align: left;">
+
+                                                    {!! 'Invoice for ' . $payInv->service . ' to ' .
+                                                    $payInv->merchantName !!}
+
+                                                </div>
+                                                <div class="col-md-12" style="text-align: left;">
                                                     <div class="row">
-                                                        <div class="col-md-12" style="text-align: left;">
-
-                                                            {!! 'Invoice for ' . $payInv->service . ' to ' . $payInv->merchantName !!}
-
-                                                        </div>
-                                                        <div class="col-md-12" style="text-align: left;">
-                                                            <div class="row">
-                                                                <div class="col-md-8">
-                                                                    <small>
-                                                                        {{ $payInv->invoice_no }}
-                                                                        {!! $countryBase != Auth::user()->country ? '<img src="https://img.icons8.com/color/30/000000/around-the-globe.png"/>' : '' !!}
-                                                                    </small>
-                                                                </div>
-                                                                <div class="col-md-4">
-
-                                                                    @if ($payInv->payment_status == 0)
-                                                                        <small><span class='badge badge-danger'
-                                                                                style='cursor: pointer;'
-                                                                                onclick=location.href='{{ route('payment', $payInv->invoice_no) }}'>Pay
-                                                                                Invoice</span></small>
-                                                                    @elseif($payInv->payment_status == 2)
-                                                                        <small><span class='badge badge-danger'
-                                                                                style='cursor: pointer;'
-                                                                                onclick=location.href='{{ route('payment', $payInv->invoice_no) }}'>Pay
-                                                                                Balance</span></small>
-                                                                    @else
-                                                                        <small><span
-                                                                                class='badge badge-success'>Paid</span></small>
-                                                                    @endif
-
-                                                                    {{-- {!! ($payInv->payment_status == 0) ? "<small><span class='badge badge-danger' style='cursor: pointer;' onclick=location.href='".route('payment', $payInv->invoice_no)."'>Pay Invoice</span></small>" : "<small><span class='badge badge-success'>Paid</span></small>" !!} --}}
-
-                                                                </div>
-                                                            </div>
+                                                        <div class="col-md-8">
                                                             <small>
-                                                                {{ date('d/m/Y h:i a', strtotime($payInv->created_at)) }}
-
+                                                                {{ $payInv->invoice_no }}
+                                                                {!! $countryBase != Auth::user()->country ? '<img
+                                                                    src="https://img.icons8.com/color/30/000000/around-the-globe.png" />'
+                                                                : '' !!}
                                                             </small>
                                                         </div>
+                                                        <div class="col-md-4">
+
+                                                            @if ($payInv->payment_status == 0)
+                                                            <small><span class='badge badge-danger'
+                                                                    style='cursor: pointer;' onclick=location.href='{{ route(' payment',
+                                                                    $payInv->invoice_no) }}'>Pay
+                                                                    Invoice</span></small>
+                                                            @elseif($payInv->payment_status == 2)
+                                                            <small><span class='badge badge-danger'
+                                                                    style='cursor: pointer;'
+                                                                    onclick=location.href='{{ route(' payment',
+                                                                    $payInv->invoice_no) }}'>Pay
+                                                                    Balance</span></small>
+                                                            @else
+                                                            <small><span class='badge badge-success'>Paid</span></small>
+                                                            @endif
+
+                                                            {{-- {!! ($payInv->payment_status == 0) ? "<small><span
+                                                                    class='badge badge-danger' style='cursor: pointer;'
+                                                                    onclick=location.href='".route(' payment',
+                                                                    $payInv->invoice_no)."'>Pay Invoice</span></small>"
+                                                            : "<small><span
+                                                                    class='badge badge-success'>Paid</span></small>" !!}
+                                                            --}}
+
+                                                        </div>
                                                     </div>
+                                                    <small>
+                                                        {{ date('d/m/Y h:i a', strtotime($payInv->created_at)) }}
 
-                                                </td>
-                                                <td style="font-weight: 700">
+                                                    </small>
+                                                </div>
+                                            </div>
 
-
-
-                                                    @php
-                                                        if ($payInv->total_amount != null || $payInv->total_amount != 0) {
-                                                            $totalAmount = $payInv->total_amount;
-                                                        } else {
-                                                            $totalAmount = $payInv->amount;
-                                                        }
-                                                    @endphp
-
-                                                    @if ($payInv->payment_status == 0)
-                                                        {{ '+' . $currencySymb . number_format($totalAmount, 2) }}
-                                                    @elseif($payInv->payment_status == 2)
-                                                        {{ '-' . $currencySymb . number_format($payInv->remaining_balance, 2) }}
-                                                    @else
-                                                        {{ '-' . $currencySymb . number_format($totalAmount, 2) }}
-                                                    @endif
-
-                                                    {{-- {{ ($payInv->payment_status == 0) ? "+".$currencySymb.number_format($totalAmount, 2) : "-".$currencySymb.number_format($totalAmount, 2) }} --}}
+                                        </td>
+                                        <td style="font-weight: 700">
 
 
-                                                </td>
-                                            </tr>
-                                        @endforeach
+
+                                            @php
+                                            if ($payInv->total_amount != null || $payInv->total_amount != 0) {
+                                            $totalAmount = $payInv->total_amount;
+                                            } else {
+                                            $totalAmount = $payInv->amount;
+                                            }
+                                            @endphp
+
+                                            @if ($payInv->payment_status == 0)
+                                            {{ '+' . $currencySymb . number_format($totalAmount, 2) }}
+                                            @elseif($payInv->payment_status == 2)
+                                            {{ '-' . $currencySymb . number_format($payInv->remaining_balance, 2) }}
+                                            @else
+                                            {{ '-' . $currencySymb . number_format($totalAmount, 2) }}
+                                            @endif
+
+                                            {{-- {{ ($payInv->payment_status == 0) ?
+                                            "+".$currencySymb.number_format($totalAmount, 2) :
+                                            "-".$currencySymb.number_format($totalAmount, 2) }} --}}
+
+
+                                        </td>
+                                    </tr>
+                                    @endforeach
                                     @else
-                                        <tr>
-                                            <td colspan="3" align="center">No record</td>
-                                        </tr>
+                                    <tr>
+                                        <td colspan="3" align="center">No record</td>
+                                    </tr>
                                     @endif
                                 </tbody>
                             </table>
@@ -593,38 +607,41 @@
                             <table class="table table-striped">
                                 <tbody>
                                     @if (count($data['sendReceive']) > 0)
-                                        @foreach ($data['sendReceive'] as $sendRecData)
-                                            <tr>
-                                                <td><i
-                                                        class="fas fa-circle {{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}"></i>
-                                                </td>
-                                                <td>
+                                    @foreach ($data['sendReceive'] as $sendRecData)
+                                    <tr>
+                                        <td><i
+                                                class="fas fa-circle {{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}"></i>
+                                        </td>
+                                        <td>
 
-                                                    <div class="row">
-                                                        <div class="col-md-12" style="text-align: left;">
-                                                            {!! $sendRecData->activity !!}
-                                                        </div>
-                                                        <div class="col-md-12" style="text-align: left;">
-                                                            <small>
-                                                                {{ $sendRecData->reference_code }}
-                                                            </small><br>
-                                                            <small>
-                                                                {{ date('d/m/Y h:i a', strtotime($sendRecData->created_at)) }}
-                                                            </small>
-                                                        </div>
-                                                    </div>
+                                            <div class="row">
+                                                <div class="col-md-12" style="text-align: left;">
+                                                    {!! $sendRecData->activity !!}
+                                                </div>
+                                                <div class="col-md-12" style="text-align: left;">
+                                                    <small>
+                                                        {{ $sendRecData->reference_code }}
+                                                    </small><br>
+                                                    <small>
+                                                        {{ date('d/m/Y h:i a', strtotime($sendRecData->created_at)) }}
+                                                    </small>
+                                                </div>
+                                            </div>
 
-                                                </td>
-                                                <td style="font-weight: 700"
-                                                    class="{{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}">
-                                                    {{ $sendRecData->credit != 0 ? '+' . $data['currencyCode']->currencySymbol . number_format($sendRecData->credit, 2) : '-' . $data['currencyCode']->currencySymbol . number_format($sendRecData->debit, 2) }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
+                                        </td>
+                                        <td style="font-weight: 700"
+                                            class="{{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}">
+                                            {{ $sendRecData->credit != 0 ? '+' . $data['currencyCode']->currencySymbol .
+                                            number_format($sendRecData->credit, 2) : '-' .
+                                            $data['currencyCode']->currencySymbol . number_format($sendRecData->debit,
+                                            2) }}
+                                        </td>
+                                    </tr>
+                                    @endforeach
                                     @else
-                                        <tr>
-                                            <td colspan="3" align="center">No record</td>
-                                        </tr>
+                                    <tr>
+                                        <td colspan="3" align="center">No record</td>
+                                    </tr>
                                     @endif
                                 </tbody>
                             </table>
@@ -642,8 +659,9 @@
                             <div class="col-md-4">
                                 <i class="far fa-bell" title="Notifications" style="cursor: pointer"
                                     onclick="location.href='{{ route('notifications') }}'"></i>
-                                @if (count($data['getfiveNotifications']) > 0 && $data['getfiveNotifications'][0]->notify == 0)
-                                    <i class="fas fa-circle fa-blink" style="color: rgb(129, 6, 6)"></i>
+                                @if (count($data['getfiveNotifications']) > 0 &&
+                                $data['getfiveNotifications'][0]->notify == 0)
+                                <i class="fas fa-circle fa-blink" style="color: rgb(129, 6, 6)"></i>
                                 @endif
                             </div>
                         </div>
@@ -651,35 +669,37 @@
                             <table class="table table-striped">
                                 <tbody>
                                     @if (count($data['getfiveNotifications']) > 0)
-                                        @foreach ($data['getfiveNotifications'] as $urgentNotify)
-                                            <tr>
-                                                <td><i
-                                                        class="fas fa-circle {{ $urgentNotify->notify == 0 ? 'text-success' : 'text-success' }}"></i>
-                                                </td>
-                                                <td align="left" colspan="2">
+                                    @foreach ($data['getfiveNotifications'] as $urgentNotify)
+                                    <tr>
+                                        <td><i
+                                                class="fas fa-circle {{ $urgentNotify->notify == 0 ? 'text-success' : 'text-success' }}"></i>
+                                        </td>
+                                        <td align="left" colspan="2">
 
-                                                    <div class="row">
-                                                        <div class="col-md-12" style="text-align: left;">
-                                                            {{-- {!! $urgentNotify->activity !!} --}}
+                                            <div class="row">
+                                                <div class="col-md-12" style="text-align: left;">
+                                                    {{-- {!! $urgentNotify->activity !!} --}}
 
-                                                            {!! $urgentNotify->notify == 0 ? '<strong>' . $urgentNotify->activity . '</strong>' : $urgentNotify->activity !!}
-                                                        </div>
-                                                        <div class="col-md-12" style="text-align: left;">
+                                                    {!! $urgentNotify->notify == 0 ? '<strong>' .
+                                                        $urgentNotify->activity . '</strong>' : $urgentNotify->activity
+                                                    !!}
+                                                </div>
+                                                <div class="col-md-12" style="text-align: left;">
 
-                                                            <small>
-                                                                {{ date('d/m/Y h:i a', strtotime($urgentNotify->created_at)) }}
-                                                            </small>
-                                                        </div>
-                                                    </div>
+                                                    <small>
+                                                        {{ date('d/m/Y h:i a', strtotime($urgentNotify->created_at)) }}
+                                                    </small>
+                                                </div>
+                                            </div>
 
-                                                </td>
+                                        </td>
 
-                                            </tr>
-                                        @endforeach
+                                    </tr>
+                                    @endforeach
                                     @else
-                                        <tr>
-                                            <td colspan="3" align="center">No record</td>
-                                        </tr>
+                                    <tr>
+                                        <td colspan="3" align="center">No record</td>
+                                    </tr>
                                     @endif
                                 </tbody>
                             </table>
@@ -694,9 +714,10 @@
                     <div class="card-header"
                         style="background-color: #ffba01; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
                         Quick Wallet Setup
-                        @if (Auth::user()->approval == 0 || (count($data['getCard']) <= 0 && count($data['getBank']) <= 0) || Auth::user()->transaction_pin == null || Auth::user()->securityQuestion == null)
+                        @if (Auth::user()->approval == 0 || (count($data['getCard']) <= 0 && count($data['getBank'])
+                            <=0) || Auth::user()->transaction_pin == null || Auth::user()->securityQuestion == null)
                             <a href="javascript:void()" type="button" class="btn btn-danger fa-blink">Incomplete</a>
-                        @endif
+                            @endif
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"
@@ -706,7 +727,10 @@
                                     <a href="{{ route('profile') }}">Identity Verification</a>
                                 </div>
                                 <div class="col-md-2">
-                                    {!! Auth::user()->approval > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                    {!! Auth::user()->approval > 0 ? "<img
+                                        src='https://img.icons8.com/fluent/20/000000/check-all.png' />" : "<img
+                                        class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png' />"
+                                    !!}
                                 </div>
                             </div>
 
@@ -720,7 +744,10 @@
                                         Card/Prepaid Card/Bank Account </a>
                                 </div>
                                 <div class="col-md-2">
-                                    {!! count($data['getCard']) > 0 || count($data['getBank']) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                    {!! count($data['getCard']) > 0 || count($data['getBank']) > 0 ? "<img
+                                        src='https://img.icons8.com/fluent/20/000000/check-all.png' />" : "<img
+                                        class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png' />"
+                                    !!}
                                 </div>
                             </div>
 
@@ -733,7 +760,10 @@
                                     <a href="{{ route('profile') }}">Set Transaction Pin </a>
                                 </div>
                                 <div class="col-md-2">
-                                    {!! Auth::user()->transaction_pin != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                    {!! Auth::user()->transaction_pin != null ? "<img
+                                        src='https://img.icons8.com/fluent/20/000000/check-all.png' />" : "<img
+                                        class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png' />"
+                                    !!}
                                 </div>
                             </div>
 
@@ -746,7 +776,10 @@
                                     <a href="{{ route('profile') }}">Set Security Question </a>
                                 </div>
                                 <div class="col-md-2">
-                                    {!! Auth::user()->securityQuestion != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
+                                    {!! Auth::user()->securityQuestion != null ? "<img
+                                        src='https://img.icons8.com/fluent/20/000000/check-all.png' />" : "<img
+                                        class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png' />"
+                                    !!}
                                 </div>
                             </div>
 
@@ -756,20 +789,23 @@
 
 
                         @if (Auth::user()->country == 'Nigeria')
-                            <li class="list-group-item" title="Bank Verification (BVN)">
+                        <li class="list-group-item" title="Bank Verification (BVN)">
 
-                                <div class="row">
-                                    <div class="col-md-10">
-                                        <a href="{{ route('profile') }}">Bank Verification (BVN) </a>
-                                    </div>
-                                    <div class="col-md-2">
-                                        {!! Auth::user()->bvn_verification != null || Auth::user()->bvn_verification > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png'/>" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png'/>" !!}
-                                    </div>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <a href="{{ route('profile') }}">Bank Verification (BVN) </a>
                                 </div>
+                                <div class="col-md-2">
+                                    {!! Auth::user()->bvn_verification != null || Auth::user()->bvn_verification > 0 ?
+                                    "<img src='https://img.icons8.com/fluent/20/000000/check-all.png' />" : "<img
+                                        class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png' />"
+                                    !!}
+                                </div>
+                            </div>
 
 
 
-                            </li>
+                        </li>
                         @endif
 
 
@@ -803,8 +839,7 @@
                             <br>
 
                             <div class="row">
-                                <form action="{{ route('claim point') }}" method="POST"
-                                    enctype="multipart/form-data">
+                                <form action="{{ route('claim point') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="col-md-12">
 
@@ -837,11 +872,11 @@
                                 <div class="col-md-12">
 
                                     @if (Auth::user()->country == 'Nigeria')
-                                        <a href="{{ route('utility bills') }}">Utility Payment</small></a>
+                                    <a href="{{ route('utility bills') }}">Utility Payment</small></a>
                                     @else
-                                        <a
-                                            href="{{ route('select utility bills country', 'country=' . Auth::user()->country) }}">Utility
-                                            Payment</small></a>
+                                    <a
+                                        href="{{ route('select utility bills country', 'country=' . Auth::user()->country) }}">Utility
+                                        Payment</small></a>
                                     @endif
 
 
@@ -891,33 +926,32 @@
 
                         @if (count($data['getmerchantsByCategory']) > 0)
 
-                            @foreach ($data['getmerchantsByCategory'] as $merchants)
-                                <li class="list-group-item" title="{{ $merchants->industry }}">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <a
-                                                href="{{ route('merchant category', 'service=' . $merchants->industry) }}">{{ $merchants->industry }}</a>
-                                        </div>
-
-                                    </div>
-
-                                </li>
-                            @endforeach
-
-                            @if (count($data['getmerchantsByCategory']) == 8)
-                                <a href="{{ route('all merchant') }}" type="button"
-                                    class="btn btn-danger btn-block">View
-                                    more <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></a>
-                            @endif
-                        @else
-                            <li class="list-group-item" title="No available merchant">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <a href="#">No available merchant</a>
-                                    </div>
+                        @foreach ($data['getmerchantsByCategory'] as $merchants)
+                        <li class="list-group-item" title="{{ $merchants->industry }}">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <a href="{{ route('merchant category', 'service=' . $merchants->industry) }}">{{
+                                        $merchants->industry }}</a>
                                 </div>
 
-                            </li>
+                            </div>
+
+                        </li>
+                        @endforeach
+
+                        @if (count($data['getmerchantsByCategory']) == 8)
+                        <a href="{{ route('all merchant') }}" type="button" class="btn btn-danger btn-block">View
+                            more <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></a>
+                        @endif
+                        @else
+                        <li class="list-group-item" title="No available merchant">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <a href="#">No available merchant</a>
+                                </div>
+                            </div>
+
+                        </li>
 
                         @endif
 

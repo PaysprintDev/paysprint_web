@@ -287,9 +287,6 @@ class HomeController extends Controller
     public function index()
     {
 
-
-
-
         // dd($req->session());
 
         if (Auth::check() == true) {
