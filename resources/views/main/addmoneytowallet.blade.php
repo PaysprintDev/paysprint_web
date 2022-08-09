@@ -852,7 +852,7 @@
                         var secretKey=`{{ env('APP_ENV') == 'local' ? env('DUSU_PAY_DEV_SECRET_KEY') : env('DUSU_PAY_PROD_SECRET_KEY') }}`
 
                         var currencyCode=`{{ $data['currencyCode']->code }}`;
-                        
+
                         var dusuUrl = 'https://sandbox.dusupay.com/v1/payment-options/collection/card/'+currencyCode.toLowerCase()+'?api_key='+publicKey;
 
                         var config = {
@@ -862,15 +862,15 @@
                            'Content-Type': 'application/json',
                            'secret-key': secretKey,
                          },
-    
+
                         };
 
                         var response= await axios(config);
 
-                        
+
 
                         return response.data.data[0].id;
-                        
+
                     } catch (error) {
                         console.log(error.response);
                     }
@@ -882,7 +882,7 @@
 
                 try {
                     var callbackUrl;
-                    
+
                     var netamount = $('#amounttosend').val();
                     var feeamount = $('#commissiondeduct').val();
                     var amount = (+netamount + +feeamount).toFixed(2);
@@ -901,9 +901,9 @@
                     callbackUrl =
                     `http://localhost:8000/dusupay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
                     }
-                    
-                    var accountnumber="{{ $data['mobilemoney']->account_number}}";
-                    var providerId= "{{ $data['mobilemoney']->provider}}";
+
+                    var accountnumber="{{ isset($data['mobilemoney']->account_number) ? $data['mobilemoney']->account_number : '' }}";
+                    var providerId= "{{ isset($data['mobilemoney']->provider) ? $data['mobilemoney']->provider : '' }}";
                     var productId = "{{ Auth::user()->ref_code }}";
                     var description = "Added {{ $data['currencyCode']->currencyCode }}" + netamount +
                     " to PaySprint Wallet and a Fee of " + feeamount + " inclusive.";
@@ -920,7 +920,7 @@
                     "narration":"Added {{ $data['currencyCode']->currencyCode }}" +
                     netamount +
                     " to PaySprint Wallet and a Fee of " + feeamount + " inclusive.",
-                    
+
                     };
 
                     var config = {
@@ -931,16 +931,16 @@
                     },
                     data: data
                     };
-                    
+
                     console.log(config);
                     const response = await axios(config);
-                    
-                    
-                    
+
+
+
                     $('.cardSubmit').text('Confirm');
-                    
-                    
-                    
+
+
+
                     setTimeout(() => {
                     location.href = response.data.data.payment_url;
                     }, 1000);
@@ -995,7 +995,7 @@
                 "narration":"Added {{ $data['currencyCode']->currencyCode }}" +
                 netamount +
                 " to PaySprint Wallet and a Fee of " + feeamount + " inclusive.",
-            
+
 };
 
 
