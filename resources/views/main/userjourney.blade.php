@@ -1,5 +1,4 @@
-@extends('layouts.app')
-
+@extends ('layouts.app')
 
 @section('title', 'Home')
 
@@ -26,7 +25,8 @@
                         <br>
                         <div class="col-md-12">
                             <h3>
-                                {{ $data['currencyCode']->currencySymbol . '' . number_format(Auth::user()->wallet_balance, 4) }}
+                                {{ $data['currencyCode']->currencySymbol . '' .
+                                number_format(Auth::user()->wallet_balance, 4) }}
                             </h3>
                         </div>
                     </div>
@@ -137,11 +137,37 @@
 <!-- Our Services Area -->
 <section>
     <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-          <p>Hello</p> <i class="fa-solid fa-circle-check"></i>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="wrapper option-1 option-1-1">
+                    @if(isset($data['status']))
+                    <ol class="c-stepper">
+                        <li class="c-stepper__item {{Auth::user() ? 'c-stepper__item__active' : ''}}">
+                            <h3 class="c-stepper__title">Sign Up</h3>
+                            {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                        </li>
+                        <li class="c-stepper__item {{ $data['userdetails'] ? 'c-stepper__item__active' : '' }}">
+                            <h3 class="c-stepper__title">
+                                30-Day Trial</h3>
+                            {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                        </li>
+                        <li class="c-stepper__item {{ $data['pending'] ? 'c-stepper__item__active' : '' }}">
+                            <h3 class="c-stepper__title">Account Verification-Pending</h3>
+                            {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                        </li>
+                        <li class="c-stepper__item {{ $data['pending'] ? 'c-stepper__item__active' : '' }}">
+                            <h3 class="c-stepper__title">Verified</h3>
+                            {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                        </li>
+
+                    </ol>
+                    @endif
+                </div>
+                <!-- /section -->
+                <!-- /section -->
+                <!-- /section -->
+            </div>
         </div>
-    </div>
     </div>
 </section>
 <!-- End Our Services Area -->

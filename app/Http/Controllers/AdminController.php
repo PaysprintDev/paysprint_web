@@ -16187,7 +16187,7 @@ class AdminController extends Controller
 
                         // TODO:: Kindly return to live when subscription live on ShuftiPro...
 
-                        if(env('APP_ENV') === 'local'){
+                        if (env('APP_ENV') === 'local') {
                             $dob = $getMerchant->yearOfBirth . "-" . $getMerchant->monthOfBirth . "-" . $getMerchant->dayOfBirth;
 
                             $thisusersname = explode(" ", $getMerchant->name);
@@ -16378,29 +16378,28 @@ class AdminController extends Controller
                             }
 
 
-                            if(env('APP_ENV') === 'local'){
+                            if (env('APP_ENV') === 'local') {
                                 $dob = $getMerchant->yearOfBirth . "-" . $getMerchant->monthOfBirth . "-" . $getMerchant->dayOfBirth;
 
-                            $thisusersname = explode(" ", $getMerchant->name);
+                                $thisusersname = explode(" ", $getMerchant->name);
 
-                            $getUsername = [
-                                'first_name' => $thisusersname[0],
-                                'middle_name' => '',
-                                'last_name' => $thisusersname[1],
-                            ];
+                                $getUsername = [
+                                    'first_name' => $thisusersname[0],
+                                    'middle_name' => '',
+                                    'last_name' => $thisusersname[1],
+                                ];
 
-                            $shuftiVerify = new ShuftiProController();
+                                $shuftiVerify = new ShuftiProController();
 
-                            $checkAmlVerification = $shuftiVerify->callAmlCheck($getMerchant->ref_code, $dob, $getUsername, $getMerchant->email, $countryApproval->code);
+                                $checkAmlVerification = $shuftiVerify->callAmlCheck($getMerchant->ref_code, $dob, $getUsername, $getMerchant->email, $countryApproval->code);
 
 
-                            if ($checkAmlVerification->event !== 'verification.accepted') {
-                                User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
-                            } else {
-                                User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
+                                if ($checkAmlVerification->event !== 'verification.accepted') {
+                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
+                                } else {
+                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
+                                }
                             }
-                            }
-
                         } else {
 
                             $message = "error";

@@ -37,7 +37,7 @@ trait DusuPay
             'provider_id' => 'local_ngn',
             'merchant_reference' => 'Payment to Paysprint Limited',
             'narration' => $reason,
-            "redirect_url" => 'https://localhost:8000'
+            "redirect_url" => 'https://paysprint.ca'
         ]);
 
         $data = $this->doPost();
@@ -112,8 +112,6 @@ trait DusuPay
 
         $data = $this->mobileMoneyCode();
 
-
-
         return $data;
     }
 
@@ -149,7 +147,6 @@ trait DusuPay
 
     public function dusuGet()
     {
-
         $curl = curl_init();
 
         curl_setopt_array($curl, array(

@@ -79,6 +79,7 @@
         <div class="row mb-4">
             <div class="col-lg-8 mx-auto text-center">
                 <h1 class="display-4">{{ $pages }}</h1>
+                {{ Auth::user()->country }}
             </div>
         </div> <!-- End -->
         <div class="row">
@@ -285,9 +286,18 @@
                                             Confirm
                                         </button></div>
 
-                                    @elseif($data['paymentgateway']->gateway == 'Dusupay')
+                                    @elseif($data['paymentgateway']->gateway == 'Dusupay' && Auth::user()->country
+                                    == 'Ghana')
                                     <div class="card-footer">
                                         <button type="button" onclick="payWithDusupay('{{ Auth::user()->email }}')"
+                                            class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                            Confirm
+                                        </button>
+                                    </div>
+
+                                    @elseif ($data['paymentgateway']->gateway == 'Dusupay')
+                                    <div class="card-footer">
+                                        <button type="button" onclick="payWithDusumoney('{{ Auth::user()->email }}')"
                                             class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
                                             Confirm
                                         </button>
@@ -866,7 +876,82 @@
                     }
                 }
 
-                    //Dusupay Integration
+                //Dusu Mobile Money Integration
+                async function payWithDusumoney(email) {
+                $('.cardSubmit').text('Please wait...');
+
+                try {
+                    var callbackUrl;
+                    
+                    var netamount = $('#amounttosend').val();
+                    var feeamount = $('#commissiondeduct').val();
+                    var amount = (+netamount + +feeamount).toFixed(2);
+                    var paymentToken = '' + Math.floor((Math.random() * 1000000000) + 1);
+                    var publicKey = `{{ env('APP_ENV') == 'local' ? env('DUSU_PAY_DEV_KEY_ID') : env('DUSU_PAY_KEY_PROD') }}`;
+                    var commission = $('#commission').val();
+                    var currencyCode = `{{ $data['currencyCode']->currencyCode }}`;
+                    var conversionamount = $('#conversionamount').val();
+                    var api_token = `{{ Auth::user()->api_token }}`;
+
+                    if (`{{ env('APP_ENV') }}` != "local") {
+                    callbackUrl =
+                    `{{ env('APP_URL')
+                    }}/dusupay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
+                    } else {
+                    callbackUrl =
+                    `http://localhost:8000/dusupay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}`;
+                    }
+                    
+                    var accountnumber="{{ $data['mobilemoney']->account_number}}";
+                    var providerId= "{{ $data['mobilemoney']->provider}}";
+                    var productId = "{{ Auth::user()->ref_code }}";
+                    var description = "Added {{ $data['currencyCode']->currencyCode }}" + netamount +
+                    " to PaySprint Wallet and a Fee of " + feeamount + " inclusive.";
+
+                    var data = {
+                    "amount": parseFloat(amount),
+                    "currency":currencyCode,
+                    "api_key": publicKey,
+                    "redirect_url": callbackUrl,
+                    "method": "MOBILE_MONEY",
+                    "provider_id": providerId,
+                    "account_number": accountnumber,
+                    "merchant_reference":paymentToken,
+                    "narration":"Added {{ $data['currencyCode']->currencyCode }}" +
+                    netamount +
+                    " to PaySprint Wallet and a Fee of " + feeamount + " inclusive.",
+                    
+                    };
+
+                    var config = {
+                    method: 'post',
+                    url: `{{env('DUSUPAY_PAYMENT_URL_DEV')}}`,
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    data: data
+                    };
+                    
+                    console.log(config);
+                    const response = await axios(config);
+                    
+                    
+                    
+                    $('.cardSubmit').text('Confirm');
+                    
+                    
+                    
+                    setTimeout(() => {
+                    location.href = response.data.data.payment_url;
+                    }, 1000);
+
+                } catch (error) {
+                    $('.cardSubmit').text('Confirm');
+                    swal('Oops!', error.response.data.message, 'error');
+                }
+            }
+
+                    //Dusupay Card Integration
                 async function payWithDusupay(email) {
                 $('.cardSubmit').text('Please wait...');
 
