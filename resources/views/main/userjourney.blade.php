@@ -1,5 +1,4 @@
-@extends('layouts.app')
-
+@extends ('layouts.app')
 
 @section('title', 'Home')
 
@@ -140,54 +139,31 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <section class="wrapper bg-light">
-                    <div class="container py-14 py-md-16">
-                        <h2 class="display-4 mb-3">How We Do It?</h2>
-                        <p class="lead fs-lg mb-8">We make your spending <span class="underline">stress-free</span> for
-                            you to have the
-                            perfect control.</p>
-                        <div class="row gx-lg-8 gx-xl-12 gy-6 process-wrapper line">
-                            <!--/column -->
-                            <div class="col-md-6 col-lg-3"> <span
-                                    class="icon btn btn-circle btn-lg btn-primary disabled mb-4"><span
-                                        class="number">01</span></span>
-                                <h4 class="mb-1">Account Verfication-Pending</h4>
-                                <p class="mb-0">Vestibulum id ligula porta felis euismod semper. Sed posuere consectetur
-                                    est at
-                                    lobortis.</p>
-                            </div>
-                            <!--/column -->
-                            <div class="col-md-6 col-lg-3"> <span
-                                    class="icon btn btn-circle btn-lg btn-soft-primary disabled mb-4"><span
-                                        class="number">02</span></span>
-                                <h4 class="mb-1">Verified</h4>
-                                <p class="mb-0">Integer posuere erat a ante venenatis dapibus posuere velit aliquet.
-                                    Nulla vitae elit
-                                    libero.</p>
-                            </div>
-                            <!--/column -->
-                            <div class="col-md-6 col-lg-3"> <span
-                                    class="icon btn btn-circle btn-lg btn-soft-primary disabled mb-4"><span
-                                        class="number">03</span></span>
-                                <h4 class="mb-1">30-Day Trial</h4>
-                                <p class="mb-0">Integer posuere erat, consectetur adipiscing elit. Fusce dapibus, tellus
-                                    ac cursus
-                                    commodo.</p>
-                            </div>
-                            <!--/column -->
-                            <div class="col-md-6 col-lg-3"> <span
-                                    class="icon btn btn-circle btn-lg btn-soft-primary disabled mb-4"><span
-                                        class="number">04</span></span>
-                                <h4 class="mb-1">Account on Plan</h4>
-                                <p class="mb-0">Integer posuere erat, consectetur adipiscing elit. Fusce dapibus, tellus
-                                    ac cursus
-                                    commodo.</p>
-                            </div>
-                        </div>
-                        <!--/.row -->
-                    </div>
-                    <!-- /.container -->
-                </section>
+                <div class="wrapper option-1 option-1-1">
+                    <ol class="c-stepper">
+                        <li class="c-stepper__item {{Auth::user() ? 'c-stepper__item__active' : ''}}">
+                            <h3 class="c-stepper__title">Sign Up</h3>
+                            <p class="c-stepper__desc">Some desc text</p>
+                        </li>
+                        <li class="c-stepper__item {{ $data['userdetails'] ? 'c-stepper__item__active' : '' }}">
+                            <h3 class="c-stepper__title">
+                                30-Day Trial</h3>
+                            <p class="c-stepper__desc">Some desc text</p>
+                        </li>
+                        <li class="c-stepper__item">
+                            <h3 class="c-stepper__title">Account Verification-Pending</h3>
+                            <p class="c-stepper__desc">Some desc text</p>
+                        </li>
+                        <li class="c-stepper__item">
+                            <h3 class="c-stepper__title">Verified</h3>
+                            <p class="c-stepper__desc">Some desc text</p>
+                        </li>
+                        <li class="c-stepper__item">
+                            <h3 class="c-stepper__title">Completed</h3>
+                            <p class="c-stepper__desc">Some desc text</p>
+                        </li>
+                    </ol>
+                </div>
                 <!-- /section -->
                 <!-- /section -->
                 <!-- /section -->

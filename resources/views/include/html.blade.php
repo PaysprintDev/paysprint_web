@@ -28,8 +28,8 @@
 
     <!-- User Journey -->
 
-    
-    {{-- <link href="{{ asset('css/journey.css') }}" rel="stylesheet"> --}}
+
+    <link href="{{ asset('css/userjourney.css') }}" rel="stylesheet">
     <!-- Animate CSS -->
     <link href="{{ asset('vendors/animate/animate.css') }}" rel="stylesheet">
     <!-- Icon CSS-->

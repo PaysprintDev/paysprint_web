@@ -1674,7 +1674,8 @@ class HomeController extends Controller
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
             'continent' => $this->timezone[0],
-            'paymentgateway' => $this->getPaymentGateway(Auth::user()->country)
+            'paymentgateway' => $this->getPaymentGateway(Auth::user()->country),
+            'mobilemoney' => MobileMoney::where('user_id', Auth::id())->first()
         );
 
 
@@ -4488,7 +4489,8 @@ class HomeController extends Controller
                     'pointsclaim' => $this->getClaimedHistory(Auth::user()->id),
                     'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
                     'imtAccess' => AllCountries::where('name', Auth::user()->country)->first(),
-                    'referred' => $this->referral(Auth::user()->ref_code)
+                    'referred' => $this->referral(Auth::user()->ref_code),
+                    'userdetails' => $this->checkTrial(Auth::id(), Auth::user()->country),
                 );
 
                 $view = 'home';
@@ -4513,6 +4515,12 @@ class HomeController extends Controller
         return view('main.userjourney')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
+    public function checkTrial($id, $country)
+    {
+        $data = User::where('id', $id)->where('accountType', 'Individual')->where('archive', 0)->where('country', $country)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
 
 
     public function sendAndReceive($email)
