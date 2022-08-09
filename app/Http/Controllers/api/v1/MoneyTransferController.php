@@ -511,10 +511,12 @@ class MoneyTransferController extends Controller
             } else {
                 if ($user->ref_code != $accountno) {
                     // Get User Information
-                    $getUser = User::select('name', 'ref_code as accountNumber', 'address', 'city', 'state', 'country')->where('ref_code', $accountno)->first();
+                    $getUser = User::select('name', 'ref_code as accountNumber', 'businessname', 'accountType', 'address', 'city', 'state', 'country')->where('ref_code', $accountno)->first();
 
                     if (isset($getUser)) {
                         $status = 200;
+
+                        $getUser['name'] = ($getUser->accountType == 'Individual' ? $getUser->name : $getUser->businessname);
 
                         $resData = ['data' => $getUser, 'message' => 'success', 'status' => $status];
                     } else {

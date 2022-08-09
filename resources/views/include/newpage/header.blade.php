@@ -78,7 +78,7 @@
 
                                    <li class="nav-item">
                                        <a class="nav-link" href="{{ route('home') }}"
-                                           style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ 'Are you a CONSUMER? ' . strtoupper(' CLICK HERE') }}</a>
+                                           style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ 'Personal Account? ' . strtoupper(' CLICK HERE') }}</a>
                                    </li>
 
                                @endguest
@@ -215,14 +215,14 @@
                    <ul class="navbar-nav main-menu">
 
                        <li class="nav-item">
-                           <a class="nav-link" @guest href="{{ route('home') }}" @endguest @auth
+                           <a class="nav-link" @guest href="{{route('home')}}" @endguest @auth
                            href="{{ route('user home') }}" @endauth role="button"
                            aria-expanded="false">HOME</a>
                    </li>
 
                    @guest
                        <li class="nav-item">
-                           <a class="nav-link" href="{{ route('about') }}" role="button"
+                           <a class="nav-link" href="{{route('about')}}" role="button"
                                aria-expanded="false">ABOUT US</a>
                        </li>
 
@@ -254,7 +254,7 @@
 
                        <li class="nav-item">
                            <a class="nav-link" href="{{ route('merchant home') }}"
-                               style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ 'Are you a Merchant? ' . strtoupper(' CLICK HERE') }}</a>
+                               style="color: #000000 !important; text-decoration: underline; background-color: #e8aa07; border-radius: 10px; font-size: 17px; padding: 5px;">{{ 'Business Account? ' . strtoupper(' CLICK HERE') }}</a>
                        </li>
 
 

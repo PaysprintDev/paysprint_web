@@ -7,7 +7,7 @@ use App\ClientInfo;
 use App\ReferralClaim;
 use App\Points;
 use App\PromoDate;
-use App\Walletcredit;
+use App\TransactionCost;
 
 use App\Traits\SendgridMail;
 use Illuminate\Http\Request;
@@ -65,9 +65,7 @@ class SendGridController extends Controller
              $promodate=PromoDate::first();
       
             //  dd($promodate);
-            
-            
-    
+     
         if (count($thisuser) > 0) {
 
             $setPointClaimed = 0;
@@ -79,6 +77,15 @@ class SendGridController extends Controller
                 $username = explode(" ", $user->name);
                 $referreduser = $totalreferred;
                 $referralpoint = $user->referral_points;
+                $currency = $user->currencyCode;
+                $usertype = $user->accountType;
+                $usercountry = $user->country;
+                $consumer = TransactionCost::where('country', $usercountry)->where('structure', 'Consumer Monthly Subscription')->first();
+                $merchant = TransactionCost::where('country', $usercountry)->where('structure', 'Merchant Monthly Subscription')->first();
+                $country = $consumer->country;
+                $merchantcountry = $merchant->country;
+                $consumerfee = $consumer->fixed;
+                $merchantfee = $merchant->fixed;
 
                 $point= ReferralClaim::where('user_id', $user->id)->first();
 
@@ -95,28 +102,32 @@ class SendGridController extends Controller
                 // $receiver = $user->email;
                 $receiver = "olasunkanmimunirat@gmail.com";
 
+                if ($usertype == 'Individual' && $country == $usercountry) {
+                    $pointsclaim = $consumerfee/2;
                 $data = [
                     "name"  => $username[0],
                     "message" => "<p><strong>Here is the Summary of Your Refer and Earn Points:</strong></p><br>
                     <table>
-                    <tr>
-                      <td>Total Users Referred</td>
+                    <tr style:'text-align:left'>
+                      <td>Total Users Referred-</td>
                       <td>$referreduser</td>
                     </tr>
-                    <tr>
-                      <td>Total Referral Points Earned-</td>
+                    <tr style:'text-align:left'>
+                    <td>Total Referral Points Earned-</td>
                       <td> $referralpoint</td>
                     </tr>
-                    <tr>
+                    <tr style:'text-align:left'>
                       <td>Total Referral Points Redeemed-</td>
                       <td>$point_acquired</td>
                     </tr>
-                    <tr>
+                    <tr style:'text-align:left'>
                       <td>Referral Points Balance-</td>
                       <td>$referralbalance</td>
                      </tr>
+                     <br>
+                     <p>Redeem Your Referral Points when you have more than 500 points and above for a wallet of $pointsclaim$currency.</p>
                     
-                    </table><hr/><br>",
+                    </table><hr/>",
 
                 ];
 
@@ -128,29 +139,83 @@ class SendGridController extends Controller
 
 
                     $data["promotion"] = "
-                    <img src='https://paysprint.ca/images/paysprint_logo/specialpromologo.png' alt='promo' width='300' height='200'>
-                    <p><strong>PaySprint Special Promo: </strong></p><br>
+                    <img style='text-align:center;' src='https://paysprint.ca/images/paysprint_logo/specialpromologo.png' alt='promo' width='150' height='100'>
+                    <p><strong>PaySprint Special Promo: </strong></p>
+                    <p>$promodetails</p>
                     <table>
-                    <tr>
-                        <td>Promo Start Date:</td>
+                    <tr style:'text-align:left'>
+                        <td>Start Date:</td>
                         <td> $startdate</td>
                         
                     </tr>
-                    <tr>
-                        <td>Promo End Date:</td>
+                    <tr style:'text-align:left'>
+                        <td>End Date:</td>
                         <td> $enddate</td>
                     </tr>
-                     <br>
-                    <tbody>
-                    <tr>
-                      <td <div><p><strong>How the promo works :</strong></p></div>
-                      <div><p>$promodetails</p></div>
-                      </td>
-                    </tr>
-                    </tbody>
+                
+                  
                     </table>
                   ";
                 }
+                }
+
+                if ($usertype == 'Merchant' && $merchantcountry == $usercountry) {
+                    $referralclaim = $merchantfee / 2;
+                $data = [
+                    "name"  => $username[0],
+                    "message" => "<p><strong>Here is the Summary of Your Refer and Earn Points:</strong></p><br>
+                    <table>
+                    <tr style:'text-align:left'>
+                      <td>Total Users Referred-</td>
+                      <td>$referreduser</td>
+                    </tr>
+                    <tr style:'text-align:left'>
+                    <td>Total Referral Points Earned-</td>
+                      <td> $referralpoint</td>
+                    </tr>
+                    <tr style:'text-align:left'>
+                      <td>Total Referral Points Redeemed-</td>
+                      <td>$point_acquired</td>
+                    </tr>
+                    <tr style:'text-align:left'>
+                      <td>Referral Points Balance-</td>
+                      <td>$referralbalance</td>
+                     </tr>
+                     <br>
+                     <p>Redeem Your Referral Points when you have more than 500 points and above for a wallet of $referralclaim$currency.</p>
+                    
+                    </table><hr/>",
+
+                ];
+
+                if ($promodate){
+
+                    $startdate = $promodate->start_date;
+                    $enddate = $promodate->end_date;
+                    $promodetails = $promodate->promo_details;
+
+
+                    $data["promotion"] = "
+                    <img style='text-align:center;' src='https://paysprint.ca/images/paysprint_logo/specialpromologo.png' alt='promo' width='150' height='100' text-align ='center'>
+                    <p><strong>PaySprint Special Promo: </strong></p>
+                    <p>$promodetails</p>
+                    <table>
+                    <tr style:'text-align:left'>
+                        <td>Start Date:</td>
+                        <td> $startdate</td>
+                        
+                    </tr>
+                    <tr style:'text-align:left'>
+                        <td>End Date:</td>
+                        <td> $enddate</td>
+                    </tr>
+                    
+                  
+                    </table>
+                  ";
+                }
+                }
+                
 
                 $template_id = config('constants.sendgrid.refer_earn');
 
@@ -173,17 +238,28 @@ class SendGridController extends Controller
        
         try {
 
-            $thisuser=User::get();
+            $thisuser=User::take(2)->get();
          
     
          if (count($thisuser) > 0) {
             
-            $setCreditClaimed = 0;
+         
             $setPointAquired = 0;
             $setCurrentBalance=0;
 
             foreach ($thisuser as $user) {
                 $username = explode(" ", $user->name);
+                $currency = $user->currencyCode;
+                $usertype = $user->accountType;
+                $usercountry = $user->country;
+                $consumer = TransactionCost::where('country', $usercountry)->where('structure', 'Consumer Monthly Subscription')->first();
+                $merchant = TransactionCost::where('country', $usercountry)->where('structure', 'Merchant Monthly Subscription')->first();
+                $country = $consumer->country;
+                $merchantcountry = $merchant->country;
+                $consumerfee = $consumer->fixed;
+                $merchantfee = $merchant->fixed;
+
+
                 $points=Points::where('user_id', $user->id)->first();
                 if(isset($points)){
                     $setPointAquired = $points->points_acquired;
@@ -191,50 +267,76 @@ class SendGridController extends Controller
                      
                 }
                 $aquired_point = $setPointAquired;
-              
                 $redeemed_point = $setCurrentBalance;
                 $total_point = $aquired_point + $redeemed_point;
-                $point_balance=$total_point-$aquired_point;
-               
-                $credit_total=Walletcredit::where('user_id', $user->id)->first();
-                if(isset($credit_total)){
-                    $setCreditClaimed = $credit_total->wallet_credit;
-                }
-                $credit_balance = $setCreditClaimed;
+
 
                
-               $receiver = $user->email;
-           
+            //    $receiver = $user->email;
+            $receiver = "olasunkanmimunirat@gmail.com";
                
                
                 $date=date('d/M/Y', strtotime($user->created_at));
 
-                $data = [
-                    "name"  => $username[0],
-                    "message" => "<p><strong>Here is the Summary of Your Reward Points for the month:</strong></p><br>
-                       <p>Date Joined : $date  </p><hr/><br>
-                    <table>
-                    <tr>
-                      <td>Total Reward Points Earned - </td>
-                      <td> $total_point</td>
-                    </tr>
-                    <tr>
-                      <td>Total Reward Points Redeemed - </td>
-                      <td>$aquired_point</td>
-                    </tr>
-                    <tr>
-                      <td>Total Reward Points Balance - </td>
-                      <td>$point_balance</td>
-                    </tr>
-                    <br>
-                     <tr>
-                       <td>Total Reward Point Credit Received</td>
-                       <td>$credit_balance</td>
-                      </tr>
-                   
-                   
-                  </table>",
-                ];
+                if ($usertype == 'Individual' && $country == $usercountry) {
+                    $pointsclaim = $consumerfee/2;
+                    $data = [
+                        "name"  => $username[0],
+                        "message" => "<p><strong>Here is the Summary of Your Reward Points for the month:</strong></p><br>
+                           <p>Date Joined : $date  </p><hr/><br>
+                        <table>
+                        <tr style='text-align:left'>
+                          <td>Total Reward Points Earned - </td>
+                          <td> $total_point</td>
+                        </tr>
+                        <tr style='text-align:left'>
+                          <td>Total Reward Points Redeemed - </td>
+                          <td>$redeemed_point</td>
+                        </tr>
+                        <tr style='text-align:left'>
+                          <td>Total Reward Points Balance - </td>
+                          <td>$aquired_point</td>
+                        </tr>
+                        <br>
+                        <br>
+                         <p><strong>Redeem Your Reward Points for $pointsclaim$currency Wallet Credit when you accumulate 5000.</strong></p>
+                         
+                       
+                       
+                      </table>",
+                    ];
+                }  
+
+                if ($usertype == 'Merchant' && $merchantcountry == $usercountry) {
+                    $referralclaim = $merchantfee / 2;
+                    $data = [
+                        "name"  => $username[0],
+                        "message" => "<p><strong>Here is the Summary of Your Reward Points for the month:</strong></p><br>
+                           <p>Date Joined : $date  </p><hr/><br>
+                        <table>
+                        <tr style='text-align:left'>
+                          <td>Total Reward Points Earned - </td>
+                          <td> $total_point</td>
+                        </tr>
+                        <tr style='text-align:left'>
+                          <td>Total Reward Points Redeemed - </td>
+                          <td>$redeemed_point</td>
+                        </tr>
+                        <tr style='text-align:left'>
+                          <td>Total Reward Points Balance - </td>
+                          <td>$aquired_point</td>
+                        </tr>
+                        <br>
+                        <br>
+                         <p><strong>Redeem Your Reward Points for $referralclaim$currency Wallet Credit when you accumulate 7000.</strong></p>
+                         
+                       
+                       
+                      </table>",
+                    ];
+                }
+
+             
 
                 $template_id = config('constants.sendgrid.customer_statement');
 
