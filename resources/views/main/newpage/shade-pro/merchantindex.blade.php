@@ -48,10 +48,8 @@
                     <div class="hero-content mt-11 mt-lg-0">
                         <h4 class="pre-title gr-text-12 text-red text-uppercase mb-7" style="font-size: 22px;">Let’s lift
                             your business</h4>
-                        <h1 class="title gr-text-2 mb-8" style="font-size:60px">Save up to 90% on fees when you use
-                            PaySprint for Payment Processing</h1>
-                        <p class="gr-text-8 mb-11 pr-md-12">Create invoices at the click of a button and accept payments
-                            with ease, anytime, anywhere!</p>
+                        <h1 class="title gr-text-2 mb-8" style="font-size:60px">Save up to 90% on fees when you accept payments from Customers with PaySprint</h1>
+                        <p class="gr-text-8 mb-11 pr-md-12">Accept Payments on any mobile device (for In-Store Sales) and on Website (for Online Sales) with no transaction fees.</p>
 
 
 
@@ -179,21 +177,7 @@
             <div class="row justify-content-center position-relative gr-z-index-1">
 
 
-                <div class="col-md-6 col-lg-4 mb-9 mb-lg-0" data-aos="fade-right" data-aos-duration="800"
-                    data-aos-once="true">
-                    <div
-                        class="service-card rounded-10 gr-hover-shadow-4 d-flex flex-column text-center pt-15 px-9 pb-11 dark-mode-texts bg-green h-100">
-                        <div class="card-img mb-11">
-                            <img src="{{ asset('newpage/image/l5/png/l5-service-card1.png') }}" alt="...">
-                        </div>
-                        <h3 class="card-title gr-text-6 mb-6">Create and Send Invoice with Ease</h3>
-                        <p class="gr-text-9 mb-11">Professional Invoicing, Simplified! Create and send professional invoices
-                            with a click of a button. You can create and send a single invoice or send batch invoices and
-                            set up recurring payments, instalments and pay taxes!</p>
-                        <a href="{{ route('AdminLogin') }}" class="gr-text-9 btn-link with-icon text-white mt-auto">Get
-                            Started <i class="icon icon-tail-right"></i></a>
-                    </div>
-                </div>
+              
 
 
                 <div class="col-md-6 col-lg-4 mb-9 mb-lg-0" data-aos="fade-up" data-aos-duration="800" data-aos-once="true">
@@ -210,6 +194,22 @@
                             Started <i class="icon icon-tail-right"></i></a>
                     </div>
                 </div>
+
+                <div class="col-md-6 col-lg-4 mb-9 mb-lg-0" data-aos="fade-right" data-aos-duration="800"
+                data-aos-once="true">
+                <div
+                    class="service-card rounded-10 gr-hover-shadow-4 d-flex flex-column text-center pt-15 px-9 pb-11 dark-mode-texts bg-green h-100">
+                    <div class="card-img mb-11">
+                        <img src="{{ asset('newpage/image/l5/png/l5-service-card1.png') }}" alt="...">
+                    </div>
+                    <h3 class="card-title gr-text-6 mb-6">Create and Send Invoice with Ease</h3>
+                    <p class="gr-text-9 mb-11">Professional Invoicing, Simplified! Create and send professional invoices
+                        with a click of a button. You can create and send a single invoice or send batch invoices and
+                        set up recurring payments, instalments and pay taxes!</p>
+                    <a href="{{ route('AdminLogin') }}" class="gr-text-9 btn-link with-icon text-white mt-auto">Get
+                        Started <i class="icon icon-tail-right"></i></a>
+                </div>
+              </div>
 
                 <div class="col-md-6 col-lg-4 mb-9 mb-lg-0" data-aos="fade-left" data-aos-duration="800"
                     data-aos-once="true">
