@@ -215,14 +215,14 @@
                    <ul class="navbar-nav main-menu">
 
                        <li class="nav-item">
-                           <a class="nav-link" @guest href="{{ route('home') }}" @endguest @auth
+                           <a class="nav-link" @guest href="{{route('home')}}" @endguest @auth
                            href="{{ route('user home') }}" @endauth role="button"
                            aria-expanded="false">HOME</a>
                    </li>
 
                    @guest
                        <li class="nav-item">
-                           <a class="nav-link" href="{{ route('about') }}" role="button"
+                           <a class="nav-link" href="{{route('about')}}" role="button"
                                aria-expanded="false">ABOUT US</a>
                        </li>
 
