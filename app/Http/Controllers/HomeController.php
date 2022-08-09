@@ -4491,6 +4491,8 @@ class HomeController extends Controller
                     'imtAccess' => AllCountries::where('name', Auth::user()->country)->first(),
                     'referred' => $this->referral(Auth::user()->ref_code),
                     'userdetails' => $this->checkTrial(Auth::id(), Auth::user()->country),
+                    'pending' => User::where('id', Auth::id())->where('account_check', 2)->first(),
+                    'status' =>User::where('id', Auth::id())->where('account_check','!=', 2)->first()
                 );
 
                 $view = 'home';
