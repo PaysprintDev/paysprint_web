@@ -58,10 +58,15 @@
                                     </a> --}}
 
                                     <!-- ShareThis BEGIN -->
-                                    <p><strong>Share link to receive payment:</strong></p>
+                                    <p class="alert alert-primary text-white"><strong>Payment Link:</strong></p>
+                                        <a href="#" style="color: navy; font-weight: 700; text-align: left;">Click and Share your payment link with the icon below</a>
+                                    <br>
+                                    <br>
                                     <div class="sharethis-inline-share-buttons"
                                         data-url="{{ route('home') . '/merchant/' . Auth::user()->businessname . '/' . Auth::user()->ref_code }}">
+
                                     </div><!-- ShareThis END -->
+
 
                                     <div class="parrten">
                                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg"

@@ -94,6 +94,8 @@
             @include('include.dashboard.level1admin')
             @elseif (session('role') == 'Customer Marketing')
             @include('include.dashboard.supportadmin')
+            @elseif (session('role') == 'Customer Success')
+            @include('include.dashboard.customersuccess')
             @else
             <div class="col-lg-12 col-xs-12">
                 <!-- small box -->
@@ -451,7 +453,7 @@
         <br>
 
         @if (session('role') != 'Super' && session('role') != 'Access to Level 1 and 2 only' && session('role') !=
-        'Access to Level 1 only' && session('role') != 'Customer Marketing')
+        'Access to Level 1 only' && session('role') != 'Customer Marketing' && session('role') != 'Customer Success')
         <!-- /.row -->
         <!-- Main row -->
         <div class="row">

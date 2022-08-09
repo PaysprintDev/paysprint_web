@@ -27,7 +27,7 @@
                     substr(session('businessname'), 0, 15) . '***' ; @endphp <p>{{ session('businessname') != null ?
                     $usersBusiness : $usersName }}</p>
                     @if (session('role') != 'Super' && session('role') != 'Access to Level 1 only' && session('role') !=
-                    'Access to Level 1 and 2 only' && session('role') != 'Customer Marketing')
+                    'Access to Level 1 and 2 only' && session('role') != 'Customer Marketing' || session('role') != 'Customer Success')
                     <a href="#"><i class="fa fa-circle text-success"></i> Account No:
                         {{ session('user_id') }}</a>
                     @endif
@@ -158,6 +158,9 @@
 
                 </ul>
             </li>
+
+
+            @if(session('role') != 'Customer Success')
 
             @if (session('role') == 'Super' || session('role') == 'Access to Level 1 and 2 only' || session('role') ==
             'Access to Level 1 only')
@@ -669,30 +672,6 @@
 
             @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access
             to Level 1 and 2 only')
-            {{-- @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only')
-            <li class="treeview">
-                <a href="#">
-                    <i class="far fa-handshake"></i>
-                    <span>Wallet Credit</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li title="Credit/Debit Card"><a href="{{ route('promo page') }}"><i
-                                class="fa fa-circle-o text-red"></i>Import Promo Users</a></li>
-                    <li title="prepaid Card"><a href="{{ route('promo users') }}"><i
-                                class="fa fa-circle-o text-red"></i>List Promo User</a></li>
-                    <li title="prepaid Card"><a href="{{ route('promo report') }}"><i
-                                class="fa fa-circle-o text-red"></i>Report</a></li>
-                    <li title="prepaid Card"><a href="{{ route('claim reward') }}"><i
-                                class="fa fa-circle-o text-red"></i>Points Claimed</a></li>
-                    <li title="prepaid Card"><a href="{{ route('referral claim') }}"><i
-                                class="fa fa-circle-o text-red"></i>Referral Claims</a></li>
-                </ul>
-            </li>
-            @endif --}}
-
 
             <li class="treeview">
                 <a href="#">
@@ -794,15 +773,10 @@
 
                 </ul>
             </li>
-            {{-- <li>
-                <a href="{{ route('xpaytrans') }}">
-                    <i class="fa fa-laptop"></i>
-                    <span>Money Transfer Trans...</span>
-                </a>
-            </li> --}}
+
             @endif
             @elseif(session('role') != 'Super' && session('role') != 'Access to Level 1 only' && session('role') !=
-            'Access to Level 1 and 2 only' && session('role') != 'Customer Marketing')
+            'Access to Level 1 and 2 only' && session('role') != 'Customer Marketing' ||  session('role') != 'Customer Success')
             <li class="treeview createandSendInvoice" title="Create and Send Invoice">
                 <a href="#">
                     <i class="fa fa-book"></i>
@@ -1415,10 +1389,13 @@
             </li>
             @endif
 
+            @endif
 
 
 
         </ul>
+
+
     </section>
     <!-- /.sidebar -->
 </aside>
