@@ -61,6 +61,7 @@
                                     <option value="Customer Marketing">Customer Marketing</option>
                                     <option value="Aml compliance">Aml compliance</option>
                                     <option value="estore manager">Estore Manager</option>
+                                    <option value="Customer Success">Customer Success</option>
                                 </select>
 
                             </div>

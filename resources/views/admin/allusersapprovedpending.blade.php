@@ -232,7 +232,7 @@
                                                     <td>{{ $datainfo->platform }}</td>
 
                                                     <td>
-                                                        {{ date('d/M/Y h:i:a', strtotime($datainfo->lastUpdated)) }}
+                                                        {{ date('Y-m-d h:i:a', strtotime($datainfo->lastUpdated)) }}
                                                     </td>
 
                                                     @if ($datainfo->approval == 2 && $datainfo->accountLevel > 0 && $datainfo->account_check == 2)
