@@ -61,14 +61,15 @@
                                            role="button" aria-expanded="false">PRICING</a>
                                    </li>
 
-                                   <li class="nav-item">
-                                       <a class="nav-link" href="{{ route('AdminLogin') }}" role="button"
-                                           aria-expanded="false">LOGIN</a>
-                                   </li>
+                                  
                                    <li class="nav-item">
                                     <a class="nav-link" href="{{ route('display country') }}" role="button"
                                         aria-expanded="false">SEARCH COUNTRY</a>
-                                </li>
+                                    </li>
+                                   <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('AdminLogin') }}" role="button"
+                                        aria-expanded="false">LOGIN</a>
+                                    </li>
 
                                    <li class="nav-item">
                                        <a class="nav-link" href="{{ route('AdminRegister') }}" role="button"
@@ -236,14 +237,15 @@
                                aria-expanded="false">PRICING</a>
                        </li>
 
-                       <li class="nav-item">
-                           <a class="nav-link" href="{{ route('login') }}" role="button"
-                               aria-expanded="false">LOGIN</a>
-                       </li>
 
                        <li class="nav-item">
                            <a class="nav-link" href="{{ route('display country') }}" role="button"
                                aria-expanded="false">SEARCH COUNTRY</a>
+                       </li>
+                       
+                       <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}" role="button"
+                            aria-expanded="false">LOGIN</a>
                        </li>
 
                        <li class="nav-item">

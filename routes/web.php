@@ -586,6 +586,9 @@ Route::get('allusers', ['uses' => 'AdminController@allPlatformUsers', 'as' => 'a
 
 
 Route::get('approvedusers', ['uses' => 'AdminController@allApprovedUsers', 'as' => 'approvedusers']);
+Route::post('autocreditapproval', ['uses' => 'AdminController@autoCreditApproval', 'as' => 'auto credit activation']);
+
+
 Route::get('upgradedconsumer', ['uses' => 'AdminController@allUpgradedConsumers', 'as' => 'upgradedconsumer']);
 Route::get('upgradedmerchant', ['uses' => 'AdminController@allUpgradedMerchants', 'as' => 'upgradedmerchant']);
 Route::get('approvedpendingusers', ['uses' => 'AdminController@allApprovedPendingUsers', 'as' => 'approvedpendingusers']);

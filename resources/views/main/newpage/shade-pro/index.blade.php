@@ -108,7 +108,7 @@
                         <h1 class="gr-text-2 font-weight-bold mb-8" style="font-size:60px">Safe and Secure <br
                                 class="">Way to Send Money for Free!</h1>
                         <p class="gr-text-9 gr-text-color pr-md-7">Fastest and affordable method of sending and receiving
-                            money, paying invoice and getting Paid at anytime!</p>
+                            money, paying invoice and getting paid at anytime!</p>
 
 
                         <div class="hero-btns mt-11">
@@ -267,15 +267,7 @@
                                         </h3>
                                     </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="single-widget d-flex align-items-center py-2">
-                                        <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                            <i class="icon icon-check-simple"></i>
-                                        </div>
-                                        <h3 class="w-title gr-text-8 mb-0">Withdraw money to EXBC Prepaid Mastercard for
-                                            Free.</h3>
-                                    </div>
-                                </div>
+                                
                                 <div class="col-md-8">
                                     <div class="single-widget d-flex align-items-center py-2">
                                         <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
@@ -292,23 +284,7 @@
                                         <h3 class="w-title gr-text-8 mb-0">Pay Invoice at a click of button.</h3>
                                     </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="single-widget d-flex align-items-center py-2">
-                                        <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                            <i class="icon icon-check-simple"></i>
-                                        </div>
-                                        <h3 class="w-title gr-text-8 mb-0">Create and send professional invoice on the Go.
-                                        </h3>
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="single-widget d-flex align-items-center py-2">
-                                        <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                            <i class="icon icon-check-simple"></i>
-                                        </div>
-                                        <h3 class="w-title gr-text-8 mb-0">Fast-track how you get paid as a merchant.</h3>
-                                    </div>
-                                </div>
+                              
                                 <div class="col-md-8">
                                     <div class="single-widget d-flex align-items-center py-2">
                                         <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">

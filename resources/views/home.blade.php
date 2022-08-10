@@ -494,7 +494,7 @@
                                         <td><i class="fas fa-circle"></i></td>
                                         <td>
 
-                                            
+
                                             <div class="row">
                                                 <div class="col-md-12" style="text-align: left;">
 
@@ -516,13 +516,13 @@
 
                                                             @if ($payInv->payment_status == 0)
                                                             <small><span class='badge badge-danger'
-                                                                    style='cursor: pointer;' onclick=location.href='{{ route(' payment',
+                                                                    style='cursor: pointer;' onclick=location.href='{{ route('payment',
                                                                     $payInv->invoice_no) }}'>Pay
                                                                     Invoice</span></small>
                                                             @elseif($payInv->payment_status == 2)
                                                             <small><span class='badge badge-danger'
                                                                     style='cursor: pointer;'
-                                                                    onclick=location.href='{{ route(' payment',
+                                                                    onclick=location.href='{{ route('payment',
                                                                     $payInv->invoice_no) }}'>Pay
                                                                     Balance</span></small>
                                                             @else
@@ -531,7 +531,7 @@
 
                                                             {{-- {!! ($payInv->payment_status == 0) ? "<small><span
                                                                     class='badge badge-danger' style='cursor: pointer;'
-                                                                    onclick=location.href='".route(' payment',
+                                                                    onclick=location.href='".route('payment',
                                                                     $payInv->invoice_no)."'>Pay Invoice</span></small>"
                                                             : "<small><span
                                                                     class='badge badge-success'>Paid</span></small>" !!}

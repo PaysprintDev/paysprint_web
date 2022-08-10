@@ -67,6 +67,7 @@
                                         <th>Address</th>
                                         <th>Account Type</th>
                                         <th>Identification</th>
+                                        <th>Auto Credit</th>
                                         <th>Platform</th>
                                         <th>Date Joined</th>
                                         <th>Status</th>
@@ -175,6 +176,22 @@
                                                         @endif
 
 
+
+                                                    </td>
+
+                                                    <td>
+
+                                                        <form  action="{{ route('auto credit activation') }}" method="POST" id="checkers{{ $datainfo->id }}" class="disp-0">
+                                                            @csrf
+                                                            <input type="hidden" name="id" value="{{ $datainfo->id }}"">
+                                                            <input type="hidden" name="value" id="myvalue{{ $datainfo->id }}" value="">
+                                                        </form>
+
+                                                        @if ($datainfo->auto_credit == 1)
+                                                        <button type="button" class="btn btn-danger" onclick="checkAutoCredit('{{ $datainfo->id }}', 'remove')">Remove auto credit</button>
+                                                            @else
+                                                            <button type="button" class="btn btn-primary" onclick="checkAutoCredit('{{ $datainfo->id }}', 'approve')">Approve auto credit</button>
+                                                        @endif
 
                                                     </td>
 

@@ -5129,6 +5129,11 @@ swal({
         $('#mycountrygatewayform'+id).submit();
     }
 
+    function checkAutoCredit(id, val) {
+        $('#myvalue'+id).val(val);
+        $('#checkers'+id).submit();
+    }
+
 </script>
 
     </body>
