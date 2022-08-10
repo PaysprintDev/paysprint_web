@@ -7,6 +7,7 @@ use Session;
 use App\MarkUp;
 use App\Points;
 use App\PromoDate;
+use App\TrialDate;
 use App\watchlist;
 
 use Carbon\Carbon;
@@ -3662,28 +3663,23 @@ class AdminController extends Controller
 
     public function autoCreditApproval(Request $req)
     {
-        try{
+        try {
 
 
-            if($req->value === "remove"){
-               User::where('id', $req->id)->update(['auto_credit' => 0]);
-            }
-            else{
-            User::where('id', $req->id)->update(['auto_credit' => 1]);
-
+            if ($req->value === "remove") {
+                User::where('id', $req->id)->update(['auto_credit' => 0]);
+            } else {
+                User::where('id', $req->id)->update(['auto_credit' => 1]);
             }
 
-            $resData = 'Successfully '.$req->value.'d';
+            $resData = 'Successfully ' . $req->value . 'd';
             $resp = "success";
-
-        }
-        catch(\Throwable $th){
+        } catch (\Throwable $th) {
             $resData = $th->getMessage();
             $resp = "error";
         }
 
         return redirect()->back()->with($resp, $resData);
-
     }
 
 
@@ -17319,6 +17315,15 @@ class AdminController extends Controller
 
             $getSub = TransactionCost::where('country', $data->country)->where('structure', $subType)->first();
 
+            $startdate = date('Y-m-d');
+            $enddate = date('Y-m-d', strtotime($startdate . ' + 30 days'));
+
+            TrialDate::create([
+                'user_id' => $req->id,
+                'trial_start' => $startdate,
+                'trial_end' =>  $enddate
+            ]);
+
             $expire_date = Carbon::now()->addMonth()->toDateTimeString();
 
             $amount = $getSub->fixed;
@@ -17382,6 +17387,14 @@ class AdminController extends Controller
                 'name' => session('firstname') . ' ' . session('lastname'),
                 'activity' => 'Approved ' . strtoupper($data->name) . ' account to level 2 today: ' . date('d-M-Y h:i:a'),
             ];
+            $startdate = date('Y-m-d');
+            $enddate = date('Y-m-d', strtotime($startdate . ' + 30 days'));
+
+            TrialDate::create([
+                'user_id' => $req->id,
+                'trial_start' => $startdate,
+                'trial_end' =>  $enddate
+            ]);
 
             $this->createSupportActivity($query);
 
