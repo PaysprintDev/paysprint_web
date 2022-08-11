@@ -140,7 +140,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="wrapper option-1 option-1-1">
-                    @if(isset($data['status']))
+                    {{-- @if(isset($data['status'])) --}}
                     <ol class="c-stepper">
                         <li class="c-stepper__item {{Auth::user() ? 'c-stepper__item__active' : ''}}">
                             <h3 class="c-stepper__title">Sign Up</h3>
@@ -155,13 +155,13 @@
                             <h3 class="c-stepper__title">Account Verification-Pending</h3>
                             {{-- <p class="c-stepper__desc">Some desc text</p> --}}
                         </li>
-                        <li class="c-stepper__item {{ $data['pending'] ? 'c-stepper__item__active' : '' }}">
-                            <h3 class="c-stepper__title">Verified</h3>
+                        <li class="c-stepper__item">
+                            <h3 class="c-stepper__title">Completed</h3>
                             {{-- <p class="c-stepper__desc">Some desc text</p> --}}
                         </li>
 
                     </ol>
-                    @endif
+                    {{-- @endif --}}
                 </div>
                 <!-- /section -->
                 <!-- /section -->

@@ -22,7 +22,6 @@
                         <div class="col-md-12">
                             <h4 class="font-sm">
                                 Balance
-                            </h4>
                         </div>
                         <br>
                         <div class="col-md-12">
@@ -135,11 +134,55 @@
     </div>
 </section>
 <!-- End Professional Builde -->
-
 <!-- Professional Builde -->
 <section class="professional_builder row">
     <div class="container">
+            
 
+        @isset($data['userdetails'])
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="wrapper option-1 option-1-1">
+                        @if(new DateTime(date('Y-m-d')) < new DateTime($data['userdetails']->trial_end))
+                            <ol class="c-stepper">
+                                <li class="c-stepper__item {{Auth::user() ? 'c-stepper__item__active' : ''}}">
+                                    <h3 class="c-stepper__title">Sign Up</h3>
+                                    {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                                </li>
+            
+                                <li class="c-stepper__item {{ $data['pending'] ? 'c-stepper__item__active' : '' }}">
+                                    <h3 class="c-stepper__title">Account Verification-Pending</h3>
+                                    {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                                </li>
+                                <li class="c-stepper__item {{ $data['pending'] ? 'c-stepper__item__active' : '' }}">
+                                    <h3 class="c-stepper__title">Account Verification-Completed</h3>
+                                    {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                                </li>
+                                <li class="c-stepper__item {{ $data['pending'] ? 'c-stepper__item__active' : '' }}">
+                                    <h3 class="c-stepper__title">Completed</h3>
+                                    {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                                </li>
+                                <li
+                                    class="c-stepper__item {{ new DateTime(date('Y-m-d')) > new DateTime($data['userdetails']->trial_end) ? 'c-stepper__item__active' : '' }}">
+                                    <h3 class="c-stepper__title">
+                                        30-Day Trial</h3>
+            
+                                    {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                                </li>
+            
+                            </ol>
+                            @endif
+                    </div>
+                </div>
+            </div>
+
+            
+        @endisset
+        
+
+        <hr>
+
+        <!--end of user journey -->
         @isset($data['specialInfo'])
         <div class="row">
             <div class="alert alert-success show" role="alert">
@@ -516,7 +559,8 @@
 
                                                             @if ($payInv->payment_status == 0)
                                                             <small><span class='badge badge-danger'
-                                                                    style='cursor: pointer;' onclick=location.href='{{ route('payment',
+                                                                    style='cursor: pointer;'
+                                                                    onclick=location.href='{{ route('payment',
                                                                     $payInv->invoice_no) }}'>Pay
                                                                     Invoice</span></small>
                                                             @elseif($payInv->payment_status == 2)

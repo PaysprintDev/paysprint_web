@@ -79,7 +79,6 @@
         <div class="row mb-4">
             <div class="col-lg-8 mx-auto text-center">
                 <h1 class="display-4">{{ $pages }}</h1>
-                {{ Auth::user()->country }}
             </div>
         </div> <!-- End -->
         <div class="row">
