@@ -1811,6 +1811,28 @@
         }
     }
 
+    function getMyPaymentLink(id)
+    {
+        $('#paymentLinkModal'+id).click();
+        $('#acceptLinkBtn').attr('disabled', true);
+    }
+
+    function acceptLinkTerms()
+    {
+        $('#myPaymentLinkUp').submit();
+    }
+
+    $('#paylink_checkbox').change(function() {
+
+        if($('#paylink_checkbox').prop('checked') === false){
+            $('#acceptLinkBtn').attr('disabled', true);
+        }
+        else{
+            $('#acceptLinkBtn').attr('disabled', false);
+        }
+
+    });
+
 
     function iziMessage(status, title, message) {
 

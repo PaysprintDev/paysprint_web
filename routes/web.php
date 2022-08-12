@@ -466,7 +466,10 @@ Route::prefix('merchant')->group(function () {
 	Route::get('/paymentgateway', [MerchantPageController::class, 'paymentGateway'])->name('new merchant payment gateway');
 	Route::get('/estore', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');
 	Route::get('/storepickupaddress', [MerchantPageController::class, 'storepickupAddress'])->name('storepickup address');
-	Route::get('/deliverypickupaddress', [MerchantPageController::class, 'deliverypickupAddress'])->name('deliverypickup address');;
+	Route::get('/deliverypickupaddress', [MerchantPageController::class, 'deliverypickupAddress'])->name('deliverypickup address');
+
+	Route::post('/requestpaymentlink', [MerchantPageController::class, 'requestPaymentLink'])->name('request payment link');
+
 
 
 	Route::get('businessprofile/{id}', [MerchantPageController::class, 'businessProfile'])->name('merchant business profile');
@@ -488,6 +491,9 @@ Route::prefix('merchant')->group(function () {
 
 
 	Route::post('/setupestore', [ShopController::class, 'setupEstore'])->name('setup estore');
+
+
+
 
 
 

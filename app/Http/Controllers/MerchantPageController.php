@@ -209,6 +209,28 @@ class MerchantPageController extends Controller
     }
 
 
+    public function requestPaymentLink(Request $req){
+        try {
+
+            $today = date('Y-m-d H:i:s');
+
+            User::where('id', $req->id)->update([
+                'payment_link_access' => 1,
+                'payment_link_expiry' => date('Y-m-d H:i:s', strtotime($today.'+ 1 day'))
+            ]);
+
+            $message = 'Link generated successfully';
+            $status = 'success';
+
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+            $status = 'error';
+        }
+
+        return redirect()->route('dashboard')->with($status, $message);
+    }
+
+
     // Setup Shop Here...
     public function merchantShop($merchant){
 
