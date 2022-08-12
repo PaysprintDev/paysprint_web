@@ -26,7 +26,8 @@
                         <br>
                         <div class="col-md-12">
                             <h3>
-                                {{ $data['currencyCode']->currencySymbol . '' . number_format(Auth::user()->wallet_balance, 4) }}
+                                {{ $data['currencyCode']->currencySymbol . '' .
+                                number_format(Auth::user()->wallet_balance, 4) }}
                             </h3>
                         </div>
                     </div>
@@ -137,63 +138,66 @@
 <!-- Our Services Area -->
 <section>
     <div class="container">
-    <div class="row">
-        <div class="col-md-12 mt-4">
-            <!-- ShareThis BEGIN -->
-           <p style="text-align: center; font-size: 30px; "><strong>Check out our special Promos</strong></p>
-           <hr>
-           {!!  session('msg') !!}
-        </div>
-        <div class="col-md-12">
-            <table class="table table-striped table-responsive" id="promousers">
-                <thead>
-                    <tr>
-                        <th>S/N</th>
-                        <th>Special Promo Details</th>
-                        <th>Special Promo Start-Date</th>
-                        <th>Special Promo End-Date</th>
-                        <th> Special Promo Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
+        <div class="row">
+            <div class="col-md-12 mt-4">
+                <!-- ShareThis BEGIN -->
+                <p style="text-align: center; font-size: 30px; "><strong>Check out our special Promos</strong></p>
+                <hr>
+                {!! session('msg') !!}
+            </div>
+            <div class="col-md-12">
+                <table class="table table-striped table-responsive" id="promousers">
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Special Promo Details</th>
+                            <th>Special Promo Start-Date</th>
+                            <th>Special Promo End-Date</th>
+                            <th> Special Promo Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
                         $counter=1;
-                    @endphp
-                @if(count($data['specialpromo']) > 0)
-                  @foreach ($data['specialpromo'] as $specialpromo )
-                  @php
-                      $exist = \App\SpecialPromo::where('user_id', Auth::id())->where('special_promo_id', $specialpromo->id)->first();
-                  @endphp
-                    <tr>
-                        <td>{{ $counter++ }}</td>
-                        <td>{{ $specialpromo->promo_details }}</td>
-                        <td>{{ $specialpromo->start_date }}</td>
-                        <td>{{ $specialpromo->end_date }}</td>
-                        <td>
+                        @endphp
+                        @if(count($data['specialpromo']) > 0)
+                        @foreach ($data['specialpromo'] as $specialpromo )
+                        @php
+                        $exist = \App\SpecialPromo::where('user_id', Auth::id())->where('special_promo_id',
+                        $specialpromo->id)->first();
+                        @endphp
+                        <tr>
+                            <td>{{ $counter++ }}</td>
+                            <td>{{ $specialpromo->promo_details }}</td>
+                            <td>{{ $specialpromo->start_date }}</td>
+                            <td>{{ $specialpromo->end_date }}</td>
+                            <td>
 
 
-                            @if (new DateTime(date('Y-m-d')) <= new DateTime($specialpromo->end_date))
-                                 <a href="{{ route('join promo',$specialpromo->id) }}" class="btn btn-success {{ $exist ? 'disabled' : '' }}" >{{ $exist ? 'Joined' : 'Join Promo' }}</a>
-                            @else
-                             <a href="javascript:void()" class="btn btn-danger">Promo Ended</a>
+                                @if (new DateTime(date('Y-m-d')) <= new DateTime($specialpromo->end_date))
+                                    <a href="{{ route('join promo',$specialpromo->id) }}"
+                                        class="btn btn-success {{ $exist ? 'disabled' : '' }}">{{ $exist ? 'Joined' :
+                                        'Join Promo' }}</a>
+                                    @else
+                                    <a href="javascript:void()" class="btn btn-danger">Promo Ended</a>
 
-                            @endif
+                                    @endif
 
-                        </td>
-                    </tr>
-                @endforeach
+                            </td>
+                        </tr>
+                        @endforeach
 
-                   @else
-                   <tr>
-                    <td colspan="5" style="text-align: center">
-                         <div class="col-md-12 text-center"> No Promo available</div>
-                    </td>
-                   </tr>
-                @endif
-                </tbody>
-            </table>
+                        @else
+                        <tr>
+                            <td colspan="5" style="text-align: center">
+                                <div class="col-md-12 text-center"> No Promo available</div>
+                            </td>
+                        </tr>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
 </section>
 <!-- End Our Services Area -->
 
