@@ -3399,6 +3399,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
         try {
 
+
             // Get merchant info
             $thisuser = User::where('ref_code', $req->merchant_id)->first();
 
@@ -3495,11 +3496,17 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                 $this->updatePoints($thisuser->id, 'Add money');
 
+                $this->sendEmail($this->email, "Fund remittance");
+
                 // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
                 $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-                $this->sendEmail($this->email, "Fund remittance");
+                // Top Up PaySprint FX account with the commission charge...
+
+                $currencyFX = new MonthlySubController();
+
+                $currencyFX->feeChargeCredit($thisuser->country, $req->commissiondeduct, $thisuser->businessname, $thisuser->accountType);
             } else {
 
 
@@ -3602,6 +3609,12 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                     $monerisactivity = $thisuser->name . ' ' . $sendMsg;
                     $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1));
+
+
+                    $currencyFX = new MonthlySubController();
+
+                    $currencyFX->feeChargeCredit($thisuser->country, $req->commissiondeduct, $thisuser->businessname, $thisuser->accountType);
+
                 } else {
                     $data = [];
                     $message = $response->responseData['Message'] . " If the error persists, kindly login on the web app at https://paysprint.ca to continue your transactions.";

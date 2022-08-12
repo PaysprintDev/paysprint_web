@@ -5990,11 +5990,59 @@ class HomeController extends Controller
             if ($wallet < $req->amount) {
                 $walletCheck = 'Wallet Balance: <strong>' . $req->currency . number_format($wallet, 2) . '</strong>. <br> Insufficient balance. <a href="' . route('Add Money') . '">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
             }
+
+
+            $resData = ['data' => $req->amount, 'message' => 'success', 'walletCheck' => $walletCheck];
+
+                return $this->returnJSON($resData, 200);
+
+        }
+        else{
+            // Calculate the commission deduct...
+            $thisuser = User::where('ref_code', $req->ref_code)->first();
+
+            $data = TransactionCost::where('structure', "Add Funds/Money")->where('method', "Debit Card")->where('country', $thisuser->country)->first();
+
+            if (isset($data)) {
+
+                if ($thisuser->country == "Nigeria" && $req->amount <= 2500) {
+
+                    $x = ($data->variable / 100) * $req->amount;
+
+                    $y = 0 + $x;
+
+                    $collection = $y;
+                } else {
+
+                    $x = ($data->variable / 100) * $req->amount;
+
+                    $y = $data->fixed + $x;
+
+                    $collection = $y;
+                }
+            } else {
+
+                $x = (3.00 / 100) * $req->amount;
+
+                $y = 0.33 + $x;
+
+                $collection = $y;
+            }
+
+
+            $amountReceive = $req->amount + $collection;
+
+            $state = "commission available";
+
+
+            $resData = ['data' => $amountReceive, 'message' => 'success', 'state' => $state, 'collection' => $collection, 'walletCheck' => $walletCheck, ''];
+
+
+            return $this->returnJSON($resData, 200);
+
         }
 
-        $resData = ['data' => $req->amount, 'message' => 'success', 'walletCheck' => $walletCheck];
 
-        return $this->returnJSON($resData, 200);
     }
 
     public function convertCurrencyRate($foreigncurrency, $localcurrency, $amount)
