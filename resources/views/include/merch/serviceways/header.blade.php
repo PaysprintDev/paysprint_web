@@ -44,18 +44,15 @@
 
                                             </li>
                                             <li class="">
-                                                <a href="#"><span>Our Services</span></a>
+                                                <a href="#service"><span>Our Services</span></a>
                                             </li>
                                             <li class="">
-                                                <a href="#"><span>Plan & pricing </span></a>
+                                                <a href="#pricing"><span>Plan & pricing </span></a>
 
                                             </li>
-                                            <li class="">
-                                                <a href="#"><span>Order</span></a>
-
-                                            </li>
+                                           
                                             <li class=" ">
-                                                <a href="#"><span>Check Out</span></a>
+                                                <a href="#contact"><span>Contact</span></a>
                                             </li>
 
                                         </ul>

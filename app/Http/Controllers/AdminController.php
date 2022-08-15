@@ -376,6 +376,8 @@ class AdminController extends Controller
 
 
 
+
+
             return view('admin.getcurrencyconversion')->with(['pages' => 'My Dashboard', 'transCost' => $transCost, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');

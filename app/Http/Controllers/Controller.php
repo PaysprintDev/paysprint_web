@@ -155,6 +155,11 @@ class Controller extends BaseController
     {
 
 
+        try {
+            //code...
+
+
+
         // Get Markup
         $markuppercent = $this->markupPercentage();
 
@@ -221,15 +226,12 @@ class Controller extends BaseController
 
 
         for ($i = 0; $i < count($countryQuery); $i++) {
-
-            if($dataInfo['country'][$i] != "Zimbabwean Dollar"){
-                // Zimbabwean Dollar
-                ConversionCountry::where('country', $dataInfo['country'][$i])->update(['rate' => $dataInfo['query'][$i], 'official' => $dataInfo['official'][$i]]);
-            }
-
-
+            ConversionCountry::where('country', $dataInfo['country'][$i])->update(['rate' => $dataInfo['query'][$i], 'official' => $dataInfo['official'][$i]]);
         }
 
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
 
         $newRate = ConversionCountry::orderBy('id', 'ASC')->get();
 
@@ -237,6 +239,8 @@ class Controller extends BaseController
         $data = [
             'quotes' => $newRate
         ];
+
+
 
         return $data;
     }

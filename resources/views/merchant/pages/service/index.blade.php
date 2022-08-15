@@ -237,7 +237,7 @@
             <!--====================  Accordion area  ====================-->
 
             <!--===========  feature-images-wrapper  Start =============-->
-            <div class="feature-images-wrapper bg-gray section-space--ptb_100">
+            <div class="feature-images-wrapper bg-gray section-space--ptb_100" id="service">
                 <div class="container">
 
                     <div class="row">
@@ -404,7 +404,7 @@
 
 
             <!--========= Pricing Table Area Start ==========-->
-            <div class="pricing-table-area section-space--pb_70 p-5 bg-gradient">
+            <div class="pricing-table-area section-space--pb_70 p-5 bg-gradient" id="pricing">
                 <div class="pricing-table-title-area position-relative">
                     <div class="container">
                         <div class="row">
@@ -441,7 +441,7 @@
                                     </div>
                                     <div class="pricing-table__body">
                                         <div class="pricing-table__footer">
-                                            <a href="#" class="ht-btn ht-btn-md ht-btn--outline">Order now</a>
+                                            <a href="#contact" class="ht-btn ht-btn-md ht-btn--outline">Contact us</a>
                                         </div>
                                         <ul class="pricing-table__list text-left">
                                             {!! $data['myServiceStore']->pricingOffer1 !!}
@@ -474,7 +474,7 @@
                                     </div>
                                     <div class="pricing-table__body">
                                         <div class="pricing-table__footer">
-                                            <a href="#" class="ht-btn  ht-btn-md ">Order now</a>
+                                            <a href="#contact" class="ht-btn  ht-btn-md ">Contact us</a>
                                         </div>
                                         <ul class="pricing-table__list text-left">
                                             {!! $data['myServiceStore']->pricingOffer2 !!}
@@ -502,7 +502,7 @@
                                     </div>
                                     <div class="pricing-table__body">
                                         <div class="pricing-table__footer">
-                                            <a href="#" class="ht-btn ht-btn-md ht-btn--outline">Order now</a>
+                                            <a href="#contact" class="ht-btn ht-btn-md ht-btn--outline">Contact us</a>
                                         </div>
                                         <ul class="pricing-table__list text-left">
                                             {!! $data['myServiceStore']->pricingOffer3 !!}

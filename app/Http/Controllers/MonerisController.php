@@ -3403,7 +3403,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
             // Get merchant info
             $thisuser = User::where('ref_code', $req->merchant_id)->first();
 
-            if ($req->paymentToken != null && $thisuser->country != "Canada") {
+            $getMerchantInfo = ClientInfo::where('user_id', $req->merchant_id)->first();
+
+            if($getMerchantInfo->accountMode === 'live'){
+                 if ($req->paymentToken != null && $thisuser->country != "Canada") {
 
                 $getGateway = AllCountries::where('name', $thisuser->country)->first();
 
@@ -3628,6 +3631,14 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0);
                 }
             }
+            }
+            else{
+                $data = [];
+                $message = $thisuser->businessname. " is unable to receive payment by link because their account is still on test mode.";
+                $status = 400;
+            }
+
+
         } catch (\Throwable $th) {
             $data = [];
             $message = $th->getMessage();

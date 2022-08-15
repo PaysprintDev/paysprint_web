@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Intervention\Image\Facades\Image;
-
 use App\User;
+
 use App\StoreCart;
+use App\ClientInfo;
+use App\ProductTax;
 use App\StoreOrders;
 use App\StorePickup;
 use App\AllCountries;
@@ -14,18 +15,18 @@ use App\StoreDelivery;
 use App\StoreDiscount;
 use App\StoreMainShop;
 use App\StoreProducts;
+use App\StoreShipping;
 use App\StoreWishList;
 use App\Mail\sendEmail;
-use App\ProductTax;
 use App\Traits\MyEstore;
-use App\Traits\Xwireless;
 
+use App\Traits\Xwireless;
 use App\StoreBillingDetail;
-use App\StoreShipping;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Validator;
 
 class ShopController extends Controller
@@ -55,25 +56,37 @@ class ShopController extends Controller
         $timezone = explode("/", $this->location->timezone);
 
 
-
         $thisuser = User::where('ref_code', $id)->first();
 
-        $getCurrencyCode = $this->getPaymentGateway($this->location->country);
 
-        $data = array(
-            'pages' => $shop . ' Shop',
-            'currencyCode' => $this->getCountryCode($thisuser->country),
-            'continent' => $timezone[0],
-            'name' => $thisuser->businessname,
-            'refCode' => $thisuser->ref_code,
-            'mycurrencyCode' => $this->getCountryCode($getCurrencyCode->name),
-        );
+        $getMerchant = ClientInfo::where('user_id', $thisuser->ref_code)->first();
 
+
+        if($getMerchant->accountMode === 'live'){
+
+
+            $getCurrencyCode = $this->getPaymentGateway($this->location->country);
+
+            $data = array(
+                'pages' => $shop . ' Shop',
+                'currencyCode' => $this->getCountryCode($thisuser->country),
+                'continent' => $timezone[0],
+                'name' => $thisuser->businessname,
+                'refCode' => $thisuser->ref_code,
+                'mycurrencyCode' => $this->getCountryCode($getCurrencyCode->name),
+            );
 
         // dd($data);
 
+            return view('main.shop.index')->with(['data' => $data]);
 
-        return view('main.shop.index')->with(['data' => $data]);
+        }
+        else{
+            return view('errors.paymentunavailable')->with(['pages' => $getMerchant->business_name]);
+        }
+
+
+
     }
 
 
