@@ -16,7 +16,8 @@
       </h1>
       <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Wallet Credit</li>
+        <li class="active">Wallet Credit </li>
+       
       </ol>
     </section>
 
@@ -88,7 +89,7 @@
                                 <label class="text-danger">Currency: {{ $user->currencyCode}}</label>
                               </div>
                               <div class="col-md-12 form-group">
-                                <label>Wallet Balance: {{ $user->wallet_balance}}</label>
+                                <label>Wallet Balance: {{$user->wallet_balance}}</label>
                               </div>
                             
                               <div class="col-md-12 form-group">

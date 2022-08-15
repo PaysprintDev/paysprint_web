@@ -41,7 +41,6 @@ class SurveyImport implements ToModel, WithHeadingRow
         return new SurveyExcel([
             
             'email' => $row['email'],
-            'reason' => $row['reason'],
             
         ]);
     }

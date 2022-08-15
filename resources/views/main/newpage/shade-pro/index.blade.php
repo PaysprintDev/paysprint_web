@@ -134,8 +134,9 @@
 
                         <a data-fancybox href="https://youtu.be/txfp2Pzbzrg"
                             class="video-link gr-text-color mt-8 gr-flex-y-center justify-content-center justify-content-lg-start">
-                            <span class="mr-2 gr-text-color circle-18 border border-black-dynamic">
+                            <span class="mr-2  border border-black-dynamic">
                                 <i class="icon icon-triangle-right-17-2 gr-text-14"></i>
+                                {{-- <img src='{{asset('images/paysprint_logo/Video.png')}}' alt="icon" height="50px" width="60px"/> --}}
                             </span>
                             <span class="gr-text-12 font-weight-bold text-uppercase" style="font-size: 16px;">How PaySprint
                                 works</span>

@@ -90,7 +90,8 @@ Route::get('mailforvirtualaccount', 'SendGridController@cronToCustomersOnVirtual
 // Send Notice to Users and Merchants...
 Route::get('publicizemerchant', 'CheckSetupController@publicizeMerchantToConsumer');
 Route::get('notify-merchant-page', 'CheckSetupController@notifyMerchantPage');
-
+// update walletcredit
+Route::get('updatewalletcredit', 'CreditController@updateWalletCredit');
 
 // IDV Mail Chimp
 Route::get('idvcompletedlist', 'CheckSetupController@idvCompletedList');

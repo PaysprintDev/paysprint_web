@@ -13412,6 +13412,7 @@ class AdminController extends Controller
 
             ReferralClaim::where('id', $user)->update([
                 'status' => 'Completed',
+                'amount' => $referralclaim
             ]);
         }
 
@@ -13425,8 +13426,12 @@ class AdminController extends Controller
             ]);
             ReferralClaim::where('id', $user)->update([
                 'status' => 'Completed',
+                'amount'=>   $referralclaim
             ]);
         }
+
+       
+
 
         // Send SMS
 
@@ -13514,6 +13519,7 @@ class AdminController extends Controller
 
             ClaimedPoints::where('id', $user)->update([
                 'status' => 'Completed',
+                'amount' => $pointclaim,
             ]);
         }
 
@@ -13527,6 +13533,7 @@ class AdminController extends Controller
             ]);
             ClaimedPoints::where('id', $user)->update([
                 'status' => 'Completed',
+                'amount' =>  $referralclaim,
             ]);
         }
         // Send SMS
@@ -13583,7 +13590,7 @@ class AdminController extends Controller
         return back()->with("msg", "<div class='alert alert-success'>Point Claim Successful</div>");
     }
 
-
+   
 
     //Referral Report
     public function referralReport(Request $req)
