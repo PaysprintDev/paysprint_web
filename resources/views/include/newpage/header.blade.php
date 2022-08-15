@@ -61,7 +61,7 @@
                                            role="button" aria-expanded="false">PRICING</a>
                                    </li>
 
-                                  
+
                                    <li class="nav-item">
                                     <a class="nav-link" href="{{ route('display country') }}" role="button"
                                         aria-expanded="false">SEARCH COUNTRY</a>
@@ -192,7 +192,7 @@
 
    <header class="site-header site-header--menu-left pt-5 pb-5 site-header--absolute">
        <div class="container-fluid pr-lg-9 pl-lg-9">
-           <nav class="navbar site-navbar offcanvas-active navbar-expand-lg  px-0 fixed-top"
+           <nav class="navbar site-navbar offcanvas-active navbar-expand-lg px-0 fixed-top"
                style="background-color: #fbfbfb;">
                <!-- Brand Logo-->
                <div class="brand-logo">
@@ -242,7 +242,7 @@
                            <a class="nav-link" href="{{ route('display country') }}" role="button"
                                aria-expanded="false">SEARCH COUNTRY</a>
                        </li>
-                       
+
                        <li class="nav-item">
                         <a class="nav-link" href="{{ route('login') }}" role="button"
                             aria-expanded="false">LOGIN</a>
