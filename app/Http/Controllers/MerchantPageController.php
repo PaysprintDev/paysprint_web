@@ -16,6 +16,7 @@ use App\StoreOrders;
 use App\StorePickup;
 use App\UpgradePlan;
 use App\AllCountries;
+use App\merchantTrial;
 use App\User as User;
 
 use App\ClaimedPoints;
@@ -69,21 +70,25 @@ class MerchantPageController extends Controller
             'clientInfo' => $this->getMyClientInfo(Auth::user()->ref_code),
             'planCost' => $this->getPlanCost(),
             'specialInfo' => $this->getthisInfo(Auth::user()->country),
-            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first()
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
+            'merchantstatus' => $this->checkMerchantStatus(Auth::user()->ref_code),
+            'trial' => merchantTrial::where('user_id', Auth::user()->ref_code)->first()
         ];
 
-
-
-
-
         return view('merchant.pages.dashboard')->with(['pages' => 'dashboard', 'data' => $data]);
+    }
+
+    public function checkMerchantStatus($id)
+    {
+        $data = ClientInfo::where('user_id', $id)->where('accountMode', 'live')->first();
+        return $data;
     }
 
     public function invoiceSingle()
     {
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+        if ($client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -104,7 +109,7 @@ class MerchantPageController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+        if ($client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -156,7 +161,7 @@ class MerchantPageController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+        if ($client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -175,7 +180,7 @@ class MerchantPageController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+        if ($client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -194,7 +199,7 @@ class MerchantPageController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+        if ($client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -209,19 +214,19 @@ class MerchantPageController extends Controller
     }
 
 
-    public function requestPaymentLink(Request $req){
+    public function requestPaymentLink(Request $req)
+    {
         try {
 
             $today = date('Y-m-d H:i:s');
 
             User::where('id', $req->id)->update([
                 'payment_link_access' => 1,
-                'payment_link_expiry' => date('Y-m-d H:i:s', strtotime($today.'+ 1 day'))
+                'payment_link_expiry' => date('Y-m-d H:i:s', strtotime($today . '+ 1 day'))
             ]);
 
             $message = 'Link generated successfully';
             $status = 'success';
-
         } catch (\Throwable $th) {
             $message = $th->getMessage();
             $status = 'error';
@@ -232,42 +237,39 @@ class MerchantPageController extends Controller
 
 
     // Setup Shop Here...
-    public function merchantShop($merchant){
+    public function merchantShop($merchant)
+    {
 
 
         // Get merchant...
         $thismerchant = ClientInfo::where('business_name', $merchant)->first();
 
-        if(isset($thismerchant)){
-                $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
+        if (isset($thismerchant)) {
+            $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
 
 
-                if(Auth::check() == true){
-                    $userId = Auth::id();
-                }
-                else{
-                    $userId = 0;
-                }
+            if (Auth::check() == true) {
+                $userId = Auth::id();
+            } else {
+                $userId = 0;
+            }
 
-                if($userId == $getMerchantId->id){
-                    // If Has Main Store setup
+            if ($userId == $getMerchantId->id) {
+                // If Has Main Store setup
                 $merchantStore = $this->checkMyStore($getMerchantId->id);
+            } else {
+                // If Has Main Store setup
+                if (session('role')) {
+                    $merchantStore = $this->checkMyStore($getMerchantId->id);
+                } else {
+                    $merchantStore = $this->getMyStore($getMerchantId->id);
                 }
-                else{
-                    // If Has Main Store setup
-                    if(session('role')){
-                        $merchantStore = $this->checkMyStore($getMerchantId->id);
-                    }
-                    else{
-            $merchantStore = $this->getMyStore($getMerchantId->id);
-
-                    }
-                }
+            }
 
 
 
 
-            if(isset($merchantStore)){
+            if (isset($merchantStore)) {
 
 
 
@@ -282,58 +284,48 @@ class MerchantPageController extends Controller
 
                 // dd($data);
 
-                return view('merchant.pages.shop.index')->with(['pages' => $merchant.' Shop', 'data' => $data]);
+                return view('merchant.pages.shop.index')->with(['pages' => $merchant . ' Shop', 'data' => $data]);
+            } else {
+                return view('errors.comingsoon')->with(['pages' => $merchant . ' Shop']);
             }
-            else{
-                return view('errors.comingsoon')->with(['pages' => $merchant.' Shop']);
-            }
-
+        } else {
+            return view('errors.comingsoon')->with(['pages' => $merchant . ' Shop']);
         }
-        else{
-            return view('errors.comingsoon')->with(['pages' => $merchant.' Shop']);
-        }
-
-
-
-
     }
 
 
-    public function merchantService($merchant){
+    public function merchantService($merchant)
+    {
 
         // Get merchant...
         $thismerchant = ClientInfo::where('business_name', $merchant)->first();
 
-        if(isset($thismerchant)){
-                $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
+        if (isset($thismerchant)) {
+            $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
 
 
-                if(Auth::check() == true){
-                    $userId = Auth::id();
-                }
-                else{
-                    $userId = 0;
-                }
+            if (Auth::check() == true) {
+                $userId = Auth::id();
+            } else {
+                $userId = 0;
+            }
 
-                if($userId == $getMerchantId->id){
-                    // If Has Main Store setup
+            if ($userId == $getMerchantId->id) {
+                // If Has Main Store setup
                 $merchantStore = $this->getServiceStore($getMerchantId->id);
+            } else {
+                // If Has Main Store setup
+                if (session('role')) {
+                    $merchantStore = $this->getServiceStore($getMerchantId->id);
+                } else {
+                    $merchantStore = $this->getMyServiceStore($getMerchantId->id);
                 }
-                else{
-                    // If Has Main Store setup
-                    if(session('role')){
-                        $merchantStore = $this->getServiceStore($getMerchantId->id);
-                    }
-                    else{
-            $merchantStore = $this->getMyServiceStore($getMerchantId->id);
-
-                    }
-                }
+            }
 
 
 
 
-            if(isset($merchantStore)){
+            if (isset($merchantStore)) {
 
                 $data = [
                     'myproduct' => $this->getProducts($getMerchantId->id),
@@ -346,58 +338,48 @@ class MerchantPageController extends Controller
 
 
 
-                return view('merchant.pages.service.index')->with(['pages' => $merchant.' Shop', 'data' => $data]);
+                return view('merchant.pages.service.index')->with(['pages' => $merchant . ' Shop', 'data' => $data]);
+            } else {
+                return view('errors.comingsoon')->with(['pages' => $merchant . ' Shop']);
             }
-            else{
-                return view('errors.comingsoon')->with(['pages' => $merchant.' Shop']);
-            }
-
+        } else {
+            return view('errors.comingsoon')->with(['pages' => $merchant . ' Shop']);
         }
-        else{
-            return view('errors.comingsoon')->with(['pages' => $merchant.' Shop']);
-        }
-
-
-
-
     }
 
     //merchant shop page
-    public function merchantShopPage(Request $req){
+    public function merchantShopPage(Request $req)
+    {
 
         // Get merchant...
         $thismerchant = ClientInfo::where('business_name', $req->merchant)->first();
 
-        if(isset($thismerchant)){
-                $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
+        if (isset($thismerchant)) {
+            $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
 
 
-                if(Auth::check() == true){
-                    $userId = Auth::id();
-                }
-                else{
-                    $userId = 0;
-                }
+            if (Auth::check() == true) {
+                $userId = Auth::id();
+            } else {
+                $userId = 0;
+            }
 
-                if($userId == $getMerchantId->id){
-                    // If Has Main Store setup
+            if ($userId == $getMerchantId->id) {
+                // If Has Main Store setup
                 $merchantStore = $this->checkMyStore($getMerchantId->id);
+            } else {
+                // If Has Main Store setup
+                if (session('role')) {
+                    $merchantStore = $this->checkMyStore($getMerchantId->id);
+                } else {
+                    $merchantStore = $this->getMyStore($getMerchantId->id);
                 }
-                else{
-                    // If Has Main Store setup
-                    if(session('role')){
-                        $merchantStore = $this->checkMyStore($getMerchantId->id);
-                    }
-                    else{
-            $merchantStore = $this->getMyStore($getMerchantId->id);
-
-                    }
-                }
+            }
 
 
 
 
-            if(isset($merchantStore)){
+            if (isset($merchantStore)) {
 
 
 
@@ -412,58 +394,48 @@ class MerchantPageController extends Controller
 
 
 
-                return view('merchant.pages.shop.shopindex')->with(['pages' => $req->merchant.' Shop', 'data' => $data]);
+                return view('merchant.pages.shop.shopindex')->with(['pages' => $req->merchant . ' Shop', 'data' => $data]);
+            } else {
+                return view('errors.comingsoon')->with(['pages' => $req->merchant . ' Shop']);
             }
-            else{
-                return view('errors.comingsoon')->with(['pages' => $req->merchant.' Shop']);
-            }
-
+        } else {
+            return view('errors.comingsoon')->with(['pages' => $req->merchant . ' Shop']);
         }
-        else{
-            return view('errors.comingsoon')->with(['pages' => $req->merchant.' Shop']);
-        }
-
-
-
-
     }
 
     //merchant orders
-     public function merchantOrders(Request $req){
+    public function merchantOrders(Request $req)
+    {
 
         // Get merchant...
         $thismerchant = ClientInfo::where('business_name', $req->merchant)->first();
 
-        if(isset($thismerchant)){
-                $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
+        if (isset($thismerchant)) {
+            $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
 
 
-                if(Auth::check() == true){
-                    $userId = Auth::id();
-                }
-                else{
-                    $userId = 0;
-                }
+            if (Auth::check() == true) {
+                $userId = Auth::id();
+            } else {
+                $userId = 0;
+            }
 
-                if($userId == $getMerchantId->id){
-                    // If Has Main Store setup
+            if ($userId == $getMerchantId->id) {
+                // If Has Main Store setup
                 $merchantStore = $this->checkMyStore($getMerchantId->id);
+            } else {
+                // If Has Main Store setup
+                if (session('role')) {
+                    $merchantStore = $this->checkMyStore($getMerchantId->id);
+                } else {
+                    $merchantStore = $this->getMyStore($getMerchantId->id);
                 }
-                else{
-                    // If Has Main Store setup
-                    if(session('role')){
-                        $merchantStore = $this->checkMyStore($getMerchantId->id);
-                    }
-                    else{
-            $merchantStore = $this->getMyStore($getMerchantId->id);
-
-                    }
-                }
+            }
 
 
 
 
-            if(isset($merchantStore)){
+            if (isset($merchantStore)) {
 
 
 
@@ -478,277 +450,239 @@ class MerchantPageController extends Controller
 
 
 
-                return view('merchant.pages.shop.orders')->with(['pages' => $req->merchant.' Shop', 'data' => $data]);
+                return view('merchant.pages.shop.orders')->with(['pages' => $req->merchant . ' Shop', 'data' => $data]);
+            } else {
+                return view('errors.comingsoon')->with(['pages' => $req->merchant . ' Shop']);
             }
-            else{
-                return view('errors.comingsoon')->with(['pages' => $req->merchant.' Shop']);
-            }
-
+        } else {
+            return view('errors.comingsoon')->with(['pages' => $req->merchant . ' Shop']);
         }
-        else{
-            return view('errors.comingsoon')->with(['pages' => $req->merchant.' Shop']);
-        }
-
-
-
-
     }
 
-        //single merchant orders
-        public function singleOrder(Request $req){
+    //single merchant orders
+    public function singleOrder(Request $req)
+    {
 
-            // Get merchant...
-            $thismerchant = ClientInfo::where('business_name', $req->merchant)->first();
+        // Get merchant...
+        $thismerchant = ClientInfo::where('business_name', $req->merchant)->first();
 
-            if(isset($thismerchant)){
-                    $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
-
-
-                    if(Auth::check() == true){
-                        $userId = Auth::id();
-                    }
-                    else{
-                        $userId = 0;
-                    }
+        if (isset($thismerchant)) {
+            $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
 
 
+            if (Auth::check() == true) {
+                $userId = Auth::id();
+            } else {
+                $userId = 0;
+            }
 
-                    if($userId == $getMerchantId->id){
-                        // If Has Main Store setup
+
+
+            if ($userId == $getMerchantId->id) {
+                // If Has Main Store setup
+                $merchantStore = $this->checkMyStore($getMerchantId->id);
+            } else {
+                // If Has Main Store setup
+                if (session('role')) {
                     $merchantStore = $this->checkMyStore($getMerchantId->id);
-                    }
-                    else{
-                        // If Has Main Store setup
-                        if(session('role')){
-                            $merchantStore = $this->checkMyStore($getMerchantId->id);
-                        }
-                        else{
-                $merchantStore = $this->getMyStore($getMerchantId->id);
-
-                        }
-                    }
-
-
-
-
-                if(isset($merchantStore)){
-
-
-
-                    $data = [
-                        'mystore' => $merchantStore,
-                        'myproduct' => $this->getProducts($getMerchantId->id),
-                        'user' => $getMerchantId,
-                        'mywishlist' => $this->getMyWishlist($userId),
-                        'mycartlist' => $this->getMyCartlist($userId),
-                        'orders' => $this->getSpecificOrder($req->orderid)
-                    ];
-
-
-
-
-                    return view('merchant.pages.shop.singleorder')->with(['pages' => $req->merchant.' Shop', 'data' => $data]);
+                } else {
+                    $merchantStore = $this->getMyStore($getMerchantId->id);
                 }
-                else{
-                    return view('errors.comingsoon')->with(['pages' => $req->merchant.' Shop']);
-                }
-
-            }
-            else{
-                return view('errors.comingsoon')->with(['pages' => $req->merchant.' Shop']);
             }
 
 
 
 
+            if (isset($merchantStore)) {
+
+
+
+                $data = [
+                    'mystore' => $merchantStore,
+                    'myproduct' => $this->getProducts($getMerchantId->id),
+                    'user' => $getMerchantId,
+                    'mywishlist' => $this->getMyWishlist($userId),
+                    'mycartlist' => $this->getMyCartlist($userId),
+                    'orders' => $this->getSpecificOrder($req->orderid)
+                ];
+
+
+
+
+                return view('merchant.pages.shop.singleorder')->with(['pages' => $req->merchant . ' Shop', 'data' => $data]);
+            } else {
+                return view('errors.comingsoon')->with(['pages' => $req->merchant . ' Shop']);
+            }
+        } else {
+            return view('errors.comingsoon')->with(['pages' => $req->merchant . ' Shop']);
         }
+    }
 
-        //wishlist
-        public function wishlist(Request $req){
+    //wishlist
+    public function wishlist(Request $req)
+    {
 
-            // Get merchant...
-            $thismerchant = ClientInfo::where('business_name', $req->merchant)->first();
+        // Get merchant...
+        $thismerchant = ClientInfo::where('business_name', $req->merchant)->first();
 
-            if(isset($thismerchant)){
-                    $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
-
-
-                    if(Auth::check() == true){
-                        $userId = Auth::id();
-                    }
-                    else{
-                        $userId = 0;
-                    }
+        if (isset($thismerchant)) {
+            $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
 
 
+            if (Auth::check() == true) {
+                $userId = Auth::id();
+            } else {
+                $userId = 0;
+            }
 
-                    if($userId == $getMerchantId->id){
-                        // If Has Main Store setup
+
+
+            if ($userId == $getMerchantId->id) {
+                // If Has Main Store setup
+                $merchantStore = $this->checkMyStore($getMerchantId->id);
+            } else {
+                // If Has Main Store setup
+                if (session('role')) {
                     $merchantStore = $this->checkMyStore($getMerchantId->id);
-                    }
-                    else{
-                        // If Has Main Store setup
-                        if(session('role')){
-                            $merchantStore = $this->checkMyStore($getMerchantId->id);
-                        }
-                        else{
-                $merchantStore = $this->getMyStore($getMerchantId->id);
-
-                        }
-                    }
-
-
-
-
-                if(isset($merchantStore)){
-
-
-
-                    $data = [
-                        'mystore' => $merchantStore,
-                        'myproduct' => $this->getProducts($getMerchantId->id),
-                        'user' => $getMerchantId,
-                        'mywishlist' => $this->getMyWishlist($userId),
-                        'mycartlist' => $this->getMyCartlist($userId),
-                    ];
-
-
-
-                    return view('merchant.pages.shop.wishlist')->with(['pages' => $req->merchant.' Shop', 'data' => $data]);
+                } else {
+                    $merchantStore = $this->getMyStore($getMerchantId->id);
                 }
-                else{
-                    return view('errors.comingsoon')->with(['pages' => $req->merchant.' Shop']);
-                }
-
-            }
-            else{
-                return view('errors.comingsoon')->with(['pages' => $req->merchant.' Shop']);
             }
 
 
 
 
+            if (isset($merchantStore)) {
+
+
+
+                $data = [
+                    'mystore' => $merchantStore,
+                    'myproduct' => $this->getProducts($getMerchantId->id),
+                    'user' => $getMerchantId,
+                    'mywishlist' => $this->getMyWishlist($userId),
+                    'mycartlist' => $this->getMyCartlist($userId),
+                ];
+
+
+
+                return view('merchant.pages.shop.wishlist')->with(['pages' => $req->merchant . ' Shop', 'data' => $data]);
+            } else {
+                return view('errors.comingsoon')->with(['pages' => $req->merchant . ' Shop']);
+            }
+        } else {
+            return view('errors.comingsoon')->with(['pages' => $req->merchant . ' Shop']);
         }
+    }
 
-        //deletewishlist item
+    //deletewishlist item
 
-        public function deleteWishlist(Request $req, $id){
-            StoreWishList::where('id',$id)->delete();
-            return back();
-        }
+    public function deleteWishlist(Request $req, $id)
+    {
+        StoreWishList::where('id', $id)->delete();
+        return back();
+    }
 
-        // Shopping Cart
-    public function myCart(Request $req){
+    // Shopping Cart
+    public function myCart(Request $req)
+    {
 
         // Get merchant...
         $thismerchant = ClientInfo::where('business_name', $req->store)->first();
 
-        if(isset($thismerchant)){
+        if (isset($thismerchant)) {
 
             $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
 
 
 
-             if(Auth::check() == true){
-                    $userId = Auth::id();
-                }
-                else{
-                    $userId = 0;
-                }
+            if (Auth::check() == true) {
+                $userId = Auth::id();
+            } else {
+                $userId = 0;
+            }
 
 
-            if($userId == $getMerchantId->id){
-                    // If Has Main Store setup
+            if ($userId == $getMerchantId->id) {
+                // If Has Main Store setup
                 $merchantStore = $this->checkMyStore($getMerchantId->id);
+            } else {
+                // If Has Main Store setup
+                if (session('role')) {
+                    $merchantStore = $this->checkMyStore($getMerchantId->id);
+                } else {
+                    $merchantStore = $this->getMyStore($getMerchantId->id);
                 }
-                else{
-                    // If Has Main Store setup
-                    if(session('role')){
-                        $merchantStore = $this->checkMyStore($getMerchantId->id);
-                    }
-                    else{
-            $merchantStore = $this->getMyStore($getMerchantId->id);
-
-                    }
-                }
+            }
 
 
-                    $data = [
-                        'mystore' => $merchantStore,
-                    'myproduct' => $this->getProducts($getMerchantId->id),
-                    'user' => $getMerchantId,
-                    'mywishlist' => $this->getMyWishlist(Auth::id()),
-                    'mycartlist' => $this->getMyCartlist(Auth::id()),
-                ];
+            $data = [
+                'mystore' => $merchantStore,
+                'myproduct' => $this->getProducts($getMerchantId->id),
+                'user' => $getMerchantId,
+                'mywishlist' => $this->getMyWishlist(Auth::id()),
+                'mycartlist' => $this->getMyCartlist(Auth::id()),
+            ];
 
 
-        return view('merchant.pages.shop.mycart')->with(['pages' => $req->store.' Shop', 'data' => $data]);
+            return view('merchant.pages.shop.mycart')->with(['pages' => $req->store . ' Shop', 'data' => $data]);
+        } else {
+            return view('errors.comingsoon')->with(['pages' => $req->store . ' Shop']);
         }
-        else{
-            return view('errors.comingsoon')->with(['pages' => $req->store.' Shop']);
-        }
-
-
     }
 
 
     // Checkout Item ...
-    public function myCheckout(Request $req){
+    public function myCheckout(Request $req)
+    {
 
         // Get merchant...
         $thismerchant = ClientInfo::where('business_name', $req->store)->first();
 
-        if(isset($thismerchant)){
+        if (isset($thismerchant)) {
 
             $getMerchantId = User::where('ref_code', $thismerchant->user_id)->first();
 
 
 
-            if(Auth::check() == true){
-                    $userId = Auth::id();
-                }
-                else{
-                    $userId = 0;
-                }
+            if (Auth::check() == true) {
+                $userId = Auth::id();
+            } else {
+                $userId = 0;
+            }
 
 
-            if($userId == $getMerchantId->id){
-                    // If Has Main Store setup
+            if ($userId == $getMerchantId->id) {
+                // If Has Main Store setup
                 $merchantStore = $this->checkMyStore($getMerchantId->id);
+            } else {
+                // If Has Main Store setup
+                if (session('role')) {
+                    $merchantStore = $this->checkMyStore($getMerchantId->id);
+                } else {
+                    $merchantStore = $this->getMyStore($getMerchantId->id);
                 }
-                else{
-                    // If Has Main Store setup
-                    if(session('role')){
-                        $merchantStore = $this->checkMyStore($getMerchantId->id);
-                    }
-                    else{
-            $merchantStore = $this->getMyStore($getMerchantId->id);
-
-                    }
-                }
+            }
 
 
 
 
-                    $data = [
-                        'mystore' => $merchantStore,
-                    'myproduct' => $this->getProducts($getMerchantId->id),
-                    'storeTax' => $this->getStoreTax($getMerchantId->id),
-                    'user' => $getMerchantId,
-                    'mywishlist' => $this->getMyWishlist(Auth::id()),
-                    'mycartlist' => $this->getMyCartlist(Auth::id()),
-                ];
+            $data = [
+                'mystore' => $merchantStore,
+                'myproduct' => $this->getProducts($getMerchantId->id),
+                'storeTax' => $this->getStoreTax($getMerchantId->id),
+                'user' => $getMerchantId,
+                'mywishlist' => $this->getMyWishlist(Auth::id()),
+                'mycartlist' => $this->getMyCartlist(Auth::id()),
+            ];
 
 
 
 
-        return view('merchant.pages.shop.mycheckout')->with(['pages' => $req->store.' Shop', 'data' => $data]);
+            return view('merchant.pages.shop.mycheckout')->with(['pages' => $req->store . ' Shop', 'data' => $data]);
+        } else {
+            return view('errors.comingsoon')->with(['pages' => $req->store . ' Shop']);
         }
-        else{
-            return view('errors.comingsoon')->with(['pages' => $req->store.' Shop']);
-        }
-
-
     }
 
 
@@ -757,7 +691,7 @@ class MerchantPageController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+        if ($client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -776,7 +710,7 @@ class MerchantPageController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+        if ($client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -795,7 +729,7 @@ class MerchantPageController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+        if ($client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -814,7 +748,7 @@ class MerchantPageController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+        if ($client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -833,7 +767,7 @@ class MerchantPageController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+        if ($client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -852,7 +786,7 @@ class MerchantPageController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+        if ($client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -882,7 +816,7 @@ class MerchantPageController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if($client->accountMode == "test"){
+        if ($client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -960,12 +894,13 @@ class MerchantPageController extends Controller
     }
 
 
-    public function storepickupAddress(){
+    public function storepickupAddress()
+    {
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
 
-        if(isset($client) && $client->accountMode == "test"){
+        if (isset($client) && $client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -989,12 +924,13 @@ class MerchantPageController extends Controller
         return view('merchant.pages.storepickupaddress')->with(['pages' => 'store pickup address', 'data' => $data]);
     }
 
-    public function deliverypickupAddress(){
+    public function deliverypickupAddress()
+    {
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
 
-        if(isset($client) && $client->accountMode == "test"){
+        if (isset($client) && $client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -1168,53 +1104,59 @@ class MerchantPageController extends Controller
     }
 
 
-    public function getMyProducts($merchantId){
+    public function getMyProducts($merchantId)
+    {
         $data = StoreProducts::where('merchantId', $merchantId)->orderBy('created_at', 'DESC')->get();
 
         return $data;
-
     }
 
 
-    public function getMyOrders($merchantId){
+    public function getMyOrders($merchantId)
+    {
         $data = StoreOrders::join('estore_product', 'estore_orders.productId', '=', 'estore_product.id')->join('users', 'estore_orders.userId', '=', 'users.id')->where('estore_orders.merchantId', $merchantId)->orderBy('estore_orders.created_at', 'DESC')->get();
 
         return $data;
-
     }
 
-    public function getMyDiscounts($merchantId){
+    public function getMyDiscounts($merchantId)
+    {
         $data = StoreDiscount::select('estore_discount.id as discountId', 'estore_discount.userId', 'estore_discount.code', 'estore_discount.valueType', 'estore_discount.discountAmount', 'estore_discount.productId', 'estore_discount.startDate', 'estore_discount.endDate', 'estore_product.id', 'estore_product.productName')->join('estore_product', 'estore_discount.productId', '=', 'estore_product.id')->where('estore_discount.userId', $merchantId)->orderBy('estore_discount.created_at', 'DESC')->get();
 
         return $data;
     }
 
-    public function getProductCategory(){
+    public function getProductCategory()
+    {
         $data = StoreCategory::orderBy('category', 'ASC')->where('state', true)->get();
 
         return $data;
     }
 
 
-    public function getStorePickupCount($id){
+    public function getStorePickupCount($id)
+    {
         $data = StorePickup::where('merchantId', $id)->count();
 
         return $data;
     }
 
-    public function getStorePickup($id){
+    public function getStorePickup($id)
+    {
         $data = StorePickup::where('merchantId', $id)->get();
 
         return $data;
     }
 
-    public function getDeliveryPickupCount($id){
+    public function getDeliveryPickupCount($id)
+    {
         $data = StoreShipping::where('merchantId', $id)->count();
 
         return $data;
     }
 
-    public function getDeliveryPickup($id){
+    public function getDeliveryPickup($id)
+    {
         $data = StoreShipping::where('merchantId', $id)->get();
 
         return $data;
