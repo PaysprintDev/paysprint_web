@@ -7,6 +7,8 @@ use Session;
 use App\Answer;
 use App\Points;
 
+use App\TrialDate;
+
 use App\Community;
 
 use App\CashAdvance;
@@ -207,7 +209,10 @@ class HomeController extends Controller
                     'pointsclaim' => $this->getClaimedHistory(Auth::user()->id),
                     'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
                     'imtAccess' => AllCountries::where('name', Auth::user()->country)->first(),
-                    'referred' => $this->referral(Auth::user()->ref_code)
+                    'referred' => $this->referral(Auth::user()->ref_code),
+                    'userdetails' => $this->checkTrial(Auth::id()),
+                    'pending' => User::where('id', Auth::id())->where('account_check', 2)->first(),
+                    'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first()
                 );
 
                 $view = 'home';
@@ -311,7 +316,10 @@ class HomeController extends Controller
                     'pointsclaim' => $this->getClaimedHistory(Auth::user()->user_id),
                     'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
                     'imtAccess' => AllCountries::where('name', Auth::user()->country)->first(),
-                    'referred' => $this->referral(Auth::user()->ref_code)
+                    'referred' => $this->referral(Auth::user()->ref_code),
+                    'userdetails' => $this->checkTrial(Auth::id()),
+                    'pending' => User::where('id', Auth::id())->where('account_check', 2)->first(),
+                    'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first()
                 );
 
                 $view = 'home';
@@ -363,7 +371,10 @@ class HomeController extends Controller
                     'pointsclaim' => $this->getClaimedHistory(Auth::user()->user_id),
                     'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
                     'imtAccess' => AllCountries::where('name', Auth::user()->country)->first(),
-                    'referred' => $this->referral(Auth::user()->ref_code)
+                    'referred' => $this->referral(Auth::user()->ref_code),
+                    'userdetails' => $this->checkTrial(Auth::id()),
+                    'pending' => User::where('id', Auth::id())->where('account_check', 2)->first(),
+                    'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first()
 
                 );
             } else {
@@ -4490,9 +4501,9 @@ class HomeController extends Controller
                     'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
                     'imtAccess' => AllCountries::where('name', Auth::user()->country)->first(),
                     'referred' => $this->referral(Auth::user()->ref_code),
-                    'userdetails' => $this->checkTrial(Auth::id(), Auth::user()->country),
+                    'userdetails' => $this->checkTrial(Auth::id()),
                     'pending' => User::where('id', Auth::id())->where('account_check', 2)->first(),
-                    'status' =>User::where('id', Auth::id())->where('account_check','!=', 2)->first()
+                    'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first()
                 );
 
                 $view = 'home';
@@ -4517,19 +4528,20 @@ class HomeController extends Controller
         return view('main.userjourney')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
-    public function checkTrial($id, $country)
+    public function checkTrial($id)
     {
-        $data = User::where('id', $id)->where('accountType', 'Individual')->where('archive', 0)->where('country', $country)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->orderBy('created_at', 'DESC')->get();
+        $data = TrialDate::where('user_id', $id)->first();
 
         return $data;
     }
-
 
     public function sendAndReceive($email)
     {
         $data = Statement::where('user_id', $email)->where('statement_route', 'wallet')->orderBy('created_at', 'DESC')->limit(5)->get();
         return $data;
     }
+
+
     public function payInvoice($email)
     {
         $mydata = ImportExcel::select('import_excel.*', 'invoice_payment.*')->join('invoice_payment', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')->where('import_excel.payee_email', $email)->orderBy('import_excel.created_at', 'DESC')->limit(5)->get();
@@ -5978,11 +5990,59 @@ class HomeController extends Controller
             if ($wallet < $req->amount) {
                 $walletCheck = 'Wallet Balance: <strong>' . $req->currency . number_format($wallet, 2) . '</strong>. <br> Insufficient balance. <a href="' . route('Add Money') . '">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
             }
+
+
+            $resData = ['data' => $req->amount, 'message' => 'success', 'walletCheck' => $walletCheck];
+
+                return $this->returnJSON($resData, 200);
+
+        }
+        else{
+            // Calculate the commission deduct...
+            $thisuser = User::where('ref_code', $req->ref_code)->first();
+
+            $data = TransactionCost::where('structure', "Add Funds/Money")->where('method', "Debit Card")->where('country', $thisuser->country)->first();
+
+            if (isset($data)) {
+
+                if ($thisuser->country == "Nigeria" && $req->amount <= 2500) {
+
+                    $x = ($data->variable / 100) * $req->amount;
+
+                    $y = 0 + $x;
+
+                    $collection = $y;
+                } else {
+
+                    $x = ($data->variable / 100) * $req->amount;
+
+                    $y = $data->fixed + $x;
+
+                    $collection = $y;
+                }
+            } else {
+
+                $x = (3.00 / 100) * $req->amount;
+
+                $y = 0.33 + $x;
+
+                $collection = $y;
+            }
+
+
+            $amountReceive = $req->amount + $collection;
+
+            $state = "commission available";
+
+
+            $resData = ['data' => $amountReceive, 'message' => 'success', 'state' => $state, 'collection' => $collection, 'walletCheck' => $walletCheck, ''];
+
+
+            return $this->returnJSON($resData, 200);
+
         }
 
-        $resData = ['data' => $req->amount, 'message' => 'success', 'walletCheck' => $walletCheck];
 
-        return $this->returnJSON($resData, 200);
     }
 
     public function convertCurrencyRate($foreigncurrency, $localcurrency, $amount)

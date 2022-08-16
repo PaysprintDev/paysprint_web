@@ -260,6 +260,20 @@
                                     @endif
 
 
+                                    <div class="form-group"> <label for="netwmount">
+                                        Fee
+                                    </label>
+                                        <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
+
+                                        <input type="hidden" name="totalcharge" class="form-control" id="totalcharge" value="" placeholder="0.00" readonly>
+
+                                </div>
+
+
+
+                                    <div class="form-group">
+                                    <div class="commissionInfo"></div>
+                                </div>
 
                                     <hr>
 
@@ -386,6 +400,8 @@
                                                 <div class="input-group-append"> </div>
                                             </div>
                                         </div>
+
+
 
 
                                         {{-- <div class="card-footer"> <button type="button" onclick="payWithPaystack()"
@@ -628,11 +644,11 @@
                 $('[data-toggle="tooltip"]').tooltip();
 
                 if ($("#typepayamount").val() != "") {
-                    // runCommission();
+                    runCommission();
                 }
 
                 $("#typepayamount").on("keyup", function() {
-                    // runCommission();
+                    runCommission();
                 });
 
 
@@ -764,7 +780,6 @@
                                 $('.cardSubmit').text('Please wait...');
                             },
                             success: function(result) {
-                                console.log(result);
 
                                 $('.sendmoneyBtn').text('Make Payment');
                                 $('.cardSubmit').text('Make Payment');
@@ -951,10 +966,6 @@
                 handler.openIframe();
             }
 
-
-
-
-
             function runCommission() {
 
                 $(".sendmoneyBtn").attr("disabled", true);
@@ -966,7 +977,8 @@
                 var thisdata = {
                     amount: amount,
                     pay_method: $("#make_payment_method").val(),
-                    currency: $("#currency").val()
+                    currency: $("#currency").val(),
+                    ref_code: "{{ Request::segment(3) }}"
                 };
 
 
@@ -1002,13 +1014,14 @@
 
                                 }
 
+                                $("#commissiondeduct").val(result.collection);
+
                                 $('.commissionInfo').addClass('alert alert-success');
                                 $('.commissionInfo').removeClass('alert alert-danger');
 
                                 $('.commissionInfo').html(
                                     "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
-                                    $("#typepayamount").val() + " will be deducted from your " + $(
-                                        '#make_payment_method').val() + ".</span></li></li></ul>");
+                                    (result.data).toFixed(2) + " will be deducted from your Credit/Debit card. </span></li></li></ul>");
 
                             }
 
@@ -1022,6 +1035,7 @@
 
                 });
             }
+
 
             // Moneris Payment
             function monerisPay() {

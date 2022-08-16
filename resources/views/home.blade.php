@@ -8,7 +8,9 @@
 
 @section('content')
 
-<?php use App\Http\Controllers\User; ?>
+<?php
+
+use App\Http\Controllers\User; ?>
 
 <!-- Professional Builde -->
 <section class="professional_builders row">
@@ -22,7 +24,6 @@
                         <div class="col-md-12">
                             <h4 class="font-sm">
                                 Balance
-                            </h4>
                         </div>
                         <br>
                         <div class="col-md-12">
@@ -84,8 +85,7 @@
                         <div class="col-md-4">
                             <form action="{{ route('claim point') }}" method="POST" id="claimmypoint">
                                 @csrf
-                                <small><a type='button' href="javascript:void()" onclick="$('#claimmypoint').submit()"
-                                        style="font-weight: 700; font-size: 11px">Redeem
+                                <small><a type='button' href="javascript:void()" onclick="$('#claimmypoint').submit()" style="font-weight: 700; font-size: 11px">Redeem
                                         Points</a></small>
 
                             </form>
@@ -135,11 +135,55 @@
     </div>
 </section>
 <!-- End Professional Builde -->
-
 <!-- Professional Builde -->
 <section class="professional_builder row">
     <div class="container">
 
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="wrapper option-1 option-1-1">
+                    <ol class="c-stepper">
+                        <li class="c-stepper__item {{Auth::user() ? 'c-stepper__item__active' : ''}}">
+                            <h3 class="c-stepper__title">Sign Up</h3>
+                            {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                        </li>
+
+                        <li class="c-stepper__item {{ $data['pending'] ? 'c-stepper__item__active' : '' }}">
+                            <h3 class="c-stepper__title">Account Verification-Pending</h3>
+                            {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                        </li>
+                        <li class="c-stepper__item {{ $data['pending'] ? 'c-stepper__item__active' : '' }}">
+                            <h3 class="c-stepper__title">Account Verification-Completed</h3>
+                            {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                        </li>
+                        <li class="c-stepper__item {{ $data['pending'] ? 'c-stepper__item__active' : '' }}">
+                            <h3 class="c-stepper__title">Completed</h3>
+                            {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                        </li>
+                        @isset($data['userdetails'])
+
+
+                        @if(new DateTime(date('Y-m-d')) < new DateTime($data['userdetails']->trial_end))
+                            <li class="c-stepper__item {{ new DateTime(date('Y-m-d')) > new DateTime($data['userdetails']->trial_end) ? 'c-stepper__item__active' : '' }}">
+                                <h3 class="c-stepper__title">
+                                    30-Day Trial</h3>
+
+                                {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                            </li>
+                            @endif
+                            @endisset
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+
+
+        <hr>
+
+        <!--end of user journey -->
         @isset($data['specialInfo'])
         <div class="row">
             <div class="alert alert-success show" role="alert">
@@ -169,10 +213,8 @@
                     <strong>Welcome {{ Auth::user()->name }}!</strong> <br> Our system is yet to complete your
                     registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or
                     Bank Statement that matches your name with the current address and also take a Selfie of
-                    yourself (if using the mobile app) and <a href="{{ route('profile') }}"
-                        style="font-weight: bold; text-decoration: underline">upload in your profile setting</a> to
-                    complete the verification process. <a href="{{ route('contact') }}"
-                        style="font-weight: bold; text-decoration: underline">Kindly contact the admin using the
+                    yourself (if using the mobile app) and <a href="{{ route('profile') }}" style="font-weight: bold; text-decoration: underline">upload in your profile setting</a> to
+                    complete the verification process. <a href="{{ route('contact') }}" style="font-weight: bold; text-decoration: underline">Kindly contact the admin using the
                         contact us form if you require further assistance. Thank You</a>
                 </p>
 
@@ -190,8 +232,7 @@
 
                 <p>
                     <strong>Hey {{ Auth::user()->businessname }}!</strong> <br> You are eligible for a cash
-                    advance. <a href="{{ route('cash advance') }}"
-                        style="font-weight: bold; text-decoration: underline">Click here to continue</a>
+                    advance. <a href="{{ route('cash advance') }}" style="font-weight: bold; text-decoration: underline">Click here to continue</a>
                 </p>
 
             </div>
@@ -216,15 +257,15 @@
                                 Account</button>
                             @else
                             @if (Auth::user()->country == 'Canada' || Auth::user()->country == 'United States')
-                            <button class="btn btn-danger" onclick="changeMyPlan('changeplan')"
-                                id="cardSubmit">Downgrade
+                            <button class="btn btn-danger" onclick="changeMyPlan('changeplan')" id="cardSubmit">Downgrade
                                 Account</button>
 
                             @isset($data['myplan'])
                             <br>
                             <br>
                             <p class="text-info">Next Renewal:
-                                {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}</p>
+                                {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}
+                            </p>
 
                             @php
                             $expire = date('Y-m-d', strtotime($data['myplan']->expire_date));
@@ -236,12 +277,14 @@
                             <p class="text-danger">
                                 {{ round($datediff / (60 * 60 * 24)) > 1 ? round($datediff / (60 * 60 * 24)) . 'days' :
                                 round($datediff / (60 * 60 * 24)) . 'day' }}
-                                left</p>
+                                left
+                            </p>
                             @endisset
                             @else
                             @isset($data['myplan'])
                             <p class="text-info">Next Renewal:
-                                {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}</p>
+                                {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}
+                            </p>
 
                             @php
                             $expire = date('Y-m-d', strtotime($data['myplan']->expire_date));
@@ -253,7 +296,8 @@
                             <p class="text-danger">
                                 {{ round($datediff / (60 * 60 * 24)) > 1 ? round($datediff / (60 * 60 * 24)) . 'days' :
                                 round($datediff / (60 * 60 * 24)) . 'day' }}
-                                left</p>
+                                left
+                            </p>
                             @endisset
                             @endif
                             @endif
@@ -278,8 +322,7 @@
                                 Shop with ease on PaySprint eStore
                             </p>
                             <hr>
-                            <a type="button" class="btn btn-primary" href="{{ route('paysprint estore') }}"
-                                id="cardSubmit">Visit Stores</a>
+                            <a type="button" class="btn btn-primary" href="{{ route('paysprint estore') }}" id="cardSubmit">Visit Stores</a>
                         </li>
 
                     </ul>
@@ -295,16 +338,14 @@
                             Trade FX with PaySprint <br><br>
 
                             @if ($data['imtAccess']->imt == 'false' || $data['imtAccess']->outbound == 'false')
-                            <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit"
-                                disabled>PaySprint
+                            <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit" disabled>PaySprint
                                 FX</a>
 
                             <hr>
 
                             <a href="#">COMING SOON!!!</a>
                             @else
-                            <a type="button" class="btn btn-primary" href="{{ route('paysprint currency exchange') }}"
-                                id="cardSubmit">PaySprint
+                            <a type="button" class="btn btn-primary" href="{{ route('paysprint currency exchange') }}" id="cardSubmit">PaySprint
                                 FX</a>
 
                             <hr>
@@ -327,8 +368,7 @@
                             Trade FX with PaySprint <br><br>
 
                             @if ($data['imtAccess']->imt == 'false' || $data['imtAccess']->outbound == 'false')
-                            <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit"
-                                disabled>PaySprint
+                            <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit" disabled>PaySprint
                                 FX</a>
 
                             <hr>
@@ -361,8 +401,7 @@
                                 <h4 style="text-align: left !important;">Send & Receive</h4>
                             </div>
                             <div class="col-md-4">
-                                <i class="far fa-paper-plane" title="Send Money" onclick="$('#sendMoney').click()"
-                                    style="cursor: pointer"></i>
+                                <i class="far fa-paper-plane" title="Send Money" onclick="$('#sendMoney').click()" style="cursor: pointer"></i>
                             </div>
                         </div>
                         <div class="table table-responsive infoRec">
@@ -373,8 +412,7 @@
                                     @if (count($data['sendReceive']) > 0)
                                     @foreach ($data['sendReceive'] as $sendRecData)
                                     <tr>
-                                        <td><i
-                                                class="fas fa-circle {{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}"></i>
+                                        <td><i class="fas fa-circle {{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}"></i>
                                         </td>
                                         <td>
 
@@ -395,15 +433,10 @@
                                                     @if ($sendRecData->auto_deposit == 'off')
                                                     <br>
                                                     <small>
-                                                        <input type="hidden" name="reference_code" id="reference_code"
-                                                            value="{{ $sendRecData->reference_code }}">
+                                                        <input type="hidden" name="reference_code" id="reference_code" value="{{ $sendRecData->reference_code }}">
 
-                                                        <small><span class='badge badge-danger' style='cursor: pointer;'
-                                                                onclick="shakeHand('claimmoney', '{{ $sendRecData->reference_code }}')">Pending
-                                                                - Add to wallet <img
-                                                                    src="https://img.icons8.com/officel/16/000000/spinner-frame-4.png"
-                                                                    class="fa-spin disp-0"
-                                                                    id="btn{{ $sendRecData->reference_code }}" /></span></small>
+                                                        <small><span class='badge badge-danger' style='cursor: pointer;' onclick="shakeHand('claimmoney', '{{ $sendRecData->reference_code }}')">Pending
+                                                                - Add to wallet <img src="https://img.icons8.com/officel/16/000000/spinner-frame-4.png" class="fa-spin disp-0" id="btn{{ $sendRecData->reference_code }}" /></span></small>
 
 
                                                     </small>
@@ -416,8 +449,7 @@
 
 
 
-                                        <td style="font-weight: 700"
-                                            class="{{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}">
+                                        <td style="font-weight: 700" class="{{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}">
                                             {{ $sendRecData->credit != 0 ? '+' . $data['currencyCode']->currencySymbol .
                                             number_format($sendRecData->credit, 2) : '-' .
                                             $data['currencyCode']->currencySymbol . number_format($sendRecData->debit,
@@ -436,8 +468,7 @@
                                 </tbody>
                             </table>
 
-                            <a href="javascript:void(0)" type="button" class="btn btn-primary"
-                                onclick="$('#sendMoney').click()">Send Money</a>
+                            <a href="javascript:void(0)" type="button" class="btn btn-primary" onclick="$('#sendMoney').click()">Send Money</a>
 
                         </div>
                     </div>
@@ -450,8 +481,7 @@
                                 <h4 style="text-align: left !important;">Pay Invoice</h4>
                             </div>
                             <div class="col-md-4">
-                                <i class="fas fa-file-invoice" title="Pay Invoice"
-                                    onclick="location.href='{{ route('invoice') }}'" style="cursor: pointer"></i>
+                                <i class="fas fa-file-invoice" title="Pay Invoice" onclick="location.href='{{ route('invoice') }}'" style="cursor: pointer"></i>
                             </div>
                         </div>
                         <div class="table table-responsive infoRec">
@@ -507,22 +537,18 @@
                                                         <div class="col-md-8">
                                                             <small>
                                                                 {{ $payInv->invoice_no }}
-                                                                {!! $countryBase != Auth::user()->country ? '<img
-                                                                    src="https://img.icons8.com/color/30/000000/around-the-globe.png" />'
+                                                                {!! $countryBase != Auth::user()->country ? '<img src="https://img.icons8.com/color/30/000000/around-the-globe.png" />'
                                                                 : '' !!}
                                                             </small>
                                                         </div>
                                                         <div class="col-md-4">
 
                                                             @if ($payInv->payment_status == 0)
-                                                            <small><span class='badge badge-danger'
-                                                                    style='cursor: pointer;' onclick=location.href='{{ route('payment',
+                                                            <small><span class='badge badge-danger' style='cursor: pointer;' onclick=location.href='{{ route('payment',
                                                                     $payInv->invoice_no) }}'>Pay
                                                                     Invoice</span></small>
                                                             @elseif($payInv->payment_status == 2)
-                                                            <small><span class='badge badge-danger'
-                                                                    style='cursor: pointer;'
-                                                                    onclick=location.href='{{ route('payment',
+                                                            <small><span class='badge badge-danger' style='cursor: pointer;' onclick=location.href='{{ route('payment',
                                                                     $payInv->invoice_no) }}'>Pay
                                                                     Balance</span></small>
                                                             @else
@@ -599,8 +625,7 @@
                                 <h4 style="text-align: left !important;">Wallet Transactions</h4>
                             </div>
                             <div class="col-md-4">
-                                <i class="fas fa-wallet" title="My Wallet"
-                                    onclick="location.href='{{ route('my account') }}'" style="cursor: pointer"></i>
+                                <i class="fas fa-wallet" title="My Wallet" onclick="location.href='{{ route('my account') }}'" style="cursor: pointer"></i>
                             </div>
                         </div>
                         <div class="table table-responsive infoRec">
@@ -609,8 +634,7 @@
                                     @if (count($data['sendReceive']) > 0)
                                     @foreach ($data['sendReceive'] as $sendRecData)
                                     <tr>
-                                        <td><i
-                                                class="fas fa-circle {{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}"></i>
+                                        <td><i class="fas fa-circle {{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}"></i>
                                         </td>
                                         <td>
 
@@ -629,8 +653,7 @@
                                             </div>
 
                                         </td>
-                                        <td style="font-weight: 700"
-                                            class="{{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}">
+                                        <td style="font-weight: 700" class="{{ $sendRecData->credit != 0 ? 'text-success' : 'text-danger' }}">
                                             {{ $sendRecData->credit != 0 ? '+' . $data['currencyCode']->currencySymbol .
                                             number_format($sendRecData->credit, 2) : '-' .
                                             $data['currencyCode']->currencySymbol . number_format($sendRecData->debit,
@@ -657,8 +680,7 @@
                                 <h4 style="text-align: left !important;">Notifications</h4>
                             </div>
                             <div class="col-md-4">
-                                <i class="far fa-bell" title="Notifications" style="cursor: pointer"
-                                    onclick="location.href='{{ route('notifications') }}'"></i>
+                                <i class="far fa-bell" title="Notifications" style="cursor: pointer" onclick="location.href='{{ route('notifications') }}'"></i>
                                 @if (count($data['getfiveNotifications']) > 0 &&
                                 $data['getfiveNotifications'][0]->notify == 0)
                                 <i class="fas fa-circle fa-blink" style="color: rgb(129, 6, 6)"></i>
@@ -671,8 +693,7 @@
                                     @if (count($data['getfiveNotifications']) > 0)
                                     @foreach ($data['getfiveNotifications'] as $urgentNotify)
                                     <tr>
-                                        <td><i
-                                                class="fas fa-circle {{ $urgentNotify->notify == 0 ? 'text-success' : 'text-success' }}"></i>
+                                        <td><i class="fas fa-circle {{ $urgentNotify->notify == 0 ? 'text-success' : 'text-success' }}"></i>
                                         </td>
                                         <td align="left" colspan="2">
 
@@ -711,32 +732,26 @@
             <div class="col-md-3">
 
                 <div class="card" style="width: 100%;">
-                    <div class="card-header"
-                        style="background-color: #ffba01; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+                    <div class="card-header" style="background-color: #ffba01; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
                         Quick Wallet Setup
-                        @if (Auth::user()->approval == 0 || (count($data['getCard']) <= 0 && count($data['getBank'])
-                            <=0) || Auth::user()->transaction_pin == null || Auth::user()->securityQuestion == null)
+                        @if (Auth::user()->approval == 0 || (count($data['getCard']) <= 0 && count($data['getBank']) <=0) || Auth::user()->transaction_pin == null || Auth::user()->securityQuestion == null)
                             <a href="javascript:void()" type="button" class="btn btn-danger fa-blink">Incomplete</a>
                             @endif
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"
-                            title="Upload Government issued photo ID e.g National ID, International Passport, Driver Licence">
+                        <li class="list-group-item" title="Upload Government issued photo ID e.g National ID, International Passport, Driver Licence">
                             <div class="row">
                                 <div class="col-md-10">
                                     <a href="{{ route('profile') }}">Identity Verification</a>
                                 </div>
                                 <div class="col-md-2">
-                                    {!! Auth::user()->approval > 0 ? "<img
-                                        src='https://img.icons8.com/fluent/20/000000/check-all.png' />" : "<img
-                                        class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png' />"
+                                    {!! Auth::user()->approval > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png' />" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png' />"
                                     !!}
                                 </div>
                             </div>
 
                         </li>
-                        <li class="list-group-item"
-                            title="To add money to your wallet, you need to add a credit/debit card to your account">
+                        <li class="list-group-item" title="To add money to your wallet, you need to add a credit/debit card to your account">
 
                             <div class="row">
                                 <div class="col-md-10">
@@ -744,9 +759,7 @@
                                         Card/Prepaid Card/Bank Account </a>
                                 </div>
                                 <div class="col-md-2">
-                                    {!! count($data['getCard']) > 0 || count($data['getBank']) > 0 ? "<img
-                                        src='https://img.icons8.com/fluent/20/000000/check-all.png' />" : "<img
-                                        class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png' />"
+                                    {!! count($data['getCard']) > 0 || count($data['getBank']) > 0 ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png' />" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png' />"
                                     !!}
                                 </div>
                             </div>
@@ -760,9 +773,7 @@
                                     <a href="{{ route('profile') }}">Set Transaction Pin </a>
                                 </div>
                                 <div class="col-md-2">
-                                    {!! Auth::user()->transaction_pin != null ? "<img
-                                        src='https://img.icons8.com/fluent/20/000000/check-all.png' />" : "<img
-                                        class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png' />"
+                                    {!! Auth::user()->transaction_pin != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png' />" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png' />"
                                     !!}
                                 </div>
                             </div>
@@ -776,9 +787,7 @@
                                     <a href="{{ route('profile') }}">Set Security Question </a>
                                 </div>
                                 <div class="col-md-2">
-                                    {!! Auth::user()->securityQuestion != null ? "<img
-                                        src='https://img.icons8.com/fluent/20/000000/check-all.png' />" : "<img
-                                        class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png' />"
+                                    {!! Auth::user()->securityQuestion != null ? "<img src='https://img.icons8.com/fluent/20/000000/check-all.png' />" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png' />"
                                     !!}
                                 </div>
                             </div>
@@ -797,8 +806,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     {!! Auth::user()->bvn_verification != null || Auth::user()->bvn_verification > 0 ?
-                                    "<img src='https://img.icons8.com/fluent/20/000000/check-all.png' />" : "<img
-                                        class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png' />"
+                                    "<img src='https://img.icons8.com/fluent/20/000000/check-all.png' />" : "<img class='fa-blink' src='https://img.icons8.com/fluent/20/000000/cancel.png' />"
                                     !!}
                                 </div>
                             </div>
@@ -828,138 +836,133 @@
                                         <img src="https://img.icons8.com/external-tulpahn-outline-color-tulpahn/20/000000/external-celebration-chinese-new-year-tulpahn-outline-color-tulpahn.png"
                                             class="fa-blink" />
                                         {{ isset($data['mypoints']) ? $data['mypoints']->points_acquired : 0 }}
-                                        <img src="https://img.icons8.com/external-tulpahn-outline-color-tulpahn/20/000000/external-celebration-chinese-new-year-tulpahn-outline-color-tulpahn.png"
-                                            class="fa-blink" />
-                                    </p>
-                                </div>
-
-
-                            </div>
-
-                            <br>
-
-                            <div class="row">
-                                <form action="{{ route('claim point') }}" method="POST" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="col-md-12">
-
-
-                                        <button type="submit" class="btn btn-default btn-block">Claim
-                                            Points</button>
-
-
-                                    </div>
-                                </form>
-                            </div>
-
-                        </li>
-
-                    </ul>
-                </div> --}}
-
-
-
-                <div class="card" style="width: 100%;">
-                    <div class="card-header"
-                        style="background-color: #ff8a04; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
-                        Pay Utility Bills
-                    </div>
-                    <ul class="list-group list-group-flush">
-
-
-                        <li class="list-group-item" title="Pay Utility Bills">
-                            <div class="row">
-                                <div class="col-md-12">
-
-                                    @if (Auth::user()->country == 'Nigeria')
-                                    <a href="{{ route('utility bills') }}">Utility Payment</small></a>
-                                    @else
-                                    <a
-                                        href="{{ route('select utility bills country', 'country=' . Auth::user()->country) }}">Utility
-                                        Payment</small></a>
-                                    @endif
-
-
-                                </div>
-                            </div>
-
-                        </li>
-
-                    </ul>
-                </div>
-
-
-
-                <div class="card" style="width: 100%;">
-                    <div class="card-header"
-                        style="background-color:#00fd77; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
-                        Property Management
-
-                    </div>
-                    <ul class="list-group list-group-flush">
-
-
-                        <li class="list-group-item" title="Rental Property Management">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <a href="{{ route('rentalmanagement') }}">Rental Property Management</a>
-                                </div>
-                            </div>
-
-                        </li>
-
-                    </ul>
-                </div>
-
-
-
-
-
-
-                <div class="card" style="width: 100%;">
-                    <div class="card-header"
-                        style="background-color: #ffba00; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
-                        Merchant By Services
-
-                    </div>
-                    <ul class="list-group list-group-flush">
-
-                        @if (count($data['getmerchantsByCategory']) > 0)
-
-                        @foreach ($data['getmerchantsByCategory'] as $merchants)
-                        <li class="list-group-item" title="{{ $merchants->industry }}">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <a href="{{ route('merchant category', 'service=' . $merchants->industry) }}">{{
-                                        $merchants->industry }}</a>
-                                </div>
-
-                            </div>
-
-                        </li>
-                        @endforeach
-
-                        @if (count($data['getmerchantsByCategory']) == 8)
-                        <a href="{{ route('all merchant') }}" type="button" class="btn btn-danger btn-block">View
-                            more <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></a>
-                        @endif
-                        @else
-                        <li class="list-group-item" title="No available merchant">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <a href="#">No available merchant</a>
-                                </div>
-                            </div>
-
-                        </li>
-
-                        @endif
-
-
-                    </ul>
-                </div>
+                <img src="https://img.icons8.com/external-tulpahn-outline-color-tulpahn/20/000000/external-celebration-chinese-new-year-tulpahn-outline-color-tulpahn.png" class="fa-blink" />
+                </p>
             </div>
+
+
         </div>
+
+        <br>
+
+        <div class="row">
+            <form action="{{ route('claim point') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="col-md-12">
+
+
+                    <button type="submit" class="btn btn-default btn-block">Claim
+                        Points</button>
+
+
+                </div>
+            </form>
+        </div>
+
+        </li>
+
+        </ul>
+    </div> --}}
+
+
+
+    <div class="card" style="width: 100%;">
+        <div class="card-header" style="background-color: #ff8a04; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+            Pay Utility Bills
+        </div>
+        <ul class="list-group list-group-flush">
+
+
+            <li class="list-group-item" title="Pay Utility Bills">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        @if (Auth::user()->country == 'Nigeria')
+                        <a href="{{ route('utility bills') }}">Utility Payment</small></a>
+                        @else
+                        <a href="{{ route('select utility bills country', 'country=' . Auth::user()->country) }}">Utility
+                            Payment</small></a>
+                        @endif
+
+
+                    </div>
+                </div>
+
+            </li>
+
+        </ul>
+    </div>
+
+
+
+    <div class="card" style="width: 100%;">
+        <div class="card-header" style="background-color:#00fd77; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+            Property Management
+
+        </div>
+        <ul class="list-group list-group-flush">
+
+
+            <li class="list-group-item" title="Rental Property Management">
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="{{ route('rentalmanagement') }}">Rental Property Management</a>
+                    </div>
+                </div>
+
+            </li>
+
+        </ul>
+    </div>
+
+
+
+
+
+
+    <div class="card" style="width: 100%;">
+        <div class="card-header" style="background-color: #ffba00; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
+            Merchant By Services
+
+        </div>
+        <ul class="list-group list-group-flush">
+
+            @if (count($data['getmerchantsByCategory']) > 0)
+
+            @foreach ($data['getmerchantsByCategory'] as $merchants)
+            <li class="list-group-item" title="{{ $merchants->industry }}">
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="{{ route('merchant category', 'service=' . $merchants->industry) }}">{{
+                                        $merchants->industry }}</a>
+                    </div>
+
+                </div>
+
+            </li>
+            @endforeach
+
+            @if (count($data['getmerchantsByCategory']) == 8)
+            <a href="{{ route('all merchant') }}" type="button" class="btn btn-danger btn-block">View
+                more <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i></a>
+            @endif
+            @else
+            <li class="list-group-item" title="No available merchant">
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="#">No available merchant</a>
+                    </div>
+                </div>
+
+            </li>
+
+            @endif
+
+
+        </ul>
+    </div>
+    </div>
+    </div>
     </div>
 </section>
 <!-- End Professional Builde -->
