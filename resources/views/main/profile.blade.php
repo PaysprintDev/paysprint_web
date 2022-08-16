@@ -5,6 +5,7 @@
 
 @show
 <?php use App\Http\Controllers\LinkAccount; ?>
+        <?php use App\Http\Controllers\FlutterwaveModel; ?>
 @section('text/css')
 
 <style>
@@ -87,7 +88,14 @@
                                             {{ Auth::user()->virtual_account }}</b>
                                     </p>
                                     <p>
-                                        <i class="fa fa-cc"></i> <b>Bank: WEMA BANK</b>
+
+                                        @if ($bankaccount = \App\FlutterwaveModel::where('userId', Auth::user()->ref_code)->first())
+                    @php
+                        $bankName = $bankaccount->bank_name;
+                    @endphp
+                @endif
+
+                                        <i class="fa fa-cc"></i> <b>Bank: {{ $bankName }}</b>
                                     </p>
                                 </div>
                             </div>

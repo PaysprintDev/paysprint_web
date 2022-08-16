@@ -267,11 +267,14 @@ class CheckSetupController extends Controller
                 $this->email = $user->email;
                 $this->subject = "(PENDING ACTION). We Need Your Help to Deposit your funds to your PaySprint Wallet";
 
-                $this->message = '<p> We have received your funds transferred through the PaySprint Bank Account with Wema Bank. However, we need you to properly complete the set-up of
+                // Get Bank Name...
+                $bankaccount = FlutterwaveModel::where('userId', $user->ref_code)->first();
+
+                $this->message = '<p> We have received your funds transferred through the PaySprint Bank Account with '.$bankaccount->bank_name.'. However, we need you to properly complete the set-up of
 your PaySprint Account.</p><p>You need to provide the outstanding information and complete the quick set up in order for us to deposit the funds into your Wallet.</p><p><ul>' . $approval . '' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '</ul></p><p>Kindly complete these important tasks to enable us proceed with processing the deposit into your PaySprint Wallet.</p><p>a href=' . route('profile') . ' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
 
 
-$sendMsg = ' We have received your funds transferred through the PaySprint Bank Account with Wema Bank. However, we need you to properly complete the set-up of
+$sendMsg = ' We have received your funds transferred through the PaySprint Bank Account with '.$bankaccount->bank_name.'. However, we need you to properly complete the set-up of
 your PaySprint Account.You need to provide the outstanding information and complete the quick set up in order for us to deposit the funds into your Wallet.'.$approval.' ' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card .'Kindly complete these important tasks to enable us proceed with processing the deposit into your PaySprint Wallet. Click here to login to your PaySprint account '.route('profile');
 
                 $this->sendEmail($this->email, "Incomplete Setup");
@@ -2500,7 +2503,14 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
 
             foreach ($users as $user) {
-                $username = explode(" ", $user->name);
+
+                if($user->accountType === 'Individual'){
+                    $username = explode(" ", $user->name);
+                }
+                else{
+                    $username = explode(" ", $user->businessname);
+                }
+
                 $this->flutterwave->initiateNewAccountNumber($user->email, $user->bvn_number, $user->telephone, $username[0], $username[1], $user->ref_code);
             }
 

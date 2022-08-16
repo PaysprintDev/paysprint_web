@@ -17,31 +17,19 @@ class ImageController extends Controller
 
 
         try {
-            
+
+            $userController = new api\v1\UserController();
 
 
-        if ($request->file('image')) {
-            //Get filename with extension
-            $filenameWithExt = $request->file('image')->getClientOriginalName();
+        switch ($request->docType) {
+            case 'avatar':
+                $userController->uploadDocument($request->user_id, $request->file('image'), 'profilepic/avatar', 'avatar');
+                break;
 
-            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-            // Get just extension
-            $extension = $request->file('image')->getClientOriginalExtension();
-            // Filename to store
-            $fileNameToStore = route('home') . "/idvdoc/" . rand() . '_' . time() . '.' . $extension;
-            //Upload Image
-            // $path = $request->file('image')->storeAs('public/idvdoc', $fileNameToStore);
-
-            // $path = $request->file('image')->move(public_path('/idvdoc/'), $fileNameToStore);
-
-            $path = $request->file('image')->move(public_path('../../idvdoc/'), $fileNameToStore);
-        } else {
-            $fileNameToStore = 'noImage.png';
+            default:
+                $userController->uploadDocument($request->user_id, $request->file('image'), 'document/'.$request->docType, $request->docType);
+                break;
         }
-
-        // Perform database operation
-
-        User::where('id', $request->user_id)->update(['idvdoc' => $fileNameToStore]);
 
 
         $data = ['res' => 'success', 'message' => 'Successfully uploaded'];
@@ -57,6 +45,6 @@ class ImageController extends Controller
 
 
         return $this->returnJSON($data, $status);
- 
+
     }
 }

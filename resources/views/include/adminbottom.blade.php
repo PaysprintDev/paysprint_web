@@ -2271,6 +2271,7 @@ C</div>
                     // Do Ajax
 
                     formData.append("user_id", id);
+                    formData.append("docType", $('#docType'+id).val());
 
                     var fileSelect = document.getElementById("uploadContent" + id);
                     if (fileSelect.files && fileSelect.files.length == 1) {

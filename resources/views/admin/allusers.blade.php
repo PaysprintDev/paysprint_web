@@ -46,7 +46,7 @@
                         <!-- /.box-header -->
                         <div class="box-body table table-responsive">
 
-                            <table class="table table-bordered table-striped" id="example3">
+                            <table class="table table-bordered table-striped" @if(session('role') == 'Customer Success') id="example1" @else id="example3" @endif>
 
                                 <thead>
                                     <div class="row">
@@ -161,6 +161,18 @@
                                                             <hr>
                                                         @endif
 
+                                                        @if ($datainfo->idvdoc != null)
+                                                                <small style="font-weight: bold;">
+                                                                    Other Document : @if ($datainfo->idvdoc != null)
+                                                                        <a href="{{ $datainfo->idvdoc }}"
+                                                                            target="_blank">View Document</a>
+                                                                        @endif
+                                                                </small>
+                                                                <hr>
+                                                            @endif
+
+
+
 
 
                                                     </td>
@@ -233,6 +245,11 @@
                                                                     style="width: 20px; height: 20px;"></a>
                                                         @endif
 
+                                                         <a href="javascript:void(0)"
+                                                            onclick="$('#launchButton{{ $datainfo->id }}').click()"
+                                                            class="text-info"><i class="fas fa-paperclip"
+                                                                style="font-size: 20px;" title="Attachment"></i> </a>
+
                                                         <a href="{{ route('send message', 'id=' . $datainfo->id . '&route=') }}"
                                                             class="text-info"><i class="far fa-envelope text-success"
                                                                 style="font-size: 20px;" title="Send Mail"></i></a>
@@ -256,6 +273,9 @@
 
 
                                                 </tr>
+
+                                                @include('admin.uploaddocmodal')
+
                                             @endforeach
                                         @else
                                             <tr>
@@ -266,6 +286,7 @@
                                         @if (count($allusers) > 0)
                                             <?php $i = 1; ?>
                                             @foreach ($allusers as $data)
+
                                                 <tr>
                                                     <td>{{ $i++ }}</td>
 
@@ -309,6 +330,20 @@
                                                                     @endif | @if ($data->international_passport_back != null)
                                                                         <a href="{{ $data->international_passport_back }}"
                                                                             target="_blank">Back view</a>
+                                                                    @endif
+                                                            </small>
+                                                            <hr>
+                                                        @endif
+
+
+                                                        @if ($data->idvdoc != null || $data->incorporation_doc_front != null)
+                                                            <small style="font-weight: bold;">
+                                                                Other Document : @if ($data->idvdoc != null)
+                                                                    <a href="{{ $data->idvdoc }}"
+                                                                        target="_blank">View Doc 1</a>
+                                                                    @endif | @if ($data->incorporation_doc_front != null)
+                                                                        <a href="{{ $data->incorporation_doc_front }}"
+                                                                            target="_blank">View Doc 2</a>
                                                                     @endif
                                                             </small>
                                                             <hr>

@@ -1,3 +1,4 @@
+        <?php use App\Http\Controllers\FlutterwaveModel; ?>
         <!-- Page Sidebar Start-->
         <header class="main-nav">
             <div class="sidebar-user text-center">
@@ -16,7 +17,13 @@
                     <p class="card card-body mb-0 font-roboto" style="background: antiquewhite;
     font-weight: 600;">
                         {{ 'Bank Account Number: ' . Auth::user()->virtual_account }}
-                        <br>{{ 'Bank Name: WEMA BANK' }}
+                 @if ($bankaccount = \App\FlutterwaveModel::where('userId', Auth::user()->ref_code)->first())
+                    @php
+                        $bankName = $bankaccount->bank_name;
+                    @endphp
+                @endif
+
+                            <br>{{ 'Bank Name: '.$bankName }}
                     </p>
                 @endif
 

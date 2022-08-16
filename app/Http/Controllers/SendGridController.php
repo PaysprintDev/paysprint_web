@@ -11,6 +11,7 @@ use App\ClaimedPoints;
 use App\ReferralClaim;
 
 use App\TransactionCost;
+use App\FlutterwaveModel;
 use App\Traits\SendgridMail;
 use Illuminate\Http\Request;
 
@@ -33,9 +34,14 @@ class SendGridController extends Controller
                     $username = explode(" ", $user->name);
 
                     $receiver = $user->email;
+
+
+                    // Get Bank Name...
+                    $bankaccount = FlutterwaveModel::where('userId', $user->ref_code)->first();
+
                     $data = [
                         "name"  => $username[0],
-                        "message" => "<p>We are glad to inform you of your PaySprint <strong>BANK ACCOUNT NUMBER!</strong>. The PaySprint Bank Account provides you with additional channel to Top-up PaySprint Wallet directly from your existing Bank Account without a debit or credit card.</p><p>Below is your PaySprint Bank Account details: </p><hr/><p><strong>ACCOUNT NUMBER: {$user->virtual_account}</strong></p><p><strong>BANK NAME: WEMA BANK</strong></p><p><strong>ACCOUNT NAME: {$user->name}</strong></p><br><p>Simply add the details above as Beneficiary to your existing bank account and start to Top up your PaySprint Wallet with ease.</p><br><p>Thanks for choosing PaySprint.</p>",
+                        "message" => "<p>We are glad to inform you of your PaySprint <strong>BANK ACCOUNT NUMBER!</strong>. The PaySprint Bank Account provides you with additional channel to Top-up PaySprint Wallet directly from your existing Bank Account without a debit or credit card.</p><p>Below is your PaySprint Bank Account details: </p><hr/><p><strong>ACCOUNT NUMBER: {$user->virtual_account}</strong></p><p><strong>BANK NAME: {$bankaccount->bank_name}</strong></p><p><strong>ACCOUNT NAME: {$user->name}</strong></p><br><p>Simply add the details above as Beneficiary to your existing bank account and start to Top up your PaySprint Wallet with ease.</p><br><p>Thanks for choosing PaySprint.</p>",
                     ];
 
                     $template_id = config('constants.sendgrid.virtual_account');
@@ -132,7 +138,7 @@ class SendGridController extends Controller
                     </tr>
                      <br>
                      <p>Redeem Your Referral Points when you have more than 500 points and above for a wallet of $pointsclaim$currency.</p>
-                    
+
                     </table><hr/>",
 
                         ];
@@ -152,14 +158,14 @@ class SendGridController extends Controller
                     <tr style:'text-align:left'>
                         <td>Start Date:</td>
                         <td> $startdate</td>
-                        
+
                     </tr>
                     <tr style:'text-align:left'>
                         <td>End Date:</td>
                         <td> $enddate</td>
                     </tr>
-                
-                  
+
+
                     </table>
                   ";
                         }
@@ -193,7 +199,7 @@ class SendGridController extends Controller
                     </tr>
                      <br>
                      <p>Redeem Your Referral Points when you have more than 500 points and above for a wallet of $referralclaim$currency.</p>
-                    
+
                     </table><hr/>",
 
                         ];
@@ -213,14 +219,14 @@ class SendGridController extends Controller
                     <tr style:'text-align:left'>
                         <td>Start Date:</td>
                         <td> $startdate</td>
-                        
+
                     </tr>
                     <tr style:'text-align:left'>
                         <td>End Date:</td>
                         <td> $enddate</td>
                     </tr>
-                    
-                  
+
+
                     </table>
                   ";
                         }
@@ -247,7 +253,7 @@ class SendGridController extends Controller
         try {
 
             $thisuser = User::inRandomOrder()->take(5)->get();
-           
+
 
             if (count($thisuser) > 0) {
 
@@ -267,7 +273,7 @@ class SendGridController extends Controller
                     $consumerfee = $consumer->fixed;
                     $merchantfee = $merchant->fixed;
                     $rewardpoint = ClaimedPoints::where('user_id', $user->id)->where('status', 'completed')->sum('amount');
-                  
+
 
                     $points = Points::where('user_id', $user->id)->first();
                     if (isset($points)) {
@@ -360,7 +366,7 @@ class SendGridController extends Controller
         }
     }
 
-   
+
 
 
     // publicize merchant to customer mail
@@ -460,7 +466,7 @@ class SendGridController extends Controller
 
 
                         // $logo = $merchants->logo;
-                        
+
                         if ($merchants->logo != null) {
                             $logo = $merchants->logo;
                         } else {
@@ -504,7 +510,7 @@ class SendGridController extends Controller
                     }
 
 
-                    
+
 
 
                     // for ($i = 0; $i < count($user); $i++) {
@@ -556,11 +562,11 @@ class SendGridController extends Controller
 
         $businesses['name'] = $user[$i]['name'];
 
-        
+
 
 
         echo $receiver.' ! '.$user[$i]['country'] . "<hr>";
-        
+
         var_dump($businesses);
 
         echo "<hr>";
@@ -573,6 +579,6 @@ class SendGridController extends Controller
 
        }
 
-       
+
     }
 }
