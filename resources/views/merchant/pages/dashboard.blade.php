@@ -46,6 +46,9 @@ use App\Http\Controllers\AllCountries; ?>
 
 
             <div class="col-xl-5 box-col-12 des-xl-100">
+
+
+
                 <div class="row">
 
 
@@ -68,6 +71,8 @@ use App\Http\Controllers\AllCountries; ?>
 
                                 @if (Auth::user()->account_check == 2)
 
+
+                                @if ($data['clientInfo']->accountMode != 'test')
 
                                 {{-- Check if the days still available.... --}}
 
@@ -161,6 +166,46 @@ use App\Http\Controllers\AllCountries; ?>
 
 
                                 @endif
+
+
+                                @else
+
+                                <!-- ShareThis BEGIN -->
+                                <p class="alert alert-danger text-white" style="cursor: pointer" onclick="getMyPaymentLink('{{ Auth::user()->id }}')"><strong>Generate Payment Link:</strong></p>
+
+
+                                {{-- Start Modal Here --}}
+
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary disp-0" data-bs-toggle="modal" data-bs-target="#exampleModal" id="paymentLinkModal{{ Auth::user()->id }}">
+                                    Launch demo modal
+                                </button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Generate Payment Link.</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body" style="text-align: left">
+                                                <p>
+                                                    Payment Link would be available when your merchant account is on LIVE mode
+                                                </p>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- End Modal Here --}}
+
+
+                                @endif
+
+
+
 
 
 
@@ -266,218 +311,6 @@ use App\Http\Controllers\AllCountries; ?>
                             </div>
                         </div>
                     </div>
-
-<<<<<<< HEAD
-                    <!-- merhcnat journey -->
-=======
-
-                <div class="col-xl-5 box-col-12 des-xl-100">
-
-
-
-                    <div class="row">
-
-
-                        <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 des-xl-25 rate-sec">
-                            <div class="card income-card card-primary">
-                                <div class="card-body text-center">
-                                    <div class="round-box">
-                                        <p style="font-size: 30px;">{{ Auth::user()->currencySymbol }}</p>
-                                    </div>
-                                    <h5>{{ number_format(Auth::user()->wallet_balance, 4) }}</h5>
-                                    <p>Wallet Balance</p>
-
-                                    &nbsp;
-
-                                    {{-- <a class="btn-arrow arrow-primary" href="javascript:void(0)"><i
-                                            class="toprightarrow-primary fa fa-arrow-up me-2"></i>{{ round(Auth::user()->wallet_balance / $data['statementCount'] / 100, 2) }}%
-                                    </a> --}}
-
-                                    {{-- Open Link for verified merchants... --}}
-
-                                    @if (Auth::user()->account_check == 2)
-
-
-                                    @if ($data['clientInfo']->accountMode != 'test')
-
-                                    {{-- Check if the days still available.... --}}
-
-
-                                    @php
-                                        $expire = date('Y-m-d', strtotime(Auth::user()->payment_link_expiry));
-                                        $now = time();
-                                        $your_date = strtotime($expire);
-                                        $datediff = $your_date - $now;
-                                    @endphp
-
-
-                                    @if (Auth::user()->payment_link_access == 1 && ($datediff > 0))
-
-                                    <!-- ShareThis BEGIN -->
-                                        <p class="alert alert-primary text-white"><strong>Payment Link:</strong></p>
-                                        <p class="text-success" style="font-weight: bold;">Link expires: <br>
-                                                    <span class="text-danger" style="font-weight: bold;">{{ date('d-M-Y h:i a', strtotime(Auth::user()->payment_link_expiry)) }}</span>
-                                                </p>
-
-                                            <a href="#" style="color: navy; font-weight: 700; text-align: left;">Click and Share your payment link with the icon below</a>
-
-
-                                        <br>
-                                        <br>
-
-                                        @php
-                                            $business = Auth::user()->businessname . '/' . Auth::user()->ref_code;
-                                            $url = str_replace(' ', '%20', $business);
-                                        @endphp
-
-                                        <div class="sharethis-inline-share-buttons"
-                                            data-url="{{ route('home') . '/merchant/' . $url }}">
-
-                                        </div><!-- ShareThis END -->
-
-
-
-                                    @else
-
-                                    <!-- ShareThis BEGIN -->
-                                        <p class="alert alert-danger text-white" style="cursor: pointer" onclick="getMyPaymentLink('{{ Auth::user()->id }}')"><strong>Generate Payment Link:</strong></p>
-
-
-                                        {{-- Start Modal Here --}}
-
-                                        <!-- Button trigger modal -->
-                                                <button type="button" class="btn btn-primary disp-0" data-bs-toggle="modal" data-bs-target="#exampleModal" id="paymentLinkModal{{ Auth::user()->id }}">
-                                                Launch demo modal
-                                                </button>
-
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Accept Terms and Conditions.</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body" style="text-align: left">
-                                                        <p>
-                                                            PaySprint Merchant Payment link is a fast and quick method to accept payment from customers into the merchant account.
-                                                        </p>
-                                                        <p>
-                                                            As a User, you confirm that the customers to whom the link is shared is a verified customer and you
-                                                            agree and accept to be responsible for any charge back that may result for payment being returned.
-                                                        </p>
-                                                        <p>
-                                                            You also accept that PaySprint should debit your merchant account with the chargeback amount along with <span class="text-danger" style="font-weight: bold">penalty of
-                                                            $50.00</span> or equivalent in local currency.
-                                                        </p>
-
-                                                        <p>
-
-                                                            <form action="{{ route('request payment link') }}" method="POST" id="myPaymentLinkUp">
-                                                                @csrf
-                                                                <input type="hidden" name="id" id="myId" value="{{ Auth::user()->id }}">
-                                                            </form>
-
-                                                            <input type="checkbox" name="paylink_checkbox" id="paylink_checkbox" style="width: 20px; height: 20px; margin-top: 3px;"> <span style="font-weight: bold; color: navy;">Accept terms and conditions before proceeding</span>
-                                                        </p>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                                                        <button type="button" class="btn btn-success" id="acceptLinkBtn" onclick="acceptLinkTerms()">Submit</button>
-                                                    </div>
-                                                    </div>
-                                                </div>
-                                                </div>
-
-                                        {{-- End Modal Here --}}
-
-
-                                    @endif
-
-
-                                    @else
-
-                                                              <!-- ShareThis BEGIN -->
-                                                    <p class="alert alert-danger text-white" style="cursor: pointer" onclick="getMyPaymentLink('{{ Auth::user()->id }}')"><strong>Generate Payment Link:</strong></p>
-
-
-                                                    {{-- Start Modal Here --}}
-
-                                                    <!-- Button trigger modal -->
-                                                            <button type="button" class="btn btn-primary disp-0" data-bs-toggle="modal" data-bs-target="#exampleModal" id="paymentLinkModal{{ Auth::user()->id }}">
-                                                            Launch demo modal
-                                                            </button>
-
-                                                            <!-- Modal -->
-                                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="exampleModalLabel">Generate Payment Link.</h5>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                </div>
-                                                                <div class="modal-body" style="text-align: left">
-                                                                    <p>
-                                                                        Payment Link would be available when your merchant account is on LIVE mode
-                                                                    </p>
-                                                                </div>
-
-                                                                </div>
-                                                            </div>
-                                                            </div>
-
-                                                    {{-- End Modal Here --}}
-
-
-                                    @endif
-
-
-
-
-
-
-                                        @else
-
-
-                                                            <!-- ShareThis BEGIN -->
-                                                    <p class="alert alert-danger text-white" style="cursor: pointer" onclick="getMyPaymentLink('{{ Auth::user()->id }}')"><strong>Generate Payment Link:</strong></p>
-
-
-                                                    {{-- Start Modal Here --}}
-
-                                                    <!-- Button trigger modal -->
-                                                            <button type="button" class="btn btn-primary disp-0" data-bs-toggle="modal" data-bs-target="#exampleModal" id="paymentLinkModal{{ Auth::user()->id }}">
-                                                            Launch demo modal
-                                                            </button>
-
-                                                            <!-- Modal -->
-                                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="exampleModalLabel">Generate Payment Link.</h5>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                </div>
-                                                                <div class="modal-body" style="text-align: left">
-                                                                    <p>
-                                                                        Payment Link would be available when your merchant account is fully verified. Kindly complete your merchant account verification by uploading the business documents
-                                                                    </p>
-                                                                </div>
-
-                                                                </div>
-                                                            </div>
-                                                            </div>
-
-                                                    {{-- End Modal Here --}}
-
-
-                                    @endif
->>>>>>> 2eb71ce44e520c0e465d1d7a3f0b9eb56b48d605
-
-
-
-
-                    <!-- end of merchant journey -->
 
                     @if ($data['clientInfo']->accountMode == 'test')
 
@@ -874,6 +707,29 @@ use App\Http\Controllers\AllCountries; ?>
                                     0%
                                     @endif --}}
                                     (Coming Soon)
+                                    <!-- merchant journey -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="wrapper option-1 option-1-1">
+                                            <ol class="c-stepper">
+                                                <li class="c-stepper__item {{ $data['merchantstatus'] ? 'c-stepper__item__active' : ''}}">
+                                                    <h3 class="c-stepper__title">Activate the Account by Removing Test Mode</h3>
+                                                    {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                                                </li>
+
+                                                <li class="c-stepper__item {{ $data['trial'] ? 'c-stepper__item__active' : ''}}">
+                                                    <h3 class="c-stepper__title">30-Days Free Trial</h3>
+                                                    {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                                                </li>
+                                                <li class="c-stepper__item {{ $data['myplan'] ? 'c-stepper__item__active' : ''}}">
+                                                    <h3 class="c-stepper__title">Account on Sub. Plan</h3>
+                                                    <p class="c-stepper__desc" style="font-size:20px; font-weight:bold; color:red;">{{ $data ['myplan']->plan}}</p>
+                                                </li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- end of merchant journey -->
                                 </p>
                             </div>
                             <div class="setting-list">
@@ -888,31 +744,6 @@ use App\Http\Controllers\AllCountries; ?>
                                     <li><i class="icofont icofont-error close-card font-primary"></i></li>
                                 </ul>
                             </div>
-                            <!-- jouney -->
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="wrapper option-1 option-1-1">
-                                        <ol class="c-stepper">
-                                            <li class="c-stepper__item {{ isset($data['merchantstatus']) ? 'c-stepper__item__active' : ''}}">
-                                                <h3 class="c-stepper__title">Activate the Account by Removing Test Mode</h3>
-                                                {{-- <p class="c-stepper__desc">Some desc text</p> --}}
-                                            </li>
-
-                                            <li class="c-stepper__item">
-                                                <h3 class="c-stepper__title">30-Days Free Trial</h3>
-                                                {{-- <p class="c-stepper__desc">Some desc text</p> --}}
-                                            </li>
-                                            
-                                            <li class="c-stepper__item">
-                                                <h3 class="c-stepper__title">Account on Sub Plan</h3>
-                                                {{-- <p class="c-stepper__desc">Some desc text</p> --}}
-                                            </li>
-
-                                        </ol>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- user journey -->
                         </div>
                     </div>
                     <div class="card-body p-10">
@@ -942,9 +773,6 @@ use App\Http\Controllers\AllCountries; ?>
                     </div>
                     @endif
 
-                    <!-- journey -->
-
-                    <!-- joutney -->
 
                     <div class="col-xl-6 col-md-3 col-sm-6 box-col-3 des-xl-25 rate-sec">
                         <div class="card income-card card-primary">
