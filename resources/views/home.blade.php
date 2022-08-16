@@ -158,10 +158,7 @@ use App\Http\Controllers\User; ?>
                             <h3 class="c-stepper__title">Account Verification-Completed</h3>
                             {{-- <p class="c-stepper__desc">Some desc text</p> --}}
                         </li>
-                        <li class="c-stepper__item {{ $data['pending'] ? 'c-stepper__item__active' : '' }}">
-                            <h3 class="c-stepper__title">Completed</h3>
-                            {{-- <p class="c-stepper__desc">Some desc text</p> --}}
-                        </li>
+
                         @isset($data['userdetails'])
 
 
@@ -174,6 +171,12 @@ use App\Http\Controllers\User; ?>
                             </li>
                             @endif
                             @endisset
+
+                            <li class="c-stepper__item {{ $data['pending'] ? 'c-stepper__item__active' : '' }}">
+                                <h3 class="c-stepper__title">Completed</h3>
+                                {{-- <p class="c-stepper__desc">Some desc text</p> --}}
+                            </li>
+
                     </ol>
                 </div>
             </div>

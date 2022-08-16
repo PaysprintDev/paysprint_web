@@ -9,6 +9,7 @@ use App\Points;
 use App\PromoDate;
 use App\TrialDate;
 use App\watchlist;
+use App\merchantTrial;
 
 use Carbon\Carbon;
 
@@ -18500,7 +18501,17 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
             // Update account to live mode..
             ClientInfo::where('user_id', $req->id)->update(['accountMode' => $req->val]);
+            $startdate = date('Y-m-d');
+            $enddate = date('Y-m-d');
 
+            $startdate = date('Y-m-d');
+            $enddate = date('Y-m-d', strtotime($startdate . ' + 30 days'));
+
+            merchantTrial::create([
+                'user_id' => $req->id,
+                'start_date' => $startdate,
+                'end_date' =>  $enddate
+            ]);
 
             // Send Mail to the support agent
             $this->name = $thisuser->business_name;
