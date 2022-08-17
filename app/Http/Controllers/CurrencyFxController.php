@@ -203,6 +203,36 @@ class CurrencyFxController extends Controller
         return view('currencyexchange.fundtransfer')->with(['pages' => 'Transfer between FX Wallet', 'data' => $data]);
     }
 
+
+    // Withdraw Funds
+    public function withdrawfundAccount(Request $req)
+    {
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == false) {
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+        }
+
+        $data = array(
+            'allcountry' => $this->getCountryAndCurrency(),
+            'mycountry' => $this->personalCountry(Auth::user()->country),
+            'mywallet' => Auth::user()->forexAccount
+        );
+
+        $checker = $this->checkImt(Auth::user()->country);
+
+        if($checker == "false"){
+            return back()->with('error', 'This feature is not yet available for your country');
+        }
+
+        return view('currencyexchange.fundwithdraw')->with(['pages' => 'Withdraw from FX Wallet', 'data' => $data]);
+    }
+
     public function marketPlace(Request $req)
     {
         if ($req->session()->has('email') == false) {

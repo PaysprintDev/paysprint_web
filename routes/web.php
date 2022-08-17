@@ -405,6 +405,7 @@ Route::prefix('currencyfx')->group(function () {
 	Route::prefix('fund')->group(function () {
 		Route::get('/', ['uses' => 'CurrencyFxController@fundAccount', 'as' => 'currency exchange funding']);
 		Route::get('/transfer', ['uses' => 'CurrencyFxController@transferfundAccount', 'as' => 'currency exchange transfer funding']);
+		Route::get('/withdraw', ['uses' => 'CurrencyFxController@withdrawfundAccount', 'as' => 'currency exchange withdraw funding']);
 	});
 });
 

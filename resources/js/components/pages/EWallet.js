@@ -134,6 +134,17 @@ class EWallet extends Component {
 									</span>
 								</a>
 							</td>
+							<td>
+								<a
+									type="button"
+									className="btn btn-success"
+                                    href={`/currencyfx/fund/withdraw?currency=${mywalletdata.escrow_id}`}
+								>
+									<span className="font-weight-semibold text-white">
+										<small>Withdraw Money</small>
+									</span>
+								</a>
+							</td>
 						</tr>
 					);
 				});
@@ -226,6 +237,7 @@ class EWallet extends Component {
 														<th>Status</th>
 														<th>Funding</th>
 														<th>Move money</th>
+														<th>Withdraw</th>
 													</tr>
 												</thead>
 												<tbody className="list">{data_HTML_ACTIVE_ORDERS}</tbody>

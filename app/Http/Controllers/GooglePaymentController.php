@@ -2,102 +2,103 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use Session;
 
+use App\AllCountries;
 
-use Illuminate\Support\Facades\Hash;
-
-use Illuminate\Support\Facades\DB;
-
-use Illuminate\Support\Facades\Auth;
-
-use Illuminate\Support\Facades\Mail;
-
-use Illuminate\Support\Facades\Validator;
-
-
-use Illuminate\Support\Facades\Log;
 
 use App\User as User;
 
-use App\AnonUsers as AnonUsers;
+use App\Classes\axRef;
+
+use App\Classes\axTxi;
+
+use App\Classes\mcTax;
+
+use App\EscrowAccount;
+
 
 use App\Mail\sendEmail;
 
-use App\CreateEvent as CreateEvent;
-
-use App\SetupBilling as SetupBilling;
-
-use App\InvoicePayment as InvoicePayment;
-
-use App\ImportExcel as ImportExcel;
-
-use App\ClientInfo as ClientInfo;
-
-use App\OrganizationPay as OrganizationPay;
-
-use App\PaycaWithdraw as PaycaWithdraw;
-
-use App\Epaywithdraw as Epaywithdraw;
-
-use App\Statement as Statement;
-
-use App\ReceivePay as ReceivePay;
-
-use App\AddCard as AddCard;
-use App\AllCountries;
-use App\Classes\mpgGlobals;
-use App\Classes\httpsPost;
-use App\Classes\mpgHttpsPost;
-use App\Classes\mpgHttpsPostStatus;
-use App\Classes\mpgResponse;
-use App\Classes\mpgRequest;
-use App\Classes\mpgCustInfo;
-use App\Classes\mpgRecur;
-use App\Classes\mpgAvsInfo;
-use App\Classes\mpgCvdInfo;
-use App\Classes\mpgAchInfo;
-use App\Classes\mpgConvFeeInfo;
-use App\Classes\mpgTransaction;
-use App\Classes\MpiHttpsPost;
-use App\Classes\MpiResponse;
-use App\Classes\MpiRequest;
-use App\Classes\MpiTransaction;
-use App\Classes\riskHttpsPost;
-use App\Classes\riskResponse;
-use App\Classes\riskRequest;
-use App\Classes\mpgSessionAccountInfo;
-use App\Classes\mpgAttributeAccountInfo;
-use App\Classes\riskTransaction;
-use App\Classes\mpgAxLevel23;
-use App\Classes\axN1Loop;
-use App\Classes\axRef;
-use App\Classes\axIt1Loop;
-use App\Classes\axIt106s;
-use App\Classes\axTxi;
-use App\Classes\mpgAxRaLevel23;
-use App\Classes\mpgVsLevel23;
-use App\Classes\vsPurcha;
-use App\Classes\vsPurchl;
-use App\Classes\vsCorpai;
-use App\Classes\vsCorpas;
-use App\Classes\vsTripLegInfo;
-use App\Classes\mpgMcLevel23;
-use App\Classes\mcCorpac;
-use App\Classes\mcCorpai;
-use App\Classes\mcCorpas;
-use App\Classes\mcCorpal;
-use App\Classes\mcCorpar;
-use App\Classes\mcTax;
 use App\Classes\CofInfo;
+
 use App\Classes\MCPRate;
 
-use App\Traits\PaymentGateway;
-use App\Traits\Xwireless;
-use App\Traits\PaysprintPoint;
 use App\Traits\IDVCheck;
+
+use App\Classes\axIt106s;
+
+use App\Classes\axN1Loop;
+
+use App\Classes\mcCorpac;
+
+use App\Classes\mcCorpai;
+
+use App\Classes\mcCorpal;
+
+use App\Classes\mcCorpar;
+
+use App\Classes\mcCorpas;
+
+use App\Classes\mpgRecur;
+
+use App\Classes\vsCorpai;
+
+use App\Classes\vsCorpas;
+
+use App\Classes\vsPurcha;
+use App\Classes\vsPurchl;
+use App\Traits\Xwireless;
+use App\Classes\axIt1Loop;
+use App\Classes\httpsPost;
+use App\AddCard as AddCard;
+use App\Classes\mpgAchInfo;
+use App\Classes\mpgAvsInfo;
+use App\Classes\mpgCvdInfo;
+use App\Classes\mpgGlobals;
+use App\Classes\mpgRequest;
+use App\Classes\MpiRequest;
+use App\Classes\mpgCustInfo;
+use App\Classes\mpgResponse;
+use App\Classes\MpiResponse;
+use App\Classes\riskRequest;
+use Illuminate\Http\Request;
+use App\Classes\mpgAxLevel23;
+use App\Classes\mpgHttpsPost;
+use App\Classes\mpgMcLevel23;
+use App\Classes\mpgVsLevel23;
+use App\Classes\MpiHttpsPost;
+use App\Classes\riskResponse;
+use App\Classes\riskHttpsPost;
+use App\Classes\vsTripLegInfo;
+use App\Traits\PaymentGateway;
+use App\Traits\PaysprintPoint;
+use App\AnonUsers as AnonUsers;
+use App\Classes\mpgAxRaLevel23;
+use App\Classes\mpgConvFeeInfo;
+use App\Classes\mpgTransaction;
+use App\Classes\MpiTransaction;
+use App\Statement as Statement;
+use App\Classes\riskTransaction;
+use App\ClientInfo as ClientInfo;
+use App\ReceivePay as ReceivePay;
+use Illuminate\Support\Facades\DB;
+use App\Classes\mpgHttpsPostStatus;
+use App\CreateEvent as CreateEvent;
+use App\ImportExcel as ImportExcel;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Epaywithdraw as Epaywithdraw;
+use App\SetupBilling as SetupBilling;
+use App\Classes\mpgSessionAccountInfo;
+
+use App\PaycaWithdraw as PaycaWithdraw;
+use App\Classes\mpgAttributeAccountInfo;
+use App\InvoicePayment as InvoicePayment;
+use Illuminate\Support\Facades\Validator;
+use App\OrganizationPay as OrganizationPay;
 
 class GooglePaymentController extends Controller
 {
@@ -132,7 +133,6 @@ class GooglePaymentController extends Controller
 
     public function orgPaymentInvoice(Request $req)
     {
-
 
 
         if ($req->amount < 0) {
@@ -288,7 +288,7 @@ class GooglePaymentController extends Controller
                                                 // $dataInfo = $this->convertCurrencyRate($req->localcurrency, $req->currency, $req->amounttosend);
                                                 $dataInfo = $req->conversionamount;
                                             } else {
-                                                $dataInfo = $req->amounttosend;
+                                                $dataInfo = $req->totalcharge;
                                             }
 
 
@@ -316,9 +316,8 @@ class GooglePaymentController extends Controller
                                                 $action = "Wallet debit";
                                                 $requestReceive = 2;
 
-
-
-                                            } else {
+                                            }
+                                            else {
 
                                                 if ($req->localcurrency != $req->currency) {
 
@@ -368,11 +367,185 @@ class GooglePaymentController extends Controller
 
 
 
+                                            // Do FX Exchange if localcurrency != currency... Receiver receives money to the FX of the sender localcurrency...
 
-                                            if ($insertPay == true) {
+                                            if($req->localcurrency != $req->currency){
+                                                // Check Receiver for the FX currency and add money, else create and add money..
+                                                $currencyFX = new CurrencyFxController();
+
+                                                // Check Escrow wallet
+                                                $checkAccount = EscrowAccount::where('user_id', $client->id)->where('currencyCode', $req->localcurrency)->first();
+
+                                                // Create New Wallet
+                                                if (!$checkAccount) {
+                                                    // Create the wallet
+                                                    $escrowID = 'ES_' . uniqid() . '_' . strtoupper(date('D'));
+                                                    // Check if ID exists
+                                                    $checkExists = EscrowAccount::where('escrow_id', $escrowID)->first();
+
+                                                    if (isset($checkExists)) {
+                                                        $escrowID = 'ES_' . uniqid() . '_' . strtoupper(date('D'));
+                                                    }
+
+                                                    $query = [
+                                                        'user_id' => $client->id,
+                                                        'escrow_id' => $escrowID,
+                                                        'currencyCode' => $req->localcurrency,
+                                                        'currencySymbol' => $user->currencySymbol,
+                                                        'wallet_balance' => "0.00",
+                                                        'country' => $user->country,
+                                                        'active' => "false"
+                                                    ];
+
+                                                    EscrowAccount::insert($query);
+                                                }
+
+                                                // Fund Wallet
+                                                $myaccount = EscrowAccount::where('user_id', $client->id)->where('currencyCode', $req->localcurrency)->first();
+
+                                                $transaction_id = "es-wallet-" . date('dmY') . time();
+
+
+                                                $activity = "Received " . $req->localcurrency . '' . number_format($req->amount, 2) . " from {$user->name} to your PaySprint FX Wallet.";
+                                                $credit = $req->amount;
+                                                $debit = 0;
+                                                $reference_code = $transaction_id;
+                                                $balance = 0;
+                                                $trans_date = date('Y-m-d');
+                                                $status = "Delivered";
+                                                $action = "Escrow Wallet credit";
+                                                $regards = $client->ref_code;
+                                                $statement_route = "escrow wallet";
+                                                $statement_route2 = "wallet";
+
+                                                $fxBalance = $myaccount->wallet_balance + $req->amount;
+
+
+                                                EscrowAccount::where('user_id', $client->id)->where('currencyCode', $myaccount->currencyCode)->update(['wallet_balance' => $fxBalance]);
+
+                                                $currencyFX->insFXStatement($myaccount->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $myaccount->country, 'confirmed');
+
+                                                $currencyFX->insStatement($client->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route2, $client->country);
+
+                                                // Sender Statement
+
+
+                                                $sendMsg = "Hi " . $client->name . ", You have " . $activity . " Your current {$myaccount->currencyCode} fx wallet balance is " . $myaccount->currencyCode . ' ' . number_format($fxBalance, 2) . ".";
+
+                                                $usergetPhone = User::where('email', $client->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                if (isset($usergetPhone)) {
+
+                                                    $sendPhone = $client->telephone;
+                                                } else {
+                                                    $sendPhone = "+" . $client->code . $client->telephone;
+                                                }
+
+                                                if ($client->country == "Nigeria") {
+
+                                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                    $currencyFX->sendSms($sendMsg, $correctPhone);
+                                                } else {
+                                                    $currencyFX->sendMessage($sendMsg, $sendPhone);
+                                                }
+
+                                                // Update Wallet
+                                                User::where('email', $user->email)->update([
+                                                    'wallet_balance' => $wallet_balance,
+                                                    'withdrawal_per_day' => $withdrawal_per_day,
+                                                    'withdrawal_per_week' => $withdrawal_per_week,
+                                                    'withdrawal_per_month' => $withdrawal_per_month
+                                                ]);
+
+
+                                                // Log Activities here
+                                                $currencyFX->createNotification($client->ref_code, $sendMsg);
+
+                                                $currencyFX->slack('Congratulations!, ' . $client->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                                                $this->to = $client->email;
+                                                $this->name = $user->name;
+                                                $this->coy_name = ($client->accountType == "Individual" ? $client->name : $client->businessname);
+                                                // $this->email = "bambo@vimfile.com";
+                                                $this->email = $user->email;
+                                                $this->amount = $myaccount->currencyCode . ' ' . number_format($req->amount, 2);
+                                                $this->paypurpose = $service;
+                                                $this->subject = "Payment Received from " . $user->name . " for " . $service;
+                                                $this->subject2 = "Your Payment to " . $this->coy_name . " was successfull";
+
+                                                $activity2 = $req->payment_method . " transfer of " . $req->localcurrency . ' ' . number_format($req->amount, 2) . " to " . $this->coy_name . " for " . $service;
+                                                $credit2 = 0;
+                                                // $debit = $req->conversionamount + $req->commissiondeduct;
+                                                // $debit = $dataInfo;
+                                                $debit2 = $req->amount;
+                                                $reference_code = $paymentToken;
+                                                $balance2 = 0;
+                                                $trans_date2 = date('Y-m-d');
+                                                $walletstatus = "Delivered";
+                                                $action2 = "Wallet debit";
+                                                $regards2 = $req->user_id;
+
+                                                // Senders statement
+                                                $this->insStatement($userID, $reference_code, $activity2, $credit2, $debit2, $balance2, $trans_date2, $walletstatus, $action2, $regards2, 1, "wallet", 'on', $user->country);
+
+
+                                                // Mail to receiver
+                                                $this->sendEmail($this->to, "Payment Received");
+
+                                                // Mail from Sender
+
+                                                $this->sendEmail($this->email, "Payment Successful");
+
+                                                $sendMsg2 = "Hi " . $user->name . ", You have made a " . $activity2 . ". Your new wallet balance is " . $req->localcurrency . ' ' . number_format($wallet_balance, 2) . ". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
+
+                                                $usersPhone = User::where('email', $user->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                if (isset($usersPhone)) {
+
+                                                    $sendPhone = $user->telephone;
+                                                } else {
+                                                    $sendPhone = "+" . $user->code . $user->telephone;
+                                                }
+
+                                                $this->createNotification($user->ref_code, $sendMsg2);
+
+                                                $this->updatePoints($user->id, 'Send money');
+                                                $this->updatePoints($client->id, 'Receive money');
+
+                                                if ($user->country == "Nigeria") {
+
+                                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                    $this->sendSms($sendMsg2, $correctPhone);
+                                                } else {
+                                                    $this->sendMessage($sendMsg2, $sendPhone);
+                                                }
+
+
+                                                $this->slack($sendMsg2, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                                                $monerisactivity = $sendMsg2;
+
+                                                $this->keepRecord($reference_code, "WALLET APPROVED", $monerisactivity, "PaySprint", $user->country);
 
 
 
+
+                                                $resData = ['res' => 'Money sent successfully', 'message' => 'success', 'title' => 'Good!'];
+
+                                                    $response = 'Money sent successfully';
+                                                    $respaction = 'success';
+
+                                                    if ($user->accountType == "Individual") {
+                                                        return redirect()->route('my account')->with($respaction, $response);
+                                                    } else {
+                                                        return redirect()->back()->with($respaction, $response);
+                                                    }
+
+                                            }
+                                            else{
+
+
+                                                if ($insertPay == true) {
 
                                                 // Update Wallet
                                                 User::where('email', $user->email)->update([
@@ -416,10 +589,6 @@ class GooglePaymentController extends Controller
                                                 $trans_date = date('Y-m-d');
 
                                                 $regards = $req->user_id;
-
-
-
-
 
 
                                                 $recWallet = $client->wallet_balance + $dataInfo;
@@ -558,6 +727,13 @@ class GooglePaymentController extends Controller
 
                                                 return redirect()->back()->with($respaction, $response);
                                             }
+
+                                            }
+
+
+
+
+
                                         }
                                     }
                                 } else {
