@@ -848,6 +848,8 @@ Route::get('earnedpoints', ['uses' => 'AdminController@earnedPoints', 'as' => 'e
 
 Route::get('paysprintpointspage', ['uses' => 'HomeController@consumerPoints', 'as' => 'consumer points']);
 
+Route::get('merchantreferralpage', ['uses' => 'HomeController@merchantReferral', 'as' => 'merchant referral']);
+
 
 Route::prefix('Admin/')->group(function () {
 
