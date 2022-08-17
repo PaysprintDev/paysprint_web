@@ -884,6 +884,7 @@
                     "currency": currencyCode,
                     "api_key": publicKey,
                     "redirect_url": callbackUrl,
+                    "mobile_money_hpp": true,
                     "method": "MOBILE_MONEY",
                     "provider_id": providerId,
                     "account_number": accountnumber,
