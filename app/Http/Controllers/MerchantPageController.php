@@ -72,7 +72,8 @@ class MerchantPageController extends Controller
             'specialInfo' => $this->getthisInfo(Auth::user()->country),
             'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
             'merchantstatus' => $this->checkMerchantStatus(Auth::user()->ref_code),
-            'trial' => merchantTrial::where('user_id', Auth::user()->ref_code)->first()
+            'trial' => merchantTrial::where('user_id', Auth::user()->ref_code)->first(),
+            'referral' => User::where('referred_by', Auth::user()->ref_code)->count()
         ];
 
         return view('merchant.pages.dashboard')->with(['pages' => 'dashboard', 'data' => $data]);

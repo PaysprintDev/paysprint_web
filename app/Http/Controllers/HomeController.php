@@ -5276,6 +5276,44 @@ class HomeController extends Controller
         return view('main.consumerpoints')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email,  'data' => $data]);
     }
 
+    public function merchantReferral(Request $req)
+    {
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Consumer Points';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+            } else {
+                $this->page = 'Consumer Points';
+                $this->name = '';
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+
+            $this->page = 'Consumer Points';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+        }
+
+        // Get Bill
+        $getAllPoint = Points::where('user_id', Auth::user()->id)->first();
+
+
+
+        $data = array(
+            'getallpoint' => $getAllPoint,
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+
+        );
+
+
+
+        return view('main.merchantreferral')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email,  'data' => $data]);
+    }
+
     public function referredDetails(Request $req)
     {
 
@@ -5994,10 +6032,8 @@ class HomeController extends Controller
 
             $resData = ['data' => $req->amount, 'message' => 'success', 'walletCheck' => $walletCheck];
 
-                return $this->returnJSON($resData, 200);
-
-        }
-        else{
+            return $this->returnJSON($resData, 200);
+        } else {
             // Calculate the commission deduct...
             $thisuser = User::where('ref_code', $req->ref_code)->first();
 
@@ -6039,10 +6075,7 @@ class HomeController extends Controller
 
 
             return $this->returnJSON($resData, 200);
-
         }
-
-
     }
 
     public function convertCurrencyRate($foreigncurrency, $localcurrency, $amount)

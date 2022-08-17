@@ -713,16 +713,15 @@ use App\Http\Controllers\AllCountries; ?>
                                         <div class="wrapper option-1 option-1-1">
                                             <ol class="c-stepper">
                                                 <li class="c-stepper__item {{ $data['merchantstatus'] ? 'c-stepper__item__active' : ''}}">
-                                                    <h3 class="c-stepper__title">Activate the Account by Removing Test Mode</h3>
+                                                    <h3 class="c-stepper__title">Activate Account</h3>
                                                     {{-- <p class="c-stepper__desc">Some desc text</p> --}}
                                                 </li>
-
                                                 <li class="c-stepper__item {{ $data['trial'] ? 'c-stepper__item__active' : ''}}">
-                                                    <h3 class="c-stepper__title">30-Days Free Trial</h3>
+                                                    <h3 class="c-stepper__title">30-Days Free Trials</h3>
                                                     {{-- <p class="c-stepper__desc">Some desc text</p> --}}
                                                 </li>
                                                 <li class="c-stepper__item {{ $data['myplan'] ? 'c-stepper__item__active' : ''}}">
-                                                    <h3 class="c-stepper__title">Account on Sub. Plan</h3>
+                                                    <h3 class="c-stepper__title">Completed</h3>
                                                     <p class="c-stepper__desc" style="font-size:20px; font-weight:bold; color:red;">{{ $data ['myplan']->plan}}</p>
                                                 </li>
                                             </ol>
