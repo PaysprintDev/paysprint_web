@@ -190,16 +190,23 @@
                                         </div>
                                     </div>
 
+                                    @if ($data['paymentgateway']->gateway == 'Dusupay' && Auth::user()->country
+                                    != 'Ghana')
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission" checked disabled> Include fee</p>
+
+                                        </div>
+                                    </div>
+                                    @else
                                     <div class="form-group">
                                         <div class="input-group">
                                             <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission"> Include fee</p>
 
                                         </div>
                                     </div>
-
-
-
-
+                                    @endif
 
                                     <div class="form-group"> <label for="netwmount">
                                             <h6>Net Amount <br><small class="text-success disp-0"><b>This is the total
@@ -884,6 +891,7 @@
                     "currency": currencyCode,
                     "api_key": publicKey,
                     "redirect_url": callbackUrl,
+                    "mobile_money_hpp": true,
                     "method": "MOBILE_MONEY",
                     "provider_id": providerId,
                     "account_number": accountnumber,
@@ -893,7 +901,7 @@
 
                 var config = {
                     method: 'post',
-                    url: `{{env('DUSUPAY_PAYMENT_URL_DEV')}}`,
+                    url: `{{ env('APP_ENV') == 'local' ? env('DUSUPAY_PAYMENT_URL_DEV') : env('DUSUPAY_PAYMENT_URL_PROD') }}`,
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -908,10 +916,10 @@
                 $('.cardSubmit').text('Confirm');
 
 
-                // console.log(response);
-                // setTimeout(() => {
-                //     location.href = response.data.data.payment_url;
-                // }, 1000);
+
+                setTimeout(() => {
+                    location.href = response.data.data.payment_url;
+                }, 1000);
 
             } catch (error) {
                 $('.cardSubmit').text('Confirm');
@@ -977,7 +985,7 @@
 
                 var config = {
                     method: 'post',
-                    url: `{{env('DUSUPAY_PAYMENT_URL_DEV')}}`,
+                    url: `{{ env('APP_ENV') == 'local' ? env('DUSUPAY_PAYMENT_URL_DEV') : env('DUSUPAY_PAYMENT_URL_PROD') }}`,
                     headers: {
                         'Content-Type': 'application/json'
                     },

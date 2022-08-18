@@ -7,13 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
-        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
     <!-- Favicon -->
-    <link rel="icon"
-        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
-        type="image/x-icon" />
+    <link rel="icon" href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg" type="image/x-icon" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 
@@ -69,8 +66,7 @@
                         <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
                             <!-- Credit card form tabs -->
                             <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
-                                <li class="nav-item"> <a data-toggle="pill" href="{{ route('my account') }}"
-                                        class="nav-link active "> <i class="fas fa-home"></i> Go Back </a> </li>
+                                <li class="nav-item"> <a data-toggle="pill" href="{{ route('my account') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a> </li>
                                 {{-- <li class="nav-item"> <a data-toggle="pill" href="#paypal" class="nav-link "> <i
                                             class="fab fa-paypal mr-2"></i> Debit Card </a> </li>
                                 <li class="nav-item"> <a data-toggle="pill" href="#net-banking" class="nav-link "> <i
@@ -82,14 +78,11 @@
 
 
                             @if (isset($data))
-
-                            {{-- 234-90695 --}}
-
                             <!-- credit card info-->
                             <div id="credit-card" class="tab-pane fade show active pt-3">
                                 <!-- condition for dusupay-->
                                 @if($data['paymentgateway']->gateway == 'Dusupay')
-                                @if ( !empty($data['providers']))
+                                @if(!empty($data['providers']))
                                 @foreach ( $data['providers'] as $providers)
                                 <form action="{{ route ('withdraw mobile') }}" method="post">
                                     @csrf
@@ -118,9 +111,7 @@
                                         <div class="input-group">
                                             <div class="input-group-append"> <span class="input-group-text text-muted">
                                                     {{ $data['currencyCode']->currencySymbol }} </span> </div>
-                                            <input type="text" name="payment_type" id="mobile_money"
-                                                class="form-control" value="{{ $providers->account_type }}" required
-                                                readonly>
+                                            <input type="text" name="payment_type" id="mobile_money" class="form-control" value="{{ $providers->account_type }}" required readonly>
 
                                         </div>
                                     </div>
@@ -161,16 +152,14 @@
                                         <div class="input-group">
                                             <div class="input-group-append"> <span class="input-group-text text-muted">
                                                     {{ $data['currencyCode']->currencySymbol }} </span> </div>
-                                            <input type="number" min="0.00" max="10000.00" step="0.01" name="amount"
-                                                id="amount" class="form-control" required>
+                                            <input type="number" min="0.00" max="10000.00" step="0.01" name="amount" id="amount" class="form-control" required>
                                         </div>
                                     </div>
 
                                     <!-- fees -->
                                     <div class="form-group disp-0">
                                         <div class="input-group">
-                                            <p style="color: red; font-weight: bold;"><input type="checkbox"
-                                                    name="commission" id="commission" checked> Include fee</p>
+                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission" checked> Include fee</p>
 
                                         </div>
                                     </div>
@@ -181,19 +170,16 @@
 
                                         </label>
                                         <div class="input-group">
-                                            <input type="text" name="amounttosend" class="form-control"
-                                                id="amounttosend" value="" placeholder="0.00" readonly>
+                                            <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group"> <label for="netwmount">
                                             <h6>Fee</h6>
                                         </label>
                                         <div class="input-group">
-                                            <input type="text" name="commissiondeduct" class="form-control"
-                                                id="commissiondeduct" value="" placeholder="0.00" readonly>
+                                            <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
 
-                                            <input type="hidden" name="totalcharge" class="form-control"
-                                                id="totalcharge" value="" placeholder="0.00" readonly>
+                                            <input type="hidden" name="totalcharge" class="form-control" id="totalcharge" value="" placeholder="0.00" readonly>
 
                                         </div>
                                     </div>
@@ -201,12 +187,12 @@
                                             <h6>Currency Conversion <br><small class="text-info"><b>Exchange
                                                         rate today according to currencylayer.com</b></small></h6>
                                             <p style="font-weight: bold;">
-                                                {{ $data['currencyCode']->currencyCode }} <=> CAD
+                                                {{ $data['currencyCode']->currencyCode }}
+                                                <=> CAD
                                             </p>
                                         </label>
                                         <div class="input-group">
-                                            <input type="text" name="conversionamount" class="form-control"
-                                                id="conversionamount" value="" placeholder="0.00" readonly>
+                                            <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
                                         </div>
                                     </div>
                                     <hr>
@@ -226,9 +212,7 @@
                                         </label>
                                         <div class="input-group">
                                             <div class="input-group-append"> <span class="input-group-text text-muted">
-                                                    <i class="fas fa-lock"></i> </span> </div> <input type="password"
-                                                name="transaction_pin" id="transaction_pin" class="form-control"
-                                                maxlength="4" required>
+                                                    <i class="fas fa-lock"></i> </span> </div> <input type="password" name="transaction_pin" id="transaction_pin" class="form-control" maxlength="4" required>
 
                                         </div>
                                     </div>
@@ -244,12 +228,8 @@
                                                     <h6>New Transaction Pin</h6>
                                                 </label>
                                                 <div class="input-group">
-                                                    <div class="input-group-append"> <span
-                                                            class="input-group-text text-muted"> <i
-                                                                class="fas fa-lock"></i> </span> </div>
-                                                    <input type="password" name="transaction_pin"
-                                                        id="new_transaction_pin" class="form-control" maxlength="4"
-                                                        required>
+                                                    <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-lock"></i> </span> </div>
+                                                    <input type="password" name="transaction_pin" id="new_transaction_pin" class="form-control" maxlength="4" required>
 
                                                 </div>
                                             </div>
@@ -260,12 +240,8 @@
                                                     <h6>Confirm Transaction Pin</h6>
                                                 </label>
                                                 <div class="input-group">
-                                                    <div class="input-group-append"> <span
-                                                            class="input-group-text text-muted"> <i
-                                                                class="fas fa-lock"></i> </span> </div>
-                                                    <input type="password" name="confirm_transaction_pin"
-                                                        id="confirm_transaction_pin" class="form-control" maxlength="4"
-                                                        required>
+                                                    <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-lock"></i> </span> </div>
+                                                    <input type="password" name="confirm_transaction_pin" id="confirm_transaction_pin" class="form-control" maxlength="4" required>
 
                                                 </div>
                                             </div>
@@ -279,11 +255,8 @@
                                                             you</small></h6>
                                                 </label>
                                                 <div class="input-group">
-                                                    <div class="input-group-append"> <span
-                                                            class="input-group-text text-muted"> <i
-                                                                class="fas fa-lock"></i> </span> </div>
-                                                    <input type="password" name="password" id="password"
-                                                        class="form-control" required>
+                                                    <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-lock"></i> </span> </div>
+                                                    <input type="password" name="password" id="password" class="form-control" required>
 
                                                 </div>
                                             </div>
@@ -291,19 +264,18 @@
                                     </div>
                                     @endif
                                     <!-- end of transaction pin -->
-                                    <input type="hidden" name="currencyCode" class="form-control" id="curCurrency"
-                                        value="{{ $providers->code }}" readonly>
+                                    <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $providers->code }}" readonly>
 
                                     <div class="col-md-12">
                                         <button class="btn btn-success form-control" type="submit">Submit</button>
                                     </div>
                                 </form>
                                 @endforeach
+                                @endif
                                 @else
                                 <!--else starts-->
                                 <form role="form" action="#" method="POST" id="formElem">
                                     @csrf
-
                                     <div class="form-group">
                                         <div class="alert alert-warning">
                                             <div class="row">
@@ -346,15 +318,14 @@
                                         </label>
                                         <div class="input-group">
                                             <div class="input-group-append"> <span class="input-group-text text-muted">
-                                                    <img
-                                                        src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png" />
+                                                    <img src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png" />
                                                 </span> </div>
                                             <select name="card_id" id="card_id" class="form-control" required>
                                                 {{-- @foreach ($data['getCard'] as $mycard)
                                                 <option value="{{ $mycard->id }}">{!!
-                                                    wordwrap(substr($mycard->card_number, 0, 4) . str_repeat('*',
-                                                    strlen($mycard->card_number) - 8) . substr($mycard->card_number,
-                                                    -4), 4, ' - ', true) !!}</option>
+                                                wordwrap(substr($mycard->card_number, 0, 4) . str_repeat('*',
+                                                strlen($mycard->card_number) - 8) . substr($mycard->card_number,
+                                                -4), 4, ' - ', true) !!}</option>
                                                 @endforeach --}}
                                             </select>
 
@@ -371,13 +342,9 @@
                                             <div class="form-group">
                                                 <label for="card_number">Card Number</label>
 
-                                                <div class="input-group"> <input type="text" name="card_number"
-                                                        id="card_number" class="form-control" maxlength="16" required>
+                                                <div class="input-group"> <input type="text" name="card_number" id="card_number" class="form-control" maxlength="16" required>
                                                     <div class="input-group-append">
-                                                        <span class="input-group-text text-muted"> <i
-                                                                class="fas fa-money-check mx-1"></i> <i
-                                                                class="fab fa-cc-mastercard mx-1"></i> <i
-                                                                class="fab fa-cc-amex mx-1"></i> </span>
+                                                        <span class="input-group-text text-muted"> <i class="fas fa-money-check mx-1"></i> <i class="fab fa-cc-mastercard mx-1"></i> <i class="fab fa-cc-amex mx-1"></i> </span>
                                                     </div>
                                                 </div>
 
@@ -389,8 +356,7 @@
                                                         <label for="month">Month</label>
 
                                                         <div class="input-group">
-                                                            <select name="month" id="month" class="form-control"
-                                                                required>
+                                                            <select name="month" id="month" class="form-control" required>
                                                                 <option value="01">January</option>
                                                                 <option value="02">February</option>
                                                                 <option value="03">March</option>
@@ -405,8 +371,7 @@
                                                                 <option value="12">December</option>
                                                             </select>
                                                             <div class="input-group-append">
-                                                                <span class="input-group-text text-muted"> <i
-                                                                        class="fas fa-table"></i> </span>
+                                                                <span class="input-group-text text-muted"> <i class="fas fa-table"></i> </span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -415,14 +380,12 @@
 
                                                         <div class="input-group">
                                                             <select name="year" id="year" class="form-control" required>
-                                                                @for ($i = date('y'); $i <= date('y') + 10; $i++)
-                                                                    <option value="{{ $i }}">
+                                                                @for ($i = date('y'); $i <= date('y') + 10; $i++) <option value="{{ $i }}">
                                                                     {{ '20' . $i }}</option>
                                                                     @endfor
                                                             </select>
                                                             <div class="input-group-append">
-                                                                <span class="input-group-text text-muted"> <i
-                                                                        class="fas fa-calendar-week"></i>
+                                                                <span class="input-group-text text-muted"> <i class="fas fa-calendar-week"></i>
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -432,11 +395,9 @@
                                                                 digit at the back of your card</small></label>
 
                                                         <div class="input-group">
-                                                            <input type="password" name="cvv" id="cvv"
-                                                                class="form-control" maxlength="3" required>
+                                                            <input type="password" name="cvv" id="cvv" class="form-control" maxlength="3" required>
                                                             <div class="input-group-append">
-                                                                <span class="input-group-text text-muted"> <i
-                                                                        class="fas fa-closed-captioning"></i>
+                                                                <span class="input-group-text text-muted"> <i class="fas fa-closed-captioning"></i>
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -449,8 +410,7 @@
 
 
                                             <div class="form-group">
-                                                <button type="button" class="btn btn-primary btn-block"
-                                                    onclick="handShake('addcard')" id="cardSubmit">Submit</button>
+                                                <button type="button" class="btn btn-primary btn-block" onclick="handShake('addcard')" id="cardSubmit">Submit</button>
                                             </div>
 
                                         </form>
@@ -465,8 +425,7 @@
                                         <div class="input-group">
                                             <div class="input-group-append"> <span class="input-group-text text-muted">
                                                     {{ $data['currencyCode']->currencySymbol }} </span> </div>
-                                            <input type="number" min="0.00" max="10000.00" step="0.01" name="amount"
-                                                id="amount" class="form-control" required>
+                                            <input type="number" min="0.00" max="10000.00" step="0.01" name="amount" id="amount" class="form-control" required>
 
                                         </div>
                                     </div>
@@ -474,8 +433,7 @@
 
                                     <div class="form-group disp-0">
                                         <div class="input-group">
-                                            <p style="color: red; font-weight: bold;"><input type="checkbox"
-                                                    name="commission" id="commission" checked> Include fee</p>
+                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission" checked> Include fee</p>
 
                                         </div>
                                     </div>
@@ -486,19 +444,16 @@
 
                                         </label>
                                         <div class="input-group">
-                                            <input type="text" name="amounttosend" class="form-control"
-                                                id="amounttosend" value="" placeholder="0.00" readonly>
+                                            <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group"> <label for="netwmount">
                                             <h6>Fee</h6>
                                         </label>
                                         <div class="input-group">
-                                            <input type="text" name="commissiondeduct" class="form-control"
-                                                id="commissiondeduct" value="" placeholder="0.00" readonly>
+                                            <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
 
-                                            <input type="hidden" name="totalcharge" class="form-control"
-                                                id="totalcharge" value="" placeholder="0.00" readonly>
+                                            <input type="hidden" name="totalcharge" class="form-control" id="totalcharge" value="" placeholder="0.00" readonly>
 
                                         </div>
                                     </div>
@@ -507,12 +462,12 @@
                                             <h6>Currency Conversion <br><small class="text-info"><b>Exchange
                                                         rate today according to currencylayer.com</b></small></h6>
                                             <p style="font-weight: bold;">
-                                                {{ $data['currencyCode']->currencyCode }} <=> CAD
+                                                {{ $data['currencyCode']->currencyCode }}
+                                                <=> CAD
                                             </p>
                                         </label>
                                         <div class="input-group">
-                                            <input type="text" name="conversionamount" class="form-control"
-                                                id="conversionamount" value="" placeholder="0.00" readonly>
+                                            <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
                                         </div>
                                     </div>
 
@@ -534,9 +489,7 @@
                                         </label>
                                         <div class="input-group">
                                             <div class="input-group-append"> <span class="input-group-text text-muted">
-                                                    <i class="fas fa-lock"></i> </span> </div> <input type="password"
-                                                name="transaction_pin" id="transaction_pin" class="form-control"
-                                                maxlength="4" required>
+                                                    <i class="fas fa-lock"></i> </span> </div> <input type="password" name="transaction_pin" id="transaction_pin" class="form-control" maxlength="4" required>
 
                                         </div>
                                     </div>
@@ -552,12 +505,8 @@
                                                     <h6>New Transaction Pin</h6>
                                                 </label>
                                                 <div class="input-group">
-                                                    <div class="input-group-append"> <span
-                                                            class="input-group-text text-muted"> <i
-                                                                class="fas fa-lock"></i> </span> </div>
-                                                    <input type="password" name="transaction_pin"
-                                                        id="new_transaction_pin" class="form-control" maxlength="4"
-                                                        required>
+                                                    <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-lock"></i> </span> </div>
+                                                    <input type="password" name="transaction_pin" id="new_transaction_pin" class="form-control" maxlength="4" required>
 
                                                 </div>
                                             </div>
@@ -568,12 +517,8 @@
                                                     <h6>Confirm Transaction Pin</h6>
                                                 </label>
                                                 <div class="input-group">
-                                                    <div class="input-group-append"> <span
-                                                            class="input-group-text text-muted"> <i
-                                                                class="fas fa-lock"></i> </span> </div>
-                                                    <input type="password" name="confirm_transaction_pin"
-                                                        id="confirm_transaction_pin" class="form-control" maxlength="4"
-                                                        required>
+                                                    <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-lock"></i> </span> </div>
+                                                    <input type="password" name="confirm_transaction_pin" id="confirm_transaction_pin" class="form-control" maxlength="4" required>
 
                                                 </div>
                                             </div>
@@ -587,11 +532,8 @@
                                                             you</small></h6>
                                                 </label>
                                                 <div class="input-group">
-                                                    <div class="input-group-append"> <span
-                                                            class="input-group-text text-muted"> <i
-                                                                class="fas fa-lock"></i> </span> </div>
-                                                    <input type="password" name="password" id="password"
-                                                        class="form-control" required>
+                                                    <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-lock"></i> </span> </div>
+                                                    <input type="password" name="password" id="password" class="form-control" required>
 
                                                 </div>
                                             </div>
@@ -600,18 +542,15 @@
                                     @endif
 
 
-                                    <input type="hidden" name="currencyCode" class="form-control" id="curCurrency"
-                                        value="{{ $data['currencyCode']->currencyCode }}" readonly>
+                                    <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode']->currencyCode }}" readonly>
 
-                                    <input type="hidden" name="mode" class="form-control" id="mode" value="live"
-                                        readonly>
+                                    <input type="hidden" name="mode" class="form-control" id="mode" value="live" readonly>
 
                                     <div class="card-footer">
 
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <button type="button" onclick="handShake('withdrawmoney')"
-                                                    class="subscribe btn btn-primary btn-block shadow-sm withdrawmoneyBtn">
+                                                <button type="button" onclick="handShake('withdrawmoney')" class="subscribe btn btn-primary btn-block shadow-sm withdrawmoneyBtn">
                                                     Withdraw Money </button>
                                             </div>
                                         </div>
@@ -620,8 +559,9 @@
                                     </div>
 
                                 </form>
+                                @endif
                             </div>
-                            @endif
+
                             <!--ends here -->
                             @else
                             <div class="alert alert-danger">
@@ -629,8 +569,11 @@
                             </div>
 
                             @endif
-                        @endif
+
                         </div> <!-- End -->
+
+
+
 
                     </div>
                 </div>
@@ -643,8 +586,7 @@
         @include('include.message')
 
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"
-            integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
         </script>
 
         <script src="{{ asset('pace/pace.min.js') }}"></script>
