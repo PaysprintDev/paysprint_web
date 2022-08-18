@@ -208,9 +208,6 @@
                                     </div>
                                     @endif
 
-
-
-
                                     <div class="form-group"> <label for="netwmount">
                                             <h6>Net Amount <br><small class="text-success disp-0"><b>This is the total
                                                         amount to be received</b></small></h6>
