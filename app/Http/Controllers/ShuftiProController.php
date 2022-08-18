@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AllCountries;
 use App\Traits\ShuftiPro;
 use App\ShuftiProRecord;
 use App\User;
@@ -74,6 +75,25 @@ class ShuftiProController extends Controller
                 return true;
             }
             return false;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+
+    // Get Available Countries
+
+    public function shuftiAvailableCountries(String $country)
+    {
+        try {
+            $data = AllCountries::where('name', $country)->first();
+
+            if($data->verification_tool === 'ShuftiPro'){
+                return true;
+            }
+
+            return false;
+
         } catch (\Throwable $th) {
             throw $th;
         }

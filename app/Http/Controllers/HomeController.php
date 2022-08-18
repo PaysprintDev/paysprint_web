@@ -163,7 +163,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback', 'displayCountry', 'searchCountry', 'ajaxgetwalletBalance']]);
+        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback', 'displayCountry', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts']]);
 
         $location = $this->myLocation();
 
@@ -228,7 +228,11 @@ class HomeController extends Controller
 
             $this->page = 'Homepage';
             $this->name = '';
+            // Default...
             $view = 'main.newpage.shade-pro.index';
+
+            // Merchant Renew to default...
+            // $view = 'main.newpage.shade-pro.merchantindex';
             $data = [
                 'continent' => $this->timezone[0],
                 'availablecountry' => $allcountry
@@ -287,6 +291,19 @@ class HomeController extends Controller
         ];
 
         return view('main.newpage.shade-pro.merchantindex')->with(['pages' => $this->page, 'data' => $data]);
+    }
+
+
+    public function getStartedAccounts()
+    {
+        $allcountry = AllCountries::where('approval', 1)->get();
+
+        $this->page = 'Get Started';
+        $data = [
+            'availablecountry' => $allcountry
+        ];
+
+        return view('main.newpage.shade-pro.account')->with(['pages' => $this->page, 'data' => $data]);
     }
 
     public function index()
@@ -4800,7 +4817,7 @@ class HomeController extends Controller
                         $this->sendEmail($this->email, "Fund remittance");
                     }
 
-                    if (env('APP_ENV') === 'local') {
+                    if (env('APP_ENV') !== 'local') {
                         $dob = Auth::user()->yearOfBirth . "-" . Auth::user()->monthOfBirth . "-" . Auth::user()->dayOfBirth;
 
                         $thisusersname = explode(" ", Auth::user()->name);
@@ -4813,13 +4830,16 @@ class HomeController extends Controller
 
                         $shuftiVerify = new ShuftiProController();
 
-                        $checkAmlVerification = $shuftiVerify->callAmlCheck(Auth::user()->ref_code, $dob, $getUsername, Auth::user()->email, $countryApproval->code);
+                        $checkAvalable = $shuftiVerify->shuftiAvailableCountries(Auth::user()->country);
 
+                        if($checkAvalable === true){
+                            $checkAmlVerification = $shuftiVerify->callAmlCheck(Auth::user()->ref_code, $dob, $getUsername, Auth::user()->email, $countryApproval->code);
 
-                        if ($checkAmlVerification->event !== 'verification.accepted') {
-                            User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
-                        } else {
-                            User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
+                                if ($checkAmlVerification->event !== 'verification.accepted') {
+                                    User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
+                                } else {
+                                    User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
+                                }
                         }
                     }
                 } else {

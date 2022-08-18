@@ -200,6 +200,16 @@
                                                             <hr>
                                                         @endif
 
+                                                        @if ($datainfo->idvdoc != null)
+                                                                <small style="font-weight: bold;">
+                                                                    Other Document : @if ($datainfo->idvdoc != null)
+                                                                        <a href="{{ $datainfo->idvdoc }}"
+                                                                            target="_blank">View Document</a>
+                                                                        @endif
+                                                                </small>
+                                                                <hr>
+                                                            @endif
+
 
 
                                                         <small style="font-weight: bold;">

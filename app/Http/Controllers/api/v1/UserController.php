@@ -263,7 +263,7 @@ class UserController extends Controller
                     $this->sendEmail($this->email, "Fund remittance");
                 }
 
-                if(env('APP_ENV') === 'local'){
+                if(env('APP_ENV') !== 'local'){
                     $dob = $getcurrentUser->yearOfBirth . "-" . $getcurrentUser->monthOfBirth . "-" . $getcurrentUser->dayOfBirth;
 
                 $thisusersname = explode(" ", $getcurrentUser->name);
@@ -276,14 +276,18 @@ class UserController extends Controller
 
                 $shuftiVerify = new \App\Http\Controllers\ShuftiProController();
 
-                $checkAmlVerification = $shuftiVerify->callAmlCheck($getcurrentUser->ref_code, $dob, $getUsername, $getcurrentUser->email, $countryApproval->code);
+                 $checkAvalable = $shuftiVerify->shuftiAvailableCountries($getcurrentUser->country);
 
+                        if($checkAvalable === true){
+                            $checkAmlVerification = $shuftiVerify->callAmlCheck($getcurrentUser->ref_code, $dob, $getUsername, $getcurrentUser->email, $countryApproval->code);
 
-                if ($checkAmlVerification->event !== 'verification.accepted') {
-                    User::where('id', $getcurrentUser->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
-                } else {
-                    User::where('id', $getcurrentUser->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
-                }
+                                if ($checkAmlVerification->event !== 'verification.accepted') {
+                                    User::where('id', $getcurrentUser->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
+                                } else {
+                                    User::where('id', $getcurrentUser->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
+                                }
+                        }
+
                 }
 
             } else {

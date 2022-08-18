@@ -184,6 +184,17 @@
                                                             @endif
 
 
+                                                            @if ($datainfo->idvdoc != null)
+                                                                <small style="font-weight: bold;">
+                                                                    Other Document : @if ($datainfo->idvdoc != null)
+                                                                        <a href="{{ $datainfo->idvdoc }}"
+                                                                            target="_blank">View Document</a>
+                                                                        @endif
+                                                                </small>
+                                                                <hr>
+                                                            @endif
+
+
 
                                                         </td>
 
@@ -305,69 +316,9 @@
                                                     </tr>
 
 
-                                                    {{-- Start Modal --}}
 
+                                                    @include('admin.uploaddocmodal')
 
-                                                    <!-- Button trigger modal -->
-                                                    <button type="button" class="btn btn-primary disp-0"
-                                                        data-toggle="modal"
-                                                        data-target="#launchFileUpload{{ $datainfo->id }}"
-                                                        id="launchButton{{ $datainfo->id }}">
-                                                        Launch demo modal
-                                                    </button>
-
-
-                                                    <form action="{{ route('upload user doc') }}" method="POST"
-                                                        enctype="multipart/form-data"
-                                                        id="uploadthisform{{ $datainfo->id }}">
-                                                        @csrf
-                                                        <!-- Modal -->
-                                                        <div class="modal fade"
-                                                            id="launchFileUpload{{ $datainfo->id }}" tabindex="-1"
-                                                            role="dialog" aria-labelledby="launchFileUploadTitle"
-                                                            aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered"
-                                                                role="document">
-
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h3 class="modal-title"
-                                                                            id="exampleModalLongTitle">
-                                                                            {{ $datainfo->name }}</h3>
-                                                                        <button type="button" class="close"
-                                                                            data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                    </div>
-
-                                                                    <div class="modal-body">
-                                                                        <input type="file" name="image"
-                                                                            id="uploadContent{{ $datainfo->id }}"
-                                                                            class="form-control">
-                                                                        <input type="hidden" name="user_id"
-                                                                            value="{{ $datainfo->id }}">
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary"
-                                                                            data-dismiss="modal">Close</button>
-                                                                        <button type="button" class="btn btn-primary"
-                                                                            id="uploadBtn{{ $datainfo->id }}"
-                                                                            onclick="uploadDocsForUser('uploadthisform', '{{ $datainfo->id }}')">Upload</button>
-                                                                    </div>
-
-                                                                </div>
-
-
-                                                            </div>
-                                                        </div>
-
-                                                    </form>
-
-
-
-
-
-                                                    {{-- End Modal --}}
                                                 @endforeach
                                             @else
                                                 <tr>

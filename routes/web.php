@@ -221,6 +221,8 @@ Route::get('/estore', ['uses' => 'HomeController@estores', 'as' => 'paysprint es
 
 Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 'merchant home']);
 
+Route::get('/accounts', ['uses' => 'HomeController@getStartedAccounts', 'as' => 'accounts']);
+
 Route::get('/home', ['uses' => 'HomeController@authIndex', 'as' => 'user home']);
 Route::get('/referred', ['uses' => 'HomeController@referredDetails', 'as' => 'referred details']);
 
