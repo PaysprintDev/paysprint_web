@@ -901,7 +901,7 @@
 
                 var config = {
                     method: 'post',
-                    url: `{{env('DUSUPAY_PAYMENT_URL_DEV')}}`,
+                    url: `{{ env('APP_ENV') == 'local' ? env('DUSUPAY_PAYMENT_URL_DEV') : env('DUSUPAY_PAYMENT_URL_PROD') }}`,
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -985,7 +985,7 @@
 
                 var config = {
                     method: 'post',
-                    url: `{{env('DUSUPAY_PAYMENT_URL_DEV')}}`,
+                    url: `{{ env('APP_ENV') == 'local' ? env('DUSUPAY_PAYMENT_URL_DEV') : env('DUSUPAY_PAYMENT_URL_PROD') }}`,
                     headers: {
                         'Content-Type': 'application/json'
                     },
