@@ -190,13 +190,23 @@
                                         </div>
                                     </div>
 
+                                    @if ($data['paymentgateway']->gateway == 'Dusupay' && Auth::user()->country
+                                    != 'Ghana')
+
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission" checked disabled> Include fee</p>
+
+                                        </div>
+                                    </div>
+                                    @else
                                     <div class="form-group">
                                         <div class="input-group">
                                             <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission"> Include fee</p>
 
                                         </div>
                                     </div>
-
+                                    @endif
 
 
 
@@ -909,10 +919,10 @@
                 $('.cardSubmit').text('Confirm');
 
 
-                // console.log(response);
-                // setTimeout(() => {
-                //     location.href = response.data.data.payment_url;
-                // }, 1000);
+
+                setTimeout(() => {
+                    location.href = response.data.data.payment_url;
+                }, 1000);
 
             } catch (error) {
                 $('.cardSubmit').text('Confirm');

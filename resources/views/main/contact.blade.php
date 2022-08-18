@@ -299,19 +299,6 @@
                                 <div class='zcwf_col_help'></div>
                             </div>
                         </div>
-                        <div class="zcwf_row">
-                            <div class='zcwf_col_lab' style='font-size:12px; font-family: Arial;'><label for='Company'>Subject<span style='color:red;'>*</span></label>
-                            </div>
-                            <div class='zcwf_col_fld'>
-                                <select class='form-control' name='subject' required>
-                                    <option name="idv">Identity Verification</option>
-                                    <option name="">Technical Support</option>
-                                    <option></option>
-                                </select>
-                                <div class='zcwf_col_help'></div>
-                            </div>
-
-                        </div>
                         <div class='zcwf_row'>
                             <div class='zcwf_col_lab' style='font-size:12px; font-family: Arial;'><label for='Description'>Description<span style='color:red;'>*</span></label></div>
                             <div class='zcwf_col_fld'>
