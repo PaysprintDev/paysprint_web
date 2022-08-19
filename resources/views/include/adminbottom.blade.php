@@ -2520,6 +2520,66 @@ C</div>
     }
 
 
+    function payBank(id) {
+
+        var route = "{{ URL('Ajax/paybankwithdrawal') }}";
+        var thisdata = {
+            id: id
+        };
+        var spinner = $('.spin' + id);
+
+
+        swal({
+                title: "Are you sure?",
+                text: "Please make sure you have confirmed user information before you proceed",
+                icon: "info",
+                buttons: true,
+                dangerMode: false,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    setHeaders();
+                    jQuery.ajax({
+                        url: route,
+                        method: 'post',
+                        data: thisdata,
+                        dataType: 'JSON',
+                        beforeSend: function() {
+                            spinner.removeClass('disp-0');
+                        },
+                        success: function(result) {
+                            spinner.addClass('disp-0');
+
+                            if (result.message == "success") {
+
+                                swal(result.title, result.res, result.message);
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 2000);
+
+                            } else {
+                                swal(result.title, result.res, result.message);
+                            }
+
+
+                        },
+                        error: function(err) {
+                            spinner.addClass('disp-0');
+                            swal("Oops!", err.responseJSON.message, "error");
+                        }
+
+
+                    });
+
+                }
+            });
+
+
+
+
+    }
+
+
     function payCard(id) {
         var route = "{{ URL('Ajax/paycardwithdrawal') }}";
         var thisdata = {

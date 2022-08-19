@@ -65,16 +65,24 @@ class ShuftiProController extends Controller
 
 
     // Check for Verification Payment..
-    public function shuftiProPaymentVerification(String $userId)
+    public function shuftiProPaymentVerification(String $userId, String $currencyCode)
     {
         try {
+
+            $deductCurrencies = ["USD", "EUR", "GBP"];
+
+            dd(in_array($currencyCode, $deductCurrencies));
 
             $thisuser = User::where('ref_code', $userId)->first();
 
             if($thisuser->shuftiproservice == 1){
                 return true;
             }
-            return false;
+
+            if(in_array($currencyCode, $deductCurrencies) && $thisuser->shuftiproservice == 0){
+                return false;
+            }
+
         } catch (\Throwable $th) {
             throw $th;
         }

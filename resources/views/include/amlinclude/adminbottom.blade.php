@@ -2293,7 +2293,9 @@
     });
 
 
+
     function payBank(id) {
+
         var route = "{{ URL('Ajax/paybankwithdrawal') }}";
         var thisdata = {
             id: id

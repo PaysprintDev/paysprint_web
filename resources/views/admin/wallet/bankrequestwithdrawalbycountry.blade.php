@@ -30,7 +30,7 @@
                 <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
             </div>
             </div>
-              
+
             </div>
             <!-- /.box-header -->
             <div class="box-body table table-responsive">
@@ -97,8 +97,8 @@
                             <td style="font-weight: bold; color: {{ $data->status == "PENDING" ? "red" : "green" }}">{{ $data->status }}</td>
 
                             @endif
-                            
-                            
+
+
                             <td>
                                 {{ date('d/M/Y h:i:a', strtotime($data->created_at)) }}
                             </td>

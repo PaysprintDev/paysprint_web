@@ -4729,7 +4729,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                         // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
-                        $this->chargeForShuftiProVerification($thisuser->ref_code);
+                        $this->chargeForShuftiProVerification($thisuser->ref_code, $thisuser->currencyCode);
 
                         $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
@@ -5091,7 +5091,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                     // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
-                                    $this->chargeForShuftiProVerification($thisuser->ref_code);
+                                    $this->chargeForShuftiProVerification($thisuser->ref_code, $thisuser->currencyCode);
 
                                     $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
@@ -5219,7 +5219,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $this->updatePoints($thisuser->id, 'Add money');
 
 
-                                    $this->chargeForShuftiProVerification($thisuser->ref_code);
+                                    $this->chargeForShuftiProVerification($thisuser->ref_code, $thisuser->currencyCode);
                                     // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
                                     $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
@@ -5358,7 +5358,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                 // Log::info('Congratulations!, '.$thisuser->name.' '.$sendMsg);
 
-                                $this->chargeForShuftiProVerification($thisuser->ref_code);
+                                $this->chargeForShuftiProVerification($thisuser->ref_code, $thisuser->currencyCode);
 
                                 $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
@@ -5408,16 +5408,19 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
     // Charge money for shufti pro verification
 
-    public function chargeForShuftiProVerification($ref_code)
+    public function chargeForShuftiProVerification()
     {
+
+        $ref_code = '69212'; $currencyCode = 'USD';
+
 
         $shuftiPro = new ShuftiProController();
         $converter = new CurrencyConverterApiController();
 
-        // Shuftipro charge in USD 0.9;
-        $charge = 0.9;
+        // Shuftipro charge in USD 4;
+        $charge = 4;
 
-        $checkStatus = $shuftiPro->shuftiProPaymentVerification($ref_code);
+        $checkStatus = $shuftiPro->shuftiProPaymentVerification($ref_code, $currencyCode);
 
         if ($checkStatus === false) {
 
