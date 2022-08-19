@@ -67,11 +67,8 @@ class SendGridController extends Controller
 
         try {
 
-            $thisuser = User::inRandomOrder()->take(2)->get();
+            $thisuser = User::take(2)->get();
             $promodate = PromoDate::first();
-
-
-            //  dd($promodate);
 
             if (count($thisuser) > 0) {
 
@@ -79,7 +76,7 @@ class SendGridController extends Controller
 
 
                 foreach ($thisuser as $user) {
-                    $promopoint = Walletcredit::where('user_id', $user->id)->where('reason', 'promo')->sum('wallet_credit');
+
                     $totalreferred  = User::where('referred_by', $user->ref_code)->count('referred_by');
 
                     $username = explode(" ", $user->name);
@@ -99,8 +96,10 @@ class SendGridController extends Controller
 
                     if (isset($point)) {
                         $setPointClaimed = $point->points_claimed;
+                        $credit = $point->amount;
                     }
 
+                    $promopoint = $promodate->amount;
 
                     $point_acquired = $setPointClaimed;
 
@@ -133,12 +132,16 @@ class SendGridController extends Controller
                       <td>$referralbalance</td>
                      </tr>
                      <tr style:'text-align:left'>
-                     <td>Promo Credit-</td>
-                     <td>$promopoint$currency</td>
+                     <td>Referral Credit-</td>
+                     <td>$credit$currency</td>
+                    </tr>
+                     <tr style:'text-align:left'>
+                     <td>Promo Point-</td>
+                     <td>$promopoint</td>
                     </tr>
                      <br>
-                     <p>Redeem Your Referral Points when you have more than 500 points and above for a wallet of $pointsclaim$currency.</p>
 
+                     <p>Redeem Your Referral Points when you have 500 points and above for a wallet of $pointsclaim$currency.</p>
                     </table><hr/>",
 
                         ];
@@ -152,7 +155,7 @@ class SendGridController extends Controller
 
                             $data["promotion"] = "
                     <img style='text-align:center;' src='https://paysprint.ca/images/paysprint_logo/specialpromologo.png' alt='promo' width='150' height='100'>
-                    <p><strong>PaySprint Special Promo: </strong></p>
+                    <p><strong>PaySprint Refer+Earn Special Promo: </strong></p>
                     <p>$promodetails</p>
                     <table>
                     <tr style:'text-align:left'>
@@ -195,11 +198,15 @@ class SendGridController extends Controller
                      </tr>
                      <tr style:'text-align:left'>
                      <td>Promo Credit-</td>
-                     <td>$promopoint$currency</td>
+                     <td>$credit$currency</td>
+                    </tr>
+                     <tr style:'text-align:left'>
+                     <td>Promo Credit-</td>
+                     <td>$promopoint</td>
                     </tr>
                      <br>
-                     <p>Redeem Your Referral Points when you have more than 500 points and above for a wallet of $referralclaim$currency.</p>
 
+                     <p>Redeem Your Referral Points when you have  500 points and above for a wallet of $referralclaim$currency.</p>
                     </table><hr/>",
 
                         ];
@@ -213,7 +220,7 @@ class SendGridController extends Controller
 
                             $data["promotion"] = "
                     <img style='text-align:center;' src='https://paysprint.ca/images/paysprint_logo/specialpromologo.png' alt='promo' width='150' height='100' text-align ='center'>
-                    <p><strong>PaySprint Special Promo: </strong></p>
+                    <p><strong>PaySprint Refer+Earn Special Promo: </strong></p>
                     <p>$promodetails</p>
                     <table>
                     <tr style:'text-align:left'>
@@ -252,7 +259,8 @@ class SendGridController extends Controller
 
         try {
 
-            $thisuser = User::inRandomOrder()->take(5)->get();
+
+            $thisuser = User::inRandomOrder()->take(200)->get();
 
 
             if (count($thisuser) > 0) {
@@ -286,8 +294,8 @@ class SendGridController extends Controller
 
 
 
-                    //    $receiver = $user->email;
-                    $receiver = "olasunkanmimunirat@gmail.com";
+                     $receiver = $user->email;
+
 
 
                     $date = date('d/M/Y', strtotime($user->created_at));
@@ -549,36 +557,34 @@ class SendGridController extends Controller
     }
 
 
-    public function userList(Array $businesses, String $country)
+    public function userList(array $businesses, String $country)
     {
-       $user = User::where('country', $country)->get();
+        $user = User::where('country', $country)->get();
 
 
-       for ($i = 0; $i < count($user); $i++) {
+        for ($i = 0; $i < count($user); $i++) {
 
 
-        $receiver = $user[$i]['email'];
+            $receiver = $user[$i]['email'];
 
 
-        $businesses['name'] = $user[$i]['name'];
-
-
-
-
-        echo $receiver.' ! '.$user[$i]['country'] . "<hr>";
-
-        var_dump($businesses);
-
-        echo "<hr>";
+            $businesses['name'] = $user[$i]['name'];
 
 
 
-        // $template_id = config('constants.sendgrid.publicize_merchant');
 
-        // $response = $this->sendGridDynamicMail($receiver, $businesses, $template_id);
+            echo $receiver . ' ! ' . $user[$i]['country'] . "<hr>";
 
-       }
+            var_dump($businesses);
+
+            echo "<hr>";
 
 
+
+            // $template_id = config('constants.sendgrid.publicize_merchant');
+
+            // $response = $this->sendGridDynamicMail($receiver, $businesses, $template_id);
+
+        }
     }
 }
