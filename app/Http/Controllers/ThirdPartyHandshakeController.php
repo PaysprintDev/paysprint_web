@@ -491,4 +491,22 @@ class ThirdPartyHandshakeController extends Controller
 
         return $this->returnJSON($resData, $status);
     }
+
+
+    public function merchantFeeCharge(String $country, String $method)
+    {
+        try {
+            $record = new AdminController();
+
+            $data = $record->transactionChargeFees($country, 'Add Funds/Money', $method);
+
+        } catch (\Throwable $th) {
+            $data = [];
+        }
+
+        return $data;
+    }
+
+
+
 }

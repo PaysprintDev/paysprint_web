@@ -13425,7 +13425,7 @@ class AdminController extends Controller
             ]);
             ReferralClaim::where('id', $user)->update([
                 'status' => 'Completed',
-                'amount'=>   $referralclaim
+                'amount' =>   $referralclaim
             ]);
         }
 
@@ -15805,12 +15805,14 @@ class AdminController extends Controller
 
                     // Check if account is flagged or pass security level
 
-                    if (isset($getMerchant->flagged) && $getMerchant->flagged == 1) {
+                    // if (isset($getMerchant->flagged) && $getMerchant->flagged == 1) {
 
-                        $resData = ['res' => 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact', 'message' => 'error'];
+                    //     $resData = ['res' => 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact', 'message' => 'error'];
 
-                        $this->createNotification($checkApikey->user_id, 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact');
-                    } elseif ($getMerchant->disableAccount == 'on') {
+                    //     $this->createNotification($checkApikey->user_id, 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact');
+                    // }
+
+                    if ($getMerchant->disableAccount == 'on') {
 
                         $resData = ['res' => 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact', 'message' => 'error'];
 
@@ -16208,18 +16210,16 @@ class AdminController extends Controller
 
                             $checkAvalable = $shuftiVerify->shuftiAvailableCountries($getMerchant->country);
 
-                            if($checkAvalable === true){
+                            if ($checkAvalable === true) {
                                 $checkAmlVerification = $shuftiVerify->callAmlCheck($getMerchant->ref_code, $dob, $getUsername, $getMerchant->email, $mycode->code);
 
 
-                            if ($checkAmlVerification->event !== 'verification.accepted') {
-                                User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
-                            } else {
-                                User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
+                                if ($checkAmlVerification->event !== 'verification.accepted') {
+                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
+                                } else {
+                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
+                                }
                             }
-                            }
-
-
                         }
 
 
@@ -16405,7 +16405,7 @@ class AdminController extends Controller
 
                                 $checkAvalable = $shuftiVerify->shuftiAvailableCountries($getMerchant->country);
 
-                                if($checkAvalable === true){
+                                if ($checkAvalable === true) {
                                     $checkAmlVerification = $shuftiVerify->callAmlCheck($getMerchant->ref_code, $dob, $getUsername, $getMerchant->email, $countryApproval->code);
 
                                     if ($checkAmlVerification->event !== 'verification.accepted') {
@@ -16414,7 +16414,6 @@ class AdminController extends Controller
                                         User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
                                     }
                                 }
-
                             }
                         } else {
 

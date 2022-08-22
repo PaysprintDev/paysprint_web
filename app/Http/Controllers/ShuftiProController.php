@@ -71,8 +71,6 @@ class ShuftiProController extends Controller
 
             $deductCurrencies = ["USD", "EUR", "GBP"];
 
-            dd(in_array($currencyCode, $deductCurrencies));
-
             $thisuser = User::where('ref_code', $userId)->first();
 
             if($thisuser->shuftiproservice == 1){

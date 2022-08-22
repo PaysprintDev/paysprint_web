@@ -4895,12 +4895,13 @@ class HomeController extends Controller
 
                 if (isset($countryApproval)) {
                     // Check if Flagged or not
-                    if ($userExists[0]['flagged'] == 1) {
+                    // if ($userExists[0]['flagged'] == 1) {
 
-                        $resData = ['res' => 'Hello ' . $userExists[0]['name'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact.', 'message' => 'error'];
+                    //     $resData = ['res' => 'Hello ' . $userExists[0]['name'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact.', 'message' => 'error'];
 
-                        $this->createNotification($userExists[0]['ref_code'], 'Hello ' . $userExists[0]['name'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact.');
-                    } elseif ($userExists[0]['disableAccount'] == 'on') {
+                    //     $this->createNotification($userExists[0]['ref_code'], 'Hello ' . $userExists[0]['name'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact.');
+                    // }
+                    if ($userExists[0]['disableAccount'] == 'on') {
 
                         $resData = ['res' => 'Hello ' . $userExists[0]['name'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact.', 'message' => 'error'];
 
@@ -6138,9 +6139,19 @@ class HomeController extends Controller
 
         if ($result->success == true) {
 
+
+
+            if($localCurrency === 'USDUSD'){
+                    $localConv = 1;
+                }
+                else{
+                    $localConv = $result->quotes->$localCurrency;
+                }
+
+            $convertLocal = $amount / $localConv;
+
             // Conversion Rate USD to Local currency
             // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
-            $convertLocal = ($amount / $result->quotes->$localCurrency);
 
             if ($currency != "USDUSD") {
                 $convRate = $result->quotes->$currency * $convertLocal;
