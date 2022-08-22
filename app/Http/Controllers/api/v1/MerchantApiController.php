@@ -3187,9 +3187,6 @@ class MerchantApiController extends Controller
                             }
 
 
-                            $feeToPS = new \App\Http\Controllers\MonthlySubController();
-
-                            $feeToPS->feeChargeCredit($thismerchant->country, $collectionFee, $thismerchant->businessname, $thismerchant->accountType);
 
 
                             $merchantgetPhone = User::where('email', $thismerchant->email)->where('telephone', 'LIKE', '%+%')->first();
