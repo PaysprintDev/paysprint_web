@@ -64,7 +64,7 @@
 @section('content')
 <!-- Hero Area -->
 <!-- Hero Area -->
-<div class="bg-default-8 pb-15 pt-24 pt-lg-32 pb-lg-28" id="hero-area-animation" style="background: #f2f2f2; !important">
+<div class="bg-default-8 pb-15 pt-24 pt-lg-32 pb-lg-28" id="hero-area-animation" style="background: #f2f2f2 !important;">
 
 
     <div class="container" id="animation-area-1">
