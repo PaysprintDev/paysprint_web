@@ -294,13 +294,13 @@
                             </div>
                         </div>
                         <div class='zcwf_row'>
-                            <div class='zcwf_col_lab' style='font-size:12px; font-family: Arial;'><label for='Company'>Company</label></div>
+                            <div class='zcwf_col_lab' style='font-size:12px; font-family: Arial;'><label for='Company'>Subject</label></div>
                             <div class='zcwf_col_fld'><input type='text' id='Company' name='Company' maxlength='200' class='form-control'></input>
                                 <div class='zcwf_col_help'></div>
                             </div>
                         </div>
                         <div class='zcwf_row'>
-                            <div class='zcwf_col_lab' style='font-size:12px; font-family: Arial;'><label for='Description'>Description<span style='color:red;'>*</span></label></div>
+                            <div class='zcwf_col_lab' style='font-size:12px; font-family: Arial;'><label for='Description'>Message<span style='color:red;'>*</span></label></div>
                             <div class='zcwf_col_fld'>
                                 <textarea id='Description' name='Description' class='form-control'></textarea>
                                 <div class='zcwf_col_help'></div>
