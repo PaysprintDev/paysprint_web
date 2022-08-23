@@ -252,7 +252,7 @@ Route::prefix('developers')->group(function () {
 	Route::post('/storeanswer', ['uses' => 'HomeController@storeSubMessage', 'as' => 'storeanswer']);
 });
 
-Route::get('/updatesubscription', ['uses' => 'AdminController@updateSubscription', 'as' => 'update subscription']);
+// Route::get('/updatesubscription', ['uses' => 'AdminController@updateSubscription', 'as' => 'update subscription']);
 
 
 Route::prefix('shop')->group(function () {
