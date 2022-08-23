@@ -716,10 +716,12 @@ use App\Http\Controllers\AllCountries; ?>
                                                     <h3 class="c-stepper__title">Activate Account</h3>
                                                     {{-- <p class="c-stepper__desc">Some desc text</p> --}}
                                                 </li>
+                                                @isset($data['trial'])
                                                 <li class="c-stepper__item {{ $data['trial'] ? 'c-stepper__item__active' : ''}}">
                                                     <h3 class="c-stepper__title">30-Days Free Trials</h3>
                                                     {{-- <p class="c-stepper__desc">Some desc text</p> --}}
                                                 </li>
+                                                @endisset
                                                 <li class="c-stepper__item {{ $data['myplan'] ? 'c-stepper__item__active' : ''}}">
                                                     <h3 class="c-stepper__title">Completed</h3>
                                                     <p class="c-stepper__desc" style="font-size:20px; font-weight:bold; color:red;">{{ $data ['myplan']->plan}}</p>
@@ -985,6 +987,7 @@ use App\Http\Controllers\AllCountries; ?>
 
     {{-- End Test Mode --}}
     @else
+   
     <div class="col-xl-12 recent-order-sec">
         <div class="card">
             <div class="card-body">
@@ -1014,6 +1017,7 @@ use App\Http\Controllers\AllCountries; ?>
                     </li>
 
                 </ul>
+
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                         <div class="table-responsive">
@@ -1071,6 +1075,7 @@ use App\Http\Controllers\AllCountries; ?>
                             </table>
                         </div>
                     </div>
+
                     <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <div class="table-responsive">
 

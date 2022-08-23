@@ -13425,7 +13425,7 @@ class AdminController extends Controller
             ]);
             ReferralClaim::where('id', $user)->update([
                 'status' => 'Completed',
-                'amount'=>   $referralclaim
+                'amount' =>   $referralclaim
             ]);
         }
 
@@ -16208,18 +16208,16 @@ class AdminController extends Controller
 
                             $checkAvalable = $shuftiVerify->shuftiAvailableCountries($getMerchant->country);
 
-                            if($checkAvalable === true){
+                            if ($checkAvalable === true) {
                                 $checkAmlVerification = $shuftiVerify->callAmlCheck($getMerchant->ref_code, $dob, $getUsername, $getMerchant->email, $mycode->code);
 
 
-                            if ($checkAmlVerification->event !== 'verification.accepted') {
-                                User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
-                            } else {
-                                User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
+                                if ($checkAmlVerification->event !== 'verification.accepted') {
+                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
+                                } else {
+                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
+                                }
                             }
-                            }
-
-
                         }
 
 
@@ -16405,7 +16403,7 @@ class AdminController extends Controller
 
                                 $checkAvalable = $shuftiVerify->shuftiAvailableCountries($getMerchant->country);
 
-                                if($checkAvalable === true){
+                                if ($checkAvalable === true) {
                                     $checkAmlVerification = $shuftiVerify->callAmlCheck($getMerchant->ref_code, $dob, $getUsername, $getMerchant->email, $countryApproval->code);
 
                                     if ($checkAmlVerification->event !== 'verification.accepted') {
@@ -16414,7 +16412,6 @@ class AdminController extends Controller
                                         User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
                                     }
                                 }
-
                             }
                         } else {
 
@@ -18325,6 +18322,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     }
 
 
+
     public function sendNewUserMessage(Request $req)
     {
 
@@ -19576,5 +19574,301 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
         Mail::to($objDemoa)
             ->send(new sendEmail($objDemo));
+    }
+
+    public function updateSubscription(Request $req)
+    {
+        $data = TransactionCost::where('structure', 'Consumer Monthly Subscription')->get();
+
+        TransactionCost::where('country', 'Nigeria')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '8.41',
+        ]);
+        TransactionCost::where('country', 'Nigeria')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '25.23',
+        ]);
+        TransactionCost::where('country', 'Australia')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '4.33',
+        ]);
+        TransactionCost::where('country', 'Australia')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '10.83',
+        ]);
+        // TransactionCost::where('country', 'Austria')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Austria')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        // TransactionCost::where('country', 'Belgium')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Belgium')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        TransactionCost::where('country', 'Bulgaria')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '5.77',
+        ]);
+        TransactionCost::where('country', 'Bulgaria')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '14.41',
+        ]);
+        TransactionCost::where('country', 'Canada')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '3.87',
+        ]);
+        TransactionCost::where('country', 'Canada')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '9.68',
+        ]);
+        TransactionCost::where('country', 'Croatia')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '4.43',
+        ]);
+        TransactionCost::where('country', 'Croatia')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '11.06',
+        ]);
+        // TransactionCost::where('country', 'Cyprus')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Cyprus')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        TransactionCost::where('country', 'Czech Republic')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '7.24',
+        ]);
+        TransactionCost::where('country', 'Czech Republic')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '18.10',
+        ]);
+        // TransactionCost::where('country', 'Denmark')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Denmark')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        // TransactionCost::where('country', 'Estonia')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Estonia')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        // TransactionCost::where('country', 'Finland')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Finland')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        // TransactionCost::where('country', 'France')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'France')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        // TransactionCost::where('country', 'Germany')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Germany')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        TransactionCost::where('country', 'Ghana')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '4.27',
+        ]);
+        TransactionCost::where('country', 'Ghana')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '10.67',
+        ]);
+        // TransactionCost::where('country', 'Greece')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Greece')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        TransactionCost::where('country', 'Hong Kong')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '4.71',
+        ]);
+        TransactionCost::where('country', 'Hong Kong')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '11.76',
+        ]);
+        TransactionCost::where('country', 'Hungary')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '5.94',
+        ]);
+        TransactionCost::where('country', 'Hungary')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '14.86',
+        ]);
+        TransactionCost::where('country', 'India')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '4.77',
+        ]);
+        TransactionCost::where('country', 'India')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '11.91',
+        ]);
+        // TransactionCost::where('country', 'Ireland')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Ireland')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        // TransactionCost::where('country', 'Israel')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Israel')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        // TransactionCost::where('country', 'Italy')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Italy')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        TransactionCost::where('country', 'Japan')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '4.06',
+        ]);
+        TransactionCost::where('country', 'Japan')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '10.15',
+        ]);
+        TransactionCost::where('country', 'Latvia')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '3.02',
+        ]);
+        TransactionCost::where('country', 'Latvia')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '9.07',
+        ]);
+        TransactionCost::where('country', 'Lithuania')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '4.43',
+        ]);
+        TransactionCost::where('country', 'Lithuania')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '13.29',
+        ]);
+        // TransactionCost::where('country', 'Luxembourg')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Luxembourg')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        TransactionCost::where('country', 'Malaysia')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '4.47',
+        ]);
+        TransactionCost::where('country', 'Malaysia')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '13.40',
+        ]);
+        // TransactionCost::where('country', 'Malta')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Malta')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        TransactionCost::where('country', 'Mexico')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '6.01',
+        ]);
+        TransactionCost::where('country', 'Mexico')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '15.04',
+        ]);
+        TransactionCost::where('country', 'Netherlands')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '5.41',
+        ]);
+        TransactionCost::where('country', 'Netherlands')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '13.53',
+        ]);
+        TransactionCost::where('country', 'NewZealand')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '3.98',
+        ]);
+        TransactionCost::where('country', 'NewZealand')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '11.94',
+        ]);
+        TransactionCost::where('country', 'Norway')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '4.85',
+        ]);
+        TransactionCost::where('country', 'Norway')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '27.00',
+        ]);
+        TransactionCost::where('country', 'Phillipines')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '8.38',
+        ]);
+        TransactionCost::where('country', 'Phillipines')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '20.94',
+        ]);
+        // TransactionCost::where('country', 'Polland')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Polland')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        // TransactionCost::where('country', 'Portugal')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Phortugal')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        TransactionCost::where('country', 'Romania')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '4.79',
+        ]);
+        TransactionCost::where('country', 'Romania')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '14.38',
+        ]);
+        TransactionCost::where('country', 'Singapore')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '6.92',
+        ]);
+        TransactionCost::where('country', 'Singapore')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '20.75',
+        ]);
+        // TransactionCost::where('country', 'Slovakia')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Slovakia')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        // TransactionCost::where('country', 'Slovenia')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Slovenia')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        TransactionCost::where('country', 'SouthAfrica')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '8.06',
+        ]);
+        TransactionCost::where('country', 'SouthAfrica')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '24.19',
+        ]);
+        // TransactionCost::where('country', 'Spain')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Spain')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        TransactionCost::where('country', 'Sweden')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '5.20',
+        ]);
+        TransactionCost::where('country', 'Sweden')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '15.61',
+        ]);
+        TransactionCost::where('country', 'Switzerland')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '4.76',
+        ]);
+        TransactionCost::where('country', 'Switzerland')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '14.28',
+        ]);
+        // TransactionCost::where('country', 'Taiwan')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Taiwan')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        // TransactionCost::where('country', 'Thailand')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'Thailand')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        TransactionCost::where('country', 'United Arab Emirates')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '5.51',
+        ]);
+        TransactionCost::where('country', 'United Arab Emirates')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '13.77',
+        ]);
+        // TransactionCost::where('country', 'United Kingdom')->where('structure', 'Consumer Monthly Subscription',)->update([
+        //     'fixed' => '4.33',
+        // ]);
+        // TransactionCost::where('country', 'United Kingdom')->where('structure', 'Merchant Monthly Subscription',)->update([
+        //     'fixed' => '10.83',
+        // ]);
+        TransactionCost::where('country', 'United States')->where('structure', 'Consumer Monthly Subscription',)->update([
+            'fixed' => '6.02',
+        ]);
+        TransactionCost::where('country', 'United States')->where('structure', 'Merchant Monthly Subscription',)->update([
+            'fixed' => '15.05',
+        ]);
+
+        dd('done');
     }
 }
