@@ -605,6 +605,11 @@ class HomeController extends Controller
         return view('main.newpage.shade-pro.pricing2')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
+    public function merchantPrice(Request $req)
+    {
+        dd($req->country);
+    }
+
 
     public function pricingFees($country)
     {
@@ -4832,14 +4837,14 @@ class HomeController extends Controller
 
                         $checkAvalable = $shuftiVerify->shuftiAvailableCountries(Auth::user()->country);
 
-                        if($checkAvalable === true){
+                        if ($checkAvalable === true) {
                             $checkAmlVerification = $shuftiVerify->callAmlCheck(Auth::user()->ref_code, $dob, $getUsername, Auth::user()->email, $countryApproval->code);
 
-                                if ($checkAmlVerification->event !== 'verification.accepted') {
-                                    User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
-                                } else {
-                                    User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
-                                }
+                            if ($checkAmlVerification->event !== 'verification.accepted') {
+                                User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
+                            } else {
+                                User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
+                            }
                         }
                     }
                 } else {

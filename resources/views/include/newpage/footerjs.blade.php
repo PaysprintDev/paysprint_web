@@ -20,9 +20,16 @@
 
 <script type="module">
   // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-analytics.js";
-  import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-messaging.js";
+  import {
+    initializeApp
+  } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-app.js";
+  import {
+    getAnalytics
+  } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-analytics.js";
+  import {
+    getMessaging,
+    getToken
+  } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-messaging.js";
 
   // Your web app's Firebase configuration
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -45,54 +52,57 @@
 
 
 
-getToken(messaging, { vapidKey: '{{ env("GOOGLE_SERVER_KEY") }}' }).then((currentToken) => {
-  if (currentToken) {
-    // Send the token to your server and update the UI if necessary
+  getToken(messaging, {
+    vapidKey: '{{ env("GOOGLE_SERVER_KEY") }}'
+  }).then((currentToken) => {
+    if (currentToken) {
+      // Send the token to your server and update the UI if necessary
 
-    console.log(currentToken);
+      console.log(currentToken);
+      // ...
+    } else {
+      // Show permission request UI
+      console.log('No registration token available. Request permission to generate one.');
+      // ...
+    }
+  }).catch((err) => {
+    console.log('An error occurred while retrieving token. ', err);
     // ...
-  } else {
-    // Show permission request UI
-    console.log('No registration token available. Request permission to generate one.');
-    // ...
-  }
-}).catch((err) => {
-  console.log('An error occurred while retrieving token. ', err);
-  // ...
-});
-
-
+  });
 </script>
 
 
 
 <script>
+  $('#pricing_country').change(function() {
+    var country = $('#pricing_country').val();
 
-
-
-
-    $('#pricing_country').change(function() {
-        var country = $('#pricing_country').val();
-
-        location.href = "/pricing?country=" + country;
-    });
-    $('#pricing_country2').change(function() {
-        var country = $('#pricing_country2').val();
-
-        location.href = "/merchant-pricing?country=" + country;
+    $.ajax({
+      url: " {{ route('merchant price') }}",
+      method: 'get',
+      data: country,
+      success: function(data) {
+      console.log(data);
+    }
     });
 
+   
+    // location.href = "/pricing?country=" + country;
+  });
 
-    $('#eclipse6').eclipse({
-            margin: 20,
-            autoplay: true,
-            interval: 2000,
-            autoControl: true
-    });
+  $('#pricing_country2').change(function() {
+    var country = $('#pricing_country2').val();
+
+    location.href = "/merchant-pricing?country=" + country;
+  });
 
 
-
-
+  $('#eclipse6').eclipse({
+    margin: 20,
+    autoplay: true,
+    interval: 2000,
+    autoControl: true
+  });
 </script>
 
 
