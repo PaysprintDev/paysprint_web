@@ -77,6 +77,7 @@
                                 <td align="center">
                                     <p class="gr-text-6 font-weight-bold mb-9">Classic</p>
                                     <p class="text-danger">
+                                        
                                         {{ $data['currency'] . number_format($monthlyBased, 2) }}
                                         Monthly
                                     </p>

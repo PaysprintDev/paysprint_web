@@ -163,7 +163,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback', 'displayCountry', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts']]);
+        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback', 'displayCountry', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts', 'merchantPrice']]);
 
         $location = $this->myLocation();
 
@@ -462,14 +462,12 @@ class HomeController extends Controller
     public function feeStructure(Request $req)
     {
 
-
-
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
                 $this->page = 'Pricing';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
-                $country = Auth::user()->country;
+                $country = $req->get('country') != null ? $req->country : Auth::user()->country;
                 $data = array(
                     'country' => $country,
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
@@ -477,7 +475,7 @@ class HomeController extends Controller
                     'activecountries' => $this->getActiveCountries()
                 );
             } else {
-                $country = $this->myLocation()->country;
+                $country = $req->get('country') != null ? $req->country : $this->myLocation()->country;
                 $this->page = 'Pricing';
                 $this->name = '';
                 $data = [
@@ -487,7 +485,7 @@ class HomeController extends Controller
                 ];
             }
         } else {
-            $country = $this->myLocation()->country;
+            $country = $req->get('country') != null ? $req->country : $this->myLocation()->country;
             $this->page = 'Pricing';
             $this->name = session('name');
             $this->email = session('email');
@@ -498,14 +496,14 @@ class HomeController extends Controller
             ];
         }
 
-        if ($req->get('country') != null) {
-            $countrys = $req->get('country');
-        } else {
-            $countrys = $country;
-        }
+        // if ($req->get('country') != null) {
+        //     $countrys = $req->get('country');
+        // } else {
+        //     $countrys = $country;
+        // }
 
 
-        $prices = $this->pricingFees($countrys);
+        $prices = $this->pricingFees($country);
 
         if (isset($prices)) {
             $pricings = $prices;
@@ -513,7 +511,7 @@ class HomeController extends Controller
             $pricings = $this->pricingFees('Canada');
         }
 
-        $currency = $this->getCountryCode($countrys);
+        $currency = $this->getCountryCode($country);
 
 
         if (isset($currency)) {
@@ -525,7 +523,7 @@ class HomeController extends Controller
 
         $data['pricing'] = $pricings;
         $data['currency'] = $myCurrency;
-        $data['maintenance'] = $this->maintenanceBalanceWithdrawal('Consumer Monthly Subscription', $countrys);
+        $data['maintenance'] = $this->maintenanceBalanceWithdrawal('Consumer Monthly Subscription', $country);
 
 
         return view('main.newpage.shade-pro.pricing')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -534,15 +532,12 @@ class HomeController extends Controller
 
     public function feeStructure2(Request $req)
     {
-
-
-
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
                 $this->page = 'Merchant Pricing';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
-                $country = Auth::user()->country;
+                $country = $req->get('country') != null ? $req->country : Auth::user()->country;
                 $data = array(
                     'country' => $country,
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
@@ -550,7 +545,7 @@ class HomeController extends Controller
                     'activecountries' => $this->getActiveCountries()
                 );
             } else {
-                $country = $this->myLocation()->country;
+                $country = $req->get('country') != null ? $req->country : $this->myLocation()->country;
                 $this->page = 'Merchant Pricing';
                 $this->name = '';
                 $data = [
@@ -560,7 +555,7 @@ class HomeController extends Controller
                 ];
             }
         } else {
-            $country = $this->myLocation()->country;
+            $country = $req->get('country') != null ? $req->country : $this->myLocation()->country;
             $this->page = 'Merchant Pricing';
             $this->name = session('name');
             $this->email = session('email');
@@ -571,14 +566,16 @@ class HomeController extends Controller
             ];
         }
 
-        if ($req->get('country') != null) {
-            $countrys = $req->get('country');
-        } else {
-            $countrys = $country;
-        }
+        // if ($req->get('country') != null) {
+        //     $countrys = $req->get('country');
+        // } else {
+        //     $countrys = $country;
+        // }
 
 
-        $prices = $this->pricingFees($countrys);
+
+
+        $prices = $this->pricingFees($country);
 
         if (isset($prices)) {
             $pricings = $prices;
@@ -586,7 +583,7 @@ class HomeController extends Controller
             $pricings = $this->pricingFees('Canada');
         }
 
-        $currency = $this->getCountryCode($countrys);
+        $currency = $this->getCountryCode($country);
 
 
         if (isset($currency)) {
@@ -597,18 +594,12 @@ class HomeController extends Controller
 
         $data['pricing'] = $pricings;
         $data['currency'] = $myCurrency;
-        $data['maintenance'] = $this->maintenanceBalanceWithdrawal('Merchant Monthly Subscription', $countrys);
-
-
+        $data['maintenance'] = $this->maintenanceBalanceWithdrawal('Merchant Monthly Subscription', $country);
 
 
         return view('main.newpage.shade-pro.pricing2')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
-    public function merchantPrice(Request $req)
-    {
-        dd($req->country);
-    }
 
 
     public function pricingFees($country)
@@ -1810,6 +1801,7 @@ class HomeController extends Controller
             'continent' => $this->timezone[0],
             'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
             'providers' => MobileMoney::where('user_id', Auth::id())->get(),
+            'subscription' => $this->getConsumerCost(Auth::user()->country)
         );
 
         // dd($data['providers']);
@@ -1817,7 +1809,14 @@ class HomeController extends Controller
         return view('main.withdrawmoney')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
+    public function getConsumerCost($country)
+    {
+        $data = TransactionCost::where('country', $country)->where('structure', 'Consumer Monthly Subscription')->first();
 
+        $price = $data->fixed;
+
+        return $price;
+    }
 
 
     public function addBankDetail(Request $req)

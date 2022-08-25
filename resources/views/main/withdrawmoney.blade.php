@@ -102,6 +102,12 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- warning -->
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <p class="text-danger" style="font-weight:bold">Note: You must have a Minimum Balance of {{$data['currencyCode']->currencySymbol.$data['subscription'] }} in your Wallet</p>
+                                            </div>
+                                        </div>
 
 
                                     </div>
@@ -293,6 +299,12 @@
                                             </div>
                                         </div>
 
+                                        <!-- warning -->
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <p class="text-danger" style="font-weight:bold">Note: You must have a Minimum Balance of {{$data['currencyCode']->currencySymbol.$data['subscription'] }} in your Wallet</p>
+                                            </div>
+                                        </div>
 
                                     </div>
                                     @if (count($data['getCard']) > 0 || count($data['getBank']) > 0)

@@ -3,6 +3,9 @@
 
 <!-- Vendor Scripts -->
 <script src="{{ asset('newpage/js/vendor.min.js') }}"></script>
+
+<!-- ajax -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- Plugin's Scripts -->
 <script src="{{ asset('newpage/plugins/fancybox/jquery.fancybox.min.js') }}"></script>
 <script src="{{ asset('newpage/plugins/nice-select/jquery.nice-select.min.js') }}"></script>
@@ -76,24 +79,13 @@
 <script>
   $('#pricing_country').change(function() {
     var country = $('#pricing_country').val();
-
-    $.ajax({
-      url: " {{ route('merchant price') }}",
-      method: 'get',
-      data: country,
-      success: function(data) {
-      console.log(data);
-    }
-    });
-
-   
-    // location.href = "/pricing?country=" + country;
+    location.href = "/pricing?country=" + country;
   });
 
   $('#pricing_country2').change(function() {
     var country = $('#pricing_country2').val();
-
     location.href = "/merchant-pricing?country=" + country;
+
   });
 
 
