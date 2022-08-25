@@ -85,12 +85,14 @@ background: #ffe29f;
           <div class="col-md-12 mt-4">
               {{-- <h3 class="text-center" style="font-weight: bold">SPECIAL PROMO DATES</h3> --}}
               <hr>
+             
               <table class="table table-striped table-responsive" id="promousers">
                   <thead>
                       <tr style="postion:sticky">
                         <th class="header" scope="col">S/N</th>
                         <th class="header" scope="col"></th>
                         <th class="header" scope="col">Country</th>
+                        {{-- <th class="header" scope="col">Payout Method</th> --}}
                         <th class="header"  scope="col">Action</th>
                         
                       </tr>
@@ -105,8 +107,9 @@ background: #ffe29f;
                                   <td>{{ $counter++}}</td>
                                   <td><img style="width:60px;height:60px;border-radius:8px" src="{{$country->logo}}"></td>
                                   <td>{{ $country->name}} </td>
+                                  {{-- <td>{{ $country->payoutMethod}} </td> --}}
                                   <td><a class="nav-link" href="{{ route('login') }}" role="button"
-                                    aria-expanded="false">LOGIN</a></td>
+                                    aria-expanded="false">LOGIN/SIGNUP</a></td>
                                  
                               </tr>
                           @endforeach
@@ -115,18 +118,7 @@ background: #ffe29f;
               </table>
           </div>
       </div>
-
-
-
-
-
-
-
-
-
-
-          
-        </div>
+     </div>
     </section>
     <!-- End All contact Info -->
 

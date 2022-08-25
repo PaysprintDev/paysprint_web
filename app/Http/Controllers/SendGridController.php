@@ -67,7 +67,7 @@ class SendGridController extends Controller
 
         try {
 
-            $thisuser = User::take(2)->get();
+            $thisuser = User::take(3)->get();
             $promodate = PromoDate::first();
 
             if (count($thisuser) > 0) {
@@ -98,12 +98,11 @@ class SendGridController extends Controller
                         $setPointClaimed = $point->points_claimed;
                         $credit = $point->amount;
                     }
-
                     $promopoint = $promodate->amount;
 
-                    $point_acquired = $setPointClaimed;
+                    
 
-                    $referralbalance = $referralpoint - $point_acquired;
+                    $referralbalance = $referralpoint -  $setPointClaimed;
                     // dd( $point_acquired);
 
                     // $receiver = $user->email;
@@ -125,7 +124,7 @@ class SendGridController extends Controller
                     </tr>
                     <tr style:'text-align:left'>
                       <td>Total Referral Points Redeemed-</td>
-                      <td>$point_acquired</td>
+                      <td>$setPointClaimed</td>
                     </tr>
                     <tr style:'text-align:left'>
                       <td>Referral Points Balance-</td>
@@ -190,7 +189,7 @@ class SendGridController extends Controller
                     </tr>
                     <tr style:'text-align:left'>
                       <td>Total Referral Points Redeemed-</td>
-                      <td>$point_acquired</td>
+                      <td>$setPointClaimed</td>
                     </tr>
                     <tr style:'text-align:left'>
                       <td>Referral Points Balance-</td>

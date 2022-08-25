@@ -230,12 +230,14 @@ class HomeController extends Controller
             $this->name = '';
             // Default...
             $view = 'main.newpage.shade-pro.index';
-
+            $country = $this->myLocation()->country;
             // Merchant Renew to default...
             // $view = 'main.newpage.shade-pro.merchantindex';
             $data = [
                 'continent' => $this->timezone[0],
-                'availablecountry' => $allcountry
+                'availablecountry' => $allcountry,
+                'country' => $country,
+
             ];
         }
 
@@ -284,10 +286,11 @@ class HomeController extends Controller
     public function merchantIndex()
     {
         $allcountry = AllCountries::where('approval', 1)->get();
-
+        $country = $this->myLocation()->country;
         $this->page = 'Merchant';
         $data = [
-            'availablecountry' => $allcountry
+            'availablecountry' => $allcountry,
+            'country'=>$country
         ];
 
         return view('main.newpage.shade-pro.merchantindex')->with(['pages' => $this->page, 'data' => $data]);
