@@ -74,8 +74,16 @@ class CurrencyConverterApiController extends Controller
 
 
                     if($result->quotes->$localCurrency > 1){
-                        $convertLocal = $amount / $result->quotes->$localCurrency;
 
+
+                            if($localCurrency === 'USDUSD'){
+                                $localConv = 1;
+                            }
+                            else{
+                                $localConv = $result->quotes->$localCurrency;
+                            }
+
+                        $convertLocal = $amount / $localConv;
 
 
                         // $convRate = $result->quotes->$currency * $convertLocal / $markValue;
@@ -85,13 +93,28 @@ class CurrencyConverterApiController extends Controller
                         // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
                     }
                     elseif($result->quotes->$localCurrency < 1){
-                        $convertLocal = $amount / $result->quotes->$localCurrency;
+
+                        if($localCurrency === 'USDUSD'){
+                                $localConv = 1;
+                            }
+                            else{
+                                $localConv = $result->quotes->$localCurrency;
+                            }
+
+                        $convertLocal = $amount / $localConv;
 
                         // $convRate = $result->quotes->$currency * $convertLocal * $markdownValue;
                         $convRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
                     }
                     else{
-                        $convertLocal = $amount / $result->quotes->$localCurrency;
+                        if($localCurrency === 'USDUSD'){
+                                $localConv = 1;
+                            }
+                            else{
+                                $localConv = $result->quotes->$localCurrency;
+                            }
+
+                        $convertLocal = $amount / $localConv;
 
                         $convRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
                     }
@@ -100,7 +123,14 @@ class CurrencyConverterApiController extends Controller
 
                 } else {
                     // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
-                    $convertLocal = $amount / $result->quotes->$localCurrency;
+                    if($localCurrency === 'USDUSD'){
+                                $localConv = 1;
+                            }
+                            else{
+                                $localConv = $result->quotes->$localCurrency;
+                            }
+
+                        $convertLocal = $amount / $localConv;
                     // Converting your USD value to other currency ie CAD * Y
 
 
@@ -122,20 +152,43 @@ class CurrencyConverterApiController extends Controller
 
 
                 if($result->quotes->$localCurrency > 1){
-                    $convertLocal = $amount / $result->quotes->$localCurrency;
+
+                    if($localCurrency === 'USDUSD'){
+                                $localConv = 1;
+                            }
+                            else{
+                                $localConv = $result->quotes->$localCurrency;
+                            }
+
+                        $convertLocal = $amount / $localConv;
+
 
                 // $convRate = $result->quotes->$currency * $convertLocal / $markValue;
                     $convRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
 
                 }
                 elseif($result->quotes->$localCurrency < 1){
-                    $convertLocal = $amount / $result->quotes->$localCurrency;
+                    if($localCurrency === 'USDUSD'){
+                                $localConv = 1;
+                            }
+                            else{
+                                $localConv = $result->quotes->$localCurrency;
+                            }
+
+                        $convertLocal = $amount / $localConv;
 
                     // $convRate = $result->quotes->$currency * $convertLocal * $markdownValue;
                     $convRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
                 }
                 else{
-                    $convertLocal = $amount / $result->quotes->$localCurrency;
+                    if($localCurrency === 'USDUSD'){
+                                $localConv = 1;
+                            }
+                            else{
+                                $localConv = $result->quotes->$localCurrency;
+                            }
+
+                        $convertLocal = $amount / $localConv;
 
                     $convRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
                 }

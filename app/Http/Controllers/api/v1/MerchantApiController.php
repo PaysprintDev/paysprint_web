@@ -2862,7 +2862,7 @@ class MerchantApiController extends Controller
 
         if ($validator->passes()) {
 
-
+            $tranxFeeCharge = new \App\Http\Controllers\ThirdPartyHandshakeController();
 
             $merchantInfo = ClientInfo::where('api_secrete_key', $req->bearerToken())->first();
 
@@ -2880,7 +2880,10 @@ class MerchantApiController extends Controller
                 $myCurrency = $countryInfo->currencyCode;
 
                 // Currency converter
-                $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $myCurrency);
+                $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $myCurrency, 'API GUEST_Users');
+
+
+
 
 
 
@@ -2923,12 +2926,23 @@ class MerchantApiController extends Controller
                             }
 
 
+                            // Calculate the Service Charge Fee...
+                            $feeOnTranx = $tranxFeeCharge->merchantFeeCharge($thismerchant->country, $req->cardType);
+
+
+                            $variableVal = ($feeOnTranx->chargePercentage / 100) * $amount;
+
+                            $collectionFee = $feeOnTranx->fixed + $variableVal;
+
+
+
+
 
 
                             // Insert Statement
                             $activity = "Transfer of " . $myCurrency . " " . number_format($req->amount, 2) . " to " . $thismerchant->businessname . " for " . $service;
                             $credit = 0;
-                            $debit = number_format($req->amount, 2);
+                            $debit = $req->amount - $collectionFee;
                             $reference_code = $reference_code;
                             $balance = 0;
                             $trans_date = date('Y-m-d');
@@ -2940,23 +2954,28 @@ class MerchantApiController extends Controller
                             $statement_route = "wallet";
 
 
+
+
+
+
+
                             if ($thismerchant->auto_deposit == 'on') {
-                                $recWallet = $thismerchant->wallet_balance + $amount;
+                                $recWallet = $thismerchant->wallet_balance + ($amount - $collectionFee);
                                 $walletstatus = "Delivered";
 
-                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " in your PaySprint wallet for " . $service . " from " . $req->firstname . " " . $req->lastname . " You now have " . $myCurrency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
+                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of ".$myCurrency." ".$collectionFee." deducted from your PaySprint wallet for " . $service . " from " . $req->firstname . " " . $req->lastname . " You now have " . $myCurrency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
                             } else {
                                 $recWallet = $thismerchant->wallet_balance;
                                 $walletstatus = "Pending";
 
-                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " for " . $service . " from " . $req->firstname . " " . $req->lastname . " Your wallet balance is " . $myCurrency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
+                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of ".$myCurrency." ".$collectionFee." deducted from your PaySprint wallet for " . $service . " from " . $req->firstname . " " . $req->lastname . " Your wallet balance is " . $myCurrency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
                             }
 
 
                             User::where('ref_code', $thismerchant->ref_code)->update(['wallet_balance' => $recWallet]);
 
                             // thismerchant Statement
-                            $this->insStatement($thismerchant->email, $paymentToken, "Received " . $myCurrency . ' ' . number_format($amount, 2) . " in wallet for " . $service . " from " . $req->firstname . " " . $req->lastname, $amount, 0, $balance, $trans_date, $walletstatus, "Wallet credit", $thismerchant->ref_code, 1, $statement_route, $thismerchant->auto_deposit, $thismerchant->country, $mode);
+                            $this->insStatement($thismerchant->email, $paymentToken, "Received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of ".$myCurrency." ".$collectionFee." deducted from your PaySprint wallet for " . $service . " from " . $req->firstname . " " . $req->lastname, ($amount - $collectionFee), 0, $balance, $trans_date, $walletstatus, "Wallet credit", $thismerchant->ref_code, 1, $statement_route, $thismerchant->auto_deposit, $thismerchant->country, $mode);
 
                             // Send mail to both parties
 
@@ -2994,6 +3013,9 @@ class MerchantApiController extends Controller
                             }
 
 
+                            $feeToPS = new \App\Http\Controllers\MonthlySubController();
+
+                            $feeToPS->feeChargeCredit($thismerchant->country, $collectionFee, $thismerchant->businessname, $thismerchant->accountType);
 
 
                             $recPhone = "+" . $thismerchant->code . $thismerchant->telephone;
@@ -3017,6 +3039,7 @@ class MerchantApiController extends Controller
                             $data['phone'] = $req->phone;
                             $data['paymentToken'] = $paymentToken;
                             $data['amount'] = $req->amount;
+                            $data['tranxFee'] = $collectionFee;
                             $data['currency'] = $currencyCode;
 
                             $status = 200;
@@ -3090,6 +3113,15 @@ class MerchantApiController extends Controller
                                 $myCurrency = $thismerchant->currencyCode;
                             }
 
+
+                            // Calculate the Service Charge Fee...
+                            $feeOnTranx = $tranxFeeCharge->merchantFeeCharge($thismerchant->country, $req->cardType);
+
+
+                            $variableVal = ($feeOnTranx->chargePercentage / 100) * $amount;
+
+                            $collectionFee = $feeOnTranx->fixed + $variableVal;
+
                             // Send mail to both parties
 
                             // $this->to = "bambo@vimfile.com";
@@ -3114,7 +3146,7 @@ class MerchantApiController extends Controller
                             // Insert Statement
                             $activity = "Transfer of " . $thismerchant->currencyCode . " " . number_format($req->amount, 2) . " to " . $thismerchant->businessname . " for " . $service;
                             $credit = 0;
-                            $debit = number_format($req->amount, 2);
+                            $debit = $req->amount - $collectionFee;
                             $reference_code = $reference_code;
                             $balance = 0;
                             $trans_date = date('Y-m-d');
@@ -3127,19 +3159,19 @@ class MerchantApiController extends Controller
 
 
                             // thismerchant Statement
-                            $this->insStatement($thismerchant->email, $paymentToken, "Received " . $myCurrency . ' ' . number_format($amount, 2) . " in wallet for " . $service . " from " . $req->firstname . " " . $req->lastname, $amount, 0, $balance, $trans_date, $wallet_status, "Wallet credit (test)", $thismerchant->ref_code, 1, $statement_route, $thismerchant->auto_deposit, $thismerchant->country, $mode);
+                            $this->insStatement($thismerchant->email, $paymentToken, "Received " . $myCurrency . ' ' . number_format($amount, 2) . " in wallet for " . $service . " from " . $req->firstname . " " . $req->lastname, ($amount - $collectionFee), 0, $balance, $trans_date, $wallet_status, "Wallet credit (test)", $thismerchant->ref_code, 1, $statement_route, $thismerchant->auto_deposit, $thismerchant->country, $mode);
 
 
                             if ($thismerchant->auto_deposit == 'on') {
-                                $recWallet = $thismerchant->wallet_balance + $amount;
+                                $recWallet = $thismerchant->wallet_balance + ($amount - $collectionFee);
                                 $walletstatus = "Delivered";
 
-                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " in your PaySprint wallet for " . $service . " from " . $req->firstname . " " . $req->lastname . ". You now have " . $myCurrency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
+                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of ".$myCurrency." ".$collectionFee." deducted from your PaySprint wallet for " . $service . " from " . $req->firstname . " " . $req->lastname . ". You now have " . $myCurrency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
                             } else {
                                 $recWallet = $thismerchant->wallet_balance;
                                 $walletstatus = "Pending";
 
-                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " for " . $service . " from " . $req->firstname . " " . $req->lastname . ". Your wallet balance is " . $myCurrency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
+                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of ".$myCurrency." ".$collectionFee." deducted from your PaySprint wallet for " . $service . " from " . $req->firstname . " " . $req->lastname . ". Your wallet balance is " . $myCurrency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
                             }
 
 
@@ -3181,6 +3213,7 @@ class MerchantApiController extends Controller
                             $data['phone'] = $req->phone;
                             $data['paymentToken'] = $paymentToken;
                             $data['amount'] = $req->amount;
+                            $data['tranxFee'] = $collectionFee;
                             $data['currency'] = $currencyCode;
 
                             $status = 200;
@@ -3385,6 +3418,7 @@ class MerchantApiController extends Controller
     public function convertCurrency($currency, $amount, $localcurrency, $route = null)
     {
 
+
         // Get Markup
         $markuppercent = $this->markupPercentage();
 
@@ -3422,11 +3456,21 @@ class MerchantApiController extends Controller
 
 
 
+
+
         if ($result->success == true) {
 
             // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
             // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
-            $convertLocal = $amount / $result->quotes->$localCurrency;
+
+            if($localCurrency === 'USDUSD'){
+                $localConv = 1;
+            }
+            else{
+                $localConv = $result->quotes->$localCurrency;
+            }
+
+            $convertLocal = $amount / $localConv;
 
             // Converting your USD value to other currency ie CAD * Y
             $convRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;

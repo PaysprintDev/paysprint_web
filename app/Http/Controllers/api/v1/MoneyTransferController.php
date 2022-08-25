@@ -587,6 +587,18 @@ class MoneyTransferController extends Controller
     {
 
         try {
+
+            $sender = User::where('api_token', $req->bearerToken())->first();
+
+            if ($sender->flagged === 1) {
+            $message = 'Hello ' . $sender->name . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact.';
+
+            $status = 400;
+
+                $resData = ['data' => [], 'message' => $message, 'status' => $status];
+
+        }
+        else{
             if ($req->amount < 0) {
                 $status = 404;
 
@@ -596,7 +608,7 @@ class MoneyTransferController extends Controller
                 if (isset($req->mode) && $req->mode == "test") {
 
                     // Get Sender in User
-                    $sender = User::where('api_token', $req->bearerToken())->first();
+
 
                     if (isset($sender)) {
 
@@ -796,11 +808,6 @@ class MoneyTransferController extends Controller
                         $resData = ['data' => [], 'message' => 'Token mismatch', 'status' => $status];
                     }
                 } else {
-                    // Get Sender in User
-                    $sender = User::where('api_token', $req->bearerToken())->first();
-
-
-
 
                     $withdrawLimit = $this->getWithdrawalLimit($sender->country, $sender->id);
 
@@ -1081,6 +1088,9 @@ class MoneyTransferController extends Controller
                     }
                 }
             }
+        }
+
+
         } catch (\Throwable $th) {
             $status = 400;
 
@@ -1415,9 +1425,16 @@ class MoneyTransferController extends Controller
 
             if ($route == "send") {
 
-                // Conversion Rate USD to Local currency
-                $convertLocal = $amount / $result->quotes->$localCurrency;
+                if($localCurrency === 'USDUSD'){
+                $localConv = 1;
+            }
+            else{
+                $localConv = $result->quotes->$localCurrency;
+            }
 
+            $convertLocal = $amount / $localConv;
+
+                // Conversion Rate USD to Local currency
 
                 $actualRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
                 $convRate = $actualRate * 95/100;

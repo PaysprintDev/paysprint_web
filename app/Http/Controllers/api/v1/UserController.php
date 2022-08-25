@@ -371,7 +371,7 @@ class UserController extends Controller
 
                     if (isset($countryApproval)) {
 
-                        if ($getUser->flagged == 1) {
+                        if ($getUser->disableAccount == "on") {
                             $data = [];
                             $status = 400;
                             $message = 'Hello ' . $getUser->name . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact';

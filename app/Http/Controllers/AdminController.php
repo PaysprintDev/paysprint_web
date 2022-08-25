@@ -15805,12 +15805,14 @@ class AdminController extends Controller
 
                     // Check if account is flagged or pass security level
 
-                    if (isset($getMerchant->flagged) && $getMerchant->flagged == 1) {
+                    // if (isset($getMerchant->flagged) && $getMerchant->flagged == 1) {
 
-                        $resData = ['res' => 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact', 'message' => 'error'];
+                    //     $resData = ['res' => 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact', 'message' => 'error'];
 
-                        $this->createNotification($checkApikey->user_id, 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact');
-                    } elseif ($getMerchant->disableAccount == 'on') {
+                    //     $this->createNotification($checkApikey->user_id, 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact');
+                    // }
+
+                    if ($getMerchant->disableAccount == 'on') {
 
                         $resData = ['res' => 'Hello ' . $adminCheck[0]['firstname'] . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact', 'message' => 'error'];
 

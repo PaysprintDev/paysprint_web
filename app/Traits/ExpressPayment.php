@@ -610,7 +610,16 @@ trait ExpressPayment
 
             // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
             // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
-            $convertLocal = ($amount / $result->quotes->$localCurrency);
+
+            if($localCurrency === 'USDUSD'){
+                $localConv = 1;
+            }
+            else{
+                $localConv = $result->quotes->$localCurrency;
+            }
+
+            $convertLocal = $amount / $localConv;
+
 
             // Converting your USD value to other currency ie CAD * Y
             $convRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
