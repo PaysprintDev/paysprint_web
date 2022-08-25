@@ -16,7 +16,7 @@ use App\AddBeneficiary as AddBeneficiary;
 use App\CardIssuer as CardIssuer;
 use App\DeletedCards as DeletedCards;
 use App\DeletedBanks as DeletedBanks;
-
+use App\PayoutAgent;
 use App\Traits\Xwireless;
 use App\Traits\PaysprintPoint;
 
@@ -513,16 +513,14 @@ class CardController extends Controller
         if ($cardDetail == "Bank Account") {
             $query = AddBank::where('user_id', $thisuser->id)->get();
 
-            // Log::info("Get bank information for :=> ".$thisuser->name);
-            $this->slack("Get bank information for :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-        } else {
+        }
+        elseif($cardDetail == "Prepaid Card") {
             $query = AddCard::where('user_id', $thisuser->id)->where('card_provider', 'LIKE', '%' . $cardDetail . '%')->get();
 
-            // Log::info("Get card information for :=> ".$thisuser->name);
-            $this->slack("Get card information for :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
         }
-
-
+        else {
+            $query = PayoutAgent::where('country', $thisuser->country)->orderBy('businessname', 'asc')->get();
+        }
 
         if (count($query) > 0) {
             $data = $query;
@@ -530,7 +528,7 @@ class CardController extends Controller
             $status = 200;
         } else {
             $data = [];
-            $message = $cardDetail . " not available";
+            $message = $cardDetail === 'Cash' ? 'Payout Agent not available' :  $cardDetail . " not available";
             $status = 400;
         }
 

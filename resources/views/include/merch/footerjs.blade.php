@@ -1833,6 +1833,59 @@
 
     });
 
+    function becomeAnAgent(ref_code){
+
+        let data = {ref_code: ref_code};
+
+        var headers = {
+            'X-CSRF-TOKEN': "{{ csrf_token() }}",
+            'Authorization': 'Bearer {{ Auth::user()->api_token }}'
+        };
+
+        swal({
+                title: "Are you sure?",
+                text: "Click OK if you want to become a payout agent",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then(async (willDelete) => {
+                if (willDelete) {
+
+                    try {
+
+                        const config = {
+                            method: 'POST',
+                            url: "{{ URL('/api/v1/becomepayoutagent') }}",
+                            headers,
+                            data
+                        }
+
+
+                        const response = await axios(config);
+
+                        iziMessage(true, 'Good', response.data.message);
+
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+
+                    } catch (error) {
+
+                        if (error.response) {
+                            iziMessage(false, 'Error', error.response.data.message);
+                        } else {
+                            iziMessage(false, 'Error', error.message);
+                        }
+
+                    }
+
+
+
+                }
+            });
+    }
+
 
     function iziMessage(status, title, message) {
 
