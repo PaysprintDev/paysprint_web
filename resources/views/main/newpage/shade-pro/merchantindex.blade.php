@@ -740,17 +740,17 @@
     <div class="row justify-content-center mt-2">
         <div class="col-md-2 mb-2" style="border-right: 1px solid black; border-left:1px solid grey">
             <h6 class="text-center">Automotive</h6>
-            <p><img src="{{asset('images/soar_logo.PNG')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;" class="mt-2"></p>
+            <p><img src="{{asset('images/soar_logo.png')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;" class="mt-2"></p>
 
-            <p><img src="{{asset('images/busywrench_logo.PNG')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:contain;"></p>
+            <p><img src="{{asset('images/busywrench_logo.png')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:contain;"></p>
 
-            <p><img src="{{asset('images/vimcare_logo.JPG')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;"></p>
+            <p><img src="{{asset('images/vimcare_logo.jpg')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;"></p>
 
-            <p><img src="{{asset('images/vimfile_logo.JPG')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:contain;"></p>
+            <p><img src="{{asset('images/vimfile_logo.jpg')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:contain;"></p>
         </div>
         <div class="col-md-2" style="border-right: 1px solid black;">
             <h6 class="text-center">Technology</h6>
-            <p><img src="{{asset('images/prochatr_logo.PNG')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;" class="mt-2"></p>
+            <p><img src="{{asset('images/prochatr_logo.png')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;" class="mt-2"></p>
         </div>
         <div class="col-md-2" style="border-right: 1px solid black;">
             <h6 style="font-size:14px;" class="text-center">Professional Services</h6>
