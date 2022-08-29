@@ -89,7 +89,7 @@ background: #ffe29f;
               <table class="table table-striped table-responsive" id="promousers">
                   <thead>
                       <tr style="postion:sticky">
-                        <th class="header" scope="col">S/N</th>
+                       
                         <th class="header" scope="col"></th>
                         <th class="header" scope="col">Country</th>
                        
@@ -104,7 +104,7 @@ background: #ffe29f;
                       @if (count($data['availablecountry']) > 0)
                           @foreach ( $data['availablecountry'] as $country )
                               <tr>
-                                  <td>{{ $counter++}}</td>
+                                 
                                   <td><img style="width:60px;height:60px;border-radius:8px" src="{{$country->logo}}"></td>
                                   <td>{{ $country->name}} </td>
                                   

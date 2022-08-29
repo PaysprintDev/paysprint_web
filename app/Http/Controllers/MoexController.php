@@ -1698,6 +1698,29 @@ class MoexController extends Controller
                     'MOBILE WALLET'
                 ]
             ],
+            '98' =>[
+                'country' => 'CANADA',
+                'range' => [
+                     '0 - ONWARDS',
+                     '0 - ONWARDS',
+                     '0 - ONWARD'
+                ],
+                    'fee' => [
+                     '1.25USD ',
+                     '1.5%',
+                     '2.50USD'
+                ],
+                    'payoutcurrency' => [
+                    'CAD',
+                    'CAD',
+                    'CAD'
+                ],
+                    'payoutmethod' => [
+                    'E-TRANSFER',
+                    'BANK DEPOSIT',
+                    'PREPAID CARD'
+                ]
+            ],
         ];
        
 

@@ -4041,6 +4041,7 @@ class HomeController extends Controller
         $community = Community::orderBy('created_at', 'DESC')->paginate(5);
         $allcountry = AllCountries::where('approval', 1)->get();
         // dd($allcountry);
+        // dd($allcountry);
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
                 $this->page = 'Contact';
@@ -4078,7 +4079,8 @@ class HomeController extends Controller
     public function displayCountryMerchant(Request $req)
     {
         $community = Community::orderBy('created_at', 'DESC')->paginate(5);
-        $allcountry = AllCountries::where('approval', 1)->get();
+        $allcountry = AllCountries::where('approval', 1)->where('payoutmethod','!=','')->get();
+        
         // dd($allcountry);
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
