@@ -193,6 +193,7 @@ class MarketplaceController extends Controller
         return response()->json($response, $status);
     }
 
+    //get all business
     public function getallBusinesses(Request $req)
     {
         try {
