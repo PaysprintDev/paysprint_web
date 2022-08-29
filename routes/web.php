@@ -29,6 +29,9 @@ use App\Http\Controllers\WalletCreditController;
 // search country
 Route::post('search', ['uses' => 'HomeController@searchCountry', 'as' => 'search']);
 
+//import data
+Route::get('importdata', ['uses' => 'MoexController@importData', 'as' => 'import data']);
+
 // App Logger
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
@@ -241,6 +244,8 @@ Route::get('payorganization', ['uses' => 'HomeController@payOrganization', 'as' 
 Route::get('contact', ['uses' => 'HomeController@contact', 'as' => 'contact']);
 
 Route::get('countrylist', ['uses' => 'HomeController@displayCountry', 'as' => 'display country']);
+
+Route::get('countrylists', ['uses' => 'HomeController@displayCountryMerchant', 'as' => 'display country merchant']);
 
 
 
