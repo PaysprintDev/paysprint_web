@@ -102,6 +102,12 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- warning -->
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <p class="text-danger" style="font-weight:bold">Note: You must have a Minimum Balance of {{$data['currencyCode']->currencySymbol.$data['subscription'] }} in your Wallet</p>
+                                            </div>
+                                        </div>
 
 
                                     </div>
@@ -293,11 +299,18 @@
                                             </div>
                                         </div>
 
+                                        <!-- warning -->
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <p class="text-danger" style="font-weight:bold">Note: You must have a Minimum Balance of {{$data['currencyCode']->currencySymbol.$data['subscription'] }} in your Wallet</p>
+                                            </div>
+                                        </div>
 
                                     </div>
                                     @if (count($data['getCard']) > 0 || count($data['getBank']) > 0)
                                     <div class="form-group"> <label for="card_id">
-                                            <h6>Select Card Type/ Bank Account</h6>
+                                            {{-- <h6>Select Card Type/ Bank Account</h6> --}}
+                                            <h6>Select Payment Option</h6>
                                         </label>
                                         <div class="input-group">
                                             <div class="input-group-append"> <span class="input-group-text text-muted">
@@ -305,32 +318,62 @@
                                                 </span> </div>
                                             <select name="card_type" id="card_type" class="form-control" required>
                                                 <option value="">Select option</option>
+
+                                                    @if (Auth::user()->country === 'Canada')
+                                                        <option value="Cash">Cash</option>
+                                                        <option value="e-Transfer">e-Transfer</option>
+                                                    @endif
+
                                                 {{-- <option value="Credit Card">Credit Card</option> --}}
                                                 {{-- <option value="Debit Card">Debit Visa/Mastercard</option> --}}
-                                                <option value="Prepaid Card">Prepaid Card</option>
-                                                <option value="Bank Account">Bank Account</option>
+                                                <option value="Prepaid Card">Reloadable Prepaid Card</option>
+                                                <option value="Bank Account">Bank Deposit</option>
                                             </select>
 
                                         </div>
                                     </div>
-                                    <div class="form-group"> <label for="card_id">
+
+
+
+                                    {{-- Start For Cash Deposit  --}}
+
+                                    <div class="form-group cashDeposit disp-0">
+                                        <label for="payout_id">
+                                            <h6>Select Payout Agent</h6>
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-append"> <span class="input-group-text text-muted">
+                                                    <img src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png" />
+                                                </span> </div>
+                                            <select name="payout_id" id="payout_id" class="form-control" required></select>
+
+                                        </div>
+
+                                        <br>
+                                        <div class="alert alert-info">
+                                            Please note that your means of identification for collection is your uploaded: <strong>@if (Auth::user()->nin_front != NULL) {{ "National Identity Card" }} @elseif (Auth::user()->drivers_license_front != NULL) {{ "Driver Licence" }} @elseif (Auth::user()->international_passport_front != NULL) {{ "International Passport" }} @elseif (Auth::user()->incorporation_doc_front != NULL || Auth::user()->idvdoc != NULL) {{ "Utility Bill" }}  @endif </strong>
+                                        </div>
+
+                                    </div>
+
+                                    {{-- End For Cash Deposit --}}
+
+
+                                    {{-- Start For Card and Bank Deposit  --}}
+
+                                    <div class="form-group cardbankDeposit disp-0"> <label for="card_id">
                                             <h6>Select Card/Bank</h6>
                                         </label>
                                         <div class="input-group">
                                             <div class="input-group-append"> <span class="input-group-text text-muted">
                                                     <img src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png" />
                                                 </span> </div>
-                                            <select name="card_id" id="card_id" class="form-control" required>
-                                                {{-- @foreach ($data['getCard'] as $mycard)
-                                                <option value="{{ $mycard->id }}">{!!
-                                                wordwrap(substr($mycard->card_number, 0, 4) . str_repeat('*',
-                                                strlen($mycard->card_number) - 8) . substr($mycard->card_number,
-                                                -4), 4, ' - ', true) !!}</option>
-                                                @endforeach --}}
-                                            </select>
+                                            <select name="card_id" id="card_id" class="form-control" required></select>
 
                                         </div>
                                     </div>
+
+                                    {{-- End For Card and Bank Deposit --}}
                                     @else
                                     <div class="form-group"> <label for="amount">
                                             <h5>Add a new card</h5>
@@ -603,7 +646,26 @@
             });
 
             $('#card_type').change(function() {
-                runCardType();
+
+                if($('#card_type').val() === 'Cash'){
+                    $('.cashDeposit').removeClass('disp-0');
+                    $('.cardbankDeposit').addClass('disp-0');
+
+                    runPayoutAgent();
+                }
+                // else if($('#card_type').val() === 'e-Transfer') {
+                //     $('.cashDeposit').removeClass('disp-0');
+                //     $('.cardbankDeposit').addClass('disp-0');
+                // }
+                else if($('#card_type').val() === 'Prepaid Card' || $('#card_type').val() === 'Bank Account') {
+                    $('.cardbankDeposit').removeClass('disp-0');
+                    $('.cashDeposit').addClass('disp-0');
+                    runCardType();
+                }
+                else{
+                    $('.cardbankDeposit').addClass('disp-0');
+                    $('.cashDeposit').addClass('disp-0');
+                }
 
                 if ($("#amount").val() != "") {
                     runCommission();
@@ -683,6 +745,64 @@
             }
 
 
+            function runPayoutAgent() {
+
+                $('#payout_id').html("");
+
+                var route = "{{ URL('/api/v1/getmycarddetail') }}";
+                var thisdata = {
+                    card_provider: $('#card_type').val()
+                };
+
+
+                Pace.restart();
+                Pace.track(function() {
+
+                    setHeaders();
+
+                    jQuery.ajax({
+                        url: route,
+                        method: 'get',
+                        data: thisdata,
+                        dataType: 'JSON',
+
+                        success: function(result) {
+                            if (result.message == "success") {
+                                var res = result.data;
+
+                               $.each(res, function(v, k) {
+                                    $('#payout_id').append(
+                                        `<option value="${k.id}">${k.businessname+' - ('+k.address+' '+k.city+', '+k.state+')'}</option>`
+                                    );
+                                });
+
+                            } else {
+                                $('#payout_id').append(
+                                    `<option value="">Payout Agent not available</option>`);
+                            }
+
+                        },
+                        error: function(err) {
+
+                            if(err.responseJSON){
+                                $('#payout_id').append(
+                                `<option value="">${err.responseJSON.message}</option>`);
+                            }
+                            else{
+                                $('#payout_id').append(
+                                `<option value="">${err.message}</option>`);
+                            }
+
+
+                        }
+
+                    });
+
+                });
+
+            }
+
+
             function cardHide(card) {
                 let hideNum = [];
                 for (let i = 0; i < card.length; i++) {
@@ -703,7 +823,11 @@
 
                 if ($('#card_type').val() == "Prepaid Card") {
                     structure = "EXBC Prepaid Card";
-                } else {
+                }
+                else if ($('#card_type').val() == "Cash") {
+                    structure = "Payout";
+                }
+                else {
                     structure = $("#card_type").val();
                 }
 
@@ -718,7 +842,8 @@
                     localcurrency: "{{ $data['currencyCode']->currencyCode }}",
                     foreigncurrency: "USD",
                     structure: "Withdrawal",
-                    structureMethod: structure
+                    structureMethod: structure,
+                    payoutAgent: $('#payout_id').val()
                 };
 
 
@@ -761,11 +886,22 @@
                                     $('.commissionInfo').addClass('alert alert-success');
                                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                                    $('.commissionInfo').html(
+                                    if($('#card_type').val() == "Cash"){
+                                        $('.commissionInfo').html(
+                                        "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
+                                        result.data.toFixed(2) + " will be given to you as " + $(
+                                            '#card_type').val() +
+                                        ". Fee charge of {{ $data['currencyCode']->currencySymbol }}"+(result.collection).toFixed(2)+" inclusive</span></li></li></ul>");
+                                    }
+                                    else{
+                                        $('.commissionInfo').html(
                                         "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
                                         result.data.toFixed(2) + " will be credited to your " + $(
                                             '#card_type').val() +
                                         ". Fee charge inclusive</span></li></li></ul>");
+                                    }
+
+
 
                                     $("#amounttosend").val(result.data);
                                     $("#commissiondeduct").val(result.collection);

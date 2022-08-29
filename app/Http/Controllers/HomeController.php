@@ -7,23 +7,34 @@ use Session;
 use App\Answer;
 use App\Points;
 
-use App\TrialDate;
-
 use App\Community;
 
+use App\PromoDate;
+
+use App\TrialDate;
+
 use App\CashAdvance;
+
+use App\MobileMoney;
+
+use App\PayoutAgent;
 
 use App\UpgradePlan;
 
 use App\Events\Event;
 
-use App\User as User;
+use App\SpecialPromo;
 
-use App\DusuProviders;
+use App\User as User;
 
 use App\ClaimedPoints;
 
+use App\DusuProviders;
+
 use App\HistoryReport;
+
+
+use App\ReferralClaim;
 
 use App\ReferredUsers;
 
@@ -33,7 +44,6 @@ use App\Mail\sendEmail;
 
 use App\Traits\Trulioo;
 
-
 use App\ImportExcelLink;
 
 use App\Traits\IDVCheck;
@@ -41,8 +51,6 @@ use App\Traits\IDVCheck;
 use App\Traits\MyEstore;
 
 use App\ReferralGenerate;
-
-use App\ReferralClaim;
 
 use App\Traits\Xwireless;
 
@@ -70,45 +78,43 @@ use App\Traits\PaymentGateway;
 
 use App\Traits\PaysprintPoint;
 
+
 use App\AnonUsers as AnonUsers;
 
 use App\Bronchure as Bronchure;
 
 use App\Contactus as Contactus;
-
 use App\Statement as Statement;
-
-
 use App\Traits\PaystackPayment;
-
 use App\Workorder as Workorder;
 
 use App\Classes\MyCurrencyCloud;
+
 use App\CardIssuer as CardIssuer;
 use App\ClientInfo as ClientInfo;
-use App\Consultant as Consultant;
 
+use App\Consultant as Consultant;
 use App\UserClosed as UserClosed;
+
+
 
 use App\Exports\TransactionExport;
 use Illuminate\Support\Facades\DB;
-
 use App\CreateEvent as CreateEvent;
 use App\ImportExcel as ImportExcel;
 
-
-
 use App\RentalQuote as RentalQuote;
+
 use App\ServiceType as ServiceType;
+
 use App\Traits\MailChimpNewsLetter;
+
+
 use Illuminate\Support\Facades\Log;
 
 use Illuminate\Support\Facades\Auth;
 
-use Illuminate\Support\Facades\Validator;
-
 use Illuminate\Support\Facades\Hash;
-
 
 use Illuminate\Support\Facades\Mail;
 
@@ -128,12 +134,7 @@ use Illuminate\Support\Facades\Storage;
 
 use App\InvoicePayment as InvoicePayment;
 
-use App\PromoDate;
-
-use App\MobileMoney;
-
-use App\SpecialPromo;
-
+use Illuminate\Support\Facades\Validator;
 use App\OrganizationPay as OrganizationPay;
 use App\TransactionCost as TransactionCost;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -465,14 +466,12 @@ class HomeController extends Controller
     public function feeStructure(Request $req)
     {
 
-
-
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
                 $this->page = 'Pricing';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
-                $country = Auth::user()->country;
+                $country = $req->get('country') != null ? $req->country : Auth::user()->country;
                 $data = array(
                     'country' => $country,
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
@@ -480,7 +479,7 @@ class HomeController extends Controller
                     'activecountries' => $this->getActiveCountries()
                 );
             } else {
-                $country = $this->myLocation()->country;
+                $country = $req->get('country') != null ? $req->country : $this->myLocation()->country;
                 $this->page = 'Pricing';
                 $this->name = '';
                 $data = [
@@ -490,7 +489,7 @@ class HomeController extends Controller
                 ];
             }
         } else {
-            $country = $this->myLocation()->country;
+            $country = $req->get('country') != null ? $req->country : $this->myLocation()->country;
             $this->page = 'Pricing';
             $this->name = session('name');
             $this->email = session('email');
@@ -501,14 +500,14 @@ class HomeController extends Controller
             ];
         }
 
-        if ($req->get('country') != null) {
-            $countrys = $req->get('country');
-        } else {
-            $countrys = $country;
-        }
+        // if ($req->get('country') != null) {
+        //     $countrys = $req->get('country');
+        // } else {
+        //     $countrys = $country;
+        // }
 
 
-        $prices = $this->pricingFees($countrys);
+        $prices = $this->pricingFees($country);
 
         if (isset($prices)) {
             $pricings = $prices;
@@ -516,7 +515,7 @@ class HomeController extends Controller
             $pricings = $this->pricingFees('Canada');
         }
 
-        $currency = $this->getCountryCode($countrys);
+        $currency = $this->getCountryCode($country);
 
 
         if (isset($currency)) {
@@ -528,7 +527,7 @@ class HomeController extends Controller
 
         $data['pricing'] = $pricings;
         $data['currency'] = $myCurrency;
-        $data['maintenance'] = $this->maintenanceBalanceWithdrawal('Consumer Monthly Subscription', $countrys);
+        $data['maintenance'] = $this->maintenanceBalanceWithdrawal('Consumer Monthly Subscription', $country);
 
 
         return view('main.newpage.shade-pro.pricing')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -537,15 +536,12 @@ class HomeController extends Controller
 
     public function feeStructure2(Request $req)
     {
-
-
-
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
                 $this->page = 'Merchant Pricing';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
-                $country = Auth::user()->country;
+                $country = $req->get('country') != null ? $req->country : Auth::user()->country;
                 $data = array(
                     'country' => $country,
                     'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
@@ -553,7 +549,7 @@ class HomeController extends Controller
                     'activecountries' => $this->getActiveCountries()
                 );
             } else {
-                $country = $this->myLocation()->country;
+                $country = $req->get('country') != null ? $req->country : $this->myLocation()->country;
                 $this->page = 'Merchant Pricing';
                 $this->name = '';
                 $data = [
@@ -563,7 +559,7 @@ class HomeController extends Controller
                 ];
             }
         } else {
-            $country = $this->myLocation()->country;
+            $country = $req->get('country') != null ? $req->country : $this->myLocation()->country;
             $this->page = 'Merchant Pricing';
             $this->name = session('name');
             $this->email = session('email');
@@ -574,14 +570,16 @@ class HomeController extends Controller
             ];
         }
 
-        if ($req->get('country') != null) {
-            $countrys = $req->get('country');
-        } else {
-            $countrys = $country;
-        }
+        // if ($req->get('country') != null) {
+        //     $countrys = $req->get('country');
+        // } else {
+        //     $countrys = $country;
+        // }
 
 
-        $prices = $this->pricingFees($countrys);
+
+
+        $prices = $this->pricingFees($country);
 
         if (isset($prices)) {
             $pricings = $prices;
@@ -589,7 +587,7 @@ class HomeController extends Controller
             $pricings = $this->pricingFees('Canada');
         }
 
-        $currency = $this->getCountryCode($countrys);
+        $currency = $this->getCountryCode($country);
 
 
         if (isset($currency)) {
@@ -600,13 +598,12 @@ class HomeController extends Controller
 
         $data['pricing'] = $pricings;
         $data['currency'] = $myCurrency;
-        $data['maintenance'] = $this->maintenanceBalanceWithdrawal('Merchant Monthly Subscription', $countrys);
-
-
+        $data['maintenance'] = $this->maintenanceBalanceWithdrawal('Merchant Monthly Subscription', $country);
 
 
         return view('main.newpage.shade-pro.pricing2')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
+
 
 
     public function pricingFees($country)
@@ -1808,6 +1805,7 @@ class HomeController extends Controller
             'continent' => $this->timezone[0],
             'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
             'providers' => MobileMoney::where('user_id', Auth::id())->get(),
+            'subscription' => $this->getConsumerCost(Auth::user()->country)
         );
 
         // dd($data['providers']);
@@ -1815,7 +1813,14 @@ class HomeController extends Controller
         return view('main.withdrawmoney')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
+    public function getConsumerCost($country)
+    {
+        $data = TransactionCost::where('country', $country)->where('structure', 'Consumer Monthly Subscription')->first();
 
+        $price = $data->fixed;
+
+        return $price;
+    }
 
 
     public function addBankDetail(Request $req)
@@ -4874,14 +4879,14 @@ class HomeController extends Controller
 
                         $checkAvalable = $shuftiVerify->shuftiAvailableCountries(Auth::user()->country);
 
-                        if($checkAvalable === true){
+                        if ($checkAvalable === true) {
                             $checkAmlVerification = $shuftiVerify->callAmlCheck(Auth::user()->ref_code, $dob, $getUsername, Auth::user()->email, $countryApproval->code);
 
-                                if ($checkAmlVerification->event !== 'verification.accepted') {
-                                    User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
-                                } else {
-                                    User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
-                                }
+                            if ($checkAmlVerification->event !== 'verification.accepted') {
+                                User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
+                            } else {
+                                User::where('id', Auth::user()->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
+                            }
                         }
                     }
                 } else {
@@ -5906,9 +5911,6 @@ class HomeController extends Controller
     public function ajaxgetCommission(Request $req)
     {
 
-
-
-
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
 
@@ -5937,6 +5939,8 @@ class HomeController extends Controller
 
 
 
+
+
             /*
 
                 Calculation
@@ -5949,7 +5953,21 @@ class HomeController extends Controller
 
             if (isset($data) == true) {
 
-                if ($thisuser->country == "Nigeria" && $req->amount <= 2500) {
+                if($req->pay_method == "Cash"){
+
+                    // Get the selected payout agent...
+                    $getAgent = PayoutAgent::where('id', $req->payoutAgent)->first();
+
+                    if($getAgent){
+                        $collection = ($getAgent->fee / 100) * $req->amount;
+                    }
+                    else{
+                        $collection = (1.50 / 100) * $req->amount;
+                    }
+
+                }
+                else{
+                    if ($thisuser->country == "Nigeria" && $req->amount <= 2500) {
 
                     $x = ($data->variable / 100) * $req->amount;
 
@@ -5990,6 +6008,9 @@ class HomeController extends Controller
                         }
                     }
                 }
+                }
+
+
             } else {
 
                 if ($req->structure == "Withdrawal") {
@@ -6027,7 +6048,11 @@ class HomeController extends Controller
                 $amountReceive = $req->amount;
                 $state = "commission unavailable";
             }
+
+
+
         } else {
+
             $amountReceive = $req->amount;
             $state = "commission free";
             $collection = 0;

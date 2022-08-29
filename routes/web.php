@@ -257,6 +257,7 @@ Route::prefix('developers')->group(function () {
 	Route::post('/storeanswer', ['uses' => 'HomeController@storeSubMessage', 'as' => 'storeanswer']);
 });
 
+// Route::get('/updatesubscription', ['uses' => 'AdminController@updateSubscription', 'as' => 'update subscription']);
 
 
 Route::prefix('shop')->group(function () {
@@ -476,6 +477,8 @@ Route::prefix('merchant')->group(function () {
 	Route::get('/estore', [MerchantPageController::class, 'orderingSystem'])->name('ordering system');
 	Route::get('/storepickupaddress', [MerchantPageController::class, 'storepickupAddress'])->name('storepickup address');
 	Route::get('/deliverypickupaddress', [MerchantPageController::class, 'deliverypickupAddress'])->name('deliverypickup address');
+
+	Route::get('/mypayoutrecord', [MerchantPageController::class, 'payoutRecord'])->name('my payout record');
 
 	Route::post('/requestpaymentlink', [MerchantPageController::class, 'requestPaymentLink'])->name('request payment link');
 
@@ -1245,6 +1248,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 	Route::post('Ajaxregister', ['uses' => 'HomeController@ajaxregister', 'as' => 'Ajaxregister']);
 	Route::post('Ajaxlogin', ['uses' => 'HomeController@ajaxlogin', 'as' => 'Ajaxlogin']);
 	Route::post('contactus', ['uses' => 'HomeController@contactus', 'as' => 'contactus']);
+	
 
 
 	// Logout

@@ -22,6 +22,9 @@ Route::prefix('/v1')->group(function () {
 
     Route::get('epspayinvoicelink',  ['uses' => 'MonerisController@epspayInvoiceLink'])->name('eps pay invoice link from gateway');
 
+    Route::get('getmarketcategory',  ['uses' => 'MarketplaceController@getmarketCategory'])->name('get market category');
+    Route::get('getallbusiness',  ['uses' => 'MarketplaceController@getallBusinesses'])->name('get businesses');
+
 
     Route::group(['middleware' => ['appkey']], function () {
 
@@ -77,14 +80,13 @@ Route::prefix('/v1')->group(function () {
         // Investor Relation ....
 
         Route::get('investor/activatedposts', ['uses' => 'api\v1\InvestorRelationController@investorActivatedPosts']);
-        Route::post('investor/interestpayload',['uses' => 'api\v1\InvestorRelationController@investorInterestPayload']);
+        Route::post('investor/interestpayload', ['uses' => 'api\v1\InvestorRelationController@investorInterestPayload']);
 
 
-        Route::get('investor/get-specific',['uses' => 'api\v1\InvestorRelationController@investorGetSpecificPost']);
-        Route::get('investor/express-interest',['uses' => 'api\v1\InvestorRelationController@investorExpressInteret']);
+        Route::get('investor/get-specific', ['uses' => 'api\v1\InvestorRelationController@investorGetSpecificPost']);
+        Route::get('investor/express-interest', ['uses' => 'api\v1\InvestorRelationController@investorExpressInteret']);
 
-        Route::get('investor/logout',['uses' => 'api\v1\InvestorRelationController@logout']);
-
+        Route::get('investor/logout', ['uses' => 'api\v1\InvestorRelationController@logout']);
     });
 
 
@@ -382,10 +384,14 @@ Route::prefix('/v1')->group(function () {
         Route::post('/shop/product/removecartitem', ['uses' => 'ShopController@removeCartItem', 'as' => 'remove cart item']);
 
         // Services.....
-         Route::post('/service/setup', ['uses' => 'ServiceController@setupService', 'as' => 'setup service']);
+        Route::post('/service/setup', ['uses' => 'ServiceController@setupService', 'as' => 'setup service']);
 
         // Estore
+
          Route::post('/order/out-for-delivery', ['uses' => 'ShopController@outForDelivery', 'as' => 'out for delivery or pickup']);
+
+         Route::post('/becomepayoutagent', ['uses' => 'PayoutAgentController@beAnAgent', 'as' => 'be an agent on paysprint']);
+
     });
 
 
@@ -407,7 +413,7 @@ Route::prefix('/v1')->group(function () {
         Route::post('sync/handshake',  ['uses' => 'ThirdPartyHandshakeController@handshakeRegistration']);
     });
 
-        // Get Currency value
+    // Get Currency value
     Route::get('/fetchcurrency', ['uses' => 'CurrencyFxController@fetchCurrency', 'as' => 'currency fetcher']);
 
     Route::post('walletbalance',  ['uses' => 'api\v1\MerchantApiController@getMyWalletBalance', 'as' => 'check customer wallet balance']);
@@ -419,6 +425,4 @@ Route::prefix('/v1')->group(function () {
     Route::get('sync/countries',  ['uses' => 'ThirdPartyHandshakeController@availableCountriesonPS']);
 
     Route::get('/transaction-fee',  ['uses' => 'ThirdPartyHandshakeController@transactionFeeCharge']);
-
-
 });

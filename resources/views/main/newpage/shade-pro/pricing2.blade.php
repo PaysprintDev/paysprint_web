@@ -1,235 +1,259 @@
 @extends('layouts.newpage.app')
 
 @section('content')
-    <!-- navbar- -->
-    <div style="overflow-y: auto !important;">
-        <div class="inner-banner pt-29 pt-lg-30 pb-9 pb-lg-12 bg-default-6">
-            <div class="container">
-                <div class="row  justify-content-center pt-5">
-                    <div class="col-xl-8 col-lg-9">
-                        <div class="px-md-15 text-center">
-                            <h2 class="title gr-text-2 mb-8 mb-lg-10">Pricing</h2>
-                            {{-- <p class="gr-text-7 mb-0 mb-lg-13">Full Time, Remote</p> --}}
-                        </div>
-                    </div>
-
-                    <div class="col-12">
-                        <table class="table table-striped table-bordered">
-
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <p class="gr-text-7 font-weight-bold mb-9">Select Country</p>
-
-                                        <select name="country" id="pricing_country2" class="form-control"
-                                            style="overflow-y: auto">
-                                            <option value="">Select Country</option>
-                                            @foreach ($data['activecountries'] as $country)
-                                                <option value="{{ $country->name }}"
-                                                    {{ $country->name == Request::get('country') ? 'selected' : '' }}>
-                                                    {{ $country->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                </tr>
-                            </tbody>
-
-                        </table>
+<!-- navbar- -->
+<div style="overflow-y: auto !important;">
+    <div class="inner-banner pt-29 pt-lg-30 pb-9 pb-lg-12 bg-default-6">
+        <div class="container">
+            <div class="row  justify-content-center pt-5">
+                <div class="col-xl-8 col-lg-9">
+                    <div class="px-md-15 text-center">
+                        <h2 class="title gr-text-2 mb-8 mb-lg-10">Pricing</h2>
+                        {{-- <p class="gr-text-7 mb-0 mb-lg-13">Full Time, Remote</p> --}}
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="main-block pb-6 pb-lg-17 bg-default-6">
-            <div class="container">
-                <div class="row justify-content-center">
 
-                    <div class="table table-responsive">
+                <div class="col-12">
+                    <table class="table table-striped table-bordered">
 
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <p class="gr-text-7 font-weight-bold mb-9">Select Country</p>
 
-                    </div>
-                    <div class="table table-responsive">
-                        <table class="table table-striped table-bordered">
-                            <tbody>
+                                    <select name="country" id="pricing_country2" class="form-control" style="overflow-y: auto">
+                                        <option value="">Select Country</option>
+                                        @foreach ($data['activecountries'] as $country)
+                                        <option value="{{ $country->name }}" {{ $country->name == Request::get('country') ? 'selected' : '' }}>
+                                            {{ $country->name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
 
-                                <tr>
-                                    <td>
-                                        <p class="gr-text-6 font-weight-bold mb-9"></p>
-                                    </td>
-                                    <td align="center">
-                                        <p class="gr-text-6 font-weight-bold mb-9">Basic</p>
-                                        <p class="text-danger">{{ $data['currency'] . '0.00' }} Fee</p>
-                                    </td>
-
-
-                                    @if ($thisprices = \App\TransactionCost::where('country', $data['country'])->where('structure', 'Merchant Monthly Subscription')->first())
-
-                                        @php
-                                            $monthlyBased = $thisprices->fixed;
-                                            $yearlyBased = $thisprices->fixed * 10;
-                                        @endphp
-
-                                    @else
-                                        @php
-                                            $monthlyBased = 0;
-                                            $yearlyBased = 0;
-                                        @endphp
-                                    @endif
-
-                                    <td align="center">
-                                        <p class="gr-text-6 font-weight-bold mb-9">Classic</p>
-                                        <p class="text-danger">
-                                            {{ $data['currency'] . number_format($monthlyBased, 2) }}
-                                            Monthly/{{ $data['currency'] . number_format($yearlyBased, 2) }} Annually
-                                        </p>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <p class="gr-text-9 mb-0">Create and Send Invoice to Customers</p>
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <p class="gr-text-9 mb-0">No Charge Money Transfer (Local & Intl.)</p>
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <p class="gr-text-9 mb-0">Accept Payments (Mobile, Online & On Your Website)</p>
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <p class="gr-text-9 mb-0">Pay Invoice to PaySprint Merchants</p>
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <p class="gr-text-9 mb-0">Pay Invoice to Non-PaySprint Merchants (Globally)</p>
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                    </td>
-                                </tr>
-
-                                @if (Request::get('country') == 'Canada' || Request::get('country') == 'United States')
-
-                                    <tr>
-                                        <td>
-                                            <p class="gr-text-9 mb-0">Access to Currency Exchange</p>
-                                        </td>
-                                        <td align="center">
-                                            <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-
-                                        </td>
-                                        <td align="center">
-                                            <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                        </td>
-                                    </tr>
-
-                                @endif
-
-
-
-                                @if (Request::get('country') == 'Canada' || Request::get('country') == 'United States')
-
-                                    <tr>
-                                        <td>
-                                            <p class="gr-text-9 mb-0">Merchants Cash Advance</p>
-                                        </td>
-                                        <td align="center">
-                                            <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-
-                                        </td>
-                                        <td align="center">
-                                            <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                        </td>
-                                    </tr>
-
-                                @endif
-
-                                <tr>
-                                    <td>
-                                        <p class="gr-text-9 mb-0">Manage Rental Property</p>
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <p class="gr-text-9 mb-0">Manage Orders (eStore)</p>
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <p class="gr-text-9 mb-0">Promote your Business</p>
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-
-                                    </td>
-                                    <td align="center">
-                                        <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                    </td>
-                                </tr>
-
-
-                            </tbody>
-
-
-                        </table>
-                    </div>
-
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+    <div class="main-block pb-6 pb-lg-17 bg-default-6">
+        <div class="container">
+            <div class="row justify-content-center">
+
+                <div class="table table-responsive">
+
+
+                </div>
+                <div class="table table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <tbody>
+
+                            <tr>
+                                <td>
+                                    <p class="gr-text-6 font-weight-bold mb-9"></p>
+                                </td>
+                                <td align="center">
+                                    <p class="gr-text-6 font-weight-bold mb-9">Basic</p>
+                                    <p class="text-danger">{{ $data['currency'] . '0.00' }} Fee</p>
+                                </td>
+
+
+                                @if ($thisprices = \App\TransactionCost::where('country', $data['country'])->where('structure', 'Merchant Monthly Subscription')->first())
+
+                                @php
+                                $monthlyBased = $thisprices->fixed;
+                                $yearlyBased = $thisprices->fixed * 10;
+                                @endphp
+
+                                @else
+                                @php
+                                $monthlyBased = 0;
+                                $yearlyBased = 0;
+                                @endphp
+                                @endif
+
+                                <td align="center">
+                                    <p class="gr-text-6 font-weight-bold mb-9">Classic</p>
+                                    <p class="text-danger">
+                                        
+                                        {{ $data['currency'] . number_format($monthlyBased, 2) }}
+                                        Monthly
+                                    </p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <p class="gr-text-9 mb-0">Create and Send Invoice to Customers</p>
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="gr-text-9 mb-0">No Charge Money Transfer (Local & Intl.)</p>
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <p class="gr-text-9 mb-0">Accept Payments (Mobile, Online & On Your Website)</p>
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <p class="gr-text-9 mb-0">Pay Invoice to PaySprint Merchants</p>
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="gr-text-9 mb-0">Pay Invoice to Non-PaySprint Merchants (Globally)</p>
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+                                </td>
+                            </tr>
+
+                            @if (Request::get('country') == 'Canada' || Request::get('country') == 'United States')
+
+                            <tr>
+                                <td>
+                                    <p class="gr-text-9 mb-0">Access to Currency Exchange</p>
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
+
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+
+                                </td>
+                            </tr>
+
+                            @endif
+
+
+
+                            @if (Request::get('country') == 'Canada' || Request::get('country') == 'United States')
+
+                            <tr>
+                                <td>
+                                    <p class="gr-text-9 mb-0">Merchants Cash Advance</p>
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
+
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+
+                                </td>
+                            </tr>
+
+                            @endif
+
+                            <tr>
+                                <td>
+                                    <p class="gr-text-9 mb-0">Manage Rental Property</p>
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
+
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <p class="gr-text-9 mb-0">Manage Orders (Market Place)</p>
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
+
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <p class="gr-text-9 mb-0">Promote your Business</p>
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
+
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="gr-text-9 mb-0">Access PaySprint Foreign Exchange</p>
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
+
+                                </td>
+                                <td align="center">
+                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p class="gr-text-9 mb-0 text-danger">Minimum balance of {{ $data['currency'] . number_format($monthlyBased, 2) }} in Wallet Applies.</p>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <p class="text-center text-danger">30days Free Subscription. Cancel Subscription at any time.</p>
+                                </td>
+                                <!-- <td></td>
+                                <td></td> -->
+                            </tr>
+
+                        </tbody>
+
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

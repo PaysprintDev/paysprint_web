@@ -11,27 +11,30 @@ use App\Statement;
 //Session
 use App\ClientInfo;
 
+use App\PayoutAgent;
 use App\ServiceType;
 use App\StoreOrders;
 use App\StorePickup;
 use App\UpgradePlan;
 use App\AllCountries;
-use App\merchantTrial;
 use App\User as User;
 
 use App\ClaimedPoints;
 
 use App\HistoryReport;
+use App\merchantTrial;
 use App\Notifications;
 use App\StoreCategory;
 use App\StoreDiscount;
 use App\StoreMainShop;
 use App\StoreProducts;
-use App\StoreWishList;
-use App\ActivationEstore;
+use App\StoreShipping;
 
+use App\StoreWishList;
 use App\Traits\MyEstore;
 use App\TransactionCost;
+use App\ActivationEstore;
+use App\PayoutWithdrawal;
 use App\Traits\SpecialInfo;
 use Illuminate\Http\Request;
 use App\Traits\PointsHistory;
@@ -41,7 +44,6 @@ use App\ImportExcel as ImportExcel;
 use Illuminate\Support\Facades\Auth;
 use App\InvoicePayment as InvoicePayment;
 use App\ImportExcelLink as ImportExcelLink;
-use App\StoreShipping;
 
 class MerchantPageController extends Controller
 {
@@ -102,6 +104,29 @@ class MerchantPageController extends Controller
 
 
         return view('merchant.pages.invoice')->with(['pages' => 'invoice single', 'data' => $data]);
+    }
+
+    public function payoutRecord()
+    {
+        $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+        if ($client->accountMode == "test") {
+
+            return redirect()->route('dashboard')->with('error', 'You are in test mode');
+        }
+
+        $agentRec = PayoutAgent::where('user_id', Auth::user()->ref_code)->first();
+
+
+        $data = [
+            'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
+            'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+            'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
+            'record' => isset($agentRec) ? PayoutWithdrawal::where('id', $agentRec->id)->orderBy('created_at', 'DESC')->get() : []
+        ];
+
+
+        return view('merchant.pages.payout')->with(['pages' => 'invoice single', 'data' => $data]);
     }
 
 
