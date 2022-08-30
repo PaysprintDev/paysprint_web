@@ -11,6 +11,7 @@ class MoexController extends Controller
     public function importData(){
 
         $data=$this->importPartnerFee();
+      
     
 
 
@@ -364,7 +365,7 @@ class MoexController extends Controller
                 ]
             ],
             '19' =>[
-                'country' => 'CONGO BRAZZAVILLE',
+                'country' => 'CONGO',
                 'range' => [
                      '0 - ONWARDS'
                 ],
@@ -1449,7 +1450,7 @@ class MoexController extends Controller
                 ]
             ],
             '83' =>[
-                'country' => 'SURINAM',
+                'country' => 'SURINAME',
                 'range' => [
                      '0 - ONWARDS',
                     '0 - ONWARDS'
@@ -1581,7 +1582,7 @@ class MoexController extends Controller
                 ]
             ],
             '91' =>[
-                'country' => 'UNITED ARAB EMIRATE',
+                'country' => 'UNITED ARAB EMIRATES',
                 'range' => [
                      '0 - ONWARDS'
                 ],
@@ -1611,7 +1612,7 @@ class MoexController extends Controller
                 ]
             ],
             '93' =>[
-                'country' => 'UNITED STATE',
+                'country' => 'UNITED STATES',
                 'range' => [
                      '0 - ONWARDS',
                      '0 - ONWARDS'
@@ -1725,6 +1726,7 @@ class MoexController extends Controller
        
 
      return $list;
+     
  
     }
     
