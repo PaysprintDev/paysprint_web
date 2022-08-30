@@ -47,24 +47,37 @@
 
 @auth
 
+@php
 $subdate=new DateTime(Auth::user()->subscription_trigger);
-$currentdate=new DateTime(date('Y-m-d');
 
+
+$currentdate=new DateTime(date('Y-m-d'));
+
+@endphp
 @if (Auth::user()->subscription_trigger === NULL || $currentdate > $subdate)
 <script>
     $(document).ready(function() {
         $('#triggerbtn').click();
 
+        trigger();
+
     });
 
 
     function trigger() {
-        var data = $('#triggerform').serialize();
+        var user_id = "{{Auth::id()}}";
+
+        // alert(user_id);
 
         $.ajax({
             method: 'POST',
             url: '{{ route("trigger date") }}',
-            data: data,
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            data: {
+                user_id
+            },
             success: function(resp) {
                 console.log(resp);
             }

@@ -12,6 +12,7 @@ class TriggerController extends Controller
     {
         $userid = $req->user_id;
 
+
         $date = date('Y-m-d');
 
         $newdate = date('Y-m-d', strtotime($date . ' + 7 days'));
@@ -20,6 +21,4 @@ class TriggerController extends Controller
             'subscription_trigger' => $newdate,
         ]);
     }
-
-    
 }

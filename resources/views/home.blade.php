@@ -971,6 +971,7 @@ use App\Http\Controllers\User; ?>
 
 
 
+
     <!-- modal form -->
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary disp-0" data-toggle="modal" data-target="#staticBackdrop" id="triggerbtn">
@@ -991,14 +992,14 @@ use App\Http\Controllers\User; ?>
                             <form action="" method="post" id="triggerform">
                                 <h1>Upgrade Your Account Now!</h1>
                                 <p>Enjoy unlimited access to exciting features when you upgrade your account</p>
-                                <input type="hidden" name="user_id" value="{{Auth::id()}}">
+                                <input type="hidden" name="user_id" id="form_user_id" value="{{Auth::id()}}">
 
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="trigger();">Upgrade Now</button>
+                    <button type="button" class="btn btn-primary">Upgrade Now</button>
                 </div>
                 </form>
             </div>
