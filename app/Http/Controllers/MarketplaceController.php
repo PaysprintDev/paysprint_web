@@ -161,6 +161,7 @@ use App\OrganizationPay as OrganizationPay;
 use App\SupportActivity as SupportActivity;
 use App\TransactionCost as TransactionCost;
 use App\BVNVerificationList as BVNVerificationList;
+use App\StoreProducts;
 use Illuminate\Http\Response;
 
 class MarketplaceController extends Controller
@@ -218,5 +219,29 @@ class MarketplaceController extends Controller
 
 
         return response()->json($response, $status);
+    }
+
+    //getting all verified business
+    public function getVerifiedBusiness(Request $req)
+    {
+        try {
+            $data = StoreProducts::get();
+            $code = 200;
+
+            $response = [
+                'data' => $data,
+                'message' => 'success'
+            ];
+        } catch (\Throwable $th) {
+            //throw $th;
+            $response = [
+                'data' => [],
+                'message' => $th->getMessage()
+            ];
+
+            $code = 400;
+        }
+
+        return response()->json($response, $code);
     }
 }

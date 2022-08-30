@@ -30,11 +30,9 @@
 <script src="{{ asset('pace/pace.min.js') }}"></script>
 
 <script src="{{ asset('ext/plugins/countrycode/js/jquery.ccpicker.js') }}"></script>
- <!-- Sharethis script -->
+<!-- Sharethis script -->
 {{-- <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=62bad1f7ffa4ba00198f3c70&product=inline-share-buttons" async="async"></script> --}}
-<script type='text/javascript'
-        src='https://platform-api.sharethis.com/js/sharethis.js#property=62837dc55d7558001495d1e7&product=sop'
-        async='async'></script>
+<script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=62837dc55d7558001495d1e7&product=sop' async='async'></script>
 
 
 <script language="javascript">
@@ -49,39 +47,70 @@
 
 @auth
 
-    <script>
-        function payOrg(user_id) {
+$subdate=new DateTime(Auth::user()->subscription_trigger);
+$currentdate=new DateTime(date('Y-m-d');
 
-            location.href = location.origin + "/payment/sendmoney/" + user_id + "?country={{ Auth::user()->country }}";
-        }
+@if (Auth::user()->subscription_trigger === NULL || $currentdate > $subdate)
+<script>
+    $(document).ready(function() {
+        $('#triggerbtn').click();
 
-        function receiveMoney(user_id) {
-            location.href = location.origin + "/payment/receivemoney/" + user_id +
-                "?country={{ Auth::user()->country }}";
-        }
-
+    });
 
 
-        // When the user scrolls the page, execute myFunction
-        window.onscroll = function() {
-            myFunction()
-        };
+    function trigger() {
+        var data = $('#triggerform').serialize();
 
-        // Get the header
-        var header = document.getElementById("myHeader");
-
-        // Get the offset position of the navbar
-        var sticky = header.offsetTop;
-
-        // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
-        function myFunction() {
-            if (window.pageYOffset > sticky) {
-                header.classList.add("sticky");
-            } else {
-                header.classList.remove("sticky");
+        $.ajax({
+            method: 'POST',
+            url: '{{ route("trigger date") }}',
+            data: data,
+            success: function(resp) {
+                console.log(resp);
             }
+
+        });
+    }
+</script>
+
+
+@endif
+
+
+
+<script>
+    function payOrg(user_id) {
+
+        location.href = location.origin + "/payment/sendmoney/" + user_id + "?country={{ Auth::user()->country }}";
+    }
+
+    function receiveMoney(user_id) {
+        location.href = location.origin + "/payment/receivemoney/" + user_id +
+            "?country={{ Auth::user()->country }}";
+    }
+
+
+
+    // When the user scrolls the page, execute myFunction
+    window.onscroll = function() {
+        myFunction()
+    };
+
+    // Get the header
+    var header = document.getElementById("myHeader");
+
+    // Get the offset position of the navbar
+    var sticky = header.offsetTop;
+
+    // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+    function myFunction() {
+        if (window.pageYOffset > sticky) {
+            header.classList.add("sticky");
+        } else {
+            header.classList.remove("sticky");
         }
-    </script>
+    }
+</script>
 
 @endauth
 
@@ -2162,769 +2191,769 @@
 
 
 @auth
-    <script>
-        function shakeHand(val, ref_code) {
+<script>
+    function shakeHand(val, ref_code) {
 
-            var route;
+        var route;
 
-            if (val == 'claimmoney') {
+        if (val == 'claimmoney') {
 
-                var formData = new FormData();
-                var spin = $('#btn' + ref_code);
-                formData.append('reference_code', $('#reference_code').val());
-
-
-                route = "{{ URL('/api/v1/claimmoney') }}";
-
-                Pace.restart();
-                Pace.track(function() {
-                    setHeaders();
-                    jQuery.ajax({
-                        url: route,
-                        method: 'post',
-                        data: formData,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'JSON',
-                        beforeSend: function() {
-                            spin.removeClass('disp-0');
-                        },
-                        success: function(result) {
-                            spin.addClass('disp-0');
-                            if (result.status == 200) {
-                                swal("Success", result.message, "success");
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 2000);
-                            } else {
-                                swal("Oops", result.message, "error");
-                            }
-
-                        },
-                        error: function(err) {
-                            spin.addClass('disp-0');
-                            swal("Oops", err.responseJSON.message, "error");
-
-                        }
-
-                    });
-                });
-
-            }
-
-        }
-
-        function changeMyPlan(val) {
-            if ('changeplan') {
-                var formData = new FormData(formElemchangeplan);
-
-                swal({
-                        title: "Are you sure?",
-                        text: "Click OK to proceed",
-                        icon: "warning",
-                        buttons: true,
-                        dangerMode: true,
-                    })
-                    .then((willDelete) => {
-                        if (willDelete) {
-                            route = "{{ URL('/api/v1/changeplan') }}";
-
-                            Pace.restart();
-                            Pace.track(function() {
-                                setHeaders();
-                                jQuery.ajax({
-                                    url: route,
-                                    method: 'post',
-                                    data: formData,
-                                    cache: false,
-                                    processData: false,
-                                    contentType: false,
-                                    dataType: 'JSON',
-                                    beforeSend: function() {
-                                        $('#cardSubmit').text('Please wait...');
-                                    },
-                                    success: function(result) {
-
-                                        $('#cardSubmit').text('Upgrade Account');
+            var formData = new FormData();
+            var spin = $('#btn' + ref_code);
+            formData.append('reference_code', $('#reference_code').val());
 
 
-                                        if (result.status == 200) {
-                                            swal("Success", result.message, "success");
-                                            setTimeout(function() {
-                                                location.reload();
-                                            }, 2000);
-                                        } else {
-                                            swal("Oops", result.message, "error");
-                                        }
+            route = "{{ URL('/api/v1/claimmoney') }}";
 
-
-                                    },
-                                    error: function(err) {
-                                        $('#cardSubmit').text('Upgrade Account');
-                                        swal("Oops", err.responseJSON.message, "error");
-
-                                    }
-
-                                });
-                            });
+            Pace.restart();
+            Pace.track(function() {
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'post',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        spin.removeClass('disp-0');
+                    },
+                    success: function(result) {
+                        spin.addClass('disp-0');
+                        if (result.status == 200) {
+                            swal("Success", result.message, "success");
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
                         } else {
-
-                        }
-                    });
-
-
-
-            }
-        }
-
-
-        function handShake(val) {
-
-            var route;
-
-            var formData = new FormData(formElem);
-
-
-
-            if (val == "updateprofile") {
-                route = "{{ URL('/api/v1/profile') }}";
-
-
-                Pace.restart();
-                Pace.track(function() {
-                    setHeaders();
-                    jQuery.ajax({
-                        url: route,
-                        method: 'post',
-                        data: formData,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'JSON',
-                        beforeSend: function() {
-                            $('#updateBtn').text('Updating Profile...');
-                        },
-                        success: function(result) {
-
-                            $('#updateBtn').text('Update Profile');
-
-
-                            if (result.status == 200) {
-                                swal("Success", result.message, "success");
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 2000);
-                            } else {
-                                swal("Oops", result.message, "error");
-                            }
-
-
-                        },
-                        error: function(err) {
-                            $('#updateBtn').text('Update Profile');
-                            swal("Oops", err.responseJSON.message, "error");
-
+                            swal("Oops", result.message, "error");
                         }
 
-                    });
+                    },
+                    error: function(err) {
+                        spin.addClass('disp-0');
+                        swal("Oops", err.responseJSON.message, "error");
+
+                    }
+
                 });
-
-            } else if (val == "transactionpinsettings") {
-
-                formData = new FormData(formElemtransactionpinsettings);
-
-                route = "{{ URL('/api/v1/updatetransactionpin') }}";
-
-
-                Pace.restart();
-                Pace.track(function() {
-                    setHeaders();
-                    jQuery.ajax({
-                        url: route,
-                        method: 'post',
-                        data: formData,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'JSON',
-                        beforeSend: function() {
-                            $('#transactionBtn').text('Please wait...');
-                        },
-                        success: function(result) {
-
-                            $('#transactionBtn').text('Save');
-
-
-                            if (result.status == 200) {
-                                swal("Success", result.message, "success");
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 2000);
-                            } else {
-                                swal("Oops", result.message, "error");
-                            }
-
-
-                        },
-                        error: function(err) {
-                            $('#transactionBtn').text('Save');
-                            swal("Oops", err.responseJSON.message, "error");
-
-                        }
-
-                    });
-                });
-
-            } else if (val == "newtransactionpinsettings") {
-
-                formData = new FormData(formElemnewtransactionpinsettings);
-
-                route = "{{ URL('/api/v1/createtransactionpin') }}";
-
-
-                Pace.restart();
-                Pace.track(function() {
-                    setHeaders();
-                    jQuery.ajax({
-                        url: route,
-                        method: 'post',
-                        data: formData,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'JSON',
-                        beforeSend: function() {
-                            $('#transactionBtn').text('Please wait...');
-                        },
-                        success: function(result) {
-
-                            $('#transactionBtn').text('Save');
-
-
-                            if (result.status == 200) {
-                                swal("Success", result.message, "success");
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 2000);
-                            } else {
-                                swal("Oops", result.message, "error");
-                            }
-
-
-                        },
-                        error: function(err) {
-                            $('#transactionBtn').text('Save');
-                            swal("Oops", err.responseJSON.message, "error");
-
-                        }
-
-                    });
-                });
-
-            } else if (val == "passwordsettings") {
-
-                formData = new FormData(formElempasswordsettings);
-
-                route = "{{ URL('/api/v1/updatepassword') }}";
-
-
-                Pace.restart();
-                Pace.track(function() {
-                    setHeaders();
-                    jQuery.ajax({
-                        url: route,
-                        method: 'post',
-                        data: formData,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'JSON',
-                        beforeSend: function() {
-                            $('#passwordBtn').text('Please wait...');
-                        },
-                        success: function(result) {
-
-                            $('#passwordBtn').text('Save');
-
-
-                            if (result.status == 200) {
-                                swal("Success", result.message, "success");
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 2000);
-                            } else {
-                                swal("Oops", result.message, "error");
-                            }
-
-
-                        },
-                        error: function(err) {
-                            $('#passwordBtn').text('Save');
-                            swal("Oops", err.responseJSON.message, "error");
-
-                        }
-
-                    });
-                });
-
-            } else if (val == "bvnverification") {
-
-                formData = new FormData(formElembvnverification);
-
-                route = "{{ URL('/api/v1/bvnverification') }}";
-
-
-                Pace.restart();
-                Pace.track(function() {
-                    setHeaders();
-                    jQuery.ajax({
-                        url: route,
-                        method: 'post',
-                        data: formData,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'JSON',
-                        beforeSend: function() {
-                            $('#passwordBtn').text('Please wait...');
-                        },
-                        success: function(result) {
-
-                            $('#passwordBtn').text('Save');
-
-
-                            if (result.status == 200) {
-                                swal("Success", result.message, "success");
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 2000);
-                            } else {
-                                swal("Oops", result.message, "error");
-                            }
-
-
-                        },
-                        error: function(err) {
-                            $('#passwordBtn').text('Save');
-                            swal("Oops", err.responseJSON.message, "error");
-
-                        }
-
-                    });
-                });
-
-            } else if (val == "securityquestans") {
-
-                formData = new FormData(formElemsecurityquestans);
-
-                route = "{{ URL('/api/v1/security') }}";
-
-
-                Pace.restart();
-                Pace.track(function() {
-                    setHeaders();
-                    jQuery.ajax({
-                        url: route,
-                        method: 'post',
-                        data: formData,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'JSON',
-                        beforeSend: function() {
-                            $('#securityBtn').text('Please wait...');
-                        },
-                        success: function(result) {
-
-                            $('#securityBtn').text('Save');
-
-
-                            if (result.status == 200) {
-                                swal("Success", result.message, "success");
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 2000);
-                            } else {
-                                swal("Oops", result.message, "error");
-                            }
-
-
-                        },
-                        error: function(err) {
-                            $('#securityBtn').text('Save');
-                            swal("Oops", err.responseJSON.message, "error");
-
-                        }
-
-                    });
-                });
-
-            } else if (val == "autodeposit") {
-
-                formData = new FormData(formElemautodeposit);
-
-                route = "{{ URL('/api/v1/autodeposit') }}";
-
-
-                Pace.restart();
-                Pace.track(function() {
-                    setHeaders();
-                    jQuery.ajax({
-                        url: route,
-                        method: 'post',
-                        data: formData,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'JSON',
-                        beforeSend: function() {
-                            $('#autodepositBtn').text('Please wait...');
-                        },
-                        success: function(result) {
-
-                            $('#autodepositBtn').text('Save');
-
-
-                            if (result.status == 200) {
-                                swal("Success", result.message, "success");
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 2000);
-                            } else {
-                                swal("Oops", result.message, "error");
-                            }
-
-
-                        },
-                        error: function(err) {
-                            $('#autodepositBtn').text('Save');
-                            swal("Oops", err.responseJSON.message, "error");
-
-                        }
-
-                    });
-                });
-
-            } else if (val == "resetPassword") {
-
-                formData = new FormData(formElemresetPassword);
-
-                route = "{{ URL('/api/v1/resetpassword') }}";
-
-
-                Pace.restart();
-                Pace.track(function() {
-                    setHeaders();
-                    jQuery.ajax({
-                        url: route,
-                        method: 'post',
-                        data: formData,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'JSON',
-                        beforeSend: function() {
-                            $('#' + val + 'Btn').text('Please wait...');
-                        },
-                        success: function(result) {
-
-
-                            $('#' + val + 'Btn').text('Submit');
-
-                            $(".close").click();
-                            if (result.status == 200) {
-                                swal("Success", result.message, "success");
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 2000);
-                            } else {
-                                swal("Oops", result.message, "error");
-                            }
-
-
-                        },
-                        error: function(err) {
-                            $(".close").click();
-                            $('#' + val + 'Btn').text('Submit');
-                            swal("Oops", err.responseJSON.message, "error");
-
-                        }
-
-                    });
-                });
-
-            } else if (val == "resetTransactionPin") {
-
-                formData = new FormData(formElemresetTransactionPin);
-
-                route = "{{ URL('/api/v1/resettransactionpin') }}";
-
-
-                Pace.restart();
-                Pace.track(function() {
-                    setHeaders();
-                    jQuery.ajax({
-                        url: route,
-                        method: 'post',
-                        data: formData,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'JSON',
-                        beforeSend: function() {
-                            $('#' + val + 'Btn').text('Please wait...');
-                        },
-                        success: function(result) {
-
-
-                            $('#' + val + 'Btn').text('Submit');
-                            $(".close").click();
-
-                            if (result.status == 200) {
-                                swal("Success", result.message, "success");
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 2000);
-                            } else {
-                                swal("Oops", result.message, "error");
-                            }
-
-
-                        },
-                        error: function(err) {
-                            $(".close").click();
-                            $('#' + val + 'Btn').text('Submit');
-                            swal("Oops", err.responseJSON.message, "error");
-
-                        }
-
-                    });
-                });
-
-            } else if (val == "linkaccount") {
-
-                formData = new FormData(formElemlinkaccount);
-
-                route = "{{ URL('/api/v1/linkaccount') }}";
-
-
-                Pace.restart();
-                Pace.track(function() {
-                    setHeaders();
-                    jQuery.ajax({
-                        url: route,
-                        method: 'post',
-                        data: formData,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'JSON',
-                        beforeSend: function() {
-                            $('#' + val + 'Btn').text('Please wait...');
-                        },
-                        success: function(result) {
-
-
-                            $('#' + val + 'Btn').text('Submit');
-
-                            if (result.status == 200) {
-                                swal("Success", result.message, "success");
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 2000);
-                            } else {
-                                swal("Oops", result.message, "error");
-                            }
-
-
-                        },
-                        error: function(err) {
-                            $('#' + val + 'Btn').text('Submit');
-                            swal("Oops", err.responseJSON.message, "error");
-
-                        }
-
-                    });
-                });
-
-            } else if (val == "otheraccount") {
-
-                formData = new FormData(formElemotheraccount);
-
-                route = "{{ URL('/api/v1/otheraccount') }}";
-
-
-                Pace.restart();
-                Pace.track(function() {
-                    setHeaders();
-                    jQuery.ajax({
-                        url: route,
-                        method: 'post',
-                        data: formData,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'JSON',
-                        beforeSend: function() {
-                            $('#' + val + 'Btn').text('Please wait...');
-                        },
-                        success: function(result) {
-
-
-                            $('#' + val + 'Btn').text('Submit');
-
-                            if (result.status == 200) {
-                                var res = result.data;
-                                swal("Success", result.message, "success");
-                                setTimeout(function() {
-                                    location.href = res;
-                                }, 2000);
-                            } else {
-                                swal("Oops", result.message, "error");
-                            }
-
-
-                        },
-                        error: function(err) {
-                            $('#' + val + 'Btn').text('Submit');
-                            swal("Oops", err.responseJSON.message, "error");
-
-                        }
-
-                    });
-                });
-
-            } else if ('addcard') {
-
-                route = "{{ URL('/api/v1/addnewcard') }}";
-
-                Pace.restart();
-                Pace.track(function() {
-                    setHeaders();
-                    jQuery.ajax({
-                        url: route,
-                        method: 'post',
-                        data: formData,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'JSON',
-                        beforeSend: function() {
-                            $('#cardSubmit').text('Please wait...');
-                        },
-                        success: function(result) {
-
-                            $('#cardSubmit').text('Submit');
-
-
-                            if (result.status == 200) {
-                                swal("Success", result.message, "success");
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 2000);
-                            } else {
-                                swal("Oops", result.message, "error");
-                            }
-
-
-                        },
-                        error: function(err) {
-                            $('#cardSubmit').text('Confirm');
-                            swal("Oops", err.responseJSON.message, "error");
-
-                        }
-
-                    });
-                });
-
-            }
-
-
-
-
-
-        }
-
-        function resetPin(question, val) {
-            $("#" + val + "securityQuest").val(question);
-            $("#" + val + "mySecQuest").text(question);
-            $("#" + val).click();
-        }
-
-
-
-        $("#thiscountry").change(function() {
-            var country = $("#correctcountry").val();
-            if ($("#thiscountry").val() != "-1") {
-                country = $("#thiscountry").val();
-                $("#correctcountry").val(country);
-            } else {
-                $("#correctcountry").val(country);
-            }
-        });
-
-
-        $("#bank_code").change(function() {
-            var accountNumber = $("#account_number").val();
-            var bankCode = $("#bank_code").val();
-            if ($("#accountNumber").val() != "") {
-
-                var route = "{{ URL('/api/v1/verifyaccountnumber') }}";
-
-                var formData = new FormData();
-                formData.append("bank_code", bankCode);
-                formData.append("account_number", accountNumber);
-
-                Pace.restart();
-                Pace.track(function() {
-                    setHeaders();
-                    jQuery.ajax({
-                        url: route,
-                        method: 'post',
-                        data: formData,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'JSON',
-
-                        success: function(result) {
-
-                            if (result.status == 200) {
-                                $('#account_name').val(result.data.account_name);
-                            } else {
-                                $('#account_name').val("ACCOUNT NUMBER NOT VALID");
-                            }
-
-                        },
-                        error: function(err) {
-
-                            swal("Oops", err.responseJSON.message, "error");
-
-                        }
-
-                    });
-                });
-            }
-
-        });
-
-        function showForm(val) {
-            $(".cardform").removeClass('disp-0');
-            $(".pickCard").addClass('disp-0');
-        }
-
-        function setHeaders() {
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                    'Authorization': "Bearer " + "{{ Auth::user()->api_token }}"
-                }
             });
 
         }
-    </script>
+
+    }
+
+    function changeMyPlan(val) {
+        if ('changeplan') {
+            var formData = new FormData(formElemchangeplan);
+
+            swal({
+                    title: "Are you sure?",
+                    text: "Click OK to proceed",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        route = "{{ URL('/api/v1/changeplan') }}";
+
+                        Pace.restart();
+                        Pace.track(function() {
+                            setHeaders();
+                            jQuery.ajax({
+                                url: route,
+                                method: 'post',
+                                data: formData,
+                                cache: false,
+                                processData: false,
+                                contentType: false,
+                                dataType: 'JSON',
+                                beforeSend: function() {
+                                    $('#cardSubmit').text('Please wait...');
+                                },
+                                success: function(result) {
+
+                                    $('#cardSubmit').text('Upgrade Account');
+
+
+                                    if (result.status == 200) {
+                                        swal("Success", result.message, "success");
+                                        setTimeout(function() {
+                                            location.reload();
+                                        }, 2000);
+                                    } else {
+                                        swal("Oops", result.message, "error");
+                                    }
+
+
+                                },
+                                error: function(err) {
+                                    $('#cardSubmit').text('Upgrade Account');
+                                    swal("Oops", err.responseJSON.message, "error");
+
+                                }
+
+                            });
+                        });
+                    } else {
+
+                    }
+                });
+
+
+
+        }
+    }
+
+
+    function handShake(val) {
+
+        var route;
+
+        var formData = new FormData(formElem);
+
+
+
+        if (val == "updateprofile") {
+            route = "{{ URL('/api/v1/profile') }}";
+
+
+            Pace.restart();
+            Pace.track(function() {
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'post',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        $('#updateBtn').text('Updating Profile...');
+                    },
+                    success: function(result) {
+
+                        $('#updateBtn').text('Update Profile');
+
+
+                        if (result.status == 200) {
+                            swal("Success", result.message, "success");
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            swal("Oops", result.message, "error");
+                        }
+
+
+                    },
+                    error: function(err) {
+                        $('#updateBtn').text('Update Profile');
+                        swal("Oops", err.responseJSON.message, "error");
+
+                    }
+
+                });
+            });
+
+        } else if (val == "transactionpinsettings") {
+
+            formData = new FormData(formElemtransactionpinsettings);
+
+            route = "{{ URL('/api/v1/updatetransactionpin') }}";
+
+
+            Pace.restart();
+            Pace.track(function() {
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'post',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        $('#transactionBtn').text('Please wait...');
+                    },
+                    success: function(result) {
+
+                        $('#transactionBtn').text('Save');
+
+
+                        if (result.status == 200) {
+                            swal("Success", result.message, "success");
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            swal("Oops", result.message, "error");
+                        }
+
+
+                    },
+                    error: function(err) {
+                        $('#transactionBtn').text('Save');
+                        swal("Oops", err.responseJSON.message, "error");
+
+                    }
+
+                });
+            });
+
+        } else if (val == "newtransactionpinsettings") {
+
+            formData = new FormData(formElemnewtransactionpinsettings);
+
+            route = "{{ URL('/api/v1/createtransactionpin') }}";
+
+
+            Pace.restart();
+            Pace.track(function() {
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'post',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        $('#transactionBtn').text('Please wait...');
+                    },
+                    success: function(result) {
+
+                        $('#transactionBtn').text('Save');
+
+
+                        if (result.status == 200) {
+                            swal("Success", result.message, "success");
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            swal("Oops", result.message, "error");
+                        }
+
+
+                    },
+                    error: function(err) {
+                        $('#transactionBtn').text('Save');
+                        swal("Oops", err.responseJSON.message, "error");
+
+                    }
+
+                });
+            });
+
+        } else if (val == "passwordsettings") {
+
+            formData = new FormData(formElempasswordsettings);
+
+            route = "{{ URL('/api/v1/updatepassword') }}";
+
+
+            Pace.restart();
+            Pace.track(function() {
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'post',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        $('#passwordBtn').text('Please wait...');
+                    },
+                    success: function(result) {
+
+                        $('#passwordBtn').text('Save');
+
+
+                        if (result.status == 200) {
+                            swal("Success", result.message, "success");
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            swal("Oops", result.message, "error");
+                        }
+
+
+                    },
+                    error: function(err) {
+                        $('#passwordBtn').text('Save');
+                        swal("Oops", err.responseJSON.message, "error");
+
+                    }
+
+                });
+            });
+
+        } else if (val == "bvnverification") {
+
+            formData = new FormData(formElembvnverification);
+
+            route = "{{ URL('/api/v1/bvnverification') }}";
+
+
+            Pace.restart();
+            Pace.track(function() {
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'post',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        $('#passwordBtn').text('Please wait...');
+                    },
+                    success: function(result) {
+
+                        $('#passwordBtn').text('Save');
+
+
+                        if (result.status == 200) {
+                            swal("Success", result.message, "success");
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            swal("Oops", result.message, "error");
+                        }
+
+
+                    },
+                    error: function(err) {
+                        $('#passwordBtn').text('Save');
+                        swal("Oops", err.responseJSON.message, "error");
+
+                    }
+
+                });
+            });
+
+        } else if (val == "securityquestans") {
+
+            formData = new FormData(formElemsecurityquestans);
+
+            route = "{{ URL('/api/v1/security') }}";
+
+
+            Pace.restart();
+            Pace.track(function() {
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'post',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        $('#securityBtn').text('Please wait...');
+                    },
+                    success: function(result) {
+
+                        $('#securityBtn').text('Save');
+
+
+                        if (result.status == 200) {
+                            swal("Success", result.message, "success");
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            swal("Oops", result.message, "error");
+                        }
+
+
+                    },
+                    error: function(err) {
+                        $('#securityBtn').text('Save');
+                        swal("Oops", err.responseJSON.message, "error");
+
+                    }
+
+                });
+            });
+
+        } else if (val == "autodeposit") {
+
+            formData = new FormData(formElemautodeposit);
+
+            route = "{{ URL('/api/v1/autodeposit') }}";
+
+
+            Pace.restart();
+            Pace.track(function() {
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'post',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        $('#autodepositBtn').text('Please wait...');
+                    },
+                    success: function(result) {
+
+                        $('#autodepositBtn').text('Save');
+
+
+                        if (result.status == 200) {
+                            swal("Success", result.message, "success");
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            swal("Oops", result.message, "error");
+                        }
+
+
+                    },
+                    error: function(err) {
+                        $('#autodepositBtn').text('Save');
+                        swal("Oops", err.responseJSON.message, "error");
+
+                    }
+
+                });
+            });
+
+        } else if (val == "resetPassword") {
+
+            formData = new FormData(formElemresetPassword);
+
+            route = "{{ URL('/api/v1/resetpassword') }}";
+
+
+            Pace.restart();
+            Pace.track(function() {
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'post',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        $('#' + val + 'Btn').text('Please wait...');
+                    },
+                    success: function(result) {
+
+
+                        $('#' + val + 'Btn').text('Submit');
+
+                        $(".close").click();
+                        if (result.status == 200) {
+                            swal("Success", result.message, "success");
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            swal("Oops", result.message, "error");
+                        }
+
+
+                    },
+                    error: function(err) {
+                        $(".close").click();
+                        $('#' + val + 'Btn').text('Submit');
+                        swal("Oops", err.responseJSON.message, "error");
+
+                    }
+
+                });
+            });
+
+        } else if (val == "resetTransactionPin") {
+
+            formData = new FormData(formElemresetTransactionPin);
+
+            route = "{{ URL('/api/v1/resettransactionpin') }}";
+
+
+            Pace.restart();
+            Pace.track(function() {
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'post',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        $('#' + val + 'Btn').text('Please wait...');
+                    },
+                    success: function(result) {
+
+
+                        $('#' + val + 'Btn').text('Submit');
+                        $(".close").click();
+
+                        if (result.status == 200) {
+                            swal("Success", result.message, "success");
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            swal("Oops", result.message, "error");
+                        }
+
+
+                    },
+                    error: function(err) {
+                        $(".close").click();
+                        $('#' + val + 'Btn').text('Submit');
+                        swal("Oops", err.responseJSON.message, "error");
+
+                    }
+
+                });
+            });
+
+        } else if (val == "linkaccount") {
+
+            formData = new FormData(formElemlinkaccount);
+
+            route = "{{ URL('/api/v1/linkaccount') }}";
+
+
+            Pace.restart();
+            Pace.track(function() {
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'post',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        $('#' + val + 'Btn').text('Please wait...');
+                    },
+                    success: function(result) {
+
+
+                        $('#' + val + 'Btn').text('Submit');
+
+                        if (result.status == 200) {
+                            swal("Success", result.message, "success");
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            swal("Oops", result.message, "error");
+                        }
+
+
+                    },
+                    error: function(err) {
+                        $('#' + val + 'Btn').text('Submit');
+                        swal("Oops", err.responseJSON.message, "error");
+
+                    }
+
+                });
+            });
+
+        } else if (val == "otheraccount") {
+
+            formData = new FormData(formElemotheraccount);
+
+            route = "{{ URL('/api/v1/otheraccount') }}";
+
+
+            Pace.restart();
+            Pace.track(function() {
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'post',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        $('#' + val + 'Btn').text('Please wait...');
+                    },
+                    success: function(result) {
+
+
+                        $('#' + val + 'Btn').text('Submit');
+
+                        if (result.status == 200) {
+                            var res = result.data;
+                            swal("Success", result.message, "success");
+                            setTimeout(function() {
+                                location.href = res;
+                            }, 2000);
+                        } else {
+                            swal("Oops", result.message, "error");
+                        }
+
+
+                    },
+                    error: function(err) {
+                        $('#' + val + 'Btn').text('Submit');
+                        swal("Oops", err.responseJSON.message, "error");
+
+                    }
+
+                });
+            });
+
+        } else if ('addcard') {
+
+            route = "{{ URL('/api/v1/addnewcard') }}";
+
+            Pace.restart();
+            Pace.track(function() {
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'post',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        $('#cardSubmit').text('Please wait...');
+                    },
+                    success: function(result) {
+
+                        $('#cardSubmit').text('Submit');
+
+
+                        if (result.status == 200) {
+                            swal("Success", result.message, "success");
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            swal("Oops", result.message, "error");
+                        }
+
+
+                    },
+                    error: function(err) {
+                        $('#cardSubmit').text('Confirm');
+                        swal("Oops", err.responseJSON.message, "error");
+
+                    }
+
+                });
+            });
+
+        }
+
+
+
+
+
+    }
+
+    function resetPin(question, val) {
+        $("#" + val + "securityQuest").val(question);
+        $("#" + val + "mySecQuest").text(question);
+        $("#" + val).click();
+    }
+
+
+
+    $("#thiscountry").change(function() {
+        var country = $("#correctcountry").val();
+        if ($("#thiscountry").val() != "-1") {
+            country = $("#thiscountry").val();
+            $("#correctcountry").val(country);
+        } else {
+            $("#correctcountry").val(country);
+        }
+    });
+
+
+    $("#bank_code").change(function() {
+        var accountNumber = $("#account_number").val();
+        var bankCode = $("#bank_code").val();
+        if ($("#accountNumber").val() != "") {
+
+            var route = "{{ URL('/api/v1/verifyaccountnumber') }}";
+
+            var formData = new FormData();
+            formData.append("bank_code", bankCode);
+            formData.append("account_number", accountNumber);
+
+            Pace.restart();
+            Pace.track(function() {
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'post',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+
+                    success: function(result) {
+
+                        if (result.status == 200) {
+                            $('#account_name').val(result.data.account_name);
+                        } else {
+                            $('#account_name').val("ACCOUNT NUMBER NOT VALID");
+                        }
+
+                    },
+                    error: function(err) {
+
+                        swal("Oops", err.responseJSON.message, "error");
+
+                    }
+
+                });
+            });
+        }
+
+    });
+
+    function showForm(val) {
+        $(".cardform").removeClass('disp-0');
+        $(".pickCard").addClass('disp-0');
+    }
+
+    function setHeaders() {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                'Authorization': "Bearer " + "{{ Auth::user()->api_token }}"
+            }
+        });
+
+    }
+</script>
 @endauth
 
 
