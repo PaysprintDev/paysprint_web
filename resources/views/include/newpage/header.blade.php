@@ -224,7 +224,7 @@
 
 
                    <li class="nav-item">
-                       <a class="nav-link" href="{{ route('display country') }}" role="button"
+                       <a class="nav-link" href="{{ route('display country merchant') }}" role="button"
                            aria-expanded="false">SEARCH COUNTRY</a>
                    </li>
 

@@ -278,6 +278,33 @@
 <!-- Feature section -->
 
 
+<!-- Available countries -->
+<div class="container mt-8 mb-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="">
+            <h2 class="title gr-text-4 mb-8">Money Transfer from {{($data['country'])}}  to {{count($data['availablecountry'] )}} Countries</h2>
+        </div>
+    </div>
+    <div class="row mx-auto">
+
+        @if (count($data['availablecountry']))
+
+        @foreach ($data['availablecountry'] as $country)
+        <div id="eclipse6">
+            <div class="eclipse-slider">
+                <div class="countrylist"> <img src="{{$country->logo}}" alt="{{$country->name}}" title="{{$country->name}}"></div>
+            </div>
+        </div>
+        @endforeach
+
+        @endif
+
+    </div>
+</div>
+<br>
+<br>
+<hr>
+
 
 <!-- Content section 1 -->
 <div class="content-section pt-11 pt-lg-20 pb-11 pb-lg-20 bg-default-6 disp-0" id=animation-area-2>
@@ -671,37 +698,7 @@
 </div>
 </div><br>
 
-<!-- Available countries -->
-<div class="container mt-8 mb-5">
-    <div class="row justify-content-center align-items-center">
-        <div class="col-xl-5 col-lg-6 col-md-8">
-            <h2 class="title gr-text-4 mb-8">Avaliable in {{count($data['availablecountry'])}} Countries</h2>
-        </div>
 
-
-
-
-    </div>
-    <div class="row mx-auto">
-
-        @if (count($data['availablecountry']))
-
-        @foreach ($data['availablecountry'] as $country)
-        <div id="eclipse6">
-            <div class="eclipse-slider">
-                <div class="countrylist"> <img src="{{$country->logo}}" alt="{{$country->name}}" title="{{$country->name}}"></div>
-
-            </div>
-        </div>
-        @endforeach
-
-        @endif
-
-    </div>
-</div>
-<br>
-<br>
-<hr>
 
 <!--What people are saying -->
 <section class="container">

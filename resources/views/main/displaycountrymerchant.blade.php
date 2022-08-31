@@ -89,10 +89,10 @@ background: #ffe29f;
               <table class="table table-striped table-responsive" id="promousers">
                   <thead>
                       <tr style="postion:sticky">
-                       
+                    
                         <th class="header" scope="col"></th>
                         <th class="header" scope="col">Country</th>
-                       
+                        <th class="header" scope="col">Payout Method</th>
                         <th class="header"  scope="col">Action</th>
                         
                       </tr>
@@ -104,10 +104,10 @@ background: #ffe29f;
                       @if (count($data['availablecountry']) > 0)
                           @foreach ( $data['availablecountry'] as $country )
                               <tr>
-                                 
+                                  
                                   <td><img style="width:60px;height:60px;border-radius:8px" src="{{$country->logo}}"></td>
                                   <td>{{ $country->name}} </td>
-                                  
+                                  <td>{{ $country->payoutmethod}} </td>
                                   <td><a class="nav-link" href="{{ route('login') }}" role="button"
                                     aria-expanded="false">LOGIN/SIGNUP</a></td>
                                  
