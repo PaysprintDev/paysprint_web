@@ -102,7 +102,7 @@
                                         <ul>
                                         <hr>
                                             <li>
-                                                Identify the Partner's Nearby: <a href="#" style="font-weight: bold;">Click here to view</a>
+                                                Identify the Partner's Nearby: <a href="{{ route('partner list') }}" target="_blank" style="font-weight: bold;">Click here to view</a>
                                             </li>
                                             <br>
                                             <li>
@@ -216,7 +216,7 @@
                                     </div>
 
 
-                                    <div class="card-footer"> <button type="button" onclick="handShake('addmoney')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                    <div class="card-footer"> <button type="button" onclick="handShake('partneraddmoney')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
                                             Submit
                                         </button></div>
 
@@ -242,9 +242,81 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
     </script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"
+    integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <script src="{{ asset('pace/pace.min.js') }}"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js"></script>
+
+
+    <script>
+        function handShake(val) {
+
+            var route;
+
+            var formData;
+
+            if (val == 'partneraddmoney') {
+                formData = new FormData(formElem);
+                route = "{{ URL('/api/v1/partneraddmoneytowallet') }}";
+
+                Pace.restart();
+                Pace.track(function() {
+                    setHeaders();
+                    jQuery.ajax({
+                        url: route,
+                        method: 'post',
+                        data: formData,
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'JSON',
+                        beforeSend: function() {
+                            $('.cardSubmit').text('Please wait...');
+                        },
+                        success: function(result) {
+                            console.log(result);
+
+                            $('.cardSubmit').text('Submit');
+
+                            if (result.status == 200) {
+                                swal("Success", result.message, "success");
+                                setTimeout(function() {
+                                    location.href = "{{ route('my account') }}";
+                                }, 2000);
+                            } else {
+                                swal("Oops", result.message, "error");
+                            }
+
+                        },
+                        error: function(err) {
+                            $('.cardSubmit').text('Submit');
+                            swal("Oops", err.responseJSON.message, "error");
+
+                        }
+
+                    });
+                });
+
+            }
+
+
+        }
+
+
+        function setHeaders() {
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                    'Authorization': "Bearer " + "{{ Auth::user()->api_token }}"
+                }
+            });
+
+        }
+    </script>
 
 
 

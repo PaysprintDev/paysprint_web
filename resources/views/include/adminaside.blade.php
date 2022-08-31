@@ -213,6 +213,8 @@
                                         class="fa fa-circle-o text-red"></i> Dusupay</a></li>
                             <li title="Stripe"><a href="{{ route('gateway activity', 'gateway=Flutterwave') }}"><i
                                         class="fa fa-circle-o text-red"></i> Flutterwave</a></li>
+                            <li title="Stripe"><a href="{{ route('gateway activity', 'gateway=Partner') }}"><i
+                                        class="fa fa-circle-o text-red"></i> Partners</a></li>
 
                         </ul>
                     </li>

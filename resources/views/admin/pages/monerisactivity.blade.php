@@ -59,6 +59,11 @@
                                             <th>&nbsp;</th>
                                             <th>&nbsp;</th>
                                             <th>&nbsp;</th>
+                                        @elseif(Request::get('gateway') == 'Partner')
+                                        <th>Partner</th>
+                                        <th>Action</th>
+                                        <th>&nbsp;</th>
+                                        <th>&nbsp;</th>
                                         @else
                                             <th>Action</th>
                                             <th>&nbsp;</th>
@@ -100,6 +105,11 @@
                                                     <td>
                                                         <a type="button" class="btn btn-primary"
                                                             href="{{ route('check transaction', $data->transaction_id) }}">Details</a>
+                                                    </td>
+                                                @endif
+                                                @if (Request::get('gateway') == 'Partner')
+                                                    <td>
+                                                        {{ $data->partner }}
                                                     </td>
                                                 @endif
                                                 @if ($data->flag_state == 0)
@@ -163,7 +173,7 @@
                                         @endforeach
                                     @else
                                         <tr>
-                                            @if (Request::get('gateway') == 'paystack')
+                                            @if (Request::get('gateway') == 'paystack' || Request::get('gateway') == 'Partner')
                                                 <td colspan="11" align="center">No record available</td>
                                             @else
                                                 <td colspan="9" align="center">No record available</td>

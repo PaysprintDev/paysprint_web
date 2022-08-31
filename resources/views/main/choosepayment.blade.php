@@ -101,7 +101,8 @@
                                     </div>
                                 </div>
 
-                                @if(isset($data['partner']))
+
+                                @if(isset($data['partner']) && !in_array('PAYSPRINT', $data['partner']))
                                 <div class="col-md-6">
                                     <div class="card" style="width: 100%;">
                                         <div class="card-body">

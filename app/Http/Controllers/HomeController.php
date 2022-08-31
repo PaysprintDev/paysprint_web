@@ -1379,6 +1379,45 @@ class HomeController extends Controller
         return view('main.partnerpayment')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
+
+    public function partnerList(Request $req)
+    {
+        if (Auth::user()->accountType == "Individual") {
+            if ($req->session()->has('email') == false) {
+                if (Auth::check() == true) {
+                    $this->page = 'Add Money - Partner';
+                    $this->name = Auth::user()->name;
+                    $this->email = Auth::user()->email;
+                } else {
+                    $this->page = 'Add Money - Partner';
+                    $this->name = '';
+                }
+            } else {
+                $this->page = 'Add Money - Partner';
+                $this->name = session('name');
+                $this->email = session('email');
+            }
+
+
+            $data = array(
+                'currencyCode' => $this->getCountryCode(Auth::user()->country),
+                'getCard' => $this->getUserCard(),
+                'getBank' => $this->getUserBankDetail(),
+                'walletStatement' => $this->walletStatement(),
+                'continent' => $this->timezone[0],
+                'specialInfo' => $this->getthisInfo(Auth::user()->country),
+                'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
+                'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
+                'partner' => $this->getPartners(),
+            );
+        } else {
+            return redirect()->route('dashboard');
+        }
+
+
+        return view('main.partnerlist')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
     public function partnerWithdrawal(Request $req)
     {
         if (Auth::user()->accountType == "Individual") {
@@ -4082,7 +4121,7 @@ class HomeController extends Controller
     {
         $community = Community::orderBy('created_at', 'DESC')->paginate(5);
         $allcountry = AllCountries::where('approval', 1)->where('payoutmethod','!=','')->get();
-        
+
         // dd($allcountry);
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {

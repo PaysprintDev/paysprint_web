@@ -12,26 +12,26 @@ class MoexController extends Controller
 
         $data=$this->importPartnerFee();
         // dd($data);
-       
-      
-    
 
 
-        for ($i=0; $i < count($data) ; $i++) { 
-            Allcountries::where('name', $data[$i]['country'])->update([
-                'range' => implode(',' ,$data[$i]['range']),
-                'fee' => implode(',',$data[$i]['fee']),
-                'payoutmethod' => implode(',',$data[$i]['payoutmethod']),
-                'payoutcurrency' => implode(',',$data[$i]['payoutcurrency']),
-                'partner' => implode(',',$data[$i]['partner'])??null,
-                'collection' => implode(',',$data[$i]['collection'])
-                
+
+
+
+        for ($i=0; $i < count($data) ; $i++) {
+            Allcountries::where('name', ucfirst(strtolower($data[$i]['country'])))->update([
+                'range' => json_encode($data[$i]['range']),
+                'fee' => json_encode($data[$i]['fee']),
+                'payoutmethod' => json_encode($data[$i]['payoutmethod']),
+                'payoutcurrency' => json_encode($data[$i]['payoutcurrency']),
+                'partner' => json_encode($data[$i]['partner']),
+                'collection' => json_encode($data[$i]['collection'])
+
             ]);
         }
 
-        
 
-      
+
+
     }
 
 
@@ -159,7 +159,7 @@ class MoexController extends Controller
                  ],
                  'collection' =>[
                    'PARTNER,PAYSPRINT',
-                   
+
                  ],
             ],
             '5' => [
@@ -195,10 +195,10 @@ class MoexController extends Controller
                     '0 - ONWARDS'
                 ],
                 'fee' => [
-                    '1.50%'   
+                    '1.50%'
                 ],
                 'payoutcurrency' => [
-                    'EUR'                  
+                    'EUR'
                 ],
                 'payoutmethod' => [
                     'CASH'
@@ -295,13 +295,13 @@ class MoexController extends Controller
                    '0 - ONWARDS'
                 ],
                 'fee' => [
-                    '1.50%',   
+                    '1.50%',
                 ],
                 'payoutcurrency' => [
-                    'BGN'     
+                    'BGN'
                 ],
                 'payoutmethod' => [
-                    'CASH'    
+                    'CASH'
                 ],
                 'partner' =>[
                     'MONEYTRANS'
@@ -342,15 +342,15 @@ class MoexController extends Controller
             '12' =>[
                 'country' => 'BURUNDI',
                 'range' => [
-                    '0 - ONWARDS'   
+                    '0 - ONWARDS'
                 ],
                 'fee' => [
                     '1.25USD + 0.50%'
                 ],
-                'payoutcurrency' => [    
+                'payoutcurrency' => [
                     'BIF'
                 ],
-                'payoutmethod' => [  
+                'payoutmethod' => [
                     'MOBILE WALLET'
                 ],
                 'partner' =>[
@@ -391,17 +391,17 @@ class MoexController extends Controller
             ],
             '14' =>[
                 'country' => 'CAPE VERDE',
-                'range' => [    
+                'range' => [
                      '0 - ONWARDS'
                 ],
                 'fee' => [
-                    '1.50%'  
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [   
+                    'payoutcurrency' => [
                     'CVE'
                 ],
                     'payoutmethod' => [
-                    'CASH/BANK DEPOSIT'    
+                    'CASH/BANK DEPOSIT'
                 ],
                 'partner' =>[
                     'CORREIOS DE CABO VERDE',
@@ -623,7 +623,7 @@ class MoexController extends Controller
                  'collection' =>[
                    'PARTNER'
                 ],
-            
+
             ],
             '24' =>[
                 'country' => 'CZECH REPUBLIC',
@@ -854,7 +854,7 @@ class MoexController extends Controller
                     'AWASH BANK',
                     'DAHABSHIIL',
                     'OROMIA INTERNATIONAL BANK',
-                    
+
                  ],
                  'collection' =>[
                    'PARTNER',
@@ -1192,7 +1192,7 @@ class MoexController extends Controller
                     'CASH',
                     'CASH',
                     'BANK DEPOSIT'
-                    
+
                 ],
                 'partner' =>[
                     'INTEL EXPRESS',
@@ -1302,7 +1302,7 @@ class MoexController extends Controller
                  'collection' =>[
                    'PARTNER/PAYSPRINT'
                  ],
-                
+
             ],
             '50' =>[
                 'country' => 'JORDAN',
@@ -1552,7 +1552,7 @@ class MoexController extends Controller
                 ],
                     'fee' => [
                      '3.50USD + 0.50%',
-                     '1.25USD + 0.50%'      
+                     '1.25USD + 0.50%'
                 ],
                     'payoutcurrency' => [
                     'NPR',
@@ -1602,7 +1602,7 @@ class MoexController extends Controller
                 ],
                     'fee' => [
                      '2.25USD + 0.50%',
-                     '1.50%'      
+                     '1.50%'
                 ],
                     'payoutcurrency' => [
                     'USD',
@@ -1690,7 +1690,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-           
+
             '66' =>[
                 'country' => 'PANAMA',
                 'range' => [
@@ -1699,7 +1699,7 @@ class MoexController extends Controller
                 ],
                     'fee' => [
                      '1.50USD + 0.50%',
-                     '1.00%'      
+                     '1.00%'
                 ],
                     'payoutcurrency' => [
                     'USD',
@@ -1726,7 +1726,7 @@ class MoexController extends Controller
                 ],
                     'fee' => [
                      '2.75USD + 0.50%',
-                     '0.50%'      
+                     '0.50%'
                 ],
                     'payoutcurrency' => [
                     'USD',
@@ -1753,7 +1753,7 @@ class MoexController extends Controller
                 ],
                     'fee' => [
                      '1.50%',
-                     '1.70USD + 0.50%'      
+                     '1.70USD + 0.50%'
                 ],
                     'payoutcurrency' => [
                     'USD,EUR',
@@ -1767,7 +1767,7 @@ class MoexController extends Controller
                     'ARGENPER SRL',
                     'AREGNPER SRL EUROS',
                     'JET PERU EUROS',
-                    'JET PERU S.A', 
+                    'JET PERU S.A',
                     'MORE MT'
                 ],
                  'collection' =>[
@@ -1788,7 +1788,7 @@ class MoexController extends Controller
                     'fee' => [
                      '1.00%',
                      '1.25USD + 0.50%',
-                     '3.50USD + 0.50%'      
+                     '3.50USD + 0.50%'
                 ],
                     'payoutcurrency' => [
                     'PHP',
@@ -1890,7 +1890,7 @@ class MoexController extends Controller
                     'fee' => [
                      '3.00%',
                      '1.50%',
-                     '1.25USD + 0.50%'      
+                     '1.25USD + 0.50%'
                 ],
                     'payoutcurrency' => [
                     'RWF',
@@ -1921,7 +1921,7 @@ class MoexController extends Controller
                 ],
                     'fee' => [
                      '1.50%',
-                     '1.25USD + 0.50%'      
+                     '1.25USD + 0.50%'
                 ],
                     'payoutcurrency' => [
                     'XOF',
@@ -2051,7 +2051,7 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
-                ], 
+                ],
                  'partner' =>[
                     'MONEY EXCHANCE ESPANA'
                  ],
@@ -2266,7 +2266,7 @@ class MoexController extends Controller
                  'collection' =>[
                    'MOBILE MONEY/PARTNER',
                    'MOBILE MONEY/PARTNER'
-                
+
                  ],
             ],
             '89' =>[
@@ -2500,11 +2500,11 @@ class MoexController extends Controller
                      ],
             ],
         ];
-       
+
 
      return $list;
-     
- 
+
+
     }
-    
+
 }

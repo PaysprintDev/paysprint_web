@@ -439,6 +439,7 @@ Route::prefix('mywallet')->group(function () {
 	Route::get('notifications', ['uses' => 'HomeController@allNotifications', 'as' => 'notifications']);
 	Route::get('paymentgateway', ['uses' => 'HomeController@paymentGateway', 'as' => 'payment gateway']);
 	Route::get('partnerpayment', ['uses' => 'HomeController@partnerPayment', 'as' => 'partner payment']);
+	Route::get('partnerlist', ['uses' => 'HomeController@partnerList', 'as' => 'partner list']);
 	Route::get('partnerwithdrawal', ['uses' => 'HomeController@partnerWithdrawal', 'as' => 'partner withdrawal']);
 	Route::post('addmobilemoney', ['uses' => 'HomeController@addMobileMoney', 'as' => 'mobile money']);
 	Route::post('withdrawmobilemoney', ['uses' => 'DusupayController@withdrawMobileMoney', 'as' => 'withdraw mobile']);

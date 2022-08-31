@@ -6444,6 +6444,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                                         // Get Payout Details
 
+
+
                                                         if ($req->card_type == "Cash") {
 
                                                             $payoutagent = PayoutAgent::where('id', $req->payout_id)->first();
@@ -6522,6 +6524,13 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                                                             $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                                                        }
+
+                                                        if($req->card_type == "e-Transfer"){
+                                                            // Coming soon
+                                                            $data = [];
+                                                            $message = "Feature coming soon shortly.";
+                                                            $status = 400;
                                                         }
                                                     } else {
                                                         $data = [];

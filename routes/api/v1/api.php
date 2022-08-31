@@ -249,6 +249,8 @@ Route::prefix('/v1')->group(function () {
 
         Route::post('addmoneytowallet',  ['uses' => 'MonerisController@addMoneyToWallet'])->name('add money to wallet');
 
+        Route::post('/partneraddmoneytowallet', ['uses' => 'PayoutAgentController@partnerAddMoneyToWallet', 'as' => 'partner add money to wallet']);
+
         Route::post('moneywithdrawal',  ['uses' => 'MonerisController@moneyWithdrawal'])->name('withdraw from wallet');
 
         Route::post('payutilitybills',  ['uses' => 'MonerisController@payUtilityBills'])->name('pay utility bills');
@@ -394,6 +396,8 @@ Route::prefix('/v1')->group(function () {
          Route::post('/order/out-for-delivery', ['uses' => 'ShopController@outForDelivery', 'as' => 'out for delivery or pickup']);
 
          Route::post('/processpayout', ['uses' => 'PayoutAgentController@processPayOut', 'as' => 'process payout fee']);
+
+
 
     });
 
