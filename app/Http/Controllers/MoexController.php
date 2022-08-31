@@ -11,6 +11,8 @@ class MoexController extends Controller
     public function importData(){
 
         $data=$this->importPartnerFee();
+        // dd($data);
+       
       
     
 
@@ -20,7 +22,9 @@ class MoexController extends Controller
                 'range' => implode(',' ,$data[$i]['range']),
                 'fee' => implode(',',$data[$i]['fee']),
                 'payoutmethod' => implode(',',$data[$i]['payoutmethod']),
-                'payoutcurrency' => implode(',',$data[$i]['payoutcurrency'])
+                'payoutcurrency' => implode(',',$data[$i]['payoutcurrency']),
+                'partner' => implode(',',$data[$i]['partner'])??null,
+                'collection' => implode(',',$data[$i]['collection'])
                 
             ]);
         }
@@ -62,6 +66,12 @@ class MoexController extends Controller
                     'CASH',
                     'CASH'
                 ],
+                'partner' =>[
+                   'RAEA FINANCIAL SERVICES LTD'
+                ],
+                'collection' =>[
+                  'PARTNER'
+                ],
             ],
             '1' => [
                 'country' => 'ANGOLA',
@@ -77,6 +87,12 @@ class MoexController extends Controller
                 'payoutmethod' => [
                     'CASH'
                 ],
+                'partner' =>[
+                    'MAXPAY'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '2' => [
                 'country' => 'ARGENTINA',
@@ -92,6 +108,16 @@ class MoexController extends Controller
                 'payoutmethod' => [
                     'CASH'
                 ],
+                'partner' =>[
+                    'ARGENPER SRL',
+                    'JET PERU S.A',
+                    'LATIN EXPRESS'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '3' => [
                 'country' => 'ARMENIA',
@@ -107,6 +133,12 @@ class MoexController extends Controller
                 'payoutmethod' => [
                     'CASH'
                 ],
+                'partner' =>[
+                    'INTEL EXPRESS'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '4' => [
                 'country' => 'AUSTRALIA',
@@ -122,6 +154,13 @@ class MoexController extends Controller
                 'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
                 ],
+                'partner' =>[
+                    'JET PERU S.A'
+                 ],
+                 'collection' =>[
+                   'PARTNER,PAYSPRINT',
+                   
+                 ],
             ],
             '5' => [
                 'country' => 'BANGLADESH',
@@ -141,6 +180,14 @@ class MoexController extends Controller
                     'CASH',
                     'MOBILE WALLET'
                 ],
+                'partner' =>[
+                    'PRABHU GROUP INC',
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '6' => [
                 'country' => 'BELGIUM',
@@ -156,6 +203,12 @@ class MoexController extends Controller
                 'payoutmethod' => [
                     'CASH'
                 ],
+                'partner' =>[
+                    'ATENA MONEY TRANSFER'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '7' =>[
                 'country' => 'BENIN',
@@ -174,7 +227,17 @@ class MoexController extends Controller
                 'payoutmethod' => [
                     'CASH',
                     'MOBILE WALLET'
-                ]
+                ],
+                'partner' =>[
+                    'BANQUE REGIONALE DE MARCHES(BRM)',
+                    'JUBA EXPRESS',
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '8' =>[
                 'country' => 'BOLIVIA',
@@ -193,7 +256,15 @@ class MoexController extends Controller
                 'payoutmethod' => [
                     'CASH',
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'EUROENIVOS',
+                    'MORE MT'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '9' =>[
                 'country' => 'BRAZIL',
@@ -208,7 +279,15 @@ class MoexController extends Controller
                 ],
                 'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'BANCO RENDIMENTO',
+                    'MORE MT'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '10' =>[
                 'country' => 'BULGARIA',
@@ -223,7 +302,13 @@ class MoexController extends Controller
                 ],
                 'payoutmethod' => [
                     'CASH'    
-                ]
+                ],
+                'partner' =>[
+                    'MONEYTRANS'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '11' =>[
                 'country' => 'BURKINA FASO',
@@ -242,7 +327,17 @@ class MoexController extends Controller
                 'payoutmethod' => [
                     'CASH',
                     'MOBILE WALLET'
-                ]
+                ],
+                'partner' =>[
+                    'BANQUE REGIONALE DE MARCHES(BRM)',
+                    'JUBA EXPRESS',
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '12' =>[
                 'country' => 'BURUNDI',
@@ -258,6 +353,12 @@ class MoexController extends Controller
                 'payoutmethod' => [  
                     'MOBILE WALLET'
                 ],
+                'partner' =>[
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'MOBILE MONEY/PARTNER'
+                 ],
             ],
             '13' =>[
                 'country' => 'CAMEROON',
@@ -277,6 +378,16 @@ class MoexController extends Controller
                     'CASH',
                     'MOBILE WALLET/BANK DEPOSIT'
                 ],
+                'partner' =>[
+                    'CREDIT COMMUNAUTAIRE DE AFRIQUE',
+                    'JUBA EXPRESS',
+                    'TERRA PAY'
+                 ],
+                 'collection' =>[
+                   'MOBILE MONEY/PARTNER',
+                   'MOBILE MONEY/PARTNER',
+                   'MOBILE MONEY/PARTNER'
+                 ],
             ],
             '14' =>[
                 'country' => 'CAPE VERDE',
@@ -291,7 +402,15 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH/BANK DEPOSIT'    
-                ]
+                ],
+                'partner' =>[
+                    'CORREIOS DE CABO VERDE',
+                    'MAXPAY'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '15' =>[
                 'country' => 'CENTRAL AFRICAN REPUBLIC',
@@ -306,7 +425,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'JUBA EXPRESS-EUROS'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '16' =>[
                 'country' => 'CHAD',
@@ -321,7 +446,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'JUBA EXPRESS'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '17' =>[
                 'country' => 'CHILE',
@@ -340,7 +471,15 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASH',
                     'BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'AFEX CHILE',
+                    'INTERCREDIT'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '18' =>[
                 'country' => 'COLOMBIA',
@@ -362,7 +501,19 @@ class MoexController extends Controller
                     'BANK DEPOSIT',
                     'MOBILE WALLET',
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'MORE MT',
+                    'MORE MT(DAVIVIENDA)',
+                    'PAGOS INTERNACIONALES',
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '19' =>[
                 'country' => 'CONGO',
@@ -377,7 +528,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'JUBA EXPRESS'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '20' =>[
                 'country' => 'CONGO REP DEMOCRATIC',
@@ -392,7 +549,15 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'FBNBANK RDC EX(B.I.C)',
+                    'JUBA EXPRESS'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '21' =>[
                 'country' => 'COASTA RICA',
@@ -407,7 +572,15 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'RED CHAPINA',
+                    'TELEDOLAR S.A'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '22' =>[
                 'country' => 'CUBA',
@@ -422,7 +595,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH/CARD'
-                ]
+                ],
+                'partner' =>[
+                    'FINCIMEX'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '23' =>[
                 'country' => 'CYPRUS',
@@ -437,7 +616,14 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'INTEL EXPRESS'
+                ],
+                 'collection' =>[
+                   'PARTNER'
+                ],
+            
             ],
             '24' =>[
                 'country' => 'CZECH REPUBLIC',
@@ -452,7 +638,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'INTEL EXPRESS DOLARES'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '25' =>[
                 'country' => 'DJIBOUTI',
@@ -471,7 +663,15 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASH',
                     'BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'DAHABCHIIL',
+                    'JUBA EXPRESS'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '26' =>[
                 'country' => 'DOMINICAN REPUBLIC',
@@ -490,7 +690,16 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASH',
                     'BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'CIBAO',
+                    'REMESAS DOMINICANAS BDHS'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+
+                 ],
             ],
             '27' =>[
                 'country' => 'ECUADOR',
@@ -528,7 +737,19 @@ class MoexController extends Controller
                     'TRAVEL',
                     'CASH',
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'ARGENPER SRL',
+                    'BANCO BOLIVARIANO ECUAGIROS',
+                    'BANCO BICHINCHA',
+                    'DELAGO TRAVEL ECUADOR'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                ],
             ],
             '28' =>[
                 'country' => 'EGYPT',
@@ -543,7 +764,15 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH/BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'BANQUE DU CAIRE',
+                    'THE UNITED BANK'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '29' =>[
                 'country' => 'EL SALVADOR',
@@ -570,7 +799,17 @@ class MoexController extends Controller
                     'CASH / BANK DEPOSIT',
                     'CASH / BANK DEPOSIT',
                     'TELEDOR',
-                ]
+                ],
+                'partner' =>[
+                    'FEDECACES',
+                    'RED CHAPINA',
+                    'TELEDOLAR S.A'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '30' =>[
                 'country' => 'EQUATORIAL GUINEA',
@@ -585,7 +824,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH/BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'DONN GRUPO'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '31' =>[
                 'country' => 'ETHIOPIA',
@@ -604,7 +849,18 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASH',
                     'BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'AWASH BANK',
+                    'DAHABSHIIL',
+                    'OROMIA INTERNATIONAL BANK',
+                    
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '32' =>[
                 'country' => 'FRANCE',
@@ -619,7 +875,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'MONEYTRANS'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '33' =>[
                 'country' => 'GABON',
@@ -634,7 +896,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'JUBA EXPRESS-EUROS'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '34' =>[
                 'country' => 'GAMBIA',
@@ -649,7 +917,17 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH/BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'EASY FINANCIAL SERVICES',
+                    'UNITY EXPRESS',
+                    'YONNA FOREX BUREAU'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '35' =>[
                 'country' => 'GEORGIA',
@@ -664,7 +942,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'INTEL EXPRESS-EURO'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '36' =>[
                 'country' => 'GERMANY',
@@ -679,7 +963,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH/BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'ITRANSFER'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '37' =>[
                 'country' => 'GHANA',
@@ -698,7 +988,19 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASH',
                     'MOBILE WALLET/ BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'GHANA COMMERCIAL BANK LTD',
+                    'TERRAPAY',
+                    'TRANSFERZERO',
+                    'UNIVERSAL MERCHANT BANK LTD'
+                 ],
+                 'collection' =>[
+                   'MOBILE MONEY/PARTNER',
+                   'MOBILE MONEY/PARTNER',
+                   'MOBILE MONEY/PARTNER',
+                   'MOBILE MONEY/PARTNER'
+                 ],
             ],
             '38' =>[
                 'country' => 'GREECE',
@@ -712,8 +1014,14 @@ class MoexController extends Controller
                     'EUR'
                 ],
                     'payoutmethod' => [
-                    'CASH/'
-                ]
+                    'CASH'
+                ],
+                'partner' =>[
+                    'INTEL EXPRESS EURO'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '39' =>[
                 'country' => 'GUATEMALA',
@@ -728,7 +1036,15 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH/BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'MORE MT',
+                    'RED CHAPINA'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '40' =>[
                 'country' => 'GUINEA',
@@ -747,7 +1063,17 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASH',
                     'MOBILE WALLET'
-                ]
+                ],
+                'partner' =>[
+                    'AFRO INTERNATIONAL LTD',
+                    'GLOBAL EXPRESS CHANGE',
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '41' =>[
                 'country' => 'GUINEA-BISSAU',
@@ -762,7 +1088,15 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'MOBILE WALLET'
-                ]
+                ],
+                'partner' =>[
+                    'BANQUE REGIONALE DU MARCHES (BRM)',
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '42' =>[
                 'country' => 'HONDURAS',
@@ -777,7 +1111,17 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH/BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'MORE MT',
+                    'RED CHAPINA',
+                    'UREMIT INTERNATIONAL'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '43' =>[
                 'country' => 'HONG KONG',
@@ -792,7 +1136,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'UREMIT INTERNATIONAL'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '44' =>[
                 'country' => 'INDIA',
@@ -811,7 +1161,15 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'BANK DEPOSIT',
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'UREMIT INTERNATIONAL',
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT',
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '45' =>[
                 'country' => 'INDONESIA',
@@ -835,7 +1193,17 @@ class MoexController extends Controller
                     'CASH',
                     'BANK DEPOSIT'
                     
-                ]
+                ],
+                'partner' =>[
+                    'INTEL EXPRESS',
+                    'SURICHANGE',
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '46' =>[
                 'country' => 'ISRAEL',
@@ -854,7 +1222,15 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASH',
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'INTEL EXPRESS',
+                    'UNIGIROS LTD'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT',
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '47' =>[
                 'country' => 'ITALY',
@@ -869,7 +1245,17 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'INTEL EXPRESS EURO',
+                    'ITRANSFER',
+                    'MONEY EXCHANGE ITALIA'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT',
+                   'PARTNER/PAYSPRINT',
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '48' =>[
                 'country' => 'IVORY COAST',
@@ -884,7 +1270,17 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH / MOBILE WALLET'
-                ]
+                ],
+                'partner' =>[
+                    'BANQUE REGIONALE DU MARCHE(BRM)',
+                    'JUDA EXPRESS',
+                    'TERRAPAY EUROS'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '49' =>[
                 'country' => 'JAPAN',
@@ -899,7 +1295,14 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'PRABHU GROUP INC'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT'
+                 ],
+                
             ],
             '50' =>[
                 'country' => 'JORDAN',
@@ -914,7 +1317,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'UREMIT INTERNATIONAL'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '51' =>[
                 'country' => 'KENYA',
@@ -933,7 +1342,15 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'MOBILE WALLET / BANK DEPOSIT',
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'DAHABSHIIL',
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'MOBILE MONEY/PARTNER',
+                   'MOBILE MONEY/PARTNER'
+                 ],
             ],
             '52' =>[
                 'country' => 'KOSOVO',
@@ -948,7 +1365,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'UPT ODEME'
-                ]
+                ],
+                'partner' =>[
+                    'UPT ODEME'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '53' =>[
                 'country' => 'KUWAIT',
@@ -963,7 +1386,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'UREMIT INTERNATIONAL'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '54' =>[
                 'country' => 'MADAGASCAR',
@@ -978,7 +1407,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'MOBILE WALLET'
-                ]
+                ],
+                'partner' =>[
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '55' =>[
                 'country' => 'MALI',
@@ -1001,8 +1436,20 @@ class MoexController extends Controller
                     'MOBILE WALLET',
                     'BANK DEPOSIT',
                     'CASH'
-                    
-                ]
+                ],
+                'partner' =>[
+                    'BANQUE MALIENNE DE SOLIDARITE(B.M.S)',
+                    'BANQUE DE DEVELOPMENT DU MALI(B.D.M)',
+                    'CHEICK SALL SERVICES',
+                    'TERRAPAY EUROS',
+                    'TIMBUCTU EXCHANGE'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '56' =>[
                 'country' => 'MEXICO',
@@ -1017,7 +1464,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'ORDER EXPRESS'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '57' =>[
                 'country' => 'MOLDOVA',
@@ -1032,7 +1485,18 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'I.S. POSTA MOLDOVEI S.A',
+                    'INTEL EXPRESS',
+                    'SMITH $ SMITH'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
+
             ],
             '58' =>[
                 'country' => 'MOROCCO',
@@ -1047,7 +1511,17 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'CASH PLUS',
+                    'DAMANE CASH',
+                    'TRANSFERT EXPRESS S.A'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '59' =>[
                 'country' => 'MOZAMBIQUE',
@@ -1062,7 +1536,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'MOBILE WALLET'
-                ]
+                ],
+                'partner' =>[
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '60' =>[
                 'country' => 'NEPAL',
@@ -1081,7 +1561,17 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASH',
                     'MOBILE WALLET'
-                ]
+                ],
+                'partner' =>[
+                    'BANK OF KATHMANDU LTD',
+                    'PRABHU GROUP INC',
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '61' =>[
                 'country' => 'NETHERLANDS',
@@ -1096,7 +1586,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'SURICHANGE'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '62' =>[
                 'country' => 'NICARAGUA',
@@ -1115,7 +1611,15 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASH',
                     'BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'MORE MT',
+                    'TELEDOLAR S.A'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '63' =>[
                 'country' => 'NIGER',
@@ -1130,7 +1634,15 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'BANQUE REGIONALE DE MARCHES(BRM)',
+                    'JUDA EXPRESS-EURO'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '64' =>[
                 'country' => 'NIGERIA',
@@ -1145,7 +1657,17 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'CASH POT LTD(USD)',
+                    'NAIRAGRAM',
+                    'SWISS REMIT GMBH'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT',
+                   'PARTNER/PAYSPRINT',
+                   'PARTNER/PAYSPRINT',
+                 ],
             ],
             '65' =>[
                 'country' => 'PAKISTAN',
@@ -1160,23 +1682,15 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'HABIB METRO BANK'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
-            '66' =>[
-                'country' => 'NETHERLANDS',
-                'range' => [
-                     '0 - ONWARDS'
-                ],
-                    'fee' => [
-                     '1.50%'
-                ],
-                    'payoutcurrency' => [
-                    'EUR'
-                ],
-                    'payoutmethod' => [
-                    'CASH'
-                ]
-            ],
+           
             '67' =>[
                 'country' => 'PANAMA',
                 'range' => [
@@ -1194,7 +1708,15 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASH',
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'DOL CORPORATION INC',
+                    'RED PLUS'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '68' =>[
                 'country' => 'PARAGUAY',
@@ -1213,7 +1735,15 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASH',
                     'BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'BANCO FAMILIAR',
+                    'MORE MT'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '69' =>[
                 'country' => 'PERU',
@@ -1232,7 +1762,21 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASH / BANK DEPOSIT',
                     'CASH / BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'ARGENPER SRL',
+                    'AREGNPER SRL EUROS',
+                    'JET PERU EUROS',
+                    'JET PERU S.A', 
+                    'MORE MT'
+                ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '70' =>[
                 'country' => 'PHILIPPINES',
@@ -1255,7 +1799,19 @@ class MoexController extends Controller
                     'CASH / BANK DEPOSIT ONLY AUB',
                     'BANK DEPOSIT - ALL BANK',
                     'MLHULLIER - CASH'
-                ]
+                ],
+                'partner' =>[
+                    'ASIA UNITED BANK',
+                    'LBC EXPRESS INC',
+                    'MLHUILLIER',
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT',
+                   'PARTNER/PAYSPRINT',
+                   'PARTNER/PAYSPRINT',
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '71' =>[
                 'country' => 'PORTUGAL',
@@ -1270,7 +1826,15 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'MAXPAY',
+                    'REAL TRANSFER'
+                 ],
+                 'collection' =>[
+                    'PARTNER',
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '72' =>[
                 'country' => 'PUERTO RICO',
@@ -1285,7 +1849,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'LA NACIONAL'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '73' =>[
                 'country' => 'ROMANIA',
@@ -1300,7 +1870,15 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'MONEY TRANS',
+                    'SMITH $ SMITH'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '74' =>[
                 'country' => 'RWANDA',
@@ -1323,7 +1901,17 @@ class MoexController extends Controller
                     'CASH - DAHAB',
                     'CASH / BANK DEPOSIT - MAICO',
                     'MOBILE WALLET / BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'DAHABSHIIL',
+                    'MAICO MONEY TRANSFER LTD',
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'MOBILE MONEY/PARTNER',
+                   'MOBILE MONEY/PARTNER',
+                   'MOBILE MONEY/PARTNER'
+                 ],
             ],
             '75' =>[
                 'country' => 'SENEGAL',
@@ -1342,7 +1930,21 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASHMINUTE',
                     'MOBILE WALLET'
-                ]
+                ],
+                'partner' =>[
+                    'ARICA P.WALLER/BANCO',
+                    'BANQUE REGIONALE DE MARCHES(BRM)',
+                    'CASH MINUTE',
+                    'TERRAPAY',
+                    'TRANSFERZERO'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '76' =>[
                 'country' => 'SIERRA LEONE',
@@ -1357,7 +1959,19 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH / BANK DEPOSIT / WALLET'
-                ]
+                ],
+                'partner' =>[
+                    'AFRICA P.CASH',
+                    'AFRO INTERNATIONAL LTD',
+                    'CASHMINUTE',
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '77' =>[
                 'country' => 'SOMALIA',
@@ -1372,7 +1986,15 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'DAHABSHIIL',
+                    'JUBA EXPRESS'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '78' =>[
                 'country' => 'SOUTH AFRICA',
@@ -1387,7 +2009,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'JUBA EXPRESS'
+                 ],
+                 'collection' =>[
+                   'MOBILE MONEY/PARTNER'
+                 ],
             ],
             '79' =>[
                 'country' => 'SOUTH SUDAN',
@@ -1402,7 +2030,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'JUBA EXPRESS'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '80' =>[
                 'country' => 'SPAIN',
@@ -1417,7 +2051,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
-                ]
+                ], 
+                 'partner' =>[
+                    'MONEY EXCHANCE ESPANA'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '81' =>[
                 'country' => 'SRI LANKA',
@@ -1432,7 +2072,15 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'SAMPATH BANK',
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '82' =>[
                 'country' => 'SUDAN',
@@ -1447,7 +2095,15 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'DAHABSHIIL',
+                    'JUBA EXPRESS'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '83' =>[
                 'country' => 'SURINAME',
@@ -1466,7 +2122,13 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASH ',
                     'BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'SURICHANGE'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '84' =>[
                 'country' => 'SWITZERLAND',
@@ -1481,7 +2143,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'ME MONEY EXCHANGE GMBH'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '85' =>[
                 'country' => 'TANZANIA',
@@ -1496,7 +2164,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'MOBILE WALLET/ BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'MOBILE MONEY/PARTNER'
+                 ],
             ],
             '86' =>[
                 'country' => 'TOGO',
@@ -1511,7 +2185,15 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'BANQUE REGIONALE DE MARCHES(BRM)',
+                    'JUBA EXPRESS-EUROS'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '87' =>[
                 'country' => 'TUNISIA',
@@ -1526,7 +2208,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'BANQUE DE LE-HABITAT-TUNNEX'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '88' =>[
                 'country' => 'TURKEY',
@@ -1541,7 +2229,17 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                ],
+                'partner' =>[
+                    'INTEL EXPRESS',
+                    'TERRAPAY',
+                    'OPT ODEME'
+                 ],
+                 'collection' =>[
+                   'PARTNER',
+                   'PARTNER',
+                   'PARTNER'
+                 ],
             ],
             '89' =>[
                 'country' => 'UGANDA',
@@ -1560,7 +2258,16 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASH',
                     'MOBILE WALLET'
-                ]
+                ],
+                'partner' =>[
+                    'JUBA EXPRESS',
+                    'TERRAPAY'
+                 ],
+                 'collection' =>[
+                   'MOBILE MONEY/PARTNER',
+                   'MOBILE MONEY/PARTNER'
+                
+                 ],
             ],
             '90' =>[
                 'country' => 'UKRAINE',
@@ -1579,7 +2286,13 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASH',
                     'CARD PAYMENT'
-                ]
+                ],
+                'partner' =>[
+                    'INTEL EXPRESS'
+                 ],
+                 'collection' =>[
+                   'PARTNER'
+                 ],
             ],
             '91' =>[
                 'country' => 'UNITED ARAB EMIRATES',
@@ -1594,7 +2307,15 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH'
-                ]
+                    ],
+                    'partner' =>[
+                        'JUBA EXPRESS',
+                        'UREMIT INTERNATIONAL'
+                     ],
+                     'collection' =>[
+                       'PARTNER/PAYSPRINT',
+                       'PARTNER/PAYSPRINT'
+                     ],
             ],
             '92' =>[
                 'country' => 'UNITED KINGDOM',
@@ -1609,7 +2330,15 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'INAIRA TRANSFER',
+                    'INTEL EXPRESS EUROS'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT',
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '93' =>[
                 'country' => 'UNITED STATES',
@@ -1628,7 +2357,21 @@ class MoexController extends Controller
                     'payoutmethod' => [
                     'CASH',
                     'BANK DEPOSIT'
-                ]
+                ],
+                'partner' =>[
+                    'DELGADO TRAVEL(USA)',
+                    'JET PERU S.A',
+                    'LA NACIONAL',
+                    'MORE MT',
+                    'ORDER EXPRESS'
+                 ],
+                 'collection' =>[
+                   'PARTNER/PAYSPRINT',
+                   'PARTNER/PAYSPRINT',
+                   'PARTNER/PAYSPRINT',
+                   'PARTNER/PAYSPRINT',
+                   'PARTNER/PAYSPRINT'
+                 ],
             ],
             '94' =>[
                 'country' => 'URUGUAY',
@@ -1643,7 +2386,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'BANK DEPOSIT'
-                ]
+                    ],
+                    'partner' =>[
+                        'GIROS MORE URUGUAY'
+                     ],
+                     'collection' =>[
+                       'PARTNER'
+                     ],
             ],
             '95' =>[
                 'country' => 'VENEZUELA',
@@ -1667,7 +2416,17 @@ class MoexController extends Controller
                    'CASH',
                    'CASH'
 
-                ]
+                    ],
+                    'partner' =>[
+                        'CASA DE CAMBIOS INSULAR',
+                        'DOL INCORPORATION INC',
+                        'INTERCREDIT'
+                     ],
+                     'collection' =>[
+                       'PARTNER',
+                       'PARTNER',
+                       'PARTNER'
+                     ],
             ],
             '96' =>[
                 'country' => 'VIETNAM',
@@ -1682,7 +2441,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'BANK DEPOSIT'
-                ]
+                    ],
+                    'partner' =>[
+                        'TERRAPAY'
+                     ],
+                     'collection' =>[
+                       'PARTNER'
+                     ],
             ],
             '97' =>[
                 'country' => 'ZAMBIA',
@@ -1697,7 +2462,13 @@ class MoexController extends Controller
                 ],
                     'payoutmethod' => [
                     'MOBILE WALLET'
-                ]
+                    ],
+                    'partner' =>[
+                        'TERRAPAY'
+                     ],
+                     'collection' =>[
+                       'PARTNER'
+                     ],
             ],
             '98' =>[
                 'country' => 'CANADA',
@@ -1720,7 +2491,13 @@ class MoexController extends Controller
                     'E-TRANSFER',
                     'BANK DEPOSIT',
                     'PREPAID CARD'
-                ]
+                    ],
+                    'partner' =>[
+                        'PAYSPRINT'
+                     ],
+                     'collection' =>[
+                       'PAYSPRINT'
+                     ],
             ],
         ];
        
