@@ -1691,7 +1691,7 @@ class MoexController extends Controller
                  ],
             ],
            
-            '67' =>[
+            '66' =>[
                 'country' => 'PANAMA',
                 'range' => [
                      '0 - 300USD',
@@ -1718,7 +1718,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-            '68' =>[
+            '67' =>[
                 'country' => 'PARAGUAY',
                 'range' => [
                      '0 - ONWARDS',
@@ -1745,7 +1745,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-            '69' =>[
+            '68' =>[
                 'country' => 'PERU',
                 'range' => [
                      '0 - ONWARDS',
@@ -1778,7 +1778,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-            '70' =>[
+            '69' =>[
                 'country' => 'PHILIPPINES',
                 'range' => [
                      '0 - ONWARDS',
@@ -1813,7 +1813,7 @@ class MoexController extends Controller
                    'PARTNER/PAYSPRINT'
                  ],
             ],
-            '71' =>[
+            '70' =>[
                 'country' => 'PORTUGAL',
                 'range' => [
                      '0 - ONWARDS'
@@ -1836,7 +1836,7 @@ class MoexController extends Controller
                    'PARTNER/PAYSPRINT'
                  ],
             ],
-            '72' =>[
+            '71' =>[
                 'country' => 'PUERTO RICO',
                 'range' => [
                      '0 - ONWARDS'
@@ -1857,7 +1857,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-            '73' =>[
+            '72' =>[
                 'country' => 'ROMANIA',
                 'range' => [
                      '0 - ONWARDS'
@@ -1880,7 +1880,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-            '74' =>[
+            '73' =>[
                 'country' => 'RWANDA',
                 'range' => [
                      '0 - ONWARDS',
@@ -1913,7 +1913,7 @@ class MoexController extends Controller
                    'MOBILE MONEY/PARTNER'
                  ],
             ],
-            '75' =>[
+            '74' =>[
                 'country' => 'SENEGAL',
                 'range' => [
                      '0 - ONWARDS',
@@ -1946,7 +1946,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-            '76' =>[
+            '75' =>[
                 'country' => 'SIERRA LEONE',
                 'range' => [
                      '0 - ONWARDS'
@@ -1973,7 +1973,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-            '77' =>[
+            '76' =>[
                 'country' => 'SOMALIA',
                 'range' => [
                      '0 - ONWARDS'
@@ -1996,7 +1996,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-            '78' =>[
+            '77' =>[
                 'country' => 'SOUTH AFRICA',
                 'range' => [
                      '0 - ONWARDS'
@@ -2017,7 +2017,7 @@ class MoexController extends Controller
                    'MOBILE MONEY/PARTNER'
                  ],
             ],
-            '79' =>[
+            '78' =>[
                 'country' => 'SOUTH SUDAN',
                 'range' => [
                      '0 - ONWARDS'
@@ -2038,7 +2038,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-            '80' =>[
+            '79' =>[
                 'country' => 'SPAIN',
                 'range' => [
                      '0 - ONWARDS'
@@ -2059,7 +2059,7 @@ class MoexController extends Controller
                    'PARTNER/PAYSPRINT'
                  ],
             ],
-            '81' =>[
+            '80' =>[
                 'country' => 'SRI LANKA',
                 'range' => [
                      '0 - ONWARDS'
@@ -2082,7 +2082,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-            '82' =>[
+            '81' =>[
                 'country' => 'SUDAN',
                 'range' => [
                      '0 - ONWARDS'
@@ -2105,7 +2105,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-            '83' =>[
+            '82' =>[
                 'country' => 'SURINAME',
                 'range' => [
                      '0 - ONWARDS',
@@ -2130,7 +2130,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-            '84' =>[
+            '83' =>[
                 'country' => 'SWITZERLAND',
                 'range' => [
                      '0 - ONWARDS'
@@ -2151,7 +2151,7 @@ class MoexController extends Controller
                    'PARTNER/PAYSPRINT'
                  ],
             ],
-            '85' =>[
+            '84' =>[
                 'country' => 'TANZANIA',
                 'range' => [
                      '0 - ONWARDS'
@@ -2172,7 +2172,7 @@ class MoexController extends Controller
                    'MOBILE MONEY/PARTNER'
                  ],
             ],
-            '86' =>[
+            '85' =>[
                 'country' => 'TOGO',
                 'range' => [
                      '0 - ONWARDS'
@@ -2195,7 +2195,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-            '87' =>[
+            '86' =>[
                 'country' => 'TUNISIA',
                 'range' => [
                      '0 - ONWARDS'
@@ -2216,7 +2216,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-            '88' =>[
+            '87' =>[
                 'country' => 'TURKEY',
                 'range' => [
                      '0 - ONWARDS'
@@ -2241,7 +2241,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-            '89' =>[
+            '88' =>[
                 'country' => 'UGANDA',
                 'range' => [
                      '0 - ONWARDS',
@@ -2269,7 +2269,7 @@ class MoexController extends Controller
                 
                  ],
             ],
-            '90' =>[
+            '89' =>[
                 'country' => 'UKRAINE',
                 'range' => [
                      '0 - ONWARDS',
@@ -2294,7 +2294,7 @@ class MoexController extends Controller
                    'PARTNER'
                  ],
             ],
-            '91' =>[
+            '90' =>[
                 'country' => 'UNITED ARAB EMIRATES',
                 'range' => [
                      '0 - ONWARDS'
@@ -2317,7 +2317,7 @@ class MoexController extends Controller
                        'PARTNER/PAYSPRINT'
                      ],
             ],
-            '92' =>[
+            '91' =>[
                 'country' => 'UNITED KINGDOM',
                 'range' => [
                      '0 - ONWARDS'
@@ -2340,7 +2340,7 @@ class MoexController extends Controller
                    'PARTNER/PAYSPRINT'
                  ],
             ],
-            '93' =>[
+            '92' =>[
                 'country' => 'UNITED STATES',
                 'range' => [
                      '0 - ONWARDS',
@@ -2373,7 +2373,7 @@ class MoexController extends Controller
                    'PARTNER/PAYSPRINT'
                  ],
             ],
-            '94' =>[
+            '93' =>[
                 'country' => 'URUGUAY',
                 'range' => [
                      '0 - ONWARDS'
@@ -2394,7 +2394,7 @@ class MoexController extends Controller
                        'PARTNER'
                      ],
             ],
-            '95' =>[
+            '94' =>[
                 'country' => 'VENEZUELA',
                 'range' => [
                      '0 - ONWARDS',
@@ -2428,7 +2428,7 @@ class MoexController extends Controller
                        'PARTNER'
                      ],
             ],
-            '96' =>[
+            '95' =>[
                 'country' => 'VIETNAM',
                 'range' => [
                      '0 - ONWARDS'
@@ -2449,7 +2449,7 @@ class MoexController extends Controller
                        'PARTNER'
                      ],
             ],
-            '97' =>[
+            '96' =>[
                 'country' => 'ZAMBIA',
                 'range' => [
                      '0 - ONWARDS'
@@ -2470,7 +2470,7 @@ class MoexController extends Controller
                        'PARTNER'
                      ],
             ],
-            '98' =>[
+            '97' =>[
                 'country' => 'CANADA',
                 'range' => [
                      '0 - ONWARDS',
