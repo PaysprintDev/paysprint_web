@@ -566,14 +566,14 @@
 
 
 
-                                    <div class="d-flex flex-row justify-content-center">
+                                    {{-- <div class="d-flex flex-row justify-content-center">
                                         <div class="col-md-12 mb-3">
                                             <a type="button" href="javascript:void(0)" onclick="becomeAnAgent('{{ Auth::user()->ref_code }}')"
                                                 class="btn btn-success btn-block" style="width: 100%;">Become a Payout Agent <i class="fa fa-money" aria-hidden="true"></i>
                                             </a>
                                         </div>
 
-                                    </div>
+                                    </div> --}}
 
 
 

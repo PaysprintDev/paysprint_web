@@ -5464,6 +5464,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     public function moneyWithdrawal(Request $req)
     {
 
+
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
         if ($req->amount < 0) {

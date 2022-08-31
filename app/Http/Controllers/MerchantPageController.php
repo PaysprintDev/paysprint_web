@@ -118,11 +118,13 @@ class MerchantPageController extends Controller
         $agentRec = PayoutAgent::where('user_id', Auth::user()->ref_code)->first();
 
 
+
+
         $data = [
             'mypoints' => $this->getAcquiredPoints(Auth::user()->id),
             'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
             'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
-            'record' => isset($agentRec) ? PayoutWithdrawal::where('id', $agentRec->id)->orderBy('created_at', 'DESC')->get() : []
+            'record' => isset($agentRec) ? PayoutWithdrawal::where('payout_id', $agentRec->id)->orderBy('created_at', 'DESC')->get() : []
         ];
 
 

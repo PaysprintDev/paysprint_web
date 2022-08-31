@@ -25,10 +25,11 @@
                                             <th>#</th>
                                             <th>Transaction ID</th>
                                             <th>Receiver</th>
-                                            <th>Amount to Receive</th>
-                                            <th>Commission</th>
+                                            <th>Amount to Payout</th>
+                                            <th>Commission Earned</th>
                                             <th>Identification</th>
                                             <th>Status</th>
+                                            <th>Date</th>
                                             <th class="text-center">Action</th>
 
 
@@ -75,12 +76,14 @@
 
 
                                                      <td style="color: {{ $item->status === 'pending' ? 'orange' : 'green' }}; font-weight: bold; font-size: 15px;">{{ strtoupper($item->status) }}</td>
+                                                    <td>{{ date('d/m/Y h:i:a', strtotime($item->created_at)) }}</td>
+
                                                     <td align="center">
 
                                                         @if ($item->status === 'pending')
 
                                                         {{-- Process funds and update status == processed --}}
-                                                        <a type="button" href="javascript:void(0)" class="btn btn-danger"
+                                                        <a type="button" href="javascript:void(0)" class="btn btn-danger" id="processbtn{{ $item->transaction_id }}" onclick="payoutProcessFund('{{ $item->transaction_id }}')"
                                                             >Process fund</a>
 
                                                         @else
@@ -93,12 +96,13 @@
 
                                                     </td>
 
+
                                                 </tr>
 
                                             @endforeach
                                         @else
                                             <tr>
-                                                <td colspan="7" align="center">No record</td>
+                                                <td colspan="8" align="center">No record</td>
                                             </tr>
                                         @endif
 

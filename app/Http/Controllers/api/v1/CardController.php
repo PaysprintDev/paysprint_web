@@ -514,7 +514,7 @@ class CardController extends Controller
             $query = AddBank::where('user_id', $thisuser->id)->get();
 
         }
-        elseif($cardDetail == "Prepaid Card") {
+        elseif($cardDetail == "Prepaid Card" || $cardDetail == "Credit Card" || $cardDetail == "Debit Card") {
             $query = AddCard::where('user_id', $thisuser->id)->where('card_provider', 'LIKE', '%' . $cardDetail . '%')->get();
 
         }

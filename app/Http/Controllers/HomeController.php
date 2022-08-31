@@ -1295,6 +1295,7 @@ class HomeController extends Controller
             return redirect()->route('dashboard');
         }
 
+
         return view('main.choosepayment')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
@@ -1342,15 +1343,15 @@ class HomeController extends Controller
         if (Auth::user()->accountType == "Individual") {
             if ($req->session()->has('email') == false) {
                 if (Auth::check() == true) {
-                    $this->page = 'My Wallet';
+                    $this->page = 'Add Money - Partner';
                     $this->name = Auth::user()->name;
                     $this->email = Auth::user()->email;
                 } else {
-                    $this->page = 'My Wallet';
+                    $this->page = 'Add Money - Partner';
                     $this->name = '';
                 }
             } else {
-                $this->page = 'My Wallet';
+                $this->page = 'Add Money - Partner';
                 $this->name = session('name');
                 $this->email = session('email');
             }
@@ -1370,6 +1371,7 @@ class HomeController extends Controller
         } else {
             return redirect()->route('dashboard');
         }
+
 
         return view('main.partnerpayment')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
@@ -5917,10 +5919,10 @@ class HomeController extends Controller
                     $getAgent = PayoutAgent::where('id', $req->payoutAgent)->first();
 
                     if($getAgent){
-                        $collection = ($getAgent->fee / 100) * $req->amount;
+                        $collection = (($getAgent->fee / 100) * $req->amount) * (20 / 100);
                     }
                     else{
-                        $collection = (1.50 / 100) * $req->amount;
+                        $collection = ((1.50 / 100) * $req->amount) * (20 / 100);
                     }
 
                 }
@@ -5999,7 +6001,8 @@ class HomeController extends Controller
 
             if ($req->check == "true") {
 
-                $amountReceive = $req->amount - $collection;
+                // $amountReceive = $req->amount - $collection;
+                $amountReceive = $req->amount;
 
                 $state = "commission available";
             } else {

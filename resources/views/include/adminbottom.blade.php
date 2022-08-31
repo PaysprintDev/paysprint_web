@@ -5,6 +5,9 @@ C</div>
 <!-- jQuery 3 -->
 <script src="{{ asset('ext/bower_components/jquery/dist/jquery.min.js') }}"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"
+    integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 @if (Session::has('username') == true)
 @if (session('loginCount') < 1) <script src="{{ asset('hopscotch/dist/js/hopscotch.js') }}">
@@ -2579,6 +2582,67 @@ C</div>
 
     }
 
+
+
+    function becomeAnAgent(ref_code){
+
+        let data = {ref_code: ref_code};
+
+        var headers = {
+            'X-CSRF-TOKEN': "{{ csrf_token() }}",
+        };
+
+        swal({
+                title: "Are you sure?",
+                text: "Click OK to proceed",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then(async (willDelete) => {
+                if (willDelete) {
+
+                    try {
+
+                        $('#btn'+ref_code).text('Please wait ...');
+
+
+                        const config = {
+                            method: 'POST',
+                            url: "{{ URL('/api/v1/becomepayoutagent') }}",
+                            headers,
+                            data
+                        }
+
+
+                        const response = await axios(config);
+
+                        $('#btn'+ref_code).text('Activate as Payout Agent');
+
+
+                        swal('Great', response.data.message, 'success');
+
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+
+                    } catch (error) {
+
+                        $('#btn'+ref_code).text('Activate as Payout Agent');
+
+                        if (error.response) {
+                            swal('Oops!', error.response.data.message, 'error');
+                        } else {
+                            swal('Oops!', error.message, 'error');
+                        }
+
+                    }
+
+
+
+                }
+            });
+    }
 
     function payCard(id) {
         var route = "{{ URL('Ajax/paycardwithdrawal') }}";

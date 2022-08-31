@@ -25,6 +25,9 @@ Route::prefix('/v1')->group(function () {
     Route::get('getmarketcategory',  ['uses' => 'MarketplaceController@getmarketCategory'])->name('get market category');
     Route::get('getallbusiness',  ['uses' => 'MarketplaceController@getallBusinesses'])->name('get businesses');
 
+    Route::post('/becomepayoutagent', ['uses' => 'PayoutAgentController@beAnAgent', 'as' => 'be an agent on paysprint']);
+
+
 
     Route::group(['middleware' => ['appkey']], function () {
 
@@ -390,7 +393,7 @@ Route::prefix('/v1')->group(function () {
 
          Route::post('/order/out-for-delivery', ['uses' => 'ShopController@outForDelivery', 'as' => 'out for delivery or pickup']);
 
-         Route::post('/becomepayoutagent', ['uses' => 'PayoutAgentController@beAnAgent', 'as' => 'be an agent on paysprint']);
+         Route::post('/processpayout', ['uses' => 'PayoutAgentController@processPayOut', 'as' => 'process payout fee']);
 
     });
 

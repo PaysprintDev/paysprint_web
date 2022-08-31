@@ -1887,6 +1887,71 @@
     }
 
 
+    function payoutProcessFund(transaction_id){
+
+
+        let data = {transaction_id};
+
+        var headers = {
+            'X-CSRF-TOKEN': "{{ csrf_token() }}",
+            'Authorization': 'Bearer {{ Auth::user()->api_token }}'
+        };
+
+        swal({
+                title: "Are you sure?",
+                text: "Click OK if you have confirmed recipient identification and the cash paid out",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then(async (willDelete) => {
+                if (willDelete) {
+
+                $('#processbtn'+transaction_id).text('Please wait...');
+
+
+                    try {
+
+                        const config = {
+                            method: 'POST',
+                            url: "{{ URL('/api/v1/processpayout') }}",
+                            headers,
+                            data
+                        }
+
+
+                        const response = await axios(config);
+
+                        $('#processbtn'+transaction_id).text('Process fund');
+
+                        iziMessage(true, 'Good', response.data.message);
+
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
+
+                    } catch (error) {
+                        $('#processbtn'+transaction_id).text('Process fund');
+
+                        if (error.response) {
+                            iziMessage(false, 'Error', error.response.data.message);
+                        } else {
+                            iziMessage(false, 'Error', error.message);
+                        }
+
+                    }
+
+
+
+                }
+            });
+    }
+
+
+
+
+
+
     function iziMessage(status, title, message) {
 
         return iziToast.show({

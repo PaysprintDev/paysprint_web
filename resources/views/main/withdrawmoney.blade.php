@@ -179,11 +179,11 @@
                                             <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
                                         </div>
                                     </div>
-                                    <div class="form-group"> <label for="netwmount">
+                                    <div class="form-group disp-0"> <label for="netwmount">
                                             <h6>Fee</h6>
                                         </label>
                                         <div class="input-group">
-                                            <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
+                                            <input type="hidden" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
 
                                             <input type="hidden" name="totalcharge" class="form-control" id="totalcharge" value="" placeholder="0.00" readonly>
 
@@ -350,11 +350,15 @@
                                         </div>
 
                                         <br>
-                                        <div class="alert alert-info">
-                                            Please note that your means of identification for collection is your uploaded: <strong>@if (Auth::user()->nin_front != NULL) {{ "National Identity Card" }} @elseif (Auth::user()->drivers_license_front != NULL) {{ "Driver Licence" }} @elseif (Auth::user()->international_passport_front != NULL) {{ "International Passport" }} @elseif (Auth::user()->incorporation_doc_front != NULL || Auth::user()->idvdoc != NULL) {{ "Utility Bill" }}  @endif </strong>
+                                        <div class="alert alert-info ">
+                                            Please note that the means of identification for the collection of cash at the payout point is the ID uploaded during the registration: <strong>@if (Auth::user()->nin_front != NULL) {{ "National Identity Card" }} @elseif (Auth::user()->drivers_license_front != NULL) {{ "Driver Licence" }} @elseif (Auth::user()->international_passport_front != NULL) {{ "International Passport" }} @elseif (Auth::user()->incorporation_doc_front != NULL || Auth::user()->idvdoc != NULL) {{ "Utility Bill" }}  @endif </strong>
                                         </div>
 
+
+
                                     </div>
+
+
 
                                     {{-- End For Cash Deposit --}}
 
@@ -370,6 +374,12 @@
                                                 </span> </div>
                                             <select name="card_id" id="card_id" class="form-control" required></select>
 
+                                        </div>
+
+                                        <br>
+
+                                     <div class="alert alert-info prepaidInfo disp-0">
+                                            Loading cost of <strong>$5.00</strong> applied
                                         </div>
                                     </div>
 
@@ -490,11 +500,11 @@
                                             <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
                                         </div>
                                     </div>
-                                    <div class="form-group"> <label for="netwmount">
+                                    <div class="form-group disp-0"> <label for="netwmount">
                                             <h6>Fee</h6>
                                         </label>
                                         <div class="input-group">
-                                            <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
+                                            <input type="hidden" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
 
                                             <input type="hidden" name="totalcharge" class="form-control" id="totalcharge" value="" placeholder="0.00" readonly>
 
@@ -650,21 +660,25 @@
                 if($('#card_type').val() === 'Cash'){
                     $('.cashDeposit').removeClass('disp-0');
                     $('.cardbankDeposit').addClass('disp-0');
-
+                    $('.prepaidInfo').addClass('disp-0');
                     runPayoutAgent();
                 }
-                // else if($('#card_type').val() === 'e-Transfer') {
-                //     $('.cashDeposit').removeClass('disp-0');
-                //     $('.cardbankDeposit').addClass('disp-0');
-                // }
-                else if($('#card_type').val() === 'Prepaid Card' || $('#card_type').val() === 'Bank Account') {
+                else if($('#card_type').val() === 'Prepaid Card') {
                     $('.cardbankDeposit').removeClass('disp-0');
                     $('.cashDeposit').addClass('disp-0');
+                    runCardType();
+                    $('.prepaidInfo').removeClass('disp-0');
+                }
+                else if($('#card_type').val() === 'Bank Account') {
+                    $('.cardbankDeposit').removeClass('disp-0');
+                    $('.cashDeposit').addClass('disp-0');
+                    $('.prepaidInfo').addClass('disp-0');
                     runCardType();
                 }
                 else{
                     $('.cardbankDeposit').addClass('disp-0');
                     $('.cashDeposit').addClass('disp-0');
+                    $('.prepaidInfo').addClass('disp-0');
                 }
 
                 if ($("#amount").val() != "") {
@@ -863,7 +877,6 @@
 
                         success: function(result) {
 
-
                             var totalCharge;
 
                             if (result.message == "success") {
@@ -889,14 +902,14 @@
                                     if($('#card_type').val() == "Cash"){
                                         $('.commissionInfo').html(
                                         "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
-                                        result.data.toFixed(2) + " will be given to you as " + $(
+                                        parseFloat(result.data).toFixed(2) + " will be given to you as " + $(
                                             '#card_type').val() +
-                                        ". Fee charge of {{ $data['currencyCode']->currencySymbol }}"+(result.collection).toFixed(2)+" inclusive</span></li></li></ul>");
+                                        ". Fee charge inclusive</span></li></li></ul>");
                                     }
                                     else{
                                         $('.commissionInfo').html(
                                         "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
-                                        result.data.toFixed(2) + " will be credited to your " + $(
+                                        parseFloat(result.data).toFixed(2) + " will be credited to your " + $(
                                             '#card_type').val() +
                                         ". Fee charge inclusive</span></li></li></ul>");
                                     }

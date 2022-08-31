@@ -69,6 +69,7 @@
                                         <th>Telephone</th>
                                         <th>Address</th>
                                         <th>Business Doc.</th>
+                                        <th>Payout Agent</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -259,6 +260,23 @@
 
 
 
+                                                    </td>
+
+                                                    <td>
+
+                                                            @if ($datainfo['users']->payout_agent === 0)
+                                                                <button class="btn btn-success"
+                                                                    id="btn{{ $datainfo['users']->ref_code }}"
+                                                                    onclick="becomeAnAgent('{{ $datainfo['users']->ref_code }}')">Activate
+                                                                    as Payout Agent</button>
+
+                                                            @else
+
+                                                                <button class="btn btn-danger"
+                                                                    id="btn{{ $datainfo['users']->ref_code }}"
+                                                                    onclick="becomeAnAgent('{{ $datainfo['users']->ref_code }}')">Deactivate
+                                                                    as Payout Agent</button>
+                                                            @endif
                                                     </td>
 
 

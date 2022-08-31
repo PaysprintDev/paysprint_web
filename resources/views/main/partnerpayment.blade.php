@@ -7,21 +7,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
-        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
     <!-- Favicon -->
-    <link rel="icon"
-        href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_icon_png_rhxm1e_sqhgj0.png"
-        type="image/x-icon" />
+    <link rel="icon" href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg" type="image/x-icon" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
-
     <script src="https://kit.fontawesome.com/384ade21a6.js"></script>
 
-    <title>PaySprint | Wallet</title>
+
+    @if ($data['paymentgateway']->gateway == 'Stripe')
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+    @endif
+
+    @if ($data['paymentgateway']->gateway == 'PayPal')
+
+    @if (env('APP_ENV') == 'local')
+    <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_LOCAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}">
+    </script>
+    @else
+    <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ Auth::user()->currencyCode }}">
+    </script>
+    @endif
+
+
+    @endif
+
+    <title>PaySprint | Payment</title>
 
     <style>
         body {
@@ -33,7 +46,7 @@
         }
 
         .nav-pills .nav-link {
-            color: rgb(255, 255, 255)
+            color: #555
         }
 
         .nav-pills .nav-link.active {
@@ -51,20 +64,6 @@
         .disp-0 {
             display: none !important;
         }
-
-        .fas {
-            font-size: 12px;
-        }
-
-        .nav-tabs .nav-link {
-            border: 1px solid #6c757d !important;
-            width: 20%;
-        }
-
-        .nav-link.active,
-        .nav-pills .show>.nav-link {
-            background-color: #fff3cd !important;
-        }
     </style>
 
 </head>
@@ -74,225 +73,180 @@
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-4">Select Add Money Method</h1>
+                <h1 class="display-4">{{ $pages }}</h1>
             </div>
         </div> <!-- End -->
         <div class="row">
-            <div class="col-lg-12 mx-auto">
+            <div class="col-lg-8 mx-auto">
                 <div class="card ">
                     <div class="card-header">
                         <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
                             <!-- Credit card form tabs -->
                             <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
-                                <li class="nav-item" style="background-color: #007bff !important;"> <a
-                                        data-toggle="pill" href="{{ route('home') }}" class="nav-link active"
-                                        style="background-color: #007bff !important;"> <i class="fas fa-home"></i>
-                                        Goto HomePage </a> </li>
+                                <li class="nav-item"> <a data-toggle="pill" href="{{ route('my account') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a> </li>
                             </ul>
                         </div> <!-- End -->
                         <!-- Credit card form content -->
                         <div class="tab-content">
 
-                            <!-- Payment Option-->
-                            <div class="row justify-content-center mt-3">
-                                <form action="" method="post">
+
+                            <!-- credit card info-->
+                            <div id="credit-card" class="tab-pane fade show active pt-3">
+                                <form role="form" action="#" method="POST" id="formElem">
                                     @csrf
-                                    <div class="col-md-12">
-                                        <h1>COMING SOON!!</h1>
-                                        {{-- <label class="form-control" for="partner">Kindly Select Payment
-                                            Partner</label>
-                                        <select class="form-control" name="partner_gateway">
-                                            @if(isset($data['partner']))
-                                            @foreach ( $data['partner'] as $partners )
-                                            <option id="partner" value="{{ $partners }}">{{ $partners }}</option>
-                                            @endforeach
-                                            @endif
-                                        </select> --}}
+
+                                    <div class="alert alert-info">
+
+
+                                        You can Top up your wallet with PaySprint using Partner's Platform by following these Steps:
+                                        <ul>
+                                        <hr>
+                                            <li>
+                                                Identify the Partner's Nearby: <a href="#" style="font-weight: bold;">Click here to view</a>
+                                            </li>
+                                            <br>
+                                            <li>
+                                                Send money to PaySprint using the following details:
+                                            </li>
+
+                                        </ul>
+
+                                        <div class="alert alert-primary">
+                                                    <h4>Receiver's Details</h4>
+                                                    <hr>
+                                                    <table class="table table-hover table-responsive">
+                                                        <tr>
+                                                            <td>Receiver's ID: </td>
+                                                            <td><strong>{{ $data['paymentgateway']->code.'_'.uniqid() }}</strong></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Receiver's Name: </td>
+                                                            <td><strong>PaySprint Inc.</strong></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Receiver's Firstname: </td>
+                                                            <td><strong>PaySprint Inc.</strong></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Receiver's Lastname: </td>
+                                                            <td><strong></strong></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Receiver's Address: </td>
+                                                            <td><strong>PaySprint International, <br>10 George St. North, <br>Brampton. ON. L6X1R2. Canada</strong></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Receiver's City: </td>
+                                                            <td><strong>Brampton, Ontario</strong></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Receiver's Country: </td>
+                                                            <td><strong>Canada</strong></td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+
+                                            <ul>
+                                            <hr>
+                                               <h3>
+                                                 <strong>After sending the money to PaySprint</strong>
+                                               </h3>
+                                            <br>
+                                            <li>
+                                                Scroll down and select the partner option you paid from, type the Transaction ID and Amount sent to PaySprint
+                                            </li>
+                                            <br>
+                                            <li>
+                                                Submit
+                                            </li>
+                                            <hr>
+
+                                            Please allow up to 24 hours for the funds to show in your wallet
+                                        </ul>
                                     </div>
-                                </form>
-                            </div>
 
-                            <!-- End Payment Option -->
 
+                                    <div class="form-group">
+                                        <label for="gateway">
+                                            <h6>Select Partner</h6>
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-append"> <span class="input-group-text text-muted">
+                                                    <img src="https://img.icons8.com/cotton/20/000000/money--v4.png" />
+                                                </span> </div>
+                                            <select name="gateway" id="gateway" class="form-control" required>
+                                                <option value="PaySprint">Select option</option>
+
+                                                @foreach ($data['partner'] as $partners)
+                                                <option value="{{ $partners }}">{{ $partners }}</option>
+                                                @endforeach
+
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+                                     <div class="form-group"> <label for="amount">
+                                            <h6>Transaction ID</h6>
+                                        </label>
+                                        <div class="input-group">
+                                             <input type="text" name="transaction_id" id="transaction_id" class="form-control" required>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group"> <label for="amount">
+                                            <h6>Amount to add to wallet</h6>
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-append"> <span class="input-group-text text-muted">
+                                                    {{ $data['currencyCode']->currencySymbol }} </span> </div> <input type="number" min="0.00" step="0.01" name="amount" id="amount" class="form-control" required>
+
+                                            <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode']->currencyCode }}" readonly>
+                                            <input type="hidden" name="name" class="form-control" id="nameInput" value="{{ Auth::user()->name }}" readonly>
+                                            <input type="hidden" name="phone" class="form-control" id="phoneInput" value="{{ Auth::user()->telephone }}" readonly>
+                                            <input type="hidden" name="api_token" class="form-control" id="apiTokenInput" value="{{ Auth::user()->api_token }}" readonly>
+                                            <input type="hidden" name="email" class="form-control" id="emailInput" value="{{ Auth::user()->email }}" readonly>
+
+                                            <input type="hidden" name="paymentToken" class="form-control" id="paymentToken" value="" readonly>
+
+                                            <input type="hidden" name="mode" class="form-control" id="mode" value="live" readonly>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="card-footer"> <button type="button" onclick="handShake('addmoney')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                            Submit
+                                        </button></div>
+
+
+                            </form>
                         </div>
-                    </div>
+
+
+
+                    </div> <!-- End -->
+
                 </div>
             </div>
+        </div>
+    </div>
 
 
-            <script src="{{ asset('js/jquery-1.12.0.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-1.12.0.min.js') }}"></script>
 
-            @include('include.message')
-
-
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"
-                integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG"
-                crossorigin="anonymous">
-            </script>
-
-            <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-
-            <script src="{{ asset('pace/pace.min.js') }}"></script>
-            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    @include('include.message')
 
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
+    </script>
 
-            {{-- <script>
-                $(document).ready(function() {
-                    $('#myTableAll').DataTable();
-                    $('#myTableCredit').DataTable();
-                    $('#myTableDebit').DataTable();
-
-                    $('#orgpaycreditcard').attr('value', '0');
-                    // Run Ajax
-                    currencyConvert();
-                });
-
-                $("#payment_method").change(function() {
-
-                    if ($("#payment_method").val() == "EXBC Card") {
-                        $(".bizInfo").removeClass('disp-0');
+    <script src="{{ asset('pace/pace.min.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js"></script>
 
 
-                        $(".bank_info").addClass('disp-0');
-                        $(".card_info").removeClass('disp-0');
-
-                        $("#accountname").val("NILL");
-                        $('#account_number').attr('value', '0');
-                        $("#bank_name").val("NILL");
-
-                    } else {
-                        $(".bizInfo").addClass('disp-0');
-
-                        $(".bank_info").removeClass('disp-0');
-                        $(".card_info").addClass('disp-0');
-
-                        $('#orgpaycreditcard').attr('value', '0');
-
-                    }
-                });
-
-
-                function currencyConvert() {
-
-                    $("#conversionamount").val("");
-
-                    var currency = "{{ $data['currencyCode']->currencyCode }}";
-                    var route = "{{ URL('Ajax/getconversion') }}";
-                    var thisdata = {
-                        currency: currency,
-                        amount: $("#amount_to_receive").val(),
-                        val: "receive"
-                    };
-
-                    setHeaders();
-                    jQuery.ajax({
-                        url: route,
-                        method: 'post',
-                        data: thisdata,
-                        dataType: 'JSON',
-                        success: function(result) {
-
-                            if (result.message == "success") {
-                                $("#conversionamount").val(result.data);
-                            } else {
-                                $("#conversionamount").val("");
-                            }
-
-
-                        }
-
-                    });
-                }
-
-
-                function handShake(val, ref_code) {
-
-                    var route;
-
-                    if (val == 'claimmoney') {
-
-                        var formData = new FormData();
-                        var spin = $('#btn' + ref_code);
-
-                        formData.append('reference_code', $('#reference_code').val());
-
-
-                        route = "{{ URL('/api/v1/claimmoney') }}";
-
-                        Pace.restart();
-                        Pace.track(function() {
-                            setHeaders();
-                            jQuery.ajax({
-                                url: route,
-                                method: 'post',
-                                data: formData,
-                                cache: false,
-                                processData: false,
-                                contentType: false,
-                                dataType: 'JSON',
-                                beforeSend: function() {
-                                    spin.removeClass('disp-0');
-                                },
-                                success: function(result) {
-                                    spin.addClass('disp-0');
-                                    if (result.status == 200) {
-                                        swal("Success", result.message, "success");
-                                        setTimeout(function() {
-                                            location.reload();
-                                        }, 2000);
-                                    } else {
-                                        swal("Oops", result.message, "error");
-                                    }
-
-                                },
-                                error: function(err) {
-                                    spin.addClass('disp-0');
-                                    swal("Oops", err.responseJSON.message, "error");
-
-                                }
-
-                            });
-                        });
-
-                    }
-
-                }
-
-
-                function comingSoon(val) {
-                    if (val == 'bank') {
-                        swal('Feature available soon', 'Add a new bank account will be available soon', 'info');
-                    } else {
-                        swal('Hey', 'This feature is coming soon', 'info');
-
-                    }
-                }
-
-                function idvResponse(response) {
-                    swal('Oops!', response, 'error');
-                }
-
-                function restriction(val, name) {
-                    $('.specialText').addClass("disp-0");
-                    if (val == "withdrawal") {
-                        swal('Hello ' + name, 'Your account need to be verified before you can make withdrawal', 'info');
-                    } else if (val == "specialinfo") {
-                        $('.specialText').removeClass("disp-0");
-                    }
-                }
-
-
-                //Set CSRF HEADERS
-                function setHeaders() {
-                    jQuery.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                            'Authorization': "Bearer " + "{{ Auth::user()->api_token }}"
-                        }
-                    });
-                }
-            </script> --}}
 
 </body>
 

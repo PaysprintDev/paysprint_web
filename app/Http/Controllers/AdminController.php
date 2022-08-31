@@ -15770,6 +15770,7 @@ class AdminController extends Controller
         // Check user exist
         $adminCheck = Admin::where('username', $req->username)->get();
 
+
         if (count($adminCheck) > 0) {
             // COnfirm Password
             if (Hash::check($req->password, $adminCheck[0]['password'])) {
@@ -15777,7 +15778,6 @@ class AdminController extends Controller
 
                 // Check if API Key EXIST
                 $checkApikey = ClientInfo::where('email', $adminCheck[0]['email'])->first();
-
 
 
 

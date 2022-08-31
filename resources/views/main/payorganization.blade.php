@@ -42,11 +42,11 @@
 @section('content')
 <!-- Banner area -->
 <section class="banner_area" data-stellar-background-ratio="0.5"
-    @if (Request::get('type') == base64_encode('international')) style="background-image: url('https://res.cloudinary.com/pilstech/image/upload/v1632419190/R_kw5udg.png') !important; background-position: top center; background-repeat: no-repeat; background-size: contain; background-color: #e5eff3;" @endif>
-    <h2>MONEY TRANSFER</h2>
+    @if (Request::get('type') == base64_encode('international')) style="background-image: url('https://pngimages.in/uploads/png/free-png-hd-planes-image-result-for-airplane-png.png') !important; background-position: top center; background-repeat: no-repeat; background-size: contain; background-color: #e98c13;" @endif>
+    <h2>MONEY TRANSFER - {{ strtoupper(base64_decode(Request::get('type'))) }}</h2>
     <ol class="breadcrumb">
         <li><a href="{{ route('home') }}">Home</a></li>
-        <li><a href="{{ route('statement') }}" class="active">MONEY TRANSFER</a></li>
+        <li><a href="{{ route('statement') }}" class="active">MONEY TRANSFER - {{ strtoupper(base64_decode(Request::get('type'))) }}</a></li>
     </ol>
 </section>
 <!-- End Banner area -->
