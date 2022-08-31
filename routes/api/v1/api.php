@@ -25,6 +25,8 @@ Route::prefix('/v1')->group(function () {
     Route::get('getmarketcategory',  ['uses' => 'MarketplaceController@getmarketCategory'])->name('get market category');
     Route::get('getallbusiness',  ['uses' => 'MarketplaceController@getallBusinesses'])->name('get businesses');
     Route::get('getallproduct',  ['uses' => 'MarketplaceController@getVerifiedBusiness'])->name('get verfied businesses');
+    Route::get('latestmerchant',  ['uses' => 'MarketplaceController@newestMerchant'])->name('newest merchant');
+    Route::get('findproduct',  ['uses' => 'MarketplaceController@findProduct'])->name('find product');
 
 
     Route::group(['middleware' => ['appkey']], function () {
