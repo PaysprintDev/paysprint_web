@@ -967,6 +967,48 @@ use App\Http\Controllers\User; ?>
     </div>
     </div>
     </div>
+
+
+
+
+
+    <!-- modal form -->
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary disp-0" data-toggle="modal" data-target="#staticBackdrop" id="triggerbtn">
+        Launch static backdrop modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button> -->
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="" method="post" id="triggerform">
+                                <h1>Upgrade Your Account Now!</h1>
+                                <p>Enjoy unlimited access to exciting features when you upgrade your account</p>
+                                <input type="hidden" name="user_id" id="form_user_id" value="{{Auth::id()}}">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Upgrade Now</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--end -->
+
+
+
 </section>
 <!-- End Professional Builde -->
 

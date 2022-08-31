@@ -10,6 +10,7 @@ use App\Http\Controllers\FlutterwaveController;
 use App\Http\Controllers\DusupayController;
 use App\Http\Controllers\MerchantPageController;
 use App\Http\Controllers\WalletCreditController;
+use App\Http\Controllers\TriggerController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,6 +38,8 @@ Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
 
 Route::get('testrazor', 'MonerisController@testRazor');
+
+Route::post('triggerdate', ['uses' => 'TriggerController@triggerDate', 'as' => 'trigger date']);
 
 
 // Route::get('feecharge', 'MaintenanceFeeCharge@monthlyMaintenaceFee');
@@ -1248,7 +1251,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 	Route::post('Ajaxregister', ['uses' => 'HomeController@ajaxregister', 'as' => 'Ajaxregister']);
 	Route::post('Ajaxlogin', ['uses' => 'HomeController@ajaxlogin', 'as' => 'Ajaxlogin']);
 	Route::post('contactus', ['uses' => 'HomeController@contactus', 'as' => 'contactus']);
-	
+
 
 
 	// Logout

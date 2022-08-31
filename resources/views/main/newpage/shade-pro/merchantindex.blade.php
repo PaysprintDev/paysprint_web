@@ -658,75 +658,74 @@
                     <h2 class="gr-text-4 mb-8">Unique Features</h2>
                     {{-- <p class="gr-text-9 mb-0">We've made telemedicine simple and easy for you. Create your
                         personal room and start practicing telemedicine today. </p> --}}
-                        <div class="content-widget mt-8">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="single-widget d-flex align-items-center py-2">
-                                        <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                            <i class="icon icon-check-simple"></i>
-                                        </div>
-                                        <h3 class="w-title gr-text-8 mb-0">Unlimited transactions.</h3>
+                    <div class="content-widget mt-8">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
                                     </div>
+                                    <h3 class="w-title gr-text-8 mb-0">Unlimited transactions.</h3>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="single-widget d-flex align-items-center py-2">
-                                        <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                            <i class="icon icon-check-simple"></i>
-                                        </div>
-                                        <h3 class="w-title gr-text-8 mb-0">Add money to your PaySprint Wallet from debit or
-                                            credit cards.</h3>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
                                     </div>
+                                    <h3 class="w-title gr-text-8 mb-0">Add money to your PaySprint Wallet from debit or
+                                        credit cards.</h3>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="single-widget d-flex align-items-center py-2">
-                                        <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                            <i class="icon icon-check-simple"></i>
-                                        </div>
-                                        <h3 class="w-title gr-text-8 mb-0">Withdraw money to your EXBC pre-paid Mastercard
-                                            for Free.</h3>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
                                     </div>
+                                    <h3 class="w-title gr-text-8 mb-0">Withdraw money to your EXBC pre-paid Mastercard
+                                        for Free.</h3>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="single-widget d-flex align-items-center py-2">
-                                        <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                            <i class="icon icon-check-simple"></i>
-                                        </div>
-                                        <h3 class="w-title gr-text-8 mb-0">Send money locally and abroad.</h3>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
                                     </div>
+                                    <h3 class="w-title gr-text-8 mb-0">Send money locally and abroad.</h3>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="single-widget d-flex align-items-center py-2">
-                                        <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                            <i class="icon icon-check-simple"></i>
-                                        </div>
-                                        <h3 class="w-title gr-text-8 mb-0">Pay invoice at a click of a button.</h3>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
                                     </div>
+                                    <h3 class="w-title gr-text-8 mb-0">Pay invoice at a click of a button.</h3>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="single-widget d-flex align-items-center py-2">
-                                        <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                            <i class="icon icon-check-simple"></i>
-                                        </div>
-                                        <h3 class="w-title gr-text-8 mb-0">Create and send professional invoices on the go.
-                                        </h3>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
                                     </div>
+                                    <h3 class="w-title gr-text-8 mb-0">Create and send professional invoices on the go.
+                                    </h3>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="single-widget d-flex align-items-center py-2">
-                                        <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                            <i class="icon icon-check-simple"></i>
-                                        </div>
-                                        <h3 class="w-title gr-text-8 mb-0">Fast-track how you get paid as a merchant.</h3>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
                                     </div>
+                                    <h3 class="w-title gr-text-8 mb-0">Fast-track how you get paid as a merchant.</h3>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="single-widget d-flex align-items-center py-2">
-                                        <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
-                                            <i class="icon icon-check-simple"></i>
-                                        </div>
-                                        <h3 class="w-title gr-text-8 mb-0">Safe and secure, multi-level security
-                                            authentication features.</h3>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
                                     </div>
+                                    <h3 class="w-title gr-text-8 mb-0">Safe and secure, multi-level security
+                                        authentication features.</h3>
                                 </div>
                             </div>
                         </div>
@@ -735,12 +734,23 @@
             </div>
         </div>
     </div>
+</div>
+<!-- merchant -->
+<div class="container">
+    <div class="row justify-content-center mt-2">
+        <div class="col-md-2 mb-2" style="border-right: 1px solid black; border-left:1px solid grey">
+            <h6 class="text-center">Automotive</h6>
+            <p><img src="{{asset('images/soar_logo.png')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;" class="mt-2"></p>
 
-            <p><img src="{{asset('images/vimfile_logo.JPG')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:contain;"></p>
+            <p><img src="{{asset('images/busywrench_logo.png')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:contain;"></p>
+
+            <p><img src="{{asset('images/vimcare_logo.jpg')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;"></p>
+
+            <p><img src="{{asset('images/vimfile_logo.jpg')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:contain;"></p>
         </div>
         <div class="col-md-2" style="border-right: 1px solid black;">
             <h6 class="text-center">Technology</h6>
-            <p><img src="{{asset('images/prochatr_logo.PNG')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;" class="mt-2"></p>
+            <p><img src="{{asset('images/prochatr_logo.png')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;" class="mt-2"></p>
         </div>
         <div class="col-md-2" style="border-right: 1px solid black;">
             <h6 style="font-size:14px;" class="text-center">Professional Services</h6>
@@ -820,9 +830,31 @@
             </center>
         </div>
 
-            </div>
+    </div>
+</div>
+</div>
+<!-- Available countries -->
+<div class="container mt-8 mb-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-xl-5 col-lg-6 col-md-8">
+            <h2 class="title gr-text-4 mb-8">Avaliable in {{count($data['availablecountry'])}} Countries</h2>
         </div>
     </div>
-       
-    
+    <div class="row mx-auto">
+
+        @if (count($data['availablecountry']))
+
+        @foreach ($data['availablecountry'] as $country)
+        <div id="eclipse6">
+            <div class="eclipse-slider">
+                <div> <img src="{{$country->logo}}" alt="{{$country->name}}" title="{{$country->name}}"></div>
+
+            </div>
+        </div>
+        @endforeach
+
+        @endif
+
+    </div>
+</div>
 @endsection
