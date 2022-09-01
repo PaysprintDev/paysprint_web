@@ -281,7 +281,7 @@ class ThirdPartyHandshakeController extends Controller
                                 }
                             }
 
-                            $this->slack("New merchant registration via " . $bearer->business_name . " api as: " . $req->firstname . ' ' . $req->lastname . " from " . $req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                            $this->slack("New consumer registration via " . $bearer->business_name . " api as: " . $req->firstname . ' ' . $req->lastname . " from " . $req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                         // } else {
 
                         //     $data = [];
@@ -417,9 +417,12 @@ class ThirdPartyHandshakeController extends Controller
 
 
                                     $record->sendEmail($record->email, "Fund remittance");
+
+
+
                                 }
 
-
+                                    // Send Message to 3rd party Account...
 
                                 $data =  getallheaders()["dev_mode"] != 'test' ? User::where('email', $req->email)->first() : $dummy;
                                 $message = 'Successfully created account!';

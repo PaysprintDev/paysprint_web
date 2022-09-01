@@ -6124,8 +6124,12 @@ class HomeController extends Controller
         // if($req->pay_method == "Wallet"){
         $wallet = $thisuser->wallet_balance;
 
-        $availableWalletBalance = $thisuser->wallet_balance - $available;
-
+        if($thisuser->withdrawal_per_overdraft !== NULL){
+             $availableWalletBalance = $thisuser->withdrawal_per_overdraft > 0 ? $thisuser->withdrawal_per_overdraft - $available : $wallet - $available;
+        }
+        else{
+             $availableWalletBalance = $wallet - $available;
+        }
 
 
         if ($availableWalletBalance <= $amountReceive) {
