@@ -999,7 +999,7 @@ use App\Http\Controllers\User; ?>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Upgrade Now</button>
+                    <button type="button" class="btn btn-primary" onclick="changeMyPlan('changeplan')" id="cardSubmit">Upgrade Now</button>
                 </div>
                 </form>
             </div>

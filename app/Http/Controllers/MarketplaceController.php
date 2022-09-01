@@ -121,6 +121,8 @@ use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Support\Facades\Mail;
 
+use Illuminate\Support\Facades\Validator;
+
 use Maatwebsite\Excel\Facades\Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
 use App\AllCountries as AllCountries;
@@ -162,6 +164,7 @@ use App\SupportActivity as SupportActivity;
 use App\TransactionCost as TransactionCost;
 use App\BVNVerificationList as BVNVerificationList;
 use App\StoreProducts;
+use App\StoreMainShop;
 use Illuminate\Http\Response;
 
 class MarketplaceController extends Controller
@@ -243,5 +246,70 @@ class MarketplaceController extends Controller
         }
 
         return response()->json($response, $code);
+    }
+
+    //latest merchant
+    public function newestMerchant(Request $req)
+    {
+        try {
+            $data = StoreMainShop::where('publish', '1')->where('status', 'active')->orderBy('created_at', 'DESC')->get();
+            $code = 200;
+
+            $response = [
+                'data' => $data,
+                'message' => 'success'
+            ];
+        } catch (\Throwable $th) {
+            //throw $th;
+            $response = [
+                'data' => [],
+                'message' => $th->getMessage()
+            ];
+
+            $code = 400;
+        }
+
+        return response()->json($response, $code);
+    }
+
+    //find product
+    public function findProduct(Request $req)
+    {
+        $validation = Validator::make($req->all(), [
+            'search' => 'required',
+        ]);
+
+        try {
+            $data = StoreProducts::where('productName', 'like', '%' . $req->search . '%')->get();
+            $code = 200;
+
+            if ($data == null) {
+                $response = [
+                    'data' => $data,
+                    'message' => 'No product or Services Found'
+                ];
+            }
+
+            $response = [
+                'data' => $data,
+                'message' => 'success'
+            ];
+        } catch (\Throwable $th) {
+            //throw $th;
+            $response = [
+                'data' => [],
+                'message' => $th->getMessage()
+            ];
+
+            $code = 400;
+        }
+
+        return response()->json($response, $code);
+    }
+
+    //join our community
+    public function joinCommunity(Request $Req)
+    {
+        
     }
 }
