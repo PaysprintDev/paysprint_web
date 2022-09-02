@@ -55,10 +55,12 @@ $currentdate=new DateTime(date('Y-m-d'));
 
 $currentbalance= Auth::user()->wallet_balance;
 
+$plan=Auth::user()->plan;
+
 $amount=100;
 
 @endphp
-@if (Auth::user()->subscription_trigger === NULL && $currentbalance > $amount || $currentdate > $subdate )
+@if (Auth::user()->subscription_trigger === NULL && $currentbalance > $amount && $plan === 'basic' || $currentdate > $subdate )
 <script>
     $(document).ready(function() {
         $('#triggerbtn').click();
