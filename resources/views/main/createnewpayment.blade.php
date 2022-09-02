@@ -58,8 +58,8 @@
     <div class="container py-5">
         <!-- For demo purpose -->
         <div class="row mb-4">
-            <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-4">Text/Email-To-Transfer</h1>
+            <div class="col-lg-6 mx-auto text-center">
+                <h1 class="display-4">Send Money to Non-PaySprint User</h1>
             </div>
         </div> <!-- End -->
         <div class="row">

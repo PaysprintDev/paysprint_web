@@ -102,20 +102,27 @@ background: #ffe29f;
                           $counter=1;
                       @endphp
                       @if (count($data['availablecountry']) > 0)
+                     
                           @foreach ( $data['availablecountry'] as $country )
+                          
                               <tr>
-                                  
                                   <td><img style="width:60px;height:60px;border-radius:8px" src="{{$country->logo}}"></td>
                                   <td>{{ $country->name}} </td>
-                                  <td>{{ $country->payoutmethod}} </td>
+                                  <td> 
+                                    @foreach (json_decode($country->payoutmethod) as $paymentmethod)
+                                      {{$paymentmethod}}
+                                    @endforeach
+                                  </td>
                                   <td><a class="nav-link" href="{{ route('login') }}" role="button"
-                                    aria-expanded="false">LOGIN/SIGNUP</a></td>
+                                  aria-expanded="false">LOGIN/SIGNUP</a></td>
                                  
                               </tr>
                           @endforeach
                       @endif
+                      
                   </tbody>
               </table>
+              
           </div>
       </div>
      </div>
