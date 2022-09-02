@@ -4540,6 +4540,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                 if ($validator->passes()) {
 
+                    $repayAmount = $this->repayOverdraft($thisuser->wallet_balance, $req->amounttosend, $thisuser->ref_code);
+
                     if ($req->commission == "on") {
                         $grossAmount = $req->amount;
                     } else {
@@ -4587,11 +4589,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                             if ($thisuser->auto_credit == 1) {
-                                $walletBal = $thisuser->wallet_balance + $req->amounttosend;
+                                $walletBal = $thisuser->wallet_balance + $repayAmount;
                                 $holdBal = $thisuser->hold_balance;
                             } else {
                                 $walletBal = $thisuser->wallet_balance;
-                                $holdBal = $thisuser->hold_balance + $req->amounttosend;
+                                $holdBal = $thisuser->hold_balance + $repayAmount;
                             }
 
 
@@ -4603,8 +4605,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                             $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                            $activity = "Added " . $req->currencyCode . '' . number_format($req->amounttosend, 2) . " to Wallet including a fee charge of " . $req->currencyCode . '' . number_format($req->commissiondeduct, 2) . " was deducted from your Debit Card";
-                            $credit = $req->amounttosend;
+                            $activity = "Added " . $req->currencyCode . '' . number_format($repayAmount, 2) . " to Wallet including a fee charge of " . $req->currencyCode . '' . number_format($req->commissiondeduct, 2) . " was deducted from your Debit Card";
+                            $credit = $repayAmount;
                             $debit = 0;
                             $reference_code = $referenced_code;
                             $balance = 0;
@@ -4617,25 +4619,25 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             // Senders statement
                             $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1));
 
-                            $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                            $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $repayAmount);
 
                             // Notification
 
 
                             $this->name = $thisuser->name;
                             $this->email = $thisuser->email;
-                            $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
+                            $this->subject = $req->currencyCode . ' ' . number_format($repayAmount, 2) . " now added to your wallet with PaySprint";
 
                             if ($thisuser->auto_credit == 1) {
 
-                                $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                                $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                                $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
                             } else {
 
-                                $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                                $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                                $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
                             }
 
 
@@ -4713,7 +4715,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                             $data = $userInfo;
                             $status = 200;
-                            $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet';
+                            $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . ' to your wallet';
 
                             $this->createNotification($thisuser->ref_code, $sendMsg);
 
@@ -4729,7 +4731,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                             $this->sendEmail($this->email, "Fund remittance");
 
-                            $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . "</p><p>Status: Successful</p>";
+                            $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $req->currencyCode . ' ' . number_format($repayAmount, 2) . "</p><p>Status: Successful</p>";
 
                             $this->notifyAdmin($gateway . " inflow", $adminMessage);
                         } else {
@@ -4737,10 +4739,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                             if ($thisuser->country == "United States" || $thisuser->country == "USA" || $thisuser->country == "United States of America") {
 
-                                // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $req->amounttosend, "purchase", "PaySprint/Vimfile Add Money to the Wallet of ".$thisuser->name, $req->mode);
+                                // $response = $this->monerisWalletProcess($req->bearerToken(), $req->card_id, $repayAmount, "purchase", "PaySprint/Vimfile Add Money to the Wallet of ".$thisuser->name, $req->mode);
 
 
-                                $response = $this->fortisPay($req->amounttosend, $req->card_id, $thisuser->zip, $thisuser->name, $thisuser->email, $thisuser->telephone, $thisuser->city, $thisuser->state, "live");
+                                $response = $this->fortisPay($repayAmount, $req->card_id, $thisuser->zip, $thisuser->name, $thisuser->email, $thisuser->telephone, $thisuser->city, $thisuser->state, "live");
 
 
 
@@ -4992,12 +4994,12 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                         if ($thisuser->auto_credit == 1) {
                                             // Update Wallet Balance
-                                            $walletBal = $thisuser->wallet_balance + $req->amounttosend;
+                                            $walletBal = $thisuser->wallet_balance + $repayAmount;
                                             $holdBal = $thisuser->hold_balance;
                                         } else {
                                             // Update Wallet Balance
                                             $walletBal = $thisuser->wallet_balance;
-                                            $holdBal = $thisuser->hold_balance + $req->amounttosend;
+                                            $holdBal = $thisuser->hold_balance + $repayAmount;
                                         }
 
 
@@ -5006,8 +5008,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                         $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                        $activity = "Added " . $req->currencyCode . '' . number_format($req->amounttosend, 2) . " to Wallet including fee charge of " . $req->currencyCode . '' . number_format($req->commissiondeduct, 2) . " was deducted from Card: " . wordwrap($cardNo, 4, '-', true);
-                                        $credit = $req->amounttosend;
+                                        $activity = "Added " . $req->currencyCode . '' . number_format($repayAmount, 2) . " to Wallet including fee charge of " . $req->currencyCode . '' . number_format($req->commissiondeduct, 2) . " was deducted from Card: " . wordwrap($cardNo, 4, '-', true);
+                                        $credit = $repayAmount;
                                         $debit = 0;
                                         $reference_code = $response->transaction->id;
                                         $balance = 0;
@@ -5020,7 +5022,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                         // Senders statement
                                         $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1));
 
-                                        $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                        $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $repayAmount);
 
 
 
@@ -5030,17 +5032,17 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                         $this->name = $thisuser->name;
                                         $this->email = $thisuser->email;
-                                        $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
+                                        $this->subject = $req->currencyCode . ' ' . number_format($repayAmount, 2) . " now added to your wallet with PaySprint";
 
 
                                         if ($thisuser->auto_credit == 1) {
-                                            $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                                            $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                                            $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                            $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
                                         } else {
-                                            $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.  You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                                            $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.  You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                                            $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.  You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                            $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.  You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
                                         }
 
 
@@ -5071,7 +5073,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                         $data = $userInfo;
                                         $status = 200;
-                                        $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet';
+                                        $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . ' to your wallet';
 
                                         $this->createNotification($thisuser->ref_code, $sendMsg);
 
@@ -5086,7 +5088,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                         $monerisactivity = $thisuser->name . ' ' . $sendMsg;
                                         $this->keepRecord($reference_code, $responseCode, $monerisactivity, $gateway, $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1));
 
-                                        $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . "</p><p>Status: Successful</p>";
+                                        $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $req->currencyCode . ' ' . number_format($repayAmount, 2) . "</p><p>Status: Successful</p>";
 
                                         $this->notifyAdmin($gateway . " inflow", $adminMessage);
                                     } else {
@@ -5121,12 +5123,12 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                         if ($thisuser->auto_credit == 1) {
                                             // Update Wallet Balance
-                                            $walletBal = $thisuser->wallet_balance + $req->amounttosend;
+                                            $walletBal = $thisuser->wallet_balance + $repayAmount;
                                             $holdBal = $thisuser->hold_balance;
                                         } else {
                                             // Update Wallet Balance
                                             $walletBal = $thisuser->wallet_balance;
-                                            $holdBal = $thisuser->hold_balance + $req->amounttosend;
+                                            $holdBal = $thisuser->hold_balance + $repayAmount;
                                         }
 
 
@@ -5134,8 +5136,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                         $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                        $activity = "Added " . $req->currencyCode . '' . number_format($req->amounttosend, 2) . " to Wallet including fee charge of " . $req->currencyCode . '' . number_format($req->commissiondeduct, 2) . " was deducted from Card: " . wordwrap($cardNo, 4, '-', true);
-                                        $credit = $req->amounttosend;
+                                        $activity = "Added " . $req->currencyCode . '' . number_format($repayAmount, 2) . " to Wallet including fee charge of " . $req->currencyCode . '' . number_format($req->commissiondeduct, 2) . " was deducted from Card: " . wordwrap($cardNo, 4, '-', true);
+                                        $credit = $repayAmount;
                                         $debit = 0;
                                         $reference_code = $response->responseData['ReceiptId'];
                                         $balance = 0;
@@ -5148,7 +5150,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                         // Senders statement
                                         $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1));
 
-                                        $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                        $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $repayAmount);
 
 
 
@@ -5158,16 +5160,16 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                         $this->name = $thisuser->name;
                                         $this->email = $thisuser->email;
-                                        $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
+                                        $this->subject = $req->currencyCode . ' ' . number_format($repayAmount, 2) . " now added to your wallet with PaySprint";
 
                                         if ($thisuser->auto_credit == 1) {
-                                            $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                                            $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                                            $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                            $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
                                         } else {
-                                            $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.  You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                                            $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.  You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                                            $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.  You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                            $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.  You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
                                         }
 
 
@@ -5198,7 +5200,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                         $data = $userInfo;
                                         $status = 200;
-                                        $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet';
+                                        $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . ' to your wallet';
 
                                         $this->createNotification($thisuser->ref_code, $sendMsg);
 
@@ -5214,7 +5216,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                         $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1));
 
 
-                                        $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . "</p><p>Status: Successful</p>";
+                                        $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $req->currencyCode . ' ' . number_format($repayAmount, 2) . "</p><p>Status: Successful</p>";
 
                                         $this->notifyAdmin($gateway . " inflow", $adminMessage);
                                     } else {
@@ -5258,12 +5260,12 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                     if ($thisuser->auto_credit == 1) {
                                         // Update Wallet Balance
-                                        $walletBal = $thisuser->wallet_balance + $req->amounttosend;
+                                        $walletBal = $thisuser->wallet_balance + $repayAmount;
                                         $holdBal = $thisuser->hold_balance;
                                     } else {
                                         // Update Wallet Balance
                                         $walletBal = $thisuser->wallet_balance;
-                                        $holdBal = $thisuser->hold_balance + $req->amounttosend;
+                                        $holdBal = $thisuser->hold_balance + $repayAmount;
                                     }
 
 
@@ -5271,8 +5273,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                     $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                    $activity = "Added " . $req->currencyCode . '' . number_format($req->amounttosend, 2) . " to Wallet including fee charge of " . $req->currencyCode . '' . number_format($req->commissiondeduct, 2) . " was deducted from Card: " . wordwrap($cardNo, 4, '-', true);
-                                    $credit = $req->amounttosend;
+                                    $activity = "Added " . $req->currencyCode . '' . number_format($repayAmount, 2) . " to Wallet including fee charge of " . $req->currencyCode . '' . number_format($req->commissiondeduct, 2) . " was deducted from Card: " . wordwrap($cardNo, 4, '-', true);
+                                    $credit = $repayAmount;
                                     $debit = 0;
                                     $reference_code = $response->responseData['ReceiptId'];
                                     $balance = 0;
@@ -5285,7 +5287,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     // Senders statement
                                     $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1));
 
-                                    $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
+                                    $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $repayAmount);
 
 
 
@@ -5295,17 +5297,17 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                     $this->name = $thisuser->name;
                                     $this->email = $thisuser->email;
-                                    $this->subject = $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . " now added to your wallet with PaySprint";
+                                    $this->subject = $req->currencyCode . ' ' . number_format($repayAmount, 2) . " now added to your wallet with PaySprint";
 
                                     if ($thisuser->auto_credit == 1) {
 
-                                        $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                                        $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                                        $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                        $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
                                     } else {
-                                        $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                                        $this->message = '<p>You have added <strong>' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . '</strong> <em>(Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ')</em> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                                        $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                        $sendMsg = 'You have added ' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . ' (Gross Amount of ' . $req->currencyCode . ' ' . number_format($grossAmount, 2) . ' less transaction fee ' . $req->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ') to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
                                     }
 
 
@@ -5334,7 +5336,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                     $data = $userInfo;
                                     $status = 200;
-                                    $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet';
+                                    $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . ' to your wallet';
 
                                     $this->createNotification($thisuser->ref_code, $sendMsg);
 
@@ -5349,7 +5351,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $monerisactivity = $thisuser->name . ' ' . $sendMsg;
                                     $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1));
 
-                                    $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . "</p><p>Status: Successful</p>";
+                                    $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $req->currencyCode . ' ' . number_format($repayAmount, 2) . "</p><p>Status: Successful</p>";
 
                                     $this->notifyAdmin($gateway . " inflow", $adminMessage);
                                 } else {

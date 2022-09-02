@@ -61,6 +61,11 @@
                                     <h5>{{ number_format(Auth::user()->wallet_balance, 4) }}</h5>
                                     <p>Wallet Balance</p>
 
+                                    <hr>
+
+                                    <h5>{{  Auth::user()->currencySymbol.''.number_format(Auth::user()->overdraft_balance, 4) }}</h5>
+                                    <p>Overdraft Balance</p>
+
                                     &nbsp;
 
                                     {{-- <a class="btn-arrow arrow-primary" href="javascript:void(0)"><i

@@ -11360,7 +11360,33 @@ class AdminController extends Controller
         $user = User::where('id', $req->id)->update(['withdrawal_per_transaction' => $req->withdrawal_per_transaction]);
 
         if (isset($user)) {
-            $resData = "Successfully Increased";
+            $resData = "Successfully Adjusted";
+            $resp = "success";
+        } else {
+            $resData = "Something went wrong!. Try Again";
+            $resp = "error";
+        }
+
+        return redirect()->back()->with($resp, $resData);
+    }
+
+
+    public function increaseOverdraftLimit(Request $req)
+    {
+
+        $thisuser = User::where('id', $req->id)->first();
+
+        if($thisuser->wallet_balance >= 0 || $thisuser->overdraft_balance === NULL || $thisuser->wallet_balance >= $thisuser->overdraft_balance){
+            $user = User::where('id', $req->id)->update(['withdrawal_per_overdraft' => $req->withdrawal_per_overdraft, 'overdraft_balance' => $req->withdrawal_per_overdraft]);
+        }
+        else{
+            $user = User::where('id', $req->id)->update(['withdrawal_per_overdraft' => $req->withdrawal_per_overdraft]);
+        }
+
+
+
+        if (isset($user)) {
+            $resData = "Successfully Adjusted";
             $resp = "success";
         } else {
             $resData = "Something went wrong!. Try Again";

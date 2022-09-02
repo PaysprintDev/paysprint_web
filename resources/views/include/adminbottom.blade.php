@@ -2204,6 +2204,13 @@ C</div>
     }
 
 
+    function increaseOverdraftLimit(id, currentLimit) {
+        $("#currOverdraftLimit").html("<span style='color: navy; font-weight:bold;'>Current Overdraft Limit: " + currentLimit +
+            "</span>");
+        $("#overdraftlimit" + id).click();
+    }
+
+
     function openAccount(id) {
 
         var thisdata;

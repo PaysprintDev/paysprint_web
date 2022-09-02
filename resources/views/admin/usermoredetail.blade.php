@@ -428,21 +428,35 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td>Overdraft Balance</td>
+                                            <td class="mainText" style="font-weight: 900; color: green;">
+
+                                                {{ $getthisuser->currencyCode . ' ' . number_format($getthisuser->overdraft_balance, 2) }}
+
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <td>Transaction Limit</td>
                                             <td class="mainText" style="font-weight: 900; color: navy;">
 
                                                 {{ $getthisuser->currencyCode . ' ' . number_format($getthisuser->withdrawal_per_transaction, 2) }}
 
+                                                <button class="btn btn-primary"
+                                                    onclick="increaseLimit({{ $getthisuser->id }}, {{ $getthisuser->withdrawal_per_transaction }})">Adjust
+                                                    Transaction Limit</button>
+
                                             </td>
                                         </tr>
 
 
-                                        <tr>
-                                            <td class="mainText" colspan="2">
+                                         <tr>
+                                            <td>Overdraft Limit</td>
+                                            <td class="mainText" style="font-weight: 900; color: navy;">
+                                                {{ $getthisuser->currencyCode . ' ' . number_format($getthisuser->withdrawal_per_overdraft, 2) }}
 
                                                 <button class="btn btn-primary"
-                                                    onclick="increaseLimit({{ $getthisuser->id }}, {{ $getthisuser->withdrawal_per_transaction }})">Increase
-                                                    Transaction Limit</button>
+                                                    onclick="increaseOverdraftLimit({{ $getthisuser->id }}, {{ $getthisuser->withdrawal_per_overdraft != NULL ? $getthisuser->withdrawal_per_overdraft : 0 }})">Adjust
+                                                    Overdraft Limit</button>
 
                                             </td>
                                         </tr>
@@ -491,7 +505,7 @@
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLongTitle">Increase
+                                                        <h5 class="modal-title" id="exampleModalLongTitle">Adjust
                                                             {{ $getthisuser->name }} transaction limit</h5>
                                                         <button type="button" class="close" data-dismiss="modal"
                                                             aria-label="Close">
@@ -515,6 +529,62 @@
                                                             </div>
 
                                                             <p id="currLimit"></p>
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Submit and
+                                                                Save</button>
+                                                        </div>
+
+                                                    </form>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        {{-- End Modal --}}
+
+
+
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-primary disp-0" data-toggle="modal"
+                                            data-target="#increaseOverdraftLimitModal" id="overdraftlimit{{ $getthisuser->id }}">
+                                            Launch demo modal
+                                        </button>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="increaseOverdraftLimitModal" tabindex="-1" role="dialog"
+                                            aria-labelledby="increaseOverdraftLimitModalTitle" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLongTitle">Adjust
+                                                            {{ $getthisuser->name }} overdraft limit</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+
+                                                    <form action="{{ route('increase overdraft limit') }}" method="post">
+                                                        @csrf
+
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label for="Set Overdraft Limit">Set Overdraft
+                                                                    Limit</label><br>
+                                                                <input type="number" class="form-control"
+                                                                    name="withdrawal_per_overdraft"
+                                                                    id="withdrawal_per_overdraft"
+                                                                    placeholder="New Limit">
+                                                                <input type="hidden" name="id"
+                                                                    value="{{ $getthisuser->id }}">
+                                                            </div>
+
+                                                            <p id="currOverdraftLimit"></p>
 
                                                         </div>
                                                         <div class="modal-footer">

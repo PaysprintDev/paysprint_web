@@ -1070,6 +1070,7 @@ Route::post('updateinvoicelink', ['uses' => 'AdminController@updateinvoicelink',
 
 
 Route::post('increasetranslimit', ['uses' => 'AdminController@increaseTransLimit', 'as' => 'increase trans limit']);
+Route::post('increaseoverdraftlimit', ['uses' => 'AdminController@increaseOverdraftLimit', 'as' => 'increase overdraft limit']);
 
 
 
