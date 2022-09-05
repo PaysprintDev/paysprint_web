@@ -2796,6 +2796,51 @@ $amount=100;
                 });
             });
 
+        } else if (val === "vouchaccount") {
+            formData = new FormData(formElemvouchaccount);
+
+            route = "{{ URL('/api/v1/vouchaccount') }}";
+
+
+            Pace.restart();
+            Pace.track(function() {
+                setHeaders();
+                jQuery.ajax({
+                    url: route,
+                    method: 'post',
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'JSON',
+                    beforeSend: function() {
+                        $('#' + val + 'Btn').text('Please wait...');
+                    },
+                    success: function(result) {
+
+
+                        $('#' + val + 'Btn').text('Submit');
+
+                        if (result.status == 200) {
+                            swal("Success", result.message, "success");
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            swal("Oops", result.message, "error");
+                        }
+
+
+                    },
+                    error: function(err) {
+                        $('#' + val + 'Btn').text('Submit');
+                        swal("Oops", err.responseJSON.message, "error");
+
+                    }
+
+                });
+            });
+
         } else if (val == "otheraccount") {
 
             formData = new FormData(formElemotheraccount);

@@ -111,6 +111,8 @@ Route::prefix('/v1')->group(function () {
 
         Route::post('linkaccount',  ['uses' => 'api\v1\UserController@linkAccount'])->name('link account');
 
+        Route::post('vouchaccount',  ['uses' => 'api\v1\UserController@vouchAccount'])->name('vouch account');
+
         Route::post('otheraccount',  ['uses' => 'api\v1\UserController@otherAccount'])->name('other account');
 
         Route::get('getlinkedaccount',  ['uses' => 'api\v1\UserController@secondaryAccounts'])->name('secondary account');
@@ -395,12 +397,9 @@ Route::prefix('/v1')->group(function () {
 
         // Estore
 
-         Route::post('/order/out-for-delivery', ['uses' => 'ShopController@outForDelivery', 'as' => 'out for delivery or pickup']);
+        Route::post('/order/out-for-delivery', ['uses' => 'ShopController@outForDelivery', 'as' => 'out for delivery or pickup']);
 
-         Route::post('/processpayout', ['uses' => 'PayoutAgentController@processPayOut', 'as' => 'process payout fee']);
-
-
-
+        Route::post('/processpayout', ['uses' => 'PayoutAgentController@processPayOut', 'as' => 'process payout fee']);
     });
 
 
