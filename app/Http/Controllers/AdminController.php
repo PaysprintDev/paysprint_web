@@ -194,6 +194,8 @@ class AdminController extends Controller
 
     public function index(Request $req)
     {
+    //   dd($req->all);
+        
 
         if (session('role') == 'Merchant') {
 
@@ -204,6 +206,8 @@ class AdminController extends Controller
             return redirect()->route('store dashboard');
         } else {
             if ($req->session()->has('username') == true) {
+
+
 
 
                 if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing" || session('role') == "Customer Success") {
@@ -285,6 +289,14 @@ class AdminController extends Controller
                 );
 
 
+                if(isset($req->q)){
+                 $details=User::where('name', 'like', '%'.$req->q.'%')->orWhere('ref_code', 'like', '%'.$req->q.'%')->orWhere('email', 'like', '%'.$req->q.'%')->get();
+
+                //  dd($details);
+
+                 return view('admin.pages.searchuser')->with(['pages' => 'My Dashboard', 'clientPay' => $clientPay, 'searchuser'=>$details,'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'invoiceLinkImport' => $invoiceLinkImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'allusers' => $allusers, 'getUserDetail' => $getUserDetail, 'getCard' => $getCard, 'getBank' => $getBank, 'getTax' => $getTax, 'withdraws' => $withdraws, 'pending' => $pending, 'allcountries' => $allcountries, 'refund' => $refund, 'received' => $received, 'data' => $data]);
+                    
+                }
 
 
 
@@ -7749,6 +7761,8 @@ class AdminController extends Controller
             return redirect()->route('AdminLogin');
         }
     }
+
+    
 
 
     public function allFreeUserList(Request $req)

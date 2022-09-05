@@ -4151,7 +4151,10 @@ class HomeController extends Controller
             'continent' => $this->timezone[0],
             'community' => $community,
             'availablecountry' => $allcountry
+
+            
         ];
+        
         //    dd($data);
 
         return view('main.displaycountrymerchant')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);

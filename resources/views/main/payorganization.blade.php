@@ -68,16 +68,16 @@
 
 
                     <ul class="nav nav-tabs">
-                        <li class="tab-menu active"><a data-toggle="tab" href="#home">Send Money <i
+                        <li class="tab-menu active"><a data-toggle="tab" href="#home">Send Money to PaySprint User <i
                                     class="fas fa-info-circle" style="cursor: pointer;"
                                     title="The fund would be auto deposited into the wallet of the receiver and the receiver would get a text message and email notification of the transaction"></i></a>
                         </li>
                         {{-- <li class="tab-menu"><a data-toggle="tab" href="#menu1">Receive</a></li> --}}
-                        <li class="tab-menu"><a data-toggle="tab" href="#menu3">Search</a></li>
+                        <li class="tab-menu"><a data-toggle="tab" href="#menu3">Search PaySprint User</a></li>
                         <li class="tab-menu"
                             onclick="location.href='{{ route('create new payment', 'country=' . Auth::user()->country) }}'">
                             <a data-toggle="tab"
-                                href="{{ route('create new payment', 'country=' . Auth::user()->country) }}">Text/Email-To-Transfer
+                                href="{{ route('create new payment', 'country=' . Auth::user()->country) }}">Send Money to Non-PaySprint User
                                 <i class="fas fa-info-circle" style="cursor: pointer;"
                                     title="The receiver would get a text message and an email to download PaySprint App to access the money sent"></i></a>
                         </li>
