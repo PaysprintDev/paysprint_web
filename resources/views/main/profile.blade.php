@@ -464,9 +464,8 @@ use App\Http\Controllers\FlutterwaveModel; ?>
                                     <input type="password" name="transaction_pin" id="link_transaction_pin" class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <button type="button" class="btn btn-primary btn-block" id="linkaccountBtn" onclick="handShake('linkaccount')">Submit</button>
+                                    <button type="button" class="btn btn-primary btn-block" id="vouchaccountBtn" onclick="handShake('linkaccount')">Submit</button>
                                 </div>
-
                             </form>
                         </div>
                     </div>
@@ -476,8 +475,9 @@ use App\Http\Controllers\FlutterwaveModel; ?>
                     <div class="panel-heading" role="tab" id="headingEight">
                         <h4 class="panel-title">
                             <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
-                                Vouch for Accounts
+                                Fast-Track Verification for Families and Friends
                             </a>
+                            (<a href="#" style="font-size:10px; color:red; font-weight:bold">View Vouched List</a>)
                         </h4>
                     </div>
                     <div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
@@ -498,7 +498,7 @@ use App\Http\Controllers\FlutterwaveModel; ?>
                                     <input type="password" name="transaction_pin" id="link_transaction_pin" class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <button type="button" class="btn btn-primary btn-block" id="vouchaccountBtn" onclick="handShake('vouchaccount')">Submit</button>
+                                    <button type="button" class="btn btn-primary btn-block" id="linkaccountBtn" onclick="handShake('vouchaccount')">Submit</button>
                                 </div>
 
                             </form>

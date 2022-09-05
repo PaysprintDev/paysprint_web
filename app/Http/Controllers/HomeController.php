@@ -947,7 +947,8 @@ class HomeController extends Controller
             'othercurrencyCode' => $this->otherCurrencyCodeOfficial($user_id),
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
-            'continent' => $this->timezone[0]
+            'continent' => $this->timezone[0],
+            'vouchedlist' => VouchAccount::get()
         );
 
 
