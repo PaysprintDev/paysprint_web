@@ -495,6 +495,12 @@ class UserController extends Controller
             $this->createNotification($user->refCode, "Document successfully uploaded");
             $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded your document.");
         }
+
+        if ($request->hasFile('idvdoc')) {
+            $this->uploadDocument($user->id, $request->file('idvdoc'), 'document/idvdoc', 'idvdoc');
+            $this->createNotification($user->refCode, "Document successfully uploaded");
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded your document.");
+        }
         // if($request->hasFile('incorporation_doc_back')){
         //     $this->uploadDocument($user->id, $request->file('incorporation_doc_back'), 'document/incorporation_doc_back', 'incorporation_doc_back');
         //     $this->createNotification($user->refCode, "Hello ".$user->name.", You have successfully uploaded the back page of your incorporation document.");
@@ -505,7 +511,7 @@ class UserController extends Controller
         }
 
 
-        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'accountType', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth', 'cardRequest', 'bvn_number', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $request->bearerToken())->first();
+        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'accountType', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'idvdoc', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth', 'cardRequest', 'bvn_number', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $request->bearerToken())->first();
 
         $status = 200;
 

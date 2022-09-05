@@ -2530,11 +2530,9 @@ in the your business category.</p> <p>This means your competitors are receiving 
         try {
             $data = $this->flutterwave->fetchGetAllTransfers();
 
-            // TODO 1:: Get the response data...
-
             if (count($data) > 0) {
                 foreach ($data as $record) {
-                    $referenced_code = $record->tx_ref;
+                    $referenced_code = $record->flw_ref;
                     $gateway = "Flutterwave";
 
                     $email = $record->customer->email;
@@ -2548,7 +2546,6 @@ in the your business category.</p> <p>This means your competitors are receiving 
                         FlutterwavePaymentRecord::where('recordId', $record->id)->update([
                             'userId' => $thisuser->ref_code,
                             'recordId' => $record->id,
-                            'tx_ref' => $record->tx_ref,
                             'tx_ref' => $record->tx_ref,
                             'flw_ref' => $record->flw_ref,
                             'amount' => $record->amount,
@@ -2571,7 +2568,6 @@ in the your business category.</p> <p>This means your competitors are receiving 
                         FlutterwavePaymentRecord::insert([
                             'userId' => $thisuser->ref_code,
                             'recordId' => $record->id,
-                            'tx_ref' => $record->tx_ref,
                             'tx_ref' => $record->tx_ref,
                             'flw_ref' => $record->flw_ref,
                             'amount' => $record->amount,
