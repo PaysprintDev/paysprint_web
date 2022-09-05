@@ -28,6 +28,7 @@ use App\ClientInfo as ClientInfo;
 use App\MonthlyFee as MonthlyFee;
 
 use App\LinkAccount as LinkAccount;
+use App\VouchAccount;
 use App\ListOfBanks as ListOfBanks;
 use App\ServiceType as ServiceType;
 use App\Traits\MailChimpNewsLetter;
@@ -263,33 +264,31 @@ class UserController extends Controller
                     $this->sendEmail($this->email, "Fund remittance");
                 }
 
-                if(env('APP_ENV') !== 'local'){
+                if (env('APP_ENV') !== 'local') {
                     $dob = $getcurrentUser->yearOfBirth . "-" . $getcurrentUser->monthOfBirth . "-" . $getcurrentUser->dayOfBirth;
 
-                $thisusersname = explode(" ", $getcurrentUser->name);
+                    $thisusersname = explode(" ", $getcurrentUser->name);
 
-                $getUsername = [
-                    'first_name' => $thisusersname[0],
-                    'middle_name' => '',
-                    'last_name' => $thisusersname[1],
-                ];
+                    $getUsername = [
+                        'first_name' => $thisusersname[0],
+                        'middle_name' => '',
+                        'last_name' => $thisusersname[1],
+                    ];
 
-                $shuftiVerify = new \App\Http\Controllers\ShuftiProController();
+                    $shuftiVerify = new \App\Http\Controllers\ShuftiProController();
 
-                 $checkAvalable = $shuftiVerify->shuftiAvailableCountries($getcurrentUser->country);
+                    $checkAvalable = $shuftiVerify->shuftiAvailableCountries($getcurrentUser->country);
 
-                        if($checkAvalable === true){
-                            $checkAmlVerification = $shuftiVerify->callAmlCheck($getcurrentUser->ref_code, $dob, $getUsername, $getcurrentUser->email, $countryApproval->code);
+                    if ($checkAvalable === true) {
+                        $checkAmlVerification = $shuftiVerify->callAmlCheck($getcurrentUser->ref_code, $dob, $getUsername, $getcurrentUser->email, $countryApproval->code);
 
-                                if ($checkAmlVerification->event !== 'verification.accepted') {
-                                    User::where('id', $getcurrentUser->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
-                                } else {
-                                    User::where('id', $getcurrentUser->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
-                                }
+                        if ($checkAmlVerification->event !== 'verification.accepted') {
+                            User::where('id', $getcurrentUser->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
+                        } else {
+                            User::where('id', $getcurrentUser->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
                         }
-
+                    }
                 }
-
             } else {
 
                 $message = "error";
@@ -1525,6 +1524,86 @@ class UserController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
+    public function vouchAccount(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'account_number' => 'required|string',
+            'transaction_pin' => 'required|string',
+        ]);
+
+        if ($validator->passes()) {
+
+            $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            // Update
+            $getAccount = User::where('ref_code', $req->account_number)->first();
+
+
+            if (isset($getAccount)) {
+
+                if (Hash::check($req->transaction_pin, $getAccount->transaction_pin)) {
+
+                    //checking if account is already vouched for
+                    $checkvouched = VouchAccount::where('voucher_ref_code', $req->account_number)->first();
+                    if (isset($checkvouched)) {
+                        User::where('ref_code', $req->account_number)->update([
+                            'flagged' => 1,
+                        ]);
+                    }
+
+
+                    // Vouch for Account
+                    $resp = VouchAccount::updateOrInsert(['ref_code' => $thisuser->ref_code, 'voucher_ref_code' => $getAccount->ref_code], ['ref_code' => $thisuser->ref_code, 'voucher_ref_code' => $req->account_number, 'user_id' => $thisuser->id]);
+
+                    //auto verify vouch user
+                    User::where('ref_code', $req->account_number)->update([
+                        'approval' => 2,
+                        'accountLevel' => 3
+                    ]);
+
+
+                    $info = "Hello " . strtoupper($thisuser->name) . ", You have just vouched for " . $getAccount->name . " to be automatically verified";
+
+                    $data = true;
+                    $message = "Successfull";
+                    $status = 200;
+
+
+                    // Log::notice($info);
+
+
+                    $this->slack($info, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                    $this->createNotification($thisuser->ref_code, $info);
+                } else {
+
+                    $error = "Invalid transaction pin";
+
+                    $data = [];
+                    $status = 400;
+                    $message = $error;
+                }
+            } else {
+                $error = "Account number not found";
+
+                $data = [];
+                $status = 400;
+                $message = $error;
+            }
+        } else {
+
+            $error = implode(",", $validator->messages()->all());
+
+            $data = [];
+            $status = 400;
+            $message = $error;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
 
 
     public function otherAccount(Request $req)
@@ -1920,7 +1999,22 @@ class UserController extends Controller
             } else {
                 $thisuser = User::where('api_token', $req->bearerToken())->first();
 
+                $refcode = $thisuser->ref_code;
+
+                $voucher = VouchAccount::where('voucher_ref_code', $refcode)->first();
+
                 if (Hash::check($req->oldpin, $thisuser->transaction_pin)) {
+
+                    //checking if it exist in vouch table and returning verifcation to pending
+                    if (isset($voucher)) {
+                        VouchAccount::where('voucher_ref_code', $refcode)->delete();
+
+                        User::where('ref_code', $refcode)->update([
+                            'approval' => 1,
+                            'accountLevel' => 2,
+                        ]);
+                    }
+
                     // Update
                     $resp = User::where('api_token', $req->bearerToken())->update(['transaction_pin' => Hash::make($req->newpin)]);
 

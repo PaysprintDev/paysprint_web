@@ -103,12 +103,15 @@
                                             </div>
                                         </div>
                                         <!-- warning -->
+                                        @if(Auth::user()->plan === 'basic')
+
                                         <div class="row">
                                             <div class="col-md-12 text-center">
                                                 <p class="text-danger" style="font-weight:bold">Note: You must have a Minimum Balance of {{$data['currencyCode']->currencySymbol.$data['subscription'] }} in your Wallet</p>
                                             </div>
                                         </div>
 
+                                        @endif
 
                                     </div>
                                     <div class="form-group"> <label for="amount">
@@ -319,10 +322,10 @@
                                             <select name="card_type" id="card_type" class="form-control" required>
                                                 <option value="">Select option</option>
 
-                                                    @if (Auth::user()->country === 'Canada')
-                                                        <option value="Cash">Cash</option>
-                                                        <option value="e-Transfer">e-Transfer</option>
-                                                    @endif
+                                                @if (Auth::user()->country === 'Canada')
+                                                <option value="Cash">Cash</option>
+                                                <option value="e-Transfer">e-Transfer</option>
+                                                @endif
 
                                                 {{-- <option value="Credit Card">Credit Card</option> --}}
                                                 {{-- <option value="Debit Card">Debit Visa/Mastercard</option> --}}
@@ -351,7 +354,7 @@
 
                                         <br>
                                         <div class="alert alert-info ">
-                                            Please note that the means of identification for the collection of cash at the payout point is the ID uploaded during the registration: <strong>@if (Auth::user()->nin_front != NULL) {{ "National Identity Card" }} @elseif (Auth::user()->drivers_license_front != NULL) {{ "Driver Licence" }} @elseif (Auth::user()->international_passport_front != NULL) {{ "International Passport" }} @elseif (Auth::user()->incorporation_doc_front != NULL || Auth::user()->idvdoc != NULL) {{ "Utility Bill" }}  @endif </strong>
+                                            Please note that the means of identification for the collection of cash at the payout point is the ID uploaded during the registration: <strong>@if (Auth::user()->nin_front != NULL) {{ "National Identity Card" }} @elseif (Auth::user()->drivers_license_front != NULL) {{ "Driver Licence" }} @elseif (Auth::user()->international_passport_front != NULL) {{ "International Passport" }} @elseif (Auth::user()->incorporation_doc_front != NULL || Auth::user()->idvdoc != NULL) {{ "Utility Bill" }} @endif </strong>
                                         </div>
 
 
@@ -378,7 +381,7 @@
 
                                         <br>
 
-                                     <div class="alert alert-info prepaidInfo disp-0">
+                                        <div class="alert alert-info prepaidInfo disp-0">
                                             Loading cost of <strong>$5.00</strong> applied
                                         </div>
                                     </div>
@@ -657,25 +660,22 @@
 
             $('#card_type').change(function() {
 
-                if($('#card_type').val() === 'Cash'){
+                if ($('#card_type').val() === 'Cash') {
                     $('.cashDeposit').removeClass('disp-0');
                     $('.cardbankDeposit').addClass('disp-0');
                     $('.prepaidInfo').addClass('disp-0');
                     runPayoutAgent();
-                }
-                else if($('#card_type').val() === 'Prepaid Card') {
+                } else if ($('#card_type').val() === 'Prepaid Card') {
                     $('.cardbankDeposit').removeClass('disp-0');
                     $('.cashDeposit').addClass('disp-0');
                     runCardType();
                     $('.prepaidInfo').removeClass('disp-0');
-                }
-                else if($('#card_type').val() === 'Bank Account') {
+                } else if ($('#card_type').val() === 'Bank Account') {
                     $('.cardbankDeposit').removeClass('disp-0');
                     $('.cashDeposit').addClass('disp-0');
                     $('.prepaidInfo').addClass('disp-0');
                     runCardType();
-                }
-                else{
+                } else {
                     $('.cardbankDeposit').addClass('disp-0');
                     $('.cashDeposit').addClass('disp-0');
                     $('.prepaidInfo').addClass('disp-0');
@@ -784,7 +784,7 @@
                             if (result.message == "success") {
                                 var res = result.data;
 
-                               $.each(res, function(v, k) {
+                                $.each(res, function(v, k) {
                                     $('#payout_id').append(
                                         `<option value="${k.id}">${k.businessname+' - ('+k.address+' '+k.city+', '+k.state+')'}</option>`
                                     );
@@ -798,13 +798,12 @@
                         },
                         error: function(err) {
 
-                            if(err.responseJSON){
+                            if (err.responseJSON) {
                                 $('#payout_id').append(
-                                `<option value="">${err.responseJSON.message}</option>`);
-                            }
-                            else{
+                                    `<option value="">${err.responseJSON.message}</option>`);
+                            } else {
                                 $('#payout_id').append(
-                                `<option value="">${err.message}</option>`);
+                                    `<option value="">${err.message}</option>`);
                             }
 
 
@@ -837,11 +836,9 @@
 
                 if ($('#card_type').val() == "Prepaid Card") {
                     structure = "EXBC Prepaid Card";
-                }
-                else if ($('#card_type').val() == "Cash") {
+                } else if ($('#card_type').val() == "Cash") {
                     structure = "Payout";
-                }
-                else {
+                } else {
                     structure = $("#card_type").val();
                 }
 
@@ -899,19 +896,18 @@
                                     $('.commissionInfo').addClass('alert alert-success');
                                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                                    if($('#card_type').val() == "Cash"){
+                                    if ($('#card_type').val() == "Cash") {
                                         $('.commissionInfo').html(
-                                        "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
-                                        parseFloat(result.data).toFixed(2) + " will be given to you as " + $(
-                                            '#card_type').val() +
-                                        ". Fee charge inclusive</span></li></li></ul>");
-                                    }
-                                    else{
+                                            "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
+                                            parseFloat(result.data).toFixed(2) + " will be given to you as " + $(
+                                                '#card_type').val() +
+                                            ". Fee charge inclusive</span></li></li></ul>");
+                                    } else {
                                         $('.commissionInfo').html(
-                                        "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
-                                        parseFloat(result.data).toFixed(2) + " will be credited to your " + $(
-                                            '#card_type').val() +
-                                        ". Fee charge inclusive</span></li></li></ul>");
+                                            "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
+                                            parseFloat(result.data).toFixed(2) + " will be credited to your " + $(
+                                                '#card_type').val() +
+                                            ". Fee charge inclusive</span></li></li></ul>");
                                     }
 
 
