@@ -311,6 +311,8 @@ Route::prefix('product')->group(function () {
 
 Route::get('Service', ['uses' => 'HomeController@service', 'as' => 'service']);
 
+Route::get('vouchlist', ['uses' => 'HomeController@vouchList', 'as' => 'vouchlist']);
+
 Route::get('Ticket', ['uses' => 'HomeController@ticket', 'as' => 'ticket']);
 
 

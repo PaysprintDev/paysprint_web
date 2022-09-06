@@ -477,7 +477,7 @@ use App\Http\Controllers\FlutterwaveModel; ?>
                             <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
                                 Fast-Track Verification for Families and Friends
                             </a>
-                            (<a href="#" style="font-size:10px; color:red; font-weight:bold">View Vouched List</a>)
+                            (<a href="{{ route('vouchlist')}}" style="font-size:10px; color:red; font-weight:bold">View Vouched List</a>)
                         </h4>
                     </div>
                     <div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
