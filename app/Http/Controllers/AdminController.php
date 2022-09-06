@@ -119,6 +119,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+
 use Illuminate\Support\Facades\Mail;
 
 use Maatwebsite\Excel\Facades\Excel;
@@ -290,7 +291,19 @@ class AdminController extends Controller
 
 
                 if(isset($req->q)){
+
                  $details=User::where('name', 'like', '%'.$req->q.'%')->orWhere('ref_code', 'like', '%'.$req->q.'%')->orWhere('email', 'like', '%'.$req->q.'%')->get();
+
+                 if(count($details) > 0){
+                    $details = $details;
+
+                 }else{
+                    $userdetails=UserClosed::where('name', 'like', '%'.$req->q.'%')->orWhere('ref_code', 'like', '%'.$req->q.'%')->orWhere('email', 'like', '%'.$req->q.'%')->get();
+
+                    $details=$userdetails;
+                 }
+
+
 
                 //  dd($details);
 
