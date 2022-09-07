@@ -92,9 +92,14 @@ use App\Http\Controllers\FlutterwaveModel; ?>
                                 <p>
 
                                     @if ($bankaccount = \App\FlutterwaveModel::where('userId', Auth::user()->ref_code)->first())
-                                    @php
-                                    $bankName = $bankaccount->bank_name;
-                                    @endphp
+                                        @php
+                                        $bankName = $bankaccount->bank_name;
+                                        @endphp
+
+                                    @else
+                                        @php
+                                        $bankName = "Not yet initialized";
+                                        @endphp
                                     @endif
 
                                     <i class="fa fa-cc"></i> <b>Bank: {{ $bankName }}</b>

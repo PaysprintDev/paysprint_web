@@ -4152,9 +4152,9 @@ class HomeController extends Controller
             'community' => $community,
             'availablecountry' => $allcountry
 
-            
+
         ];
-        
+
         //    dd($data);
 
         return view('main.displaycountrymerchant')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -5958,6 +5958,7 @@ class HomeController extends Controller
     {
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
+
 
 
 

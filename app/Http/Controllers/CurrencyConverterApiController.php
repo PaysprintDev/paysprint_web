@@ -15,6 +15,7 @@ class CurrencyConverterApiController extends Controller
     public function currencyConverter(Request $req)
     {
 
+        // dd($req->all());
 
         // Get Markup
         $markuppercent = $this->markupPercentage();

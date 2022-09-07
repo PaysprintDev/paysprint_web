@@ -57,15 +57,6 @@ class ThirdPartyHandshakeController extends Controller
             $generatedPassword = Hash::make($req->firstname);
             $api_token = uniqid() . md5($req->email) . time();
 
-            // Check Admin for existing username...
-            // $getUsername = Admin::where('username', $generatedUsername)->first();
-
-            // if (isset($getUsername)) {
-            //     $generatedUsername = $req->firstname . '' . time();
-            // }
-
-
-
 
             // $transCost = TransactionCost::where('method', "Merchant Minimum Withdrawal")->where('country', $req->country)->first();
             $transCost = TransactionCost::where('method', "Consumer Minimum Withdrawal")->where('country', $req->country)->first();
@@ -153,18 +144,6 @@ class ThirdPartyHandshakeController extends Controller
                     $getanonuser = AnonUsers::where('email', $req->email)->first();
 
                     if (isset($getanonuser)) {
-                        // Insert
-
-                        // if (getallheaders()["dev_mode"] != 'test') {
-                        //     $insClient = ClientInfo::insert(['user_id' => $ref_code, 'business_name' => $businessName, 'address' => '', 'corporate_type' => '', 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'email' => $getanonuser->email, 'country' => $req->country, 'state' => '', 'city' => '', 'zip_code' => '', 'industry' => '', 'telephone' => $req->telephone, 'website' => '', 'api_secrete_key' => md5(uniqid($generatedUsername, true)) . date('dmY') . time(), 'type_of_service' => '']);
-
-                        //     $insAdmin = Admin::insert(['user_id' => $ref_code, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $generatedUsername, 'password' => $generatedPassword, 'role' => 'Merchant', 'email' => $getanonuser->email]);
-                        // } else {
-                        //     $insAdmin = ['user_id' => $ref_code, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $generatedUsername, 'password' => $generatedPassword, 'role' => 'Merchant', 'email' => $getanonuser->email];
-                        // }
-
-
-
 
                         $mycode = $this->getCountryCode($req->country);
 
@@ -181,107 +160,120 @@ class ThirdPartyHandshakeController extends Controller
                             $user = User::where('email', $getanonuser->email)->first();
 
                             if ($req->hasFile('national_id_card')) {
-                                $documentRecord->uploadDocument($user->id, $req->file('national_id_card'), 'document/'.$bearer->business_name.'/nin_front', 'nin_front');
+                                $documentRecord->uploadDocument($user->id, $req->file('national_id_card'), 'document/' . $bearer->business_name . '/nin_front', 'nin_front');
 
                                 $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your national identity card.", $bearer->business_name . ' api');
                             }
 
                             if ($req->hasFile('drivers_license')) {
-                                $documentRecord->uploadDocument($user->id, $req->file('drivers_license'), 'document/'.$bearer->business_name.'/drivers_license_front', 'drivers_license_front');
+                                $documentRecord->uploadDocument($user->id, $req->file('drivers_license'), 'document/' . $bearer->business_name . '/drivers_license_front', 'drivers_license_front');
                                 $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your drivers license.", $bearer->business_name . ' api');
                             }
 
                             if ($req->hasFile('international_passport')) {
-                                $documentRecord->uploadDocument($user->id, $req->file('international_passport'), 'document/'.$bearer->business_name.'/international_passport_front', 'international_passport_front');
+                                $documentRecord->uploadDocument($user->id, $req->file('international_passport'), 'document/' . $bearer->business_name . '/international_passport_front', 'international_passport_front');
                                 $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your international passport.", $bearer->business_name . ' api');
                             }
 
                             if ($req->hasFile('utility_bill')) {
-                                $documentRecord->uploadDocument($user->id, $req->file('utility_bill'), 'document/'.$bearer->business_name.'/incorporation_doc_front', 'incorporation_doc_front');
+                                $documentRecord->uploadDocument($user->id, $req->file('utility_bill'), 'document/' . $bearer->business_name . '/incorporation_doc_front', 'incorporation_doc_front');
                                 $documentRecord->createNotification($user->ref_code, "Document successfully uploaded");
                                 $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your document.", $bearer->business_name . ' api');
                             }
-
                         }
 
 
                         // if (isset($insAdmin)) {
-                            // Set session
-                            $getMerchant = User::where('ref_code', $ref_code)->first();
+                        // Set session
+                        $getMerchant = User::where('ref_code', $ref_code)->first();
 
-                            $getMoney = Statement::where('user_id', $getanonuser->email)->get();
+                        $getMoney = Statement::where('user_id', $getanonuser->email)->get();
 
-                            if (count($getMoney) > 0) {
-                                foreach ($getMoney as $key => $value) {
+                        if (count($getMoney) > 0) {
+                            foreach ($getMoney as $key => $value) {
 
-                                    Statement::where('reference_code', $value->reference_code)->update(['status' => 'Delivered']);
-                                }
+                                Statement::where('reference_code', $value->reference_code)->update(['status' => 'Delivered']);
+                            }
+                        }
+
+
+                        AnonUsers::where('ref_code', $ref_code)->delete();
+
+                        $this->slack("New consumer registration via " . $bearer->business_name . " api as: " . $req->firstname . ' ' . $req->lastname . " from " . $req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+
+                        $countryApproval = AllCountries::where('name', $req->country)->where('approval', 1)->first();
+
+                        if (isset($countryApproval)) {
+
+                            $message = "success";
+
+                            if (getallheaders()["dev_mode"] != 'test') {
+                                User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'countryapproval' => 1, 'bvn_verification' => 1, 'transactionRecordId' => NULL]);
                             }
 
 
-                            AnonUsers::where('ref_code', $ref_code)->delete();
 
-                            $this->slack("New consumer registration via " . $bearer->business_name . " api as: " . $req->firstname . ' ' . $req->lastname . " from " . $req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                            $record->name = $req->firstname . ' ' . $req->lastname;
+                            // $record->email = "bambo@vimfile.com";
+                            $record->to = $req->email;
+                            $record->subject = "Welcome to PaySprint";
 
-
-                            $countryApproval = AllCountries::where('name', $req->country)->where('approval', 1)->first();
-
-                            if (isset($countryApproval)) {
-
-                                $message = "success";
-
-                                if (getallheaders()["dev_mode"] != 'test') {
-                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'countryapproval' => 1, 'bvn_verification' => 1, 'transactionRecordId' => NULL]);
-                                }
+                            $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, Pay received Invoice or Utility bills and Withdraw money as soon as the Compliance Team verifies your information. <br> Login to PaySprint Account on Mobile App or Web app at <a href='" . route('login') . "'>www.paysprint.ca/login</a> with the information below <hr><br> Email: <strong>" . $req->email . "</strong> <br> Password: <strong>" . $req->firstname . "</strong> <hr> <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
 
 
+                            $record->message = '<p>' . $message . '</p>';
+
+
+                            $record->sendEmail($record->to, "Refund Request");
+
+
+                            if ($req->country == "India") {
 
                                 $record->name = $req->firstname . ' ' . $req->lastname;
-                                // $record->email = "bambo@vimfile.com";
-                                $record->to = $req->email;
-                                $record->subject = "Welcome to PaySprint";
+                                // $record->email = "bambo@paysprint.ca";
+                                $record->email = $req->email;
+                                $record->subject = "Special Notice";
 
-                                $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, Pay received Invoice or Utility bills, but you will not be able to withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at <a href='" . route('login') . "'>www.paysprint.ca/login</a> with the information below <hr><br> Email: <strong>" . $req->email . "</strong> <br> Password: <strong>" . $req->firstname . "</strong> <hr> <br> All other features would be enabled for you as soon as the Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
+                                $mailmessage = "Dear " . $req->fname . ", If you are presenting India Aadhaar Card as the form of identification, kindly upload your India Permanent Account Number card as well using same icon.Thanks";
 
-
-                                $record->message = '<p>' . $message . '</p>';
-
-
-                                $record->sendEmail($record->to, "Refund Request");
+                                $record->message = '<p>' . $mailmessage . '</p>';
 
 
-                                if ($req->country == "India") {
-
-                                    $record->name = $req->firstname . ' ' . $req->lastname;
-                                    // $record->email = "bambo@paysprint.ca";
-                                    $record->email = $req->email;
-                                    $record->subject = "Special Notice";
-
-                                    $mailmessage = "Dear " . $req->fname . ", If you are presenting India Aadhaar Card as the form of identification, kindly upload your India Permanent Account Number card as well using same icon.Thanks";
-
-                                    $record->message = '<p>' . $mailmessage . '</p>';
-
-
-                                    $record->sendEmail($record->email, "Fund remittance");
-                                }
-
-
-
-                                $data =  getallheaders()["dev_mode"] != 'test' ? User::where('email', $req->email)->first() : $dummy;
-                                $message = 'Successfully created account!';
-                                $status = 200;
-                            } else {
-
-                                $data =  getallheaders()["dev_mode"] != 'test' ? User::where('email', $req->email)->first() : $dummy;
-                                $message = 'PaySprint is currently not available in your country. Thanks';
-                                $status = 200;
-
-                                if (getallheaders()["dev_mode"] != 'test') {
-                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 0, 'transactionRecordId' => NULL]);
-                                }
+                                $record->sendEmail($record->email, "Fund remittance");
                             }
 
-                            $this->slack("New consumer registration via " . $bearer->business_name . " api as: " . $req->firstname . ' ' . $req->lastname . " from " . $req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                            // Send Message to 3rd party Account...
+
+                            $record->name = $bearer->business_name;
+                            //  $record->email = "bambo@paysprint.ca";
+                            $record->to = $bearer->email;
+                            $record->subject = "PaySprint handshake successfull";
+
+                            $message = "You have successfully made an handshake with PaySprint, confirm the user information below: <hr><br> Name: " . $req->firstname . " " . $req->lastname . '<br> Email: ' . $req->email . '<br> Mode: <b>' . getallheaders()["dev_mode"] . ' mode</b>. <br><br> Please note that for <b>test mode</b>, records are only for test cases and no actual data is created on PaySprint.';
+
+                            $record->message = '<p>' . $message . '</p>';
+
+
+                            $record->sendEmail($record->to, "Refund Request");
+
+
+
+                            $data =  getallheaders()["dev_mode"] != 'test' ? User::where('email', $req->email)->first() : $dummy;
+                            $message = 'Successfully created account!';
+                            $status = 200;
+                        } else {
+
+                            $data =  getallheaders()["dev_mode"] != 'test' ? User::where('email', $req->email)->first() : $dummy;
+                            $message = 'PaySprint is currently not available in your country. Thanks';
+                            $status = 200;
+
+                            if (getallheaders()["dev_mode"] != 'test') {
+                                User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 0, 'transactionRecordId' => NULL]);
+                            }
+                        }
+
+                        $this->slack("New consumer registration via " . $bearer->business_name . " api as: " . $req->firstname . ' ' . $req->lastname . " from " . $req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                         // } else {
 
                         //     $data = [];
@@ -302,17 +294,6 @@ class ThirdPartyHandshakeController extends Controller
                         } else {
                             $newRefcode = $ref_code;
                         }
-
-
-                        // if (getallheaders()["dev_mode"] != 'test') {
-                        //     // Insert
-                        //     $insClient = ClientInfo::insert(['user_id' => $newRefcode, 'business_name' => $businessName, 'address' => '', 'corporate_type' => '', 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'email' => $req->email, 'country' => $req->country, 'state' => '', 'city' => '', 'zip_code' => '', 'industry' => '', 'telephone' => $req->telephone, 'website' => '', 'api_secrete_key' => md5(uniqid($generatedUsername, true)) . date('dmY') . time(), 'type_of_service' => '']);
-
-                        //     $insAdmin = Admin::insert(['user_id' => $newRefcode, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $generatedUsername, 'password' => $generatedPassword, 'role' => 'Merchant', 'email' => $req->email]);
-                        // } else {
-                        //     $insAdmin = ['user_id' => $newRefcode, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $generatedUsername, 'password' => $generatedPassword, 'role' => 'Merchant', 'email' => $req->email];
-                        // }
-
 
 
 
@@ -337,106 +318,112 @@ class ThirdPartyHandshakeController extends Controller
 
                         if (getallheaders()["dev_mode"] != 'test') {
                             User::updateOrCreate(['email' => $req->email], $data);
-
-
-
                         }
 
 
 
-                            $getMerchant = User::where('ref_code', $newRefcode)->first();
+                        $getMerchant = User::where('ref_code', $newRefcode)->first();
 
 
-                            $this->slack("New consumer registration via " . $bearer->business_name . " api as: " . $req->firstname . ' ' . $req->lastname . " from " . $req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                        $this->slack("New consumer registration via " . $bearer->business_name . " api as: " . $req->firstname . ' ' . $req->lastname . " from " . $req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-                            $countryApproval = AllCountries::where('name', $req->country)->where('approval', 1)->first();
-
-
-                            if (isset($countryApproval)) {
-
-                                $message = "success";
-
-                                if (getallheaders()["dev_mode"] != 'test') {
-                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'countryapproval' => 1, 'bvn_verification' => 1, 'transactionRecordId' => NULL]);
+                        $countryApproval = AllCountries::where('name', $req->country)->where('approval', 1)->first();
 
 
-                                    // Update file upload...
-                            $user = User::where('email', $req->email)->first();
+                        if (isset($countryApproval)) {
+
+                            $message = "success";
+
+                            if (getallheaders()["dev_mode"] != 'test') {
+                                User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'countryapproval' => 1, 'bvn_verification' => 1, 'transactionRecordId' => NULL]);
 
 
-                            if ($req->hasFile('national_id_card')) {
-                                $documentRecord->uploadDocument($user->id, $req->file('national_id_card'), 'document/'.$bearer->business_name.'/nin_front', 'nin_front');
+                                // Update file upload...
+                                $user = User::where('email', $req->email)->first();
 
-                                $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your national identity card.", $bearer->business_name . ' api');
-                            }
 
-                            if ($req->hasFile('drivers_license')) {
-                                $documentRecord->uploadDocument($user->id, $req->file('drivers_license'), 'document/'.$bearer->business_name.'/drivers_license_front', 'drivers_license_front');
-                                $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your drivers license.", $bearer->business_name . ' api');
-                            }
+                                if ($req->hasFile('national_id_card')) {
+                                    $documentRecord->uploadDocument($user->id, $req->file('national_id_card'), 'document/' . $bearer->business_name . '/nin_front', 'nin_front');
 
-                            if ($req->hasFile('international_passport')) {
-                                $documentRecord->uploadDocument($user->id, $req->file('international_passport'), 'document/'.$bearer->business_name.'/international_passport_front', 'international_passport_front');
-                                $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your international passport.", $bearer->business_name . ' api');
-                            }
-
-                            if ($req->hasFile('utility_bill')) {
-                                $documentRecord->uploadDocument($user->id, $req->file('utility_bill'), 'document/'.$bearer->business_name.'/incorporation_doc_front', 'incorporation_doc_front');
-                                $documentRecord->createNotification($user->ref_code, "Document successfully uploaded");
-                                $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your document.", $bearer->business_name . ' api');
-                            }
+                                    $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your national identity card.", $bearer->business_name . ' api');
                                 }
 
+                                if ($req->hasFile('drivers_license')) {
+                                    $documentRecord->uploadDocument($user->id, $req->file('drivers_license'), 'document/' . $bearer->business_name . '/drivers_license_front', 'drivers_license_front');
+                                    $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your drivers license.", $bearer->business_name . ' api');
+                                }
+
+                                if ($req->hasFile('international_passport')) {
+                                    $documentRecord->uploadDocument($user->id, $req->file('international_passport'), 'document/' . $bearer->business_name . '/international_passport_front', 'international_passport_front');
+                                    $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your international passport.", $bearer->business_name . ' api');
+                                }
+
+                                if ($req->hasFile('utility_bill')) {
+                                    $documentRecord->uploadDocument($user->id, $req->file('utility_bill'), 'document/' . $bearer->business_name . '/incorporation_doc_front', 'incorporation_doc_front');
+                                    $documentRecord->createNotification($user->ref_code, "Document successfully uploaded");
+                                    $documentRecord->createNotification($user->ref_code, "Hello " . $user->name . ", You have successfully uploaded your document.", $bearer->business_name . ' api');
+                                }
+                            }
 
 
+
+
+                            $record->name = $req->firstname . ' ' . $req->lastname;
+                            //  $record->email = "bambo@paysprint.ca";
+                            $record->to = $req->email;
+                            $record->subject = "Welcome to PaySprint";
+
+                            $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, Pay received Invoice or Utility bills and Withdraw money as soon as the Compliance Team verifies your information. <br> Login to PaySprint Account on Mobile App or Web app at <a href='" . route('login') . "'>www.paysprint.ca/login</a> with the information below <hr><br> Email: <strong>" . $req->email . "</strong> <br> Password: <strong>" . $req->firstname . "</strong> <hr> <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
+
+
+                            $record->message = '<p>' . $message . '</p>';
+
+
+                            $record->sendEmail($record->to, "Refund Request");
+
+
+                            if ($req->country == "India") {
 
                                 $record->name = $req->firstname . ' ' . $req->lastname;
-                                //  $record->email = "bambo@paysprint.ca";
-                                $record->to = $req->email;
-                                $record->subject = "Welcome to PaySprint";
+                                // $record->email = "bambo@paysprint.ca";
+                                $record->email = $req->email;
+                                $record->subject = "Special Notice";
 
-                                $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, Pay received Invoice or Utility bills, but you will not be able to withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at <a href='" . route('login') . "'>www.paysprint.ca/login</a> with the information below <hr><br> Email: <strong>" . $req->email . "</strong> <br> Password: <strong>" . $req->firstname . "</strong> <hr> <br> All other features would be enabled for you as soon as the Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
+                                $mailmessage = "Dear " . $req->fname . ", If you are presenting India Aadhaar Card as the form of identification, kindly upload your India Permanent Account Number card as well using same icon.Thanks";
 
-
-                                $record->message = '<p>' . $message . '</p>';
-
-
-                                $record->sendEmail($record->to, "Refund Request");
+                                $record->message = '<p>' . $mailmessage . '</p>';
 
 
-                                if ($req->country == "India") {
-
-                                    $record->name = $req->firstname . ' ' . $req->lastname;
-                                    // $record->email = "bambo@paysprint.ca";
-                                    $record->email = $req->email;
-                                    $record->subject = "Special Notice";
-
-                                    $mailmessage = "Dear " . $req->fname . ", If you are presenting India Aadhaar Card as the form of identification, kindly upload your India Permanent Account Number card as well using same icon.Thanks";
-
-                                    $record->message = '<p>' . $mailmessage . '</p>';
-
-
-                                    $record->sendEmail($record->email, "Fund remittance");
-
-
-
-                                }
-
-                                    // Send Message to 3rd party Account...
-
-                                $data =  getallheaders()["dev_mode"] != 'test' ? User::where('email', $req->email)->first() : $dummy;
-                                $message = 'Successfully created account!';
-                                $status = 200;
-                            } else {
-
-                                $data =  getallheaders()["dev_mode"] != 'test' ? User::where('email', $req->email)->first() : $dummy;
-                                $message = 'PaySprint is currently not available in your country. Thanks';
-                                $status = 200;
-
-                                if (getallheaders()["dev_mode"] != 'test') {
-                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 0, 'transactionRecordId' => NULL]);
-                                }
+                                $record->sendEmail($record->email, "Fund remittance");
                             }
+
+                            // Send Message to 3rd party Account...
+
+                            $record->name = $bearer->business_name;
+                            //  $record->email = "bambo@paysprint.ca";
+                            $record->to = $bearer->email;
+                            $record->subject = "PaySprint handshake successfull";
+
+                            $message = "You have successfully made an handshake with PaySprint, confirm the user information below: <hr><br> Name: " . $req->firstname . " " . $req->lastname . '<br> Email: ' . $req->email . '<br> Mode: <b>' . getallheaders()["dev_mode"] . ' mode</b>. <br><br> Please note that for <b>test mode</b>, records are only for test cases and no actual data is created on PaySprint.';
+
+                            $record->message = '<p>' . $message . '</p>';
+
+
+                            $record->sendEmail($record->to, "Refund Request");
+
+                            $data =  getallheaders()["dev_mode"] != 'test' ? User::where('email', $req->email)->first() : $dummy;
+                            $message = 'Successfully created account!';
+                            $status = 200;
+                        } else {
+
+                            $data =  getallheaders()["dev_mode"] != 'test' ? User::where('email', $req->email)->first() : $dummy;
+                            $message = 'PaySprint is currently not available in your country. Thanks';
+                            $status = 200;
+
+                            if (getallheaders()["dev_mode"] != 'test') {
+                                User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 0, 'transactionRecordId' => NULL]);
+                            }
+                        }
                     }
                 }
             }
@@ -483,7 +470,6 @@ class ThirdPartyHandshakeController extends Controller
             $data = $record->transactionChargeFees($req->country, 'Add Funds/Money', $req->method);
             $message = 'Success';
             $status = 200;
-
         } catch (\Throwable $th) {
             $data = [];
             $message = $th->getMessage();
@@ -502,14 +488,10 @@ class ThirdPartyHandshakeController extends Controller
             $record = new AdminController();
 
             $data = $record->transactionChargeFees($country, 'Add Funds/Money', $method);
-
         } catch (\Throwable $th) {
             $data = [];
         }
 
         return $data;
     }
-
-
-
 }

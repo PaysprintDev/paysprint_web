@@ -1079,8 +1079,9 @@ $amount=100;
 
     function checkDetail(val) {
 
-
         $('tbody#recorgRec').html("");
+
+
 
 
         if (val == 'rec') {
@@ -1114,7 +1115,6 @@ $amount=100;
                                 var datarec;
                                 var res = JSON.parse(result.data);
 
-                                // console.log(res);
 
 
                                 $.each(res, function(v, k) {
@@ -1143,6 +1143,7 @@ $amount=100;
                 });
             }
         } else if (val == "send") {
+
 
             if ($('#orgInfo').val() == "") {
                 $('tbody#orgRec').html("");
@@ -1174,8 +1175,6 @@ $amount=100;
                             if (result.message == "success") {
                                 var res = JSON.parse(result.data);
 
-                                // console.log(res);
-
                                 // Result
                                 // $('tbody#orgRec').html("<tr><td>"+res[0].business_name+"</td><td>"+res[0].address+"</td><td>"+res[0].corporate_type+"</td><td>"+res[0].city+"</td><td>"+res[0].state+"</td><td>"+res[0].country+"</td><td><button class='btn btn-primary' onclick=payOrg('"+res[0].user_id+"')>Send Money</button></td></tr>");
 
@@ -1184,6 +1183,7 @@ $amount=100;
                                 var datarec;
                                 var sendBtn;
                                 var avatar;
+                                var name;
 
 
 
@@ -1209,9 +1209,16 @@ $amount=100;
                                             "https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg";
                                     }
 
+                                    if(k.accountType === 'Individual'){
+                                        name = k.name;
+                                    }
+                                    else{
+                                        name = k.businessname;
+                                    }
+
                                     datarec = "<tr><td><img src='" + avatar +
                                         "' style='width:200px; object-fit: contain; border-radius: 100%;'></td><td>" +
-                                        k.name + "</td><td>" + k.address + "</td><td>" + k
+                                        name + "</td><td>" + k.address + "</td><td>" + k
                                         .ref_code + "</td><td>" + k.city + "</td><td>" + k
                                         .state + "</td><td>" + k.country + "</td><td>" +
                                         sendBtn + "</td></tr>";
@@ -1360,6 +1367,7 @@ $amount=100;
                             var datarec;
                             var sendBtn;
                             var avatar;
+                            var name;
 
                             // console.log(res);
 
@@ -1385,9 +1393,16 @@ $amount=100;
                                         "https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg";
                                 }
 
+                                if(k.accountType === 'Individual'){
+                                        name = k.name;
+                                    }
+                                    else{
+                                        name = k.businessname;
+                                    }
+
                                 datarec = "<tr><td><img src='" + avatar +
                                     "' style='width:200px; object-fit: contain; border-radius: 100%;'></td><td>" +
-                                    k.name + "</td><td>" + k.address + "</td><td>" +
+                                    name + "</td><td>" + k.address + "</td><td>" +
                                     k.ref_code + "</td><td>" + k.city +
                                     "</td><td>" + k.state + "</td><td>" + k
                                     .country + "</td><td>" + sendBtn + "</td></tr>";
