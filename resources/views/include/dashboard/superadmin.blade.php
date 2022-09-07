@@ -168,7 +168,7 @@
         <div class="inner">
             <h3>{{ count($data['escrowfund']) }}</h3>
 
-            <p>Funding Account</p>
+            <p>FX Funding Account</p>
         </div>
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
