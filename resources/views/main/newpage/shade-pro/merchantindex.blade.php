@@ -736,7 +736,7 @@
     </div>
 </div>
 <!-- merchant -->
-<div class="container">
+<!-- <div class="container">
     <div class="row justify-content-center mt-2">
         <div class="col-md-2 mb-2" style="border-right: 1px solid black; border-left:1px solid grey">
             <h6 class="text-center">Automotive</h6>
@@ -762,26 +762,26 @@
             <p><img src="{{asset('images/pro_executes_logo.jpeg')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;" class="mt-2"></p>
         </div>
     </div>
-</div>
+</div> -->
 <!-- end -->
 {{-- Avalable country --}}
 <div class="container mt-8 mb-5">
     <div class="row justify-content-center align-items-center">
         <div class="col-xl-5 col-lg-6 col-md-8">
-            <h2 class="title gr-text-4 mb-8">Cross Border Business Payments from  {{($data['country'])}}  to {{count($data['availablecountry'] )}} Countries</h2>
+            <h2 class="title gr-text-4 mb-8">Cross Border Business Payments from {{($data['country'])}} to {{count($data['availablecountry'] )}} Countries</h2>
         </div>
     </div>
-      <div class="row mx-auto">
+    <div class="row mx-auto">
 
         @if (count($data['availablecountry']))
 
         @foreach ($data['availablecountry'] as $country)
         <div id="eclipse6">
             <div class="eclipse-slider">
-                <div> <img src="{{$country->logo}}" alt="{{$country->name}}" title="{{$country->name}}" ></div>
+                <div> <img src="{{$country->logo}}" alt="{{$country->name}}" title="{{$country->name}}"></div>
 
             </div>
-      </div>
+        </div>
         @endforeach
 
         @endif
@@ -816,8 +816,8 @@
                         {{-- <div class="abs-shape gr-abs-tr-custom gr-z-index-n1">
                       <img src="{{ asset('newpage/image/l4/png/l4-hero-shape.png') }}" alt="" class="w-100" data-aos="zoom-in" data-aos-delay="400" data-aos-duration="800" data-aos-once="true">
                     </div> --}}
-                        </div>
-                    </div>
+                </div>
+            </div>
 
         </div>
 

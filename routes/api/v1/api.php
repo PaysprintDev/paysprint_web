@@ -253,6 +253,8 @@ Route::prefix('/v1')->group(function () {
 
         Route::post('addmoneytowallet',  ['uses' => 'MonerisController@addMoneyToWallet'])->name('add money to wallet');
 
+        Route::post('addmoneywithtransfer',  ['uses' => 'PayoutAgentController@addMoneyWithTransfer'])->name('add money with transfer');
+
         Route::post('/partneraddmoneytowallet', ['uses' => 'PayoutAgentController@partnerAddMoneyToWallet', 'as' => 'partner add money to wallet']);
 
         Route::post('moneywithdrawal',  ['uses' => 'MonerisController@moneyWithdrawal'])->name('withdraw from wallet');

@@ -17,6 +17,8 @@ use App\CashAdvance;
 
 use App\MobileMoney;
 
+use App\VouchAccount;
+
 use App\PayoutAgent;
 
 use App\UpgradePlan;
@@ -164,7 +166,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback', 'displayCountry','displayCountryMerchant', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts']]);
+        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback', 'displayCountry', 'displayCountryMerchant', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts']]);
 
         $location = $this->myLocation();
 
@@ -291,7 +293,7 @@ class HomeController extends Controller
         $this->page = 'Merchant';
         $data = [
             'availablecountry' => $allcountry,
-            'country'=>$country
+            'country' => $country
         ];
 
         return view('main.newpage.shade-pro.merchantindex')->with(['pages' => $this->page, 'data' => $data]);
@@ -947,7 +949,8 @@ class HomeController extends Controller
             'othercurrencyCode' => $this->otherCurrencyCodeOfficial($user_id),
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
-            'continent' => $this->timezone[0]
+            'continent' => $this->timezone[0],
+            'vouchedlist' => VouchAccount::get()
         );
 
 
@@ -1745,7 +1748,8 @@ class HomeController extends Controller
             'getBank' => $this->getUserBank(),
             'continent' => $this->timezone[0],
             'paymentgateway' => $this->getPaymentGateway(Auth::user()->country),
-            'mobilemoney' => MobileMoney::where('user_id', Auth::id())->first()
+            'mobilemoney' => MobileMoney::where('user_id', Auth::id())->first(),
+            'paymentgateways' => AllCountries::where('name', Auth::user()->country)->first(),
         );
 
 
@@ -4121,7 +4125,7 @@ class HomeController extends Controller
     public function displayCountryMerchant(Request $req)
     {
         $community = Community::orderBy('created_at', 'DESC')->paginate(5);
-        $allcountry = AllCountries::where('approval', 1)->where('payoutmethod','!=','')->get();
+        $allcountry = AllCountries::where('approval', 1)->where('payoutmethod', '!=', '')->get();
 
         // dd($allcountry);
         if ($req->session()->has('email') == false) {
@@ -4479,6 +4483,44 @@ class HomeController extends Controller
         }
 
         return view('main.profile')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+    //vouch list
+    public function vouchList(Request $req)
+    {
+
+
+        $id = Auth::id();
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Profile Information';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'listbank' => $this->getBankList(),
+                    'continent' => $this->timezone[0],
+                    'vouch' => VouchAccount::where('user_id', $id)->get(),
+                );
+
+                // dd($data['vouch']);
+            } else {
+                $this->page = 'Profile Information';
+                $this->name = '';
+                $data = [
+                    'vouch' => VouchAccount::where('user_id', $id)->get(),
+                ];
+            }
+        } else {
+            $this->page = 'Profile Information';
+            $this->name = session('name');
+            $this->email = session('email');
+            $data = [
+                'vouch' => VouchAccount::where('user_id', $id)->get(),
+            ];
+        }
+
+        return view('main.vouchlist')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
     //Referral link
@@ -5962,14 +6004,16 @@ class HomeController extends Controller
 
 
 
-
         if ($req->pay_method != "Wallet") {
+
 
             if ($req->foreigncurrency != $req->localcurrency) {
 
                 // dd($req->localcurrency);
 
                 $dataInfo = $this->convertCurrencyRate($req->foreigncurrency, $req->localcurrency, $req->amount);
+
+
             } else {
                 $dataInfo = $req->amount;
             }
@@ -6001,64 +6045,59 @@ class HomeController extends Controller
 
             if (isset($data) == true) {
 
-                if($req->pay_method == "Cash"){
+                if ($req->pay_method == "Cash") {
 
                     // Get the selected payout agent...
                     $getAgent = PayoutAgent::where('id', $req->payoutAgent)->first();
 
-                    if($getAgent){
+                    if ($getAgent) {
                         $collection = (($getAgent->fee / 100) * $req->amount) * (20 / 100);
-                    }
-                    else{
+                    } else {
                         $collection = ((1.50 / 100) * $req->amount) * (20 / 100);
                     }
-
-                }
-                else{
-                    if ($thisuser->country == "Nigeria" && $req->amount <= 2500) {
-
-                    $x = ($data->variable / 100) * $req->amount;
-
-                    $y = 0 + $x;
-
-                    $collection = $y;
                 } else {
-
-                    if ($thisuser->country == "Canada") {
+                    if ($thisuser->country == "Nigeria" && $req->amount <= 2500) {
 
                         $x = ($data->variable / 100) * $req->amount;
 
-                        $y = $data->fixed + $x;
+                        $y = 0 + $x;
 
                         $collection = $y;
                     } else {
 
-                        if ($req->structure == "Withdrawal") {
-                            $data = TransactionCost::where('structure', $req->structure)->where('method', "Bank Account")->where('country', $thisuser->country)->first();
-                        } else {
-                            $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->where('country', $thisuser->country)->first();
-                        }
+                        if ($thisuser->country == "Canada") {
 
-
-
-                        if (isset($data)) {
                             $x = ($data->variable / 100) * $req->amount;
 
                             $y = $data->fixed + $x;
 
                             $collection = $y;
                         } else {
-                            $x = (3.00 / 100) * $req->amount;
 
-                            $y = 0.33 + $x;
+                            if ($req->structure == "Withdrawal") {
+                                $data = TransactionCost::where('structure', $req->structure)->where('method', "Bank Account")->where('country', $thisuser->country)->first();
+                            } else {
+                                $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->where('country', $thisuser->country)->first();
+                            }
 
-                            $collection = $y;
+
+
+                            if (isset($data)) {
+                                $x = ($data->variable / 100) * $req->amount;
+
+                                $y = $data->fixed + $x;
+
+                                $collection = $y;
+                            } else {
+                                $x = (3.00 / 100) * $req->amount;
+
+                                $y = 0.33 + $x;
+
+                                $collection = $y;
+                            }
                         }
                     }
                 }
-                }
-
-
             } else {
 
                 if ($req->structure == "Withdrawal") {
@@ -6097,12 +6136,10 @@ class HomeController extends Controller
                 $amountReceive = $req->amount;
                 $state = "commission unavailable";
             }
-
-
-
         } else {
+            $amountRate = $this->convertCurrencyRate($req->localcurrency, $req->foreigncurrency, $req->amount);
 
-            $amountReceive = $req->amount;
+            $amountReceive = $req->type === 'international' ? $amountRate : $req->amount;
             $state = "commission free";
             $collection = 0;
         }
@@ -6112,6 +6149,7 @@ class HomeController extends Controller
         } else {
             $subminType = "Merchant Monthly Subscription";
         }
+
 
         // Change to Classic plan...
         // $minimumBal = TransactionCost::where('structure', $subminType)->where('country', $thisuser->country)->first();
@@ -6129,11 +6167,10 @@ class HomeController extends Controller
         // if($req->pay_method == "Wallet"){
         $wallet = $thisuser->wallet_balance;
 
-        if($thisuser->withdrawal_per_overdraft !== NULL){
-             $availableWalletBalance = $thisuser->withdrawal_per_overdraft > 0 ? $thisuser->withdrawal_per_overdraft - $available : $wallet - $available;
-        }
-        else{
-             $availableWalletBalance = $wallet - $available;
+        if ($thisuser->withdrawal_per_overdraft !== NULL) {
+            $availableWalletBalance = $thisuser->withdrawal_per_overdraft > 0 ? $thisuser->withdrawal_per_overdraft - $available : $wallet - $available;
+        } else {
+            $availableWalletBalance = $wallet - $available;
         }
 
 
@@ -6153,6 +6190,7 @@ class HomeController extends Controller
 
         $resData = ['data' => $amountReceive, 'message' => 'success', 'state' => $state, 'collection' => $collection, 'walletCheck' => $walletCheck, ''];
 
+        
 
         return $this->returnJSON($resData, 200);
     }
@@ -6261,12 +6299,11 @@ class HomeController extends Controller
 
 
 
-            if($localCurrency === 'USDUSD'){
-                    $localConv = 1;
-                }
-                else{
-                    $localConv = $result->quotes->$localCurrency;
-                }
+            if ($localCurrency === 'USDUSD') {
+                $localConv = 1;
+            } else {
+                $localConv = $result->quotes->$localCurrency;
+            }
 
             $convertLocal = $amount / $localConv;
 

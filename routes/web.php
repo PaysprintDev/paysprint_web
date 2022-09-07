@@ -311,6 +311,8 @@ Route::prefix('product')->group(function () {
 
 Route::get('Service', ['uses' => 'HomeController@service', 'as' => 'service']);
 
+Route::get('vouchlist', ['uses' => 'HomeController@vouchList', 'as' => 'vouchlist']);
+
 Route::get('Ticket', ['uses' => 'HomeController@ticket', 'as' => 'ticket']);
 
 
@@ -720,6 +722,7 @@ Route::prefix('Admin/wallet')->group(function () {
 
 	Route::get('refundmoneyrequest', ['uses' => 'AdminController@refundMoneyRequest', 'as' => 'refund money request']);
 	Route::get('escrowfundinglist', ['uses' => 'AdminController@escrowFundingList', 'as' => 'escrow funding list']);
+	Route::get('electronictransfer', ['uses' => 'AdminController@electronicTransferList', 'as' => 'electronic transfer']);
 
 	Route::post('confirmespay', ['uses' => 'AdminController@confirmEsPay', 'as' => 'confirm es pay']);
 
@@ -1032,6 +1035,7 @@ Route::prefix('Admin/')->group(function () {
 	Route::post('deletespecialactivity', ['uses' => 'AdminController@deleteSpecialInfoActivity', 'as' => 'delete special activity']);
 	Route::get('allcountries', ['uses' => 'AdminController@allCountries', 'as' => 'all countries']);
 	Route::get('countrypaymentgateway', ['uses' => 'AdminController@allCountriesPaymentGateway', 'as' => 'create payment gateway']);
+	Route::get('countrybankinformation', ['uses' => 'AdminController@allCountriesBankInformation', 'as' => 'create bank information']);
 	Route::post('countrypaymentgateway', ['uses' => 'AdminController@storeCountryPaymentGateway', 'as' => 'store payment gateway']);
 	Route::post('editcountrypaymentgateway', ['uses' => 'AdminController@editCountryPaymentGateway', 'as' => 'edit payment gateway']);
 	Route::post('deletecountrypaymentgateway', ['uses' => 'AdminController@deleteCountryPaymentGateway', 'as' => 'delete payment gateway']);

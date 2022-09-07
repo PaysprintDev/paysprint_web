@@ -5394,9 +5394,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         return $this->returnJSON($resData, $status);
     }
 
-
-
-
     // Charge money for shufti pro verification
 
     public function chargeForShuftiProVerification($ref_code, $currencyCode)
@@ -6528,7 +6525,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                             $resData = ['data' => $data, 'message' => $message, 'status' => $status];
                                                         }
 
-                                                        if($req->card_type == "e-Transfer"){
+                                                        if ($req->card_type == "e-Transfer") {
                                                             // Coming soon
                                                             $data = [];
                                                             $message = "Feature coming soon shortly.";

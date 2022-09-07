@@ -92,243 +92,346 @@
 
                             <!-- credit card info-->
                             <div id="credit-card" class="tab-pane fade show active pt-3">
+                                <div class="alert alert-info" id="board" style="display:none;">
+                                    You can Top up your wallet with PaySprint through Bank/Electronic/Wire Transfer by following these Steps:
+                                    <ul>
+                                        <hr>
+                                        <!-- <li>
+                                            Identify the Partner's Nearby: <a href="{{ route('partner list') }}" target="_blank" style="font-weight: bold;">Click here to view</a>
+                                        </li>
+                                        <br> -->
+                                        <li>
+                                            Send money to PaySprint using the following details:
+                                        </li>
+
+                                    </ul>
+
+                                    <div class="alert alert-primary">
+                                        <h4>Receiver's Details</h4>
+                                        <hr>
+                                        <table class="table table-hover table-responsive">
+                                            <tr>
+                                                <td>Receiver's ID: </td>
+                                                <td><strong>{{ $data['paymentgateways']->code.'_'.uniqid() }}</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Receiver's Name: </td>
+                                                <td><strong>PaySprint Inc.</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Receiver's Firstname: </td>
+                                                <td><strong>PaySprint Inc.</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Receiver's Lastname: </td>
+                                                <td><strong></strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Receiver's Address: </td>
+                                                <td><strong>PaySprint International, <br>10 George St. North, <br>Brampton. ON. L6X1R2. Canada</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Receiver's City/State: </td>
+                                                <td><strong>Brampton, Ontario</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Receiver's Country: </td>
+                                                <td><strong>Canada</strong></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                    <ul>
+                                        <hr>
+                                        <h3>
+                                            <strong>After sending the money to PaySprint</strong>
+                                        </h3>
+                                        <br>
+                                        <li>
+                                            Scroll down and type the Transaction ID and Amount sent to PaySprint
+                                        </li>
+                                        <br>
+                                        <li>
+                                            Submit
+                                        </li>
+                                        <hr>
+
+                                        Please allow up to 24 hours for the funds to show in your wallet
+                                    </ul>
+                                </div>
                                 <form role="form" action="#" method="POST" id="formElem">
                                     @csrf
 
+                                    <!-- adding option for bank transfer or wire transfer -->
+                                    <label>Select Payment Option</label>
+                                    <select class="form-control mb-3" name="payment_option" id="paymentoption">
+                                        <option value="card" selected>Debit / Credit Card</option>
+                                        <option value="bank_transfer">Bank/Wire/Electronic Transfer</option>
+                                    </select>
 
-                                    <div @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group" @else
-                                        class="form-group disp-0" @endif>
-                                        <label for="gateway">
-                                            {{-- <h6>Select Card Type/ Bank Account</h6> --}}
-                                            <h6>Select Payment Gateway</h6>
-                                        </label>
-                                        <div class="input-group">
-                                            <div class="input-group-append"> <span class="input-group-text text-muted">
-                                                    <img src="https://img.icons8.com/cotton/20/000000/money--v4.png" />
-                                                </span> </div>
-                                            <select name="gateway" id="gateway" class="form-control" required>
-                                                <option value="PaySprint">Select option</option>
-                                                <option value="PaySprint" selected>PaySprint</option>
-                                                {{-- <option value="Google Pay">Google Pay</option> --}}
-                                                {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
-                                                {{-- <option value="Bank Account">Bank Account</option> --}}
-                                            </select>
+                                    <!-- end of wire transfer -->
 
+                                    <div id="paymentoption1">
+                                        <div @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group" @else
+                                            class="form-group disp-0" @endif>
+                                            <label for="gateway">
+                                                {{-- <h6>Select Card Type/ Bank Account</h6> --}}
+                                                <h6>Select Payment Gateway</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <div class="input-group-append"> <span class="input-group-text text-muted">
+                                                        <img src="https://img.icons8.com/cotton/20/000000/money--v4.png" />
+                                                    </span> </div>
+                                                <select name="gateway" id="gateway" class="form-control" required>
+                                                    <option value="PaySprint">Select option</option>
+                                                    <option value="PaySprint" selected>PaySprint</option>
+                                                    {{-- <option value="Google Pay">Google Pay</option> --}}
+                                                    {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
+                                                    {{-- <option value="Bank Account">Bank Account</option> --}}
+                                                </select>
+
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group" @else
-                                        class="form-group disp-0" @endif>
-                                        <label for="card_type">
-                                            <h6>Select Card Type/ Bank Account</h6>
-                                        </label>
-                                        <div class="input-group">
-                                            <div class="input-group-append"> <span class="input-group-text text-muted">
-                                                    <img src="https://img.icons8.com/cotton/20/000000/money--v4.png" />
-                                                </span> </div>
-                                            <select name="card_type" id="card_type" class="form-control" required>
-                                                <option value="Debit Card" selected>Select option</option>
-                                                @if (Auth::user()->country != 'Nigeria')
-                                                <option value="Credit Card">Credit Card</option>
-                                                @endif
-                                                <option value="Debit Card">Debit VISA/Mastercard</option>
-                                                {{-- <option value="Google Pay">Google Pay</option> --}}
-                                                {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
-                                                {{-- <option value="Bank Account">Bank Account</option> --}}
-                                            </select>
+                                        <div @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group" @else
+                                            class="form-group disp-0" @endif>
+                                            <label for="card_type">
+                                                <h6>Select Card Type/ Bank Account</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <div class="input-group-append"> <span class="input-group-text text-muted">
+                                                        <img src="https://img.icons8.com/cotton/20/000000/money--v4.png" />
+                                                    </span> </div>
+                                                <select name="card_type" id="card_type" class="form-control" required>
+                                                    <option value="Debit Card" selected>Select option</option>
+                                                    @if (Auth::user()->country != 'Nigeria')
+                                                    <option value="Credit Card">Credit Card</option>
+                                                    @endif
+                                                    <option value="Debit Card">Debit VISA/Mastercard</option>
+                                                    {{-- <option value="Google Pay">Google Pay</option> --}}
+                                                    {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
+                                                    {{-- <option value="Bank Account">Bank Account</option> --}}
+                                                </select>
 
+                                            </div>
                                         </div>
-                                    </div>
 
 
-                                    <div @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group
-                                        selectCard" @else class="form-group selectCard disp-0" @endif>
-                                        <label for="card_id">
-                                            <h6>Select Card</h6>
-                                        </label>
-                                        <div class="input-group">
-                                            <div class="input-group-append"> <span class="input-group-text text-muted">
-                                                    <img src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png" />
-                                                </span> </div>
-                                            <select name="card_id" id="card_id" class="form-control" required>
-                                                <option value="NULL">Select option</option>
-                                                {{-- @if (count($data['getCard']) > 0)
+                                        <div @if ($data['paymentgateway']->gateway == 'Moneris') class="form-group
+                                            selectCard" @else class="form-group selectCard disp-0" @endif>
+                                            <label for="card_id">
+                                                <h6>Select Card</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <div class="input-group-append"> <span class="input-group-text text-muted">
+                                                        <img src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png" />
+                                                    </span> </div>
+                                                <select name="card_id" id="card_id" class="form-control" required>
+                                                    <option value="NULL">Select option</option>
+                                                    {{-- @if (count($data['getCard']) > 0)
 
                                                 @foreach ($data['getCard'] as $mycard)
                                                 <option value="{{ $mycard->id }}">{!! wordwrap($mycard->card_number, 4,
-                                                '-', true).' - ['.$mycard->card_provider.']' !!}</option>
-                                                @endforeach
+                                                    '-', true).' - ['.$mycard->card_provider.']' !!}</option>
+                                                    @endforeach
 
-                                                @else
-                                                <option value="">Add a new card</option>
-                                                @endif --}}
+                                                    @else
+                                                    <option value="">Add a new card</option>
+                                                    @endif --}}
 
-                                            </select>
+                                                </select>
 
+                                            </div>
                                         </div>
-                                    </div>
 
 
+                                        <div class="form-group"> <label for="amount">
+                                                <h6>Amount</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <div class="input-group-append"> <span class="input-group-text text-muted">
+                                                        {{ $data['currencyCode']->currencySymbol }} </span> </div> <input type="number" min="0.00" step="0.01" name="amount" id="amount" class="form-control" required>
 
-                                    <div class="form-group"> <label for="amount">
-                                            <h6>Amount</h6>
-                                        </label>
-                                        <div class="input-group">
-                                            <div class="input-group-append"> <span class="input-group-text text-muted">
-                                                    {{ $data['currencyCode']->currencySymbol }} </span> </div> <input type="number" min="0.00" step="0.01" name="amount" id="amount" class="form-control" required>
+                                                <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode']->currencyCode }}" readonly>
+                                                <input type="hidden" name="name" class="form-control" id="nameInput" value="{{ Auth::user()->name }}" readonly>
+                                                <input type="hidden" name="phone" class="form-control" id="phoneInput" value="{{ Auth::user()->telephone }}" readonly>
+                                                <input type="hidden" name="api_token" class="form-control" id="apiTokenInput" value="{{ Auth::user()->api_token }}" readonly>
+                                                <input type="hidden" name="email" class="form-control" id="emailInput" value="{{ Auth::user()->email }}" readonly>
 
-                                            <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode']->currencyCode }}" readonly>
-                                            <input type="hidden" name="name" class="form-control" id="nameInput" value="{{ Auth::user()->name }}" readonly>
-                                            <input type="hidden" name="phone" class="form-control" id="phoneInput" value="{{ Auth::user()->telephone }}" readonly>
-                                            <input type="hidden" name="api_token" class="form-control" id="apiTokenInput" value="{{ Auth::user()->api_token }}" readonly>
-                                            <input type="hidden" name="email" class="form-control" id="emailInput" value="{{ Auth::user()->email }}" readonly>
+                                                <input type="hidden" name="paymentToken" class="form-control" id="paymentToken" value="" readonly>
 
-                                            <input type="hidden" name="paymentToken" class="form-control" id="paymentToken" value="" readonly>
+                                                <input type="hidden" name="mode" class="form-control" id="mode" value="live" readonly>
 
-                                            <input type="hidden" name="mode" class="form-control" id="mode" value="live" readonly>
-
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    @if ($data['paymentgateway']->gateway == 'Dusupay' && Auth::user()->country
-                                    != 'Ghana')
+                                        @if ($data['paymentgateway']->gateway == 'Dusupay' && Auth::user()->country
+                                        != 'Ghana')
 
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission" checked disabled> Include fee</p>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission" checked disabled> Include fee</p>
 
+                                            </div>
                                         </div>
-                                    </div>
-                                    @else
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission"> Include fee</p>
+                                        @else
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission"> Include fee</p>
 
+                                            </div>
                                         </div>
-                                    </div>
-                                    @endif
+                                        @endif
 
-                                    <div class="form-group"> <label for="netwmount">
-                                            <h6>Net Amount <br><small class="text-success disp-0"><b>This is the total
-                                                        amount to be received</b></small></h6>
+                                        <div class="form-group"> <label for="netwmount">
+                                                <h6>Net Amount <br><small class="text-success disp-0"><b>This is the total
+                                                            amount to be received</b></small></h6>
 
-                                        </label>
-                                        <div class="input-group">
-                                            <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group"> <label for="netwmount">
-                                            <h6>Fee</h6>
-                                        </label>
-                                        <div class="input-group">
-                                            <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
+                                        <div class="form-group"> <label for="netwmount">
+                                                <h6>Fee</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
 
-                                            <input type="hidden" name="totalcharge" class="form-control" id="totalcharge" value="" placeholder="0.00" readonly>
+                                                <input type="hidden" name="totalcharge" class="form-control" id="totalcharge" value="" placeholder="0.00" readonly>
 
+                                            </div>
                                         </div>
-                                    </div>
 
 
-                                    <div class="form-group disp-0"> <label for="netwmount">
-                                            <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate
-                                                        today according to currencylayer.com</b></small></h6>
-                                            <p style="font-weight: bold;">
-                                                {{ $data['currencyCode']->currencyCode }}
-                                                <=> CAD
-                                            </p>
-                                        </label>
-                                        <div class="input-group">
-                                            <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
+                                        <div class="form-group disp-0"> <label for="netwmount">
+                                                <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate
+                                                            today according to currencylayer.com</b></small></h6>
+                                                <p style="font-weight: bold;">
+                                                    {{ $data['currencyCode']->currencyCode }}
+                                                    <=> CAD
+                                                </p>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    @if ($data['paymentgateway']->gateway == 'Stripe')
-                                    <div class="form-group"> <label for="card-elemet">
-                                            <h6>Card Detail</h6>
-                                        </label>
-                                        <div id="card-element"></div>
-                                    </div>
-                                    @endif
-
-
-                                    <div class="form-group">
-                                        <div class="commissionInfo"></div>
-                                    </div>
-
-                                    {{-- @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3) --}}
+                                        @if ($data['paymentgateway']->gateway == 'Stripe')
+                                        <div class="form-group"> <label for="card-elemet">
+                                                <h6>Card Detail</h6>
+                                            </label>
+                                            <div id="card-element"></div>
+                                        </div>
+                                        @endif
 
 
-                                    @if ($data['paymentgateway']->gateway == 'PayStack' ||
-                                    $data['paymentgateway']->gateway == 'Express Payment Solution')
-                                    {{-- <div class="card-footer"> <a type="button" id="epsButton" href=""
+                                        <div class="form-group">
+                                            <div class="commissionInfo"></div>
+                                        </div>
+
+                                        {{-- @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3) --}}
+
+
+                                        @if ($data['paymentgateway']->gateway == 'PayStack' ||
+                                        $data['paymentgateway']->gateway == 'Express Payment Solution')
+                                        {{-- <div class="card-footer"> <a type="button" id="epsButton" href=""
                                             class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Confirm </a>
                                     </div> --}}
 
 
-                                    <div class="card-footer"> <button type="button" onclick="payWithEPS('{{ Auth::user()->email }}')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
-                                            Confirm
-                                        </button></div>
+                                        <div class="card-footer"> <button type="button" onclick="payWithEPS('{{ Auth::user()->email }}')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                                Confirm
+                                            </button>
+                                        </div>
 
-                                    @elseif($data['paymentgateway']->gateway == 'Dusupay' && Auth::user()->country
-                                    == 'Ghana')
-                                    <div class="card-footer">
-                                        <button type="button" onclick="payWithDusupay('{{ Auth::user()->email }}')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
-                                            Confirm
-                                        </button>
-                                    </div>
+                                        @elseif($data['paymentgateway']->gateway == 'Dusupay' && Auth::user()->country
+                                        == 'Ghana')
+                                        <div class="card-footer">
+                                            <button type="button" onclick="payWithDusupay('{{ Auth::user()->email }}')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                                Confirm
+                                            </button>
+                                        </div>
 
-                                    @elseif ($data['paymentgateway']->gateway == 'Dusupay')
-                                    <div class="card-footer">
-                                        <button type="button" onclick="payWithDusumoney('{{ Auth::user()->email }}')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
-                                            Confirm
-                                        </button>
-                                    </div>
+                                        @elseif ($data['paymentgateway']->gateway == 'Dusupay')
+                                        <div class="card-footer">
+                                            <button type="button" onclick="payWithDusumoney('{{ Auth::user()->email }}')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                                Confirm
+                                            </button>
+                                        </div>
 
-                                    @elseif($data['paymentgateway']->gateway == 'Stripe')
-                                    <div class="card-footer"> <button type="submit" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Pay
-                                            Now</button></div>
-                                    @elseif($data['paymentgateway']->gateway == 'PayPal')
-                                    {{-- PayPal --}}
-                                    <div class="card-footer" id="paypal-button-container"></div>
-                                    @else
-                                    <div class="card-footer"> <button type="button" onclick="handShake('addmoney')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
-                                            Confirm
-                                        </button></div>
-                                    @endif
+                                        @elseif($data['paymentgateway']->gateway == 'Stripe')
+                                        <div class="card-footer"> <button type="submit" class="subscribe btn btn-info btn-block shadow-sm cardSubmit"> Pay
+                                                Now</button>
+                                        </div>
+                                        @elseif($data['paymentgateway']->gateway == 'PayPal')
+                                        {{-- PayPal --}}
+                                        <div class="card-footer" id="paypal-button-container"></div>
+                                        @else
+                                        <div class="card-footer"> <button type="button" onclick="handShake('addmoney')" class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                                Confirm
+                                            </button></div>
+                                        @endif
 
-                                    {{-- @else
+                                        {{-- @else
                                     <div class="card-footer"> <button type="button"
                                             onclick="restriction('addmoney', '{{ Auth::user()->name }}')"
-                                    class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
-                                    Confirm
-                                    </button>
-                            </div>
-
-                            @endif --}}
-
-
-
-                            <div class="col-md-12 withCardGoogle disp-0">
-                                <center>
-                                    <div id="container"></div>
-                                    <div id="moneris-google-pay" store-id="monca04155" web-merchant-key="55DAF4F744E7C36461258B79F750BC5D9D653C7D022FDB2DFC6A3309720C6D06">
+                                        class="subscribe btn btn-info btn-block shadow-sm cardSubmit">
+                                        Confirm
+                                        </button>
                                     </div>
-                                </center>
+
+
+
+
+                                    @endif --}}
+
+
+
+                                    <div class="col-md-12 withCardGoogle disp-0">
+                                        <center>
+                                            <div id="container"></div>
+                                            <div id="moneris-google-pay" store-id="monca04155" web-merchant-key="55DAF4F744E7C36461258B79F750BC5D9D653C7D022FDB2DFC6A3309720C6D06">
+                                            </div>
+                                        </center>
+                                    </div>
+
+
+
+
+                                </form>
                             </div>
-
-
-
-
-                            </form>
+                            <!-- Bank Transfer starts -->
+                            <div id="bankshow">
+                                <form action="" method="post" id="bankform">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p class="form-group">
+                                                <label>Transaction ID</label>
+                                                <input type="text" name="transaction_id" class="form-control">
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <p class="form-group">
+                                                <label>Amount Transferred</label>
+                                                <input type="text" name="amount" placeholder="Enter amount Transferred" class="form-control">
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <button class="btn btn-info form-control" type="button" id="bankbtns">Yes, I have made the Transfer</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
+                    </div>
 
 
+                </div> <!-- End -->
 
-                    </div> <!-- End -->
-
-                </div>
             </div>
         </div>
+    </div>
     </div>
 
 
@@ -349,6 +452,71 @@
 
 
     <script>
+        // change of payment option
+        $(document).ready(function() {
+            $('#bankshow').hide();
+            $('#paymentoption').change(function() {
+                const option = $('#paymentoption').val();
+                if (option == 'bank_transfer') {
+                    $('#paymentoption1').hide();
+                    $('#bankshow').show();
+                    $('#board').show();
+
+                } else if (option == 'card') {
+                    $('#paymentoption1').show();
+                    $('#bankshow').hide();
+                    $('#board').hide();
+                }
+            })
+
+            $('#bankbtns').click(function() {
+                formData = new FormData(bankform);;
+
+                var route;
+
+                route = "{{ URL('/api/v1/addmoneywithtransfer') }}";
+
+                Pace.restart();
+                Pace.track(function() {
+                    setHeaders();
+                    jQuery.ajax({
+                        url: route,
+                        method: 'post',
+                        data: formData,
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'JSON',
+                        beforeSend: function() {
+                            $('#bankbtns').text('Please wait...');
+                        },
+                        success: function(result) {
+                            console.log(result);
+
+                            $('#bankbtns').text('Confirm');
+
+                            if (result.status == 200) {
+                                swal("Success", result.message, "success");
+                                setTimeout(function() {
+                                    location.href = "{{ route('my account') }}";
+                                }, 2000);
+                            } else {
+                                swal("Oops", result.message, "error");
+                            }
+
+                        },
+                        error: function(err) {
+                            $('#bankbtns').text('Confirm');
+                            swal("Oops", err.responseJSON.message, "error");
+
+                        }
+
+                    });
+                });
+
+            });
+        });
+
         $(function() {
 
             $("#amount").on("keyup", function() {
