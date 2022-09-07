@@ -259,7 +259,7 @@ class SendGridController extends Controller
         try {
 
 
-            $thisuser = User::inRandomOrder()->take(200)->get();
+            $thisuser = User::inRandomOrder()->take(2)->get();
 
 
             if (count($thisuser) > 0) {
@@ -293,7 +293,8 @@ class SendGridController extends Controller
 
 
 
-                     $receiver = $user->email;
+                    //  $receiver = $user->email;
+                    $receiver = "olasunkanmimunirat@gmail.com";
 
 
 

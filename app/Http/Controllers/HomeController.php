@@ -1010,7 +1010,7 @@ class HomeController extends Controller
 
     public function createnewPayment(Request $req)
     {
-
+        $allcountry = AllCountries::where('approval', 1)->get();
 
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
@@ -1031,7 +1031,8 @@ class HomeController extends Controller
             'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
-            'continent' => $this->timezone[0]
+            'continent' => $this->timezone[0],
+            'availablecountry' =>$allcountry
         );
 
         // dd($data);
