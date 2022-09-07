@@ -419,11 +419,11 @@ class PayoutAgentController extends Controller
 
                 $monerisAction->name = $thisuser->name;
                 $monerisAction->email = $thisuser->email;
-                $monerisAction->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " now submitted to PaySprint for processing";
+                $monerisAction->subject = $currencycode . ' ' . number_format($req->amount, 2) . " now submitted to PaySprint for processing";
 
-                $monerisAction->message = '<p>You have added <strong>' . $currencycode . ' ' . number_format($req->amount, 2) . '</strong> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+                $monerisAction->message = '<p>You have added <strong>' . $currencycode . ' ' . number_format($req->amount, 2) . '</strong> to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $currencycode . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
 
-                $sendMsg = 'You have added ' . $$currencycode . ' ' . number_format($req->amount, 2) . ' to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $currencycode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                $sendMsg = 'You have added ' . $currencycode . ' ' . number_format($req->amount, 2) . ' to your wallet with PaySprint. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $currencycode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 

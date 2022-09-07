@@ -271,6 +271,44 @@
 
                                         @endif
 
+                                    </div>
+
+                                    <div class="form-group disp-0"> <label for="make_payment_method">
+                                            <h6>Transfer Method</h6>
+                                        </label>
+                                        <div class="input-group">
+                                            <select name="payment_method" id="make_payment_method" class="form-control" required>
+                                                <option value="">Select Payment Method</option>
+                                                <option value="Wallet" selected>Wallet</option>
+                                                {{-- <option value="Credit Card">Credit Card</option> --}}
+                                                {{-- <option value="Debit Card">Debit Card</option> --}}
+                                                {{-- <option value="EXBC Card">EXBC Card</option> --}}
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-group creditcard disp-0"> <label for="card_id">
+                                            <h6>Select Card</h6>
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png" />
+                                                </span> </div>
+                                            <select name="card_id" id="card_id" class="form-control" required>
+                                                @if (count($data['getCard']) > 0)
+                                                @foreach ($data['getCard'] as $mycard)
+                                                <option value="{{ $mycard->id }}">{!! wordwrap(substr($mycard->card_number, 0, 4) . str_repeat('*', strlen($mycard->card_number) - 8) . substr($mycard->card_number, -4), 4, ' - ', true) !!}
+                                                </option>
+                                                @endforeach
+                                                @else
+                                                <option value="">Add a new card</option>
+                                                @endif
+                                            </select>
+
+                                        </div>
+                                    </div>
 
 
 
