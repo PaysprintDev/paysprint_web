@@ -10,8 +10,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('business report') }}" class="small-box-footer">View details <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('business report') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 <!-- ./col -->
@@ -26,8 +25,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('bank request withdrawal') }}" class="small-box-footer">View details <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('bank request withdrawal') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -43,8 +41,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="#" class="small-box-footer">View details <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="#" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -60,8 +57,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="#" class="small-box-footer">View details <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="#" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -76,8 +72,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('purchase refund request') }}" class="small-box-footer">View details <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('purchase refund request') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -93,8 +88,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('card request withdrawal') }}" class="small-box-footer">View details <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('card request withdrawal') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -105,10 +99,10 @@
         <div class="inner">
 
             @if (isset($withdraws['prepaid']))
-                <h3>{{ count($withdraws['prepaid']->data) }}</h3>
+            <h3>{{ count($withdraws['prepaid']->data) }}</h3>
 
             @else
-                <h3>0</h3>
+            <h3>0</h3>
             @endif
 
 
@@ -117,8 +111,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('prepaid request withdrawal') }}" class="small-box-footer">View details <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('prepaid request withdrawal') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 <!-- ./col -->
@@ -133,8 +126,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('text to transfer') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('text to transfer') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -149,8 +141,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('pending transfer') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('pending transfer') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -166,8 +157,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('refund money request') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('refund money request') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -183,8 +173,21 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('escrow funding list') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('escrow funding list') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+    </div>
+</div>
+<div class="col-lg-3 col-xs-6">
+    <!-- small box -->
+    <div class="small-box bg-navy">
+        <div class="inner">
+            <h3>{{ count($data['transfer']) }}</h3>
+
+            <p>Bank/Wire/E-Transfer</p>
+        </div>
+        <div class="icon">
+            <i class="ion ion-stats-bars"></i>
+        </div>
+        <a href="{{ route('electronic transfer') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -199,8 +202,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('claim reward') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('claim reward') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -216,8 +218,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('cash advance list') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('cash advance list') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -233,8 +234,7 @@
         <div class="icon">
             <i class="ion ion-stats-bars"></i>
         </div>
-        <a href="{{ route('cross border list') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('cross border list') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -245,14 +245,14 @@
             <div class="inner">
               <h3>{{ count($allusers) }}</h3>
 
-              <p>All Users</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-stats-bars"></i>
-            </div>
-            <a href="{{ route('all users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div> --}}
+<p>All Users</p>
+</div>
+<div class="icon">
+    <i class="ion ion-stats-bars"></i>
+</div>
+<a href="{{ route('all users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
+</div>
+</div> --}}
 <!-- ./col -->
 <div class="col-lg-3 col-xs-6">
     <!-- small box -->
@@ -260,7 +260,7 @@
         <div class="inner">
             <h3>
                 @if ($approvedCountries = \App\AllCountries::where('approval', 1)->count())
-                    {{ $approvedCountries }}
+                {{ $approvedCountries }}
                 @endif
             </h3>
 
@@ -269,8 +269,7 @@
         <div class="icon">
             <i class="ion ion-pie-graph"></i>
         </div>
-        <a href="{{ route('all countries') }}" class="small-box-footer">View All <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('all countries') }}" class="small-box-footer">View All <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -289,8 +288,7 @@
         <div class="icon">
             <i class="ion ion-pie-graph"></i>
         </div>
-        <a href="{{ route('all paid user list') }}" class="small-box-footer">View All <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('all paid user list') }}" class="small-box-footer">View All <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -312,8 +310,7 @@
         <div class="icon">
             <i class="ion ion-pie-graph"></i>
         </div>
-        <a href="{{ route('all free user list') }}" class="small-box-footer">View All <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('all free user list') }}" class="small-box-footer">View All <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -336,8 +333,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('upgraded consumers by country') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('upgraded consumers by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -357,8 +353,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('upgraded merchant by country') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('upgraded merchant by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -378,8 +373,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('merchant account mode by country', 'mode=test') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('merchant account mode by country', 'mode=test') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -399,8 +393,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('merchant account mode by country', 'mode=live') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('merchant account mode by country', 'mode=live') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -417,8 +410,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('all users by country') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('all users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -438,8 +430,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('approved users by country') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('approved users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -460,8 +451,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('approved pending users by country') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('approved pending users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -481,8 +471,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('matched users by country') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('matched users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -502,8 +491,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('level two users by country') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('level two users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -524,8 +512,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('pending users by country') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('pending users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -547,8 +534,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('override users by country') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('override users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -569,8 +555,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('ps not active by country') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('ps not active by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -591,8 +576,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('suspended users by country') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('suspended users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -613,8 +597,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('closed users by country') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('closed users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -637,8 +620,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('new users by country', 'user=new') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('new users by country', 'user=new') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 <div class="col-lg-3 col-xs-6">
@@ -647,8 +629,8 @@
         <div class="inner">
             <h3>
                 @if ($existingUsers = \App\User::where('accountType', 'Individual')->where('archive', 0)->where('countryapproval', 1)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count())
-                {{ $existingUsers }} @else 0
-                @endif
+                    {{ $existingUsers }} @else 0
+                    @endif
             </h3>
 
             <p>Existing Consumers</p>
@@ -657,8 +639,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('new users by country', 'user=existing') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('new users by country', 'user=existing') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 <div class="col-lg-3 col-xs-6">
@@ -677,8 +658,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('new merchants by country', 'user=new') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('new merchants by country', 'user=new') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 <div class="col-lg-3 col-xs-6">
@@ -687,8 +667,8 @@
         <div class="inner">
             <h3>
                 @if ($existingMerchant = \App\User::where('accountType', 'Merchant')->where('archive', 0)->where('countryapproval', 1)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->count())
-                {{ $existingMerchant }} @else 0
-                @endif
+                    {{ $existingMerchant }} @else 0
+                    @endif
             </h3>
 
             <p>Existing Merchants</p>
@@ -697,8 +677,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('new merchants by country', 'user=existing') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('new merchants by country', 'user=existing') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -718,8 +697,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('archived users by country', 'user=consumers') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('archived users by country', 'user=consumers') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -740,8 +718,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('archived users by country', 'user=merchants') }}" class="small-box-footer">View all <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('archived users by country', 'user=merchants') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 
@@ -796,8 +773,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('kyb pending by country') }}" class="small-box-footer">View details <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('kyb pending by country') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
         {{-- <a href="{{ route('merchant banking details', 'users=Individual') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a> --}}
     </div>
 </div>
@@ -815,8 +791,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('kyb completed by country') }}" class="small-box-footer">View details <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('kyb completed by country') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
         {{-- <a href="{{ route('merchant banking details', 'users=Individual') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a> --}}
     </div>
 </div>
@@ -834,8 +809,7 @@
         <div class="icon">
             <i class="ion ion-person-add"></i>
         </div>
-        <a href="{{ route('industry category by country') }}" class="small-box-footer">View details <i
-                class="fa fa-arrow-circle-right"></i></a>
+        <a href="{{ route('industry category by country') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
         {{-- <a href="{{ route('merchant banking details', 'users=Individual') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a> --}}
     </div>
 </div>

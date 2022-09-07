@@ -1747,7 +1747,8 @@ class HomeController extends Controller
             'getBank' => $this->getUserBank(),
             'continent' => $this->timezone[0],
             'paymentgateway' => $this->getPaymentGateway(Auth::user()->country),
-            'mobilemoney' => MobileMoney::where('user_id', Auth::id())->first()
+            'mobilemoney' => MobileMoney::where('user_id', Auth::id())->first(),
+            'paymentgateways' => AllCountries::where('name', Auth::user()->country)->first(),
         );
 
 
