@@ -55,7 +55,8 @@ use App\Http\Controllers\FxPayment; ?>
 								</div>
 								<tr>
 									<th>S/N</th>
-									<th>Reference No.</th>
+									<th>Paysprint Reference No</th>
+									<th>Customer Reference No.</th>
 									<th>Account Number</th>
 									<th>Amount Funded</th>
 									<th>Payment Method</th>
@@ -77,9 +78,10 @@ use App\Http\Controllers\FxPayment; ?>
 								<tr>
 
 									<td>{{ $i++}}</td>
+									<td>{{$statement->etransfer_reference}}</td>
 									<td>{{$transfers->transaction_id}}</td>
 									<td>{{$user->ref_code}}</td>
-									<td>{{$statement->credit}}</td>
+									<td>{{$user->currencyCode.$statement->credit}}</td>
 									<td>Bank/Wire Transfer</td>
 									<td>{{ $user->name}}</td>
 									<td>{{ date('d/M/Y h:i a', strtotime($transfers->created_at)) }}</td>

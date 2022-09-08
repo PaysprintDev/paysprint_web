@@ -408,15 +408,16 @@
                                         <div class="col-md-12">
                                             <p class="form-group">
                                                 <label>Transaction ID</label>
-                                                <input type="text" name="transaction_id" class="form-control">
+                                                <input type="text" name="transaction_id" class="form-control" id="transfer_transaction_id" required>
                                             </p>
                                         </div>
                                         <div class="col-md-12">
                                             <p class="form-group">
                                                 <label>Amount Transferred</label>
-                                                <input type="text" name="amount" placeholder="Enter amount Transferred" class="form-control">
+                                                <input type="text" name="amount" placeholder="Enter amount Transferred" id="transfer_amount" class="form-control" required>
                                             </p>
                                         </div>
+                                        <input type="hidden" name="reference_number" value="{{ $data['paymentgateways']->code.'_'.uniqid() }}">
                                         <div class="col-md-12">
                                             <button class="btn btn-info form-control" type="button" id="bankbtns">Yes, I have made the Transfer</button>
                                         </div>
@@ -470,6 +471,14 @@
             })
 
             $('#bankbtns').click(function() {
+                var transaction = $('#transfer_transaction_id').val();
+                var amount = $('#transfer_amount').val();
+
+                if (transaction == '' || amount == '') {
+                    return swal("Oops", 'Please Complete the Fields', "error");
+                }
+
+
                 formData = new FormData(bankform);;
 
                 var route;
@@ -1622,7 +1631,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
 
             var stripe = Stripe('{{ env('
-                STRIPE_LIVE_PUBLIC_KEY ') }}');
+                STRIPE_LIVE_PUBLIC_KEY ')}}');
             // var stripe = Stripe('{{ env('STRIPE_LOCAL_PUBLIC_KEY') }}');
 
             var elements = stripe.elements();

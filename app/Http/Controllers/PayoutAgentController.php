@@ -380,7 +380,7 @@ class PayoutAgentController extends Controller
 
     public function addMoneyWithTransfer(Request $req)
     {
-
+        // dd($req->all());
         try {
             $monerisAction = new MonerisController();
 
@@ -414,7 +414,7 @@ class PayoutAgentController extends Controller
                 $regards = $thisuser->ref_code;
                 $statement_route = "wallet";
 
-                $monerisAction->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1);
+                $monerisAction->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1, $req->reference_number);
 
                 $monerisAction->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, 0, $req->amount);
 
@@ -506,7 +506,7 @@ class PayoutAgentController extends Controller
 
                 $monerisAction->sendEmail($thisuser->email, "Fund remittance");
 
-                $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $currencycode . ' ' . number_format($req->amounttosend, 2) . "</p><p>Partner Gateway: " . "Bank/Wire/Electronic Transfer" . "</p><p>Status: Successful</p>";
+                $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $currencycode . ' ' . number_format($req->amount, 2) . "</p><p>Partner Gateway: " . "Bank/Wire/Electronic Transfer" . "</p><p>Status: Successful</p>";
 
                 $monerisAction->notifyAdmin($req->gateway . " inflow", $adminMessage);
             }
