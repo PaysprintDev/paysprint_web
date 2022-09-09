@@ -196,7 +196,7 @@ class AdminController extends Controller
     public function index(Request $req)
     {
     //   dd($req->all);
-        
+
 
         if (session('role') == 'Merchant') {
 
@@ -310,7 +310,7 @@ class AdminController extends Controller
                 //  dd($details);
 
                  return view('admin.pages.searchuser')->with(['pages' => 'My Dashboard', 'clientPay' => $clientPay, 'searchuser'=>$details,'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'invoiceLinkImport' => $invoiceLinkImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'allusers' => $allusers, 'getUserDetail' => $getUserDetail, 'getCard' => $getCard, 'getBank' => $getBank, 'getTax' => $getTax, 'withdraws' => $withdraws, 'pending' => $pending, 'allcountries' => $allcountries, 'refund' => $refund, 'received' => $received, 'data' => $data]);
-                    
+
                 }
 
 
@@ -401,7 +401,6 @@ class AdminController extends Controller
             $data = [
                 'currencyrate' => $this->platformcurrencyConvert(),
             ];
-
 
 
 
@@ -7777,7 +7776,7 @@ class AdminController extends Controller
         }
     }
 
-    
+
 
 
     public function allFreeUserList(Request $req)

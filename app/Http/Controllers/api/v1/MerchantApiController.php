@@ -2873,6 +2873,9 @@ class MerchantApiController extends Controller
 
                 $thismerchant = User::where('ref_code', $merchantInfo->user_id)->first();
 
+
+
+
                 $mode = strtoupper($req->mode);
 
                 $countryInfo = $this->getCountryCode($req->country);
@@ -2882,8 +2885,31 @@ class MerchantApiController extends Controller
                 // Currency converter
                 $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $myCurrency, 'API GUEST_Users');
 
+                 $countryInfo = $this->getCountryCode($req->country);
+
+                $currencyCode = $countryInfo->currencyCode;
+                $currencySymbol = $countryInfo->currencySymbol;
+
+                $code = $countryInfo->callingCode;
+
+                $service = $req->purpose;
+
+                if ($req->country == $thismerchant->country) {
+                    $amount = $req->amount;
+                    $myCurrency = $myCurrency;
+                } else {
+                    // Currency converter
+                    $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $myCurrency, 'API GUEST_Users');
+                    $myCurrency = $thismerchant->currencyCode;
+                }
+
+                // Calculate the Service Charge Fee...
+                $feeOnTranx = $tranxFeeCharge->merchantFeeCharge($thismerchant->country, $req->cardType);
 
 
+                $variableVal = ($feeOnTranx->chargePercentage / 100) * $amount;
+
+                $collectionFee = $feeOnTranx->fixed + $variableVal;
 
 
 
@@ -2891,7 +2917,7 @@ class MerchantApiController extends Controller
 
                     // Make Payment
 
-                    $response = $this->monerisWalletProcess($thismerchant->ref_code, $req->cardType, $amount, $req->purpose, $mode, $req->country, $req->expiryMonth, $req->cardNumber, $req->expiryYear);
+                    $response = $this->monerisWalletProcess($thismerchant->ref_code, $req->cardType, ($amount + $collectionFee), $req->purpose, $mode, $req->country, $req->expiryMonth, $req->cardNumber, $req->expiryYear);
 
 
                     if ($response->responseData['ResponseCode'] == "000" || $response->responseData['ResponseCode'] == "001" || $response->responseData['ResponseCode'] == "002" || $response->responseData['ResponseCode'] == "003" || $response->responseData['ResponseCode'] == "004" || $response->responseData['ResponseCode'] == "005" || $response->responseData['ResponseCode'] == "006" || $response->responseData['ResponseCode'] == "007" || $response->responseData['ResponseCode'] == "008" || $response->responseData['ResponseCode'] == "009" || $response->responseData['ResponseCode'] == "010" || $response->responseData['ResponseCode'] == "023" || $response->responseData['ResponseCode'] == "024" || $response->responseData['ResponseCode'] == "025" || $response->responseData['ResponseCode'] == "026" || $response->responseData['ResponseCode'] == "027" || $response->responseData['ResponseCode'] == "028" || $response->responseData['ResponseCode'] == "029") {
@@ -2907,42 +2933,11 @@ class MerchantApiController extends Controller
 
                             // Update Wallet
 
-                            $countryInfo = $this->getCountryCode($req->country);
-
-                            $currencyCode = $countryInfo->currencyCode;
-                            $currencySymbol = $countryInfo->currencySymbol;
-
-                            $code = $countryInfo->callingCode;
-
-                            $service = $req->purpose;
-
-                            if ($req->country == $thismerchant->country) {
-                                $amount = $req->amount;
-                                $myCurrency = $currencyCode;
-                            } else {
-                                // Currency converter
-                                $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $currencyCode, 'API GUEST_Users');
-                                $myCurrency = $thismerchant->currencyCode;
-                            }
-
-
-                            // Calculate the Service Charge Fee...
-                            $feeOnTranx = $tranxFeeCharge->merchantFeeCharge($thismerchant->country, $req->cardType);
-
-
-                            $variableVal = ($feeOnTranx->chargePercentage / 100) * $amount;
-
-                            $collectionFee = $feeOnTranx->fixed + $variableVal;
-
-
-
-
-
 
                             // Insert Statement
-                            $activity = "Transfer of " . $myCurrency . " " . number_format($req->amount, 2) . " to " . $thismerchant->businessname . " for " . $service;
+                            $activity = "Transfer of " . $myCurrency . " " . number_format($req->amount + $collectionFee, 2) . " to " . $thismerchant->businessname . " for " . $service.". A service fee of ".$myCurrency." ".number_format($collectionFee, 2)." inclusive";
                             $credit = 0;
-                            $debit = $req->amount - $collectionFee;
+                            $debit = $req->amount + $collectionFee;
                             $reference_code = $reference_code;
                             $balance = 0;
                             $trans_date = date('Y-m-d');
@@ -2960,22 +2955,22 @@ class MerchantApiController extends Controller
 
 
                             if ($thismerchant->auto_deposit == 'on') {
-                                $recWallet = $thismerchant->wallet_balance + ($amount - $collectionFee);
+                                $recWallet = $thismerchant->wallet_balance + $amount;
                                 $walletstatus = "Delivered";
 
-                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of ".$myCurrency." ".$collectionFee." deducted from your PaySprint wallet for " . $service . " from " . $req->firstname . " " . $req->lastname . " You now have " . $myCurrency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
+                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of ".$myCurrency." ".$collectionFee." inclusive to PaySprint Inc. for " . $service . " from " . $req->firstname . " " . $req->lastname . " You now have " . $myCurrency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
                             } else {
                                 $recWallet = $thismerchant->wallet_balance;
                                 $walletstatus = "Pending";
 
-                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of ".$myCurrency." ".$collectionFee." deducted from your PaySprint wallet for " . $service . " from " . $req->firstname . " " . $req->lastname . " Your wallet balance is " . $myCurrency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
+                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of ".$myCurrency." ".$collectionFee." inclusive to PaySprint Inc. for " . $service . " from " . $req->firstname . " " . $req->lastname . " Your wallet balance is " . $myCurrency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
                             }
 
 
                             User::where('ref_code', $thismerchant->ref_code)->update(['wallet_balance' => $recWallet]);
 
                             // thismerchant Statement
-                            $this->insStatement($thismerchant->email, $paymentToken, "Received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of ".$myCurrency." ".$collectionFee." deducted from your PaySprint wallet for " . $service . " from " . $req->firstname . " " . $req->lastname, ($amount - $collectionFee), 0, $balance, $trans_date, $walletstatus, "Wallet credit", $thismerchant->ref_code, 1, $statement_route, $thismerchant->auto_deposit, $thismerchant->country, $mode);
+                            $this->insStatement($thismerchant->email, $paymentToken, "Received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of ".$myCurrency." ".$collectionFee." inclusive to PaySprint Inc. for " . $service . " from " . $req->firstname . " " . $req->lastname, $amount, 0, $balance, $trans_date, $walletstatus, "Wallet credit", $thismerchant->ref_code, 1, $statement_route, $thismerchant->auto_deposit, $thismerchant->country, $mode);
 
                             // Send mail to both parties
 
@@ -2985,7 +2980,7 @@ class MerchantApiController extends Controller
                             $this->coy_name = $thismerchant->businessname;
                             // $this->email = "bambo@vimfile.com";
                             $this->email = $req->email;
-                            $this->amount = $myCurrency . " " . number_format($amount, 2);
+                            $this->amount = $myCurrency . " " . number_format($amount + $collectionFee, 2);
                             $this->paypurpose = $service;
                             $this->subject = "Payment Received from " . $req->firstname . " " . $req->lastname . " for " . $service;
                             $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
@@ -2997,7 +2992,7 @@ class MerchantApiController extends Controller
                             $this->sendEmail($this->email, "Payment Successful");
 
 
-                            $receiverSMS = "Transfer of " . $countryInfo->currencyCode . " " . number_format($req->amount, 2) . " to " . $thismerchant->businessname . " for " . $service;
+                            $receiverSMS = "Transfer of " . $countryInfo->currencyCode . " " . number_format($req->amount + $collectionFee, 2) . " to " . $thismerchant->businessname . " for " . $service.". A service fee of ".$myCurrency." ".number_format($collectionFee, 2)." inclusive";
 
 
                             $sendMsg = "Hi " . $req->firstname . " " . $req->lastname . ", You have made a " . $receiverSMS . " Do more with PaySprint. Download our mobile app from Apple Store or Google Play Store. Thanks PaySprint Team";
@@ -3078,10 +3073,9 @@ class MerchantApiController extends Controller
                 } elseif ($mode == strtoupper("test")) {
 
 
-
                     // Make Payment
 
-                    $response = $this->monerisWalletProcess($thismerchant->ref_code, $req->cardType, $amount, $req->purpose, $mode, $req->country, $req->expiryMonth, $req->cardNumber, $req->expiryYear);
+                    $response = $this->monerisWalletProcess($thismerchant->ref_code, $req->cardType, ($amount + $collectionFee), $req->purpose, $mode, $req->country, $req->expiryMonth, $req->cardNumber, $req->expiryYear);
 
 
                     if ($response->responseData['ResponseCode'] == "000" || $response->responseData['ResponseCode'] == "001" || $response->responseData['ResponseCode'] == "002" || $response->responseData['ResponseCode'] == "003" || $response->responseData['ResponseCode'] == "004" || $response->responseData['ResponseCode'] == "005" || $response->responseData['ResponseCode'] == "006" || $response->responseData['ResponseCode'] == "007" || $response->responseData['ResponseCode'] == "008" || $response->responseData['ResponseCode'] == "009" || $response->responseData['ResponseCode'] == "010" || $response->responseData['ResponseCode'] == "023" || $response->responseData['ResponseCode'] == "024" || $response->responseData['ResponseCode'] == "025" || $response->responseData['ResponseCode'] == "026" || $response->responseData['ResponseCode'] == "027" || $response->responseData['ResponseCode'] == "028" || $response->responseData['ResponseCode'] == "029") {
@@ -3093,36 +3087,7 @@ class MerchantApiController extends Controller
 
                         try {
 
-                            // Update Wallet
 
-                            $countryInfo = $this->getCountryCode($req->country);
-
-                            $currencyCode = $countryInfo->currencyCode;
-                            $currencySymbol = $countryInfo->currencySymbol;
-
-                            $code = $countryInfo->callingCode;
-
-                            $service = $req->purpose;
-
-                            if ($req->country == $thismerchant->country) {
-                                $amount = $req->amount;
-                                $myCurrency = $currencyCode;
-                            } else {
-                                // Currency converter
-                                $amount = $this->convertCurrency($thismerchant->currencyCode, $req->amount, $currencyCode, 'API GUEST_Users');
-                                $myCurrency = $thismerchant->currencyCode;
-                            }
-
-
-                            // Calculate the Service Charge Fee...
-                            $feeOnTranx = $tranxFeeCharge->merchantFeeCharge($thismerchant->country, $req->cardType);
-
-
-                            $variableVal = ($feeOnTranx->chargePercentage / 100) * $amount;
-
-                            $collectionFee = $feeOnTranx->fixed + $variableVal;
-
-                            // Send mail to both parties
 
                             // $this->to = "bambo@vimfile.com";
                             $this->to = $thismerchant->email;
@@ -3130,7 +3095,7 @@ class MerchantApiController extends Controller
                             $this->coy_name = $thismerchant->businessname;
                             // $this->email = "bambo@vimfile.com";
                             $this->email = $req->email;
-                            $this->amount = $myCurrency . " " . number_format($amount, 2);
+                            $this->amount = $myCurrency . " " . number_format($amount + $collectionFee, 2);
                             $this->paypurpose = $service;
                             $this->subject = "Payment Received from " . $req->firstname . " " . $req->lastname . " for " . $service;
                             $this->subject2 = "Your Payment to " . $thismerchant->businessname . " was successful";
@@ -3144,9 +3109,9 @@ class MerchantApiController extends Controller
 
 
                             // Insert Statement
-                            $activity = "Transfer of " . $thismerchant->currencyCode . " " . number_format($req->amount, 2) . " to " . $thismerchant->businessname . " for " . $service;
+                            $activity = "Transfer of " . $thismerchant->currencyCode . " " . number_format($req->amount + $collectionFee, 2) . " to " . $thismerchant->businessname . " for " . $service.". A service fee of ".$myCurrency." ".number_format($collectionFee, 2)." inclusive";
                             $credit = 0;
-                            $debit = $req->amount - $collectionFee;
+                            $debit = $req->amount + $collectionFee;
                             $reference_code = $reference_code;
                             $balance = 0;
                             $trans_date = date('Y-m-d');
@@ -3166,12 +3131,12 @@ class MerchantApiController extends Controller
                                 $recWallet = $thismerchant->wallet_balance + ($amount - $collectionFee);
                                 $walletstatus = "Delivered";
 
-                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of ".$myCurrency." ".$collectionFee." deducted from your PaySprint wallet for " . $service . " from " . $req->firstname . " " . $req->lastname . ". You now have " . $myCurrency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
+                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of ".$myCurrency." ".$collectionFee." inclusive to PaySprint Inc. for " . $service . " from " . $req->firstname . " " . $req->lastname . ". You now have " . $myCurrency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
                             } else {
                                 $recWallet = $thismerchant->wallet_balance;
                                 $walletstatus = "Pending";
 
-                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of ".$myCurrency." ".$collectionFee." deducted from your PaySprint wallet for " . $service . " from " . $req->firstname . " " . $req->lastname . ". Your wallet balance is " . $myCurrency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
+                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of ".$myCurrency." ".$collectionFee." inclusive to PaySprint Inc. for " . $service . " from " . $req->firstname . " " . $req->lastname . ". Your wallet balance is " . $myCurrency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
                             }
 
 
@@ -3224,6 +3189,7 @@ class MerchantApiController extends Controller
                             Log::info("Sent money from " . $req->firstname . " " . $req->lastname . " to " . $thismerchant->businessname . " using 3rd party gateway TEST MODE");
 
                             $this->slack("Sent money from " . $req->firstname . " " . $req->lastname . " to " . $thismerchant->businessname . " using 3rd party gateway TEST MODE", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                            $this->slack($recMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                         } catch (\Exception $th) {
                             $status = 400;
 
