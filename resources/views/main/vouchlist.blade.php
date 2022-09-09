@@ -71,17 +71,19 @@ use App\Http\Controllers\FlutterwaveModel; ?>
 						@php
 						$counter=1;
 						@endphp
+						@if ( isset($data['vouch']))
+						@foreach ( $data['vouch'] as $vouchlist )
+						@if ($user= \App\User::where('ref_code', $vouchlist->voucher_ref_code)->first())
 						<tr>
-							@if ( isset($data['vouch']))
-							@foreach ( $data['vouch'] as $vouchlist )
-							@if ($user= \App\User::where('ref_code', $vouchlist->voucher_ref_code)->first())
+
 							<td>{{ $counter++ }}</td>
 							<td>{{ $user->name}}</td>
 							<td>{{ $vouchlist->voucher_ref_code}}</td>
-							@endif
-							@endforeach
-							@endif
+
 						</tr>
+						@endif
+						@endforeach
+						@endif
 					</tbody>
 				</table>
 			</div>
