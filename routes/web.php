@@ -1119,6 +1119,8 @@ Route::post('exporttoPdf', ['uses' => 'HomeController@exportToPdf', 'as' => 'exp
 //testng upload excel to DB skima
 Route::get('/promopage', ['uses' => 'AdminController@promoPage', 'as' => 'promo page']);
 Route::post('/uploadpromousers', ['uses' => 'AdminController@uploadPromoUsers', 'as' => 'upload promo users']);
+Route::get('/unverifiedmerchants', ['uses' => 'AdminController@unverifiedMerchants', 'as' => 'unverified merchants']);
+Route::post('/uploadunverifiedmerchants', ['uses' => 'AdminController@uploadUnverifiedMerchants', 'as' => 'upload unverified merchants']);
 Route::get('/promousers', ['uses' => 'AdminController@promoUsers', 'as' => 'promo users']);
 Route::get('/promoreport', ['uses' => 'AdminController@promoReport', 'as' => 'promo report']);
 Route::post('/topup', ['uses' => 'AdminController@topUpWallet', 'as' => 'top up']);
