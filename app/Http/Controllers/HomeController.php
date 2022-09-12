@@ -1013,7 +1013,7 @@ class HomeController extends Controller
 
     public function createnewPayment(Request $req)
     {
-
+        $allcountry = AllCountries::where('approval', 1)->get();
 
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
@@ -1034,7 +1034,8 @@ class HomeController extends Controller
             'currencyCode' => $this->getCountryCode(Auth::user()->country),
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
-            'continent' => $this->timezone[0]
+            'continent' => $this->timezone[0],
+            'availablecountry' =>$allcountry
         );
 
         // dd($data);
@@ -4155,7 +4156,10 @@ class HomeController extends Controller
             'continent' => $this->timezone[0],
             'community' => $community,
             'availablecountry' => $allcountry
+
+
         ];
+
         //    dd($data);
 
         return view('main.displaycountrymerchant')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
@@ -6002,11 +6006,14 @@ class HomeController extends Controller
 
         if ($req->pay_method != "Wallet") {
 
+
             if ($req->foreigncurrency != $req->localcurrency) {
 
                 // dd($req->localcurrency);
 
                 $dataInfo = $this->convertCurrencyRate($req->foreigncurrency, $req->localcurrency, $req->amount);
+
+
             } else {
                 $dataInfo = $req->amount;
             }
@@ -6130,8 +6137,9 @@ class HomeController extends Controller
                 $state = "commission unavailable";
             }
         } else {
+            $amountRate = $this->convertCurrencyRate($req->localcurrency, $req->foreigncurrency, $req->amount);
 
-            $amountReceive = $req->amount;
+            $amountReceive = $req->type === 'international' ? $amountRate : $req->amount;
             $state = "commission free";
             $collection = 0;
         }
@@ -6141,6 +6149,7 @@ class HomeController extends Controller
         } else {
             $subminType = "Merchant Monthly Subscription";
         }
+
 
         // Change to Classic plan...
         // $minimumBal = TransactionCost::where('structure', $subminType)->where('country', $thisuser->country)->first();
@@ -6181,6 +6190,7 @@ class HomeController extends Controller
 
         $resData = ['data' => $amountReceive, 'message' => 'success', 'state' => $state, 'collection' => $collection, 'walletCheck' => $walletCheck, ''];
 
+        
 
         return $this->returnJSON($resData, 200);
     }

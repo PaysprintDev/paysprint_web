@@ -99,10 +99,16 @@
                                                         <td style="color: green; font-weight: bold;">
                                                             {{ $datainfo->ref_code }}</td>
                                                         <td>{{ $datainfo->name }}</td>
-                                                        @if ($user = \App\Admin::where('email', $datainfo->email)->first())
-                                                            <td style="color: navy; font-weight: bold;">
-                                                                {{ $user->username }}</td>
-                                                        @else
+
+                                                        @if ($datainfo->accountType === 'Merchant')
+                                                            @if ($user = \App\Admin::where('email', $datainfo->email)->first())
+                                                                <td style="color: navy; font-weight: bold;">
+                                                                    {{ $user->username }}</td>
+                                                            @else
+                                                                <td>-</td>
+                                                            @endif
+
+                                                            @else
                                                             <td>-</td>
                                                         @endif
                                                         <td>{{ $datainfo->email }}</td>

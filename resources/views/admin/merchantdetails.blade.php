@@ -264,7 +264,7 @@
 
                                                     <td>
 
-                                                            @if ($datainfo['users']->payout_agent === 0)
+                                                            @if ($datainfo['users']->payout_agent == 0)
                                                                 <button class="btn btn-success"
                                                                     id="btn{{ $datainfo['users']->ref_code }}"
                                                                     onclick="becomeAnAgent('{{ $datainfo['users']->ref_code }}')">Activate
@@ -316,7 +316,7 @@
 
                                                                 <button class="btn btn-danger"
                                                                     id="btn{{ $datainfo['users']->ref_code }}"
-                                                                    onclick="activateLive('test', '{{ $datainfo['users']->ref_code }}')">Activate
+                                                                    onclick="activateLive('test', '{{ $datainfo['users']->ref_code }}')">Move to
                                                                     Test</button>
                                                             @endif
 
@@ -332,7 +332,7 @@
 
                                                                 <button class="btn btn-danger"
                                                                     id="btn{{ $datainfo['users']->ref_code }}"
-                                                                    onclick="activateLive('test', '{{ $datainfo['users']->ref_code }}')">Activate
+                                                                    onclick="activateLive('test', '{{ $datainfo['users']->ref_code }}')">Move to
                                                                     Test</button>
                                                             @endif
 

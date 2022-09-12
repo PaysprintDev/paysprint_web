@@ -137,6 +137,7 @@ class GooglePaymentController extends Controller
     {
 
 
+
         if ($req->amount < 0) {
             $resData = ['res' => 'Please enter a positive amount to send', 'message' => 'error', 'title' => 'Oops!'];
 
@@ -168,6 +169,15 @@ class GooglePaymentController extends Controller
                     $checking = $this->checkUsersPassAccount($user->id);
 
 
+                    if ($req->type === 'international') {
+                        $debitAmount = $req->totalcharge;
+                        $creditAmount = $req->amount;
+                    } else {
+                        $debitAmount = $req->totalcharge;
+                        $creditAmount = $req->totalcharge;
+                    }
+
+
 
 
                     if (in_array("send money", $checking['access'])) {
@@ -176,7 +186,7 @@ class GooglePaymentController extends Controller
                         $withdrawLimit = $this->getWithdrawalLimit($user->country, $user->id);
 
 
-                        if ($req->amount > $withdrawLimit['withdrawal_per_day']) {
+                        if ($debitAmount > $withdrawLimit['withdrawal_per_day']) {
 
 
 
@@ -188,7 +198,7 @@ class GooglePaymentController extends Controller
                             $respaction = 'error';
 
                             return redirect()->back()->with($respaction, $response);
-                        } elseif ($req->amount > $withdrawLimit['withdrawal_per_week']) {
+                        } elseif ($debitAmount > $withdrawLimit['withdrawal_per_week']) {
 
                             $message = "You have reached your limit for the week. Transaction limit per week is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
 
@@ -198,7 +208,7 @@ class GooglePaymentController extends Controller
                             $respaction = 'error';
 
                             return redirect()->back()->with($respaction, $response);
-                        } elseif ($req->amount > $withdrawLimit['withdrawal_per_month']) {
+                        } elseif ($debitAmount > $withdrawLimit['withdrawal_per_month']) {
 
                             $message = "You have reached your limit for the week. Transaction limit per month is " . $user->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next month";
 
@@ -232,66 +242,65 @@ class GooglePaymentController extends Controller
 
                                         // Check for Wallet Balance
 
-                                        if ($req->amount > $user->wallet_balance) {
+                                        if ($debitAmount > $user->wallet_balance) {
 
 
-                                            $checkForOverDraft = $this->overDraftInfo($user->wallet_balance, $req->amount, $user->ref_code);
+                                            $checkForOverDraft = $this->overDraftInfo($user->wallet_balance, $debitAmount, $user->ref_code);
 
-                                            if($checkForOverDraft['status'] === false){
+                                            if ($checkForOverDraft['status'] === false) {
 
-                                                $resData = ['res' => $checkForOverDraft['message'].". Please add money to continue transaction", 'message' => 'error', 'title' => 'Oops!'];
+                                                $resData = ['res' => $checkForOverDraft['message'] . ". Please add money to continue transaction", 'message' => 'error', 'title' => 'Oops!'];
 
                                                 $response = 'You cannot send money to yourself.';
                                                 $respaction = 'error';
 
                                                 return redirect()->back()->with($respaction, $response);
-                                            }
-                                            else{
+                                            } else {
 
                                                 if ($req->commission == "on") {
-                                                $amount = number_format($req->amount, 2);
-                                                $approve_commission = "Yes";
+                                                    $amount = number_format($debitAmount, 2);
+                                                    $approve_commission = "Yes";
                                                 } else {
 
-                                                    $amount = number_format($req->amount + $req->commissiondeduct, 2);
+                                                    $amount = number_format($debitAmount + $req->commissiondeduct, 2);
                                                     $approve_commission = "No";
                                                 }
 
 
-                                                    // Getting the payer
-                                                    $userID = $user->email;
-                                                    $payerID = $user->ref_code;
+                                                // Getting the payer
+                                                $userID = $user->email;
+                                                $payerID = $user->ref_code;
 
-                                                    // $req->user_id is for the receiver::
+                                                // $req->user_id is for the receiver::
 
-                                                    // Do Insert
-                                                    if ($req->service != "Others") {
-                                                        $service = $req->service;
-                                                    } else {
-                                                        $service = $req->purpose;
-                                                    }
+                                                // Do Insert
+                                                if ($req->service != "Others") {
+                                                    $service = $req->service;
+                                                } else {
+                                                    $service = $req->purpose;
+                                                }
 
-                                                    $statement_route = "wallet";
+                                                $statement_route = "wallet";
 
-                                                    if ($req->localcurrency != $req->currency) {
-                                                        // $dataInfo = $this->convertCurrencyRate($req->localcurrency, $req->currency, $req->amounttosend);
-                                                        $dataInfo = $req->conversionamount;
-                                                    } else {
-                                                        $dataInfo = $req->totalcharge;
-                                                    }
-
-
-
-                                                    if (env('APP_ENV') == "local") {
-                                                        $mode = "test";
-                                                    } else {
-                                                        $mode = "live";
-                                                    }
+                                                if ($req->localcurrency != $req->currency) {
+                                                    // $dataInfo = $this->convertCurrencyRate($req->localcurrency, $req->currency, $req->amounttosend);
+                                                    $dataInfo = $req->conversionamount;
+                                                } else {
+                                                    $dataInfo = $req->totalcharge;
+                                                }
 
 
-                                                $wallet_balance = $user->wallet_balance - $req->totalcharge;
 
-                                                $withdrawal_per_day = $user->withdrawal_per_day + $req->totalcharge;
+                                                if (env('APP_ENV') == "local") {
+                                                    $mode = "test";
+                                                } else {
+                                                    $mode = "live";
+                                                }
+
+
+                                                $wallet_balance = $user->wallet_balance - $debitAmount;
+
+                                                $withdrawal_per_day = $user->withdrawal_per_day + $debitAmount;
                                                 $withdrawal_per_week = $user->withdrawal_per_week + $withdrawal_per_day;
                                                 $withdrawal_per_month = $user->withdrawal_per_month + $withdrawal_per_week;
 
@@ -343,7 +352,7 @@ class GooglePaymentController extends Controller
                                                     $credit = 0;
                                                     // $debit = $req->conversionamount + $req->commissiondeduct;
                                                     // $debit = $dataInfo;
-                                                    $debit = $req->amount;
+                                                    $debit = $debitAmount;
                                                     $reference_code = $paymentToken;
                                                     $balance = 0;
                                                     $trans_date = date('Y-m-d');
@@ -355,15 +364,15 @@ class GooglePaymentController extends Controller
 
                                                     if ($client->auto_deposit == 'on') {
 
-                                                        $recWallet = $client->wallet_balance + $dataInfo;
+                                                        $recWallet = $client->wallet_balance + $creditAmount;
                                                         $walletstatus = "Delivered";
 
-                                                        $recMsg = "Hi " . $this->coy_name . ", You have received " . $req->currency . ' ' . number_format($dataInfo, 2) . " in your PaySprint wallet for " . $service . " from " . $user->name . ". You now have " . $req->currency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
+                                                        $recMsg = "Hi " . $this->coy_name . ", You have received " . $req->localcurrency . ' ' . number_format($creditAmount, 2) . " in your PaySprint wallet for " . $service . " from " . $user->name . ". You now have " . $req->localcurrency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
                                                     } else {
                                                         $recWallet = $client->wallet_balance;
                                                         $walletstatus = "Pending";
 
-                                                        $recMsg = "Hi " . $this->coy_name . ", You have received " . $req->currency . ' ' . number_format($dataInfo, 2) . " for " . $service . " from " . $user->name . ". Your wallet balance is " . $req->currency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
+                                                        $recMsg = "Hi " . $this->coy_name . ", You have received " . $req->localcurrency . ' ' . number_format($creditAmount, 2) . " for " . $service . " from " . $user->name . ". Your wallet balance is " . $req->localcurrency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
                                                     }
 
 
@@ -375,12 +384,12 @@ class GooglePaymentController extends Controller
 
 
                                                     // Receiver
-                                                    $this->insStatement($client->email, $reference_code, "Received " . $req->currency . ' ' . number_format($dataInfo, 2) . " in wallet for " . $service . " from " . $user->name, $dataInfo, 0, $balance, $trans_date, $walletstatus, "Wallet credit", $client->ref_code, 1, $statement_route, $client->auto_deposit, $client->country);
+                                                    $this->insStatement($client->email, $reference_code, "Received " . $req->localcurrency . ' ' . number_format($creditAmount, 2) . " in wallet for " . $service . " from " . $user->name, $creditAmount, 0, $balance, $trans_date, $walletstatus, "Wallet credit", $client->ref_code, 1, $statement_route, $client->auto_deposit, $client->country);
 
 
                                                     $newBalance = User::where('api_token', $req->api_token)->first();
 
-                                                    $sendMsg = "Hi " . $user->name . ", You have made a " . $activity . ". Your new wallet balance is " . $req->localcurrency . ' ' . number_format($newBalance->wallet_balance, 2) . ". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
+                                                    $sendMsg = "Hi " . $user->name . ", You have made a " . $activity . ". Your new wallet balance is " . $req->currency . ' ' . number_format($newBalance->wallet_balance, 2) . ". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
 
                                                     $usersPhone = User::where('email', $user->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -488,10 +497,6 @@ class GooglePaymentController extends Controller
 
                                                     return redirect()->back()->with($respaction, $response);
                                                 }
-
-
-
-
                                             }
                                         } elseif ((isset($imtCountry) && $imtCountry->imt == "false" && $client->country != $user->country) || (isset($imtCountry) && $imtCountry->outbound == "false" && $client->country != $user->country)) {
                                             $resData = ['res' => 'International money transfer is not yet available to ' . $imtCountry->name, 'message' => 'error', 'title' => 'Oops!'];
@@ -500,17 +505,15 @@ class GooglePaymentController extends Controller
                                             $respaction = 'error';
 
                                             return redirect()->back()->with($respaction, $response);
-                                        }
-
-                                        else {
+                                        } else {
 
 
                                             if ($req->commission == "on") {
-                                                $amount = number_format($req->amount, 2);
+                                                $amount = number_format($debitAmount, 2);
                                                 $approve_commission = "Yes";
                                             } else {
 
-                                                $amount = number_format($req->amount + $req->commissiondeduct, 2);
+                                                $amount = number_format($debitAmount + $req->commissiondeduct, 2);
                                                 $approve_commission = "No";
                                             }
 
@@ -551,9 +554,9 @@ class GooglePaymentController extends Controller
 
                                             if ($req->payment_method == "Wallet") {
 
-                                                $wallet_balance = $user->wallet_balance - $req->totalcharge;
+                                                $wallet_balance = $user->wallet_balance - $debitAmount;
 
-                                                $withdrawal_per_day = $user->withdrawal_per_day + $req->totalcharge;
+                                                $withdrawal_per_day = $user->withdrawal_per_day + $debitAmount;
                                                 $withdrawal_per_week = $user->withdrawal_per_week + $withdrawal_per_day;
                                                 $withdrawal_per_month = $user->withdrawal_per_month + $withdrawal_per_week;
 
@@ -650,8 +653,8 @@ class GooglePaymentController extends Controller
                                                 $transaction_id = "es-wallet-" . date('dmY') . time();
 
 
-                                                $activity = "Received " . $req->localcurrency . '' . number_format($req->amount, 2) . " from {$user->name} to your PaySprint FX Wallet.";
-                                                $credit = $req->amount;
+                                                $activity = "Received " . $req->localcurrency . '' . number_format($creditAmount, 2) . " from {$user->name} to your PaySprint FX Wallet.";
+                                                $credit = $creditAmount;
                                                 $debit = 0;
                                                 $reference_code = $transaction_id;
                                                 $balance = 0;
@@ -662,7 +665,7 @@ class GooglePaymentController extends Controller
                                                 $statement_route = "escrow wallet";
                                                 $statement_route2 = "wallet";
 
-                                                $fxBalance = $myaccount->wallet_balance + $req->amount;
+                                                $fxBalance = $myaccount->wallet_balance + $creditAmount;
 
 
                                                 EscrowAccount::where('user_id', $client->id)->where('currencyCode', $myaccount->currencyCode)->update(['wallet_balance' => $fxBalance]);
@@ -712,16 +715,16 @@ class GooglePaymentController extends Controller
                                                 $this->coy_name = ($client->accountType == "Individual" ? $client->name : $client->businessname);
                                                 // $this->email = "bambo@vimfile.com";
                                                 $this->email = $user->email;
-                                                $this->amount = $myaccount->currencyCode . ' ' . number_format($req->amount, 2);
+                                                $this->amount = $myaccount->currencyCode . ' ' . number_format($debitAmount, 2);
                                                 $this->paypurpose = $service;
                                                 $this->subject = "Payment Received from " . $user->name . " for " . $service;
                                                 $this->subject2 = "Your Payment to " . $this->coy_name . " was successfull";
 
-                                                $activity2 = $req->payment_method . " transfer of " . $req->localcurrency . ' ' . number_format($req->amount, 2) . " to " . $this->coy_name . " for " . $service;
+                                                $activity2 = $req->payment_method . " transfer of " . $req->currency . ' ' . number_format($debitAmount, 2) . " to " . $this->coy_name . " for " . $service;
                                                 $credit2 = 0;
                                                 // $debit = $req->conversionamount + $req->commissiondeduct;
                                                 // $debit = $dataInfo;
-                                                $debit2 = $req->amount;
+                                                $debit2 = $debitAmount;
                                                 $reference_code = $paymentToken;
                                                 $balance2 = 0;
                                                 $trans_date2 = date('Y-m-d');
@@ -740,7 +743,7 @@ class GooglePaymentController extends Controller
 
                                                 $this->sendEmail($this->email, "Payment Successful");
 
-                                                $sendMsg2 = "Hi " . $user->name . ", You have made a " . $activity2 . ". Your new wallet balance is " . $req->localcurrency . ' ' . number_format($wallet_balance, 2) . ". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
+                                                $sendMsg2 = "Hi " . $user->name . ", You have made a " . $activity2 . ". Your new wallet balance is " . $req->currency . ' ' . number_format($wallet_balance, 2) . ". If you did not make this transfer, kindly login to your PaySprint Account to change your Transaction PIN and report the issue to PaySprint Admin using Contact Us. PaySprint Team";
 
                                                 $usersPhone = User::where('email', $user->email)->where('telephone', 'LIKE', '%+%')->first();
 

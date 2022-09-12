@@ -441,9 +441,12 @@
 
                                                 {{ $getthisuser->currencyCode . ' ' . number_format($getthisuser->withdrawal_per_transaction, 2) }}
 
-                                                <button class="btn btn-primary"
+                                                @if (session('role') == 'Super')
+                                                            <button class="btn btn-primary"
                                                     onclick="increaseLimit({{ $getthisuser->id }}, {{ $getthisuser->withdrawal_per_transaction }})">Adjust
                                                     Transaction Limit</button>
+                                                @endif
+
 
                                             </td>
                                         </tr>
@@ -454,9 +457,14 @@
                                             <td class="mainText" style="font-weight: 900; color: navy;">
                                                 {{ $getthisuser->currencyCode . ' ' . number_format($getthisuser->withdrawal_per_overdraft, 2) }}
 
-                                                <button class="btn btn-primary"
+
+                                                @if (session('role') == 'Super')
+                                                           <button class="btn btn-primary"
                                                     onclick="increaseOverdraftLimit({{ $getthisuser->id }}, {{ $getthisuser->withdrawal_per_overdraft != NULL ? $getthisuser->withdrawal_per_overdraft : 0 }})">Adjust
                                                     Overdraft Limit</button>
+                                                @endif
+
+
 
                                             </td>
                                         </tr>
@@ -561,6 +569,7 @@
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
+
                                                         <h5 class="modal-title" id="exampleModalLongTitle">Adjust
                                                             {{ $getthisuser->name }} overdraft limit</h5>
                                                         <button type="button" class="close" data-dismiss="modal"

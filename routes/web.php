@@ -1052,7 +1052,6 @@ Route::prefix('Admin/')->group(function () {
 	Route::post('sendusermessage', ['uses' => 'AdminController@sendNewUserMessage', 'as' => 'send user message']);
 	Route::post('runmailcampaign', ['uses' => 'AdminController@runMailChimpCampaign', 'as' => 'run mail campaign to users']);
 
-
 	// Move Multiple Users
 	Route::post('moveselectedusers', ['uses' => 'AdminController@ajaxmoveSelectedUser', 'as' => 'move selected users']);
 });
