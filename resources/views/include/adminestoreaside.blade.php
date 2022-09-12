@@ -5,8 +5,7 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
-                    class="img-circle" alt="User Image">
+                <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg" class="img-circle" alt="User Image">
 
 
 
@@ -14,14 +13,10 @@
             <div class="pull-left info">
 
                 @php
-                    $usersName = strlen(session('firstname') . ' ' . session('lastname')) < 15 ? session('firstname') . ' ' . session('lastname') : substr(session('firstname') . ' ' . session('lastname'), 0, 15) . '***';
-                    $usersBusiness = strlen(session('businessname')) < 15 ? session('businessname') : substr(session('businessname'), 0, 15) . '***';
-                @endphp
-
-                <p>{{ session('businessname') != null ? $usersBusiness : $usersName }}</p>
-                @if (session('role') != 'Super' && session('role') != 'Access to Level 1 only' && session('role') != 'Access to Level 1 and 2 only' && session('role') != 'Customer Marketing')
+                $usersName = strlen(session('firstname') . ' ' . session('lastname')) < 15 ? session('firstname') . ' ' . session('lastname') : substr(session('firstname') . ' ' . session('lastname'), 0, 15) . '***' ; $usersBusiness=strlen(session('businessname')) < 15 ? session('businessname') : substr(session('businessname'), 0, 15) . '***' ; @endphp <p>{{ session('businessname') != null ? $usersBusiness : $usersName }}</p>
+                    @if (session('role') != 'Super' && session('role') != 'Access to Level 1 only' && session('role') != 'Access to Level 1 and 2 only' && session('role') != 'Customer Marketing')
                     <a href="#"><i class="fa fa-circle text-success"></i> Account No: {{ session('user_id') }}</a>
-                @endif
+                    @endif
             </div>
         </div>
         <!-- search form -->
@@ -29,8 +24,7 @@
             <div class="input-group">
                 <input type="text" name="q" class="form-control" placeholder="Search...">
                 <span class="input-group-btn">
-                    <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i
-                            class="fa fa-search"></i>
+                    <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                     </button>
                 </span>
             </div>
@@ -48,14 +42,13 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="active"><a href="{{ route('store dashboard') }}"><i
-                                class="fa fa-circle-o text-red"></i>
+                    <li class="active"><a href="{{ route('store dashboard') }}"><i class="fa fa-circle-o text-red"></i>
                             Dashboard</a></li>
 
                     @if (session('role') == 'Super')
-                        <li><a href="{{ route('Admin') }}"><i class="fa fa-circle-o text-primary"></i> Back to
-                                Admin</a>
-                        </li>
+                    <li><a href="{{ route('Admin') }}"><i class="fa fa-circle-o text-primary"></i> Back to
+                            Admin</a>
+                    </li>
                     @endif
 
 
@@ -88,11 +81,11 @@
             </li>
             {{-- <li class="">
                 <a href="{{ route('feedback')}}">
-                    <i class="fa fa-book"></i>
-                    <span>Feedback</span>
-                    <span class="pull-right-container">
-                    </span>
-                </a>
+            <i class="fa fa-book"></i>
+            <span>Feedback</span>
+            <span class="pull-right-container">
+            </span>
+            </a>
             </li> --}}
             <li class="">
                 <a href="{{ route('refund and dispute report') }}">
@@ -118,6 +111,15 @@
                     </span>
                 </a>
             </li>
+            <li class="">
+                <a href="{{ route('unverified merchants') }}">
+                    <i class="fa fa-book"></i>
+                    <span>Upload Unverified Merchants List</span>
+                    <span class="pull-right-container">
+                    </span>
+                </a>
+            </li>
+
 
 
 

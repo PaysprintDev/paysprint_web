@@ -1552,7 +1552,9 @@ class UserController extends Controller
                     //auto verify vouch user
                     User::where('ref_code', $req->account_number)->update([
                         'approval' => 2,
-                        'accountLevel' => 3
+                        'accountLevel' => 3,
+                        'gov_check' => 1,
+                        'account_check' => 1
                     ]);
 
 

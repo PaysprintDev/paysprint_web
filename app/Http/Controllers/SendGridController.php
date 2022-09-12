@@ -10,6 +10,8 @@ use App\Walletcredit;
 use App\ClaimedPoints;
 use App\ReferralClaim;
 
+use App\UnverifiedMerchant;
+
 use App\TransactionCost;
 use App\FlutterwaveModel;
 use App\Traits\SendgridMail;
@@ -48,15 +50,13 @@ class SendGridController extends Controller
 
                     $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
 
-                    echo $response;
+                    // echo $response;
                 }
             }
         } catch (\Throwable $th) {
             throw $th;
         }
     }
-
-
 
 
 
@@ -100,7 +100,7 @@ class SendGridController extends Controller
                     }
                     $promopoint = $promodate->amount;
 
-                    
+
 
                     $referralbalance = $referralpoint -  $setPointClaimed;
                     // dd( $point_acquired);
@@ -293,7 +293,7 @@ class SendGridController extends Controller
 
 
 
-                     $receiver = $user->email;
+                    $receiver = $user->email;
 
 
 
@@ -584,6 +584,43 @@ class SendGridController extends Controller
 
             // $response = $this->sendGridDynamicMail($receiver, $businesses, $template_id);
 
+        }
+    }
+
+    //marketplace claim your business
+    public function claimBusiness()
+    {
+        try {
+
+
+            $thisuser = UnverifiedMerchant::inRandomOrder()->take(1)->get();
+
+            // dd($thisuser);
+
+
+            if (count($thisuser) > 0) {
+
+
+                foreach ($thisuser as $user) {
+                    $name = $user->name;
+                    $receiver = "youngskima@gmail.com";
+                    $data = [
+                        "name"  => $name,
+                        "message" => "<p>PaySprint Market Place is one of the fastest growing global marketplaces. <br> At PaySprint Market Place, we connect merchant with customers and drive more traffic to their business at no extra costs. <br> To make sure your business is eligible to show up on PaySprint Marketplace,  </p>",
+                        "url" => route('home') . '/claimmerchantbusiness?id=' . $user->id,
+                    ];
+
+                    $template_id = config('constants.sendgrid.claimbusiness');
+
+
+
+                    $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
+                    // dd($response);
+                    echo 'done';
+                }
+            }
+        } catch (\Throwable $th) {
+            throw $th;
         }
     }
 }

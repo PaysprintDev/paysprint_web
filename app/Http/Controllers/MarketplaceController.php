@@ -50,6 +50,8 @@ use App\Traits\Trulioo;
 
 use App\InvestorRelation;
 
+use App\UnverifiedMerchant;
+
 use App\ReferralGenerate;
 
 use App\Traits\Xwireless;
@@ -165,10 +167,13 @@ use App\TransactionCost as TransactionCost;
 use App\BVNVerificationList as BVNVerificationList;
 use App\StoreProducts;
 use App\StoreMainShop;
+use App\FlutterwaveModel;
+use App\Traits\SendgridMail;
 use Illuminate\Http\Response;
 
 class MarketplaceController extends Controller
 {
+    use SendgridMail;
     //
     public function getmarketCategory(Request $req)
     {
@@ -248,6 +253,7 @@ class MarketplaceController extends Controller
         return response()->json($response, $code);
     }
 
+
     //latest merchant
     public function newestMerchant(Request $req)
     {
@@ -271,6 +277,7 @@ class MarketplaceController extends Controller
 
         return response()->json($response, $code);
     }
+
 
     //find product
     public function findProduct(Request $req)
@@ -307,9 +314,38 @@ class MarketplaceController extends Controller
         return response()->json($response, $code);
     }
 
-    //join our community
-    public function joinCommunity(Request $Req)
+
+    //Get Products
+    public function getProducts(Request $Req)
     {
-        
+        try {
+
+            $data = StoreProducts::get();
+
+            $response = [
+                'data' => $data,
+                'status' => 'success',
+            ];
+
+            $code = 200;
+        } catch (\Throwable $th) {
+            $response = [
+                'data' => [],
+                'message' => $th->getMessage(),
+                'status' => 'error'
+            ];
+
+            $code = 400;
+        }
+
+        return response()->json($response, $code);
     }
+
+    //getting all unverified merchants
+
+
+
+    //opening an account for unverified merchants
+
+    
 }

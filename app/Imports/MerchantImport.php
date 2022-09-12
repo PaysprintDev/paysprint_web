@@ -19,19 +19,19 @@ class MerchantImport implements ToModel, WithHeadingRow
 	 * @return \Illuminate\Database\Eloquent\Model|null
 	 */
 
-	public $queryData;
+	// public $queryData;
 
-	public function __construct($data)
-	{
-		$this->queryData = $data;
-	}
+	// public function __construct($data)
+	// {
+	// 	$this->queryData = $data;
+	// }
 
 
 	public function model(array $row)
 	{
+			// dd($row);
 
 		return new UnverifiedMerchant([
-
 			'name' => $row['name'],
 			'industry' => $row['nacsdescri'],
 			'title' => $row['naicstitle'],
@@ -46,8 +46,8 @@ class MerchantImport implements ToModel, WithHeadingRow
 		]);
 	}
 
-	public function headingRow(): int
-	{
-		return 1;
-	}
+	// public function headingRow(): int
+	// {
+	// 	return 1;
+	// }
 }

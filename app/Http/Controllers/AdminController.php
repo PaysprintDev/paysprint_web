@@ -12971,12 +12971,8 @@ class AdminController extends Controller
             'unverified_docs' => 'required'
         ]);
 
-        // dd($req->all());
-        $query = $req->all();
+        $data = Excel::import(new MerchantImport(), $req->file('unverified_docs'));
 
-
-        $data = Excel::import(new MerchantImport($query), $req->file('unverified_docs'));
-        // dd($data);
 
         return back()->with("msg", "<div class='alert alert-success'> Imported Successfully</div>");
     }
@@ -15618,6 +15614,14 @@ class AdminController extends Controller
         $data = $this->_merchantServices();
 
         return view('admin.adminregister')->with(['data' => $data]);
+    }
+
+    public function claimingBusiness(Request $req)
+    {
+        $id=$req->id;
+        $data = UnverifiedMerchant::where('id', $id)->first();
+
+        return view('admin.claimbusiness')->with(['data' => $data]);
     }
 
     public function _merchantServices()

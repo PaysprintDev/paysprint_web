@@ -41,6 +41,9 @@ Route::get('testrazor', 'MonerisController@testRazor');
 
 Route::post('triggerdate', ['uses' => 'TriggerController@triggerDate', 'as' => 'trigger date']);
 
+//marketplace claimbusiness
+Route::get('claimmerchantbusiness', ['uses' => 'AdminController@claimingBusiness', 'as' => 'claiming business']);
+
 
 // Route::get('feecharge', 'MaintenanceFeeCharge@monthlyMaintenaceFee');
 Route::get('renewsub', 'MaintenanceFeeCharge@renewSubscription');
@@ -111,6 +114,7 @@ Route::get('upgradedaccountlist', 'CheckSetupController@upgradedAccounts');
 Route::get('mailstatement', 'SendGridController@cronToCustomersOnCustomerStatement');
 Route::get('rewardpoint', 'SendGridController@cronToCustomersOnRewardStatement');
 Route::get('mailtocustomer', 'SendGridController@cronToPublicizeMerchantToConsumer');
+Route::get('claimbusiness', 'SendGridController@claimBusiness');
 
 // country flag
 Route::get('countryflag', 'CountryFlagController@displayCountryFlag');
