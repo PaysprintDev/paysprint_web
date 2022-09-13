@@ -199,7 +199,7 @@ class AdminController extends Controller
 
     public function index(Request $req)
     {
-    //   dd($req->all);
+        //   dd($req->all);
 
 
         if (session('role') == 'Merchant') {
@@ -296,25 +296,23 @@ class AdminController extends Controller
                 );
 
 
-                if(isset($req->q)){
+                if (isset($req->q)) {
 
-                 $details=User::where('name', 'like', '%'.$req->q.'%')->orWhere('ref_code', 'like', '%'.$req->q.'%')->orWhere('email', 'like', '%'.$req->q.'%')->get();
+                    $details = User::where('name', 'like', '%' . $req->q . '%')->orWhere('ref_code', 'like', '%' . $req->q . '%')->orWhere('email', 'like', '%' . $req->q . '%')->get();
 
-                 if(count($details) > 0){
-                    $details = $details;
+                    if (count($details) > 0) {
+                        $details = $details;
+                    } else {
+                        $userdetails = UserClosed::where('name', 'like', '%' . $req->q . '%')->orWhere('ref_code', 'like', '%' . $req->q . '%')->orWhere('email', 'like', '%' . $req->q . '%')->get();
 
-                 }else{
-                    $userdetails=UserClosed::where('name', 'like', '%'.$req->q.'%')->orWhere('ref_code', 'like', '%'.$req->q.'%')->orWhere('email', 'like', '%'.$req->q.'%')->get();
-
-                    $details=$userdetails;
-                 }
-
+                        $details = $userdetails;
+                    }
 
 
-                //  dd($details);
 
-                 return view('admin.pages.searchuser')->with(['pages' => 'My Dashboard', 'clientPay' => $clientPay, 'searchuser'=>$details,'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'invoiceLinkImport' => $invoiceLinkImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'allusers' => $allusers, 'getUserDetail' => $getUserDetail, 'getCard' => $getCard, 'getBank' => $getBank, 'getTax' => $getTax, 'withdraws' => $withdraws, 'pending' => $pending, 'allcountries' => $allcountries, 'refund' => $refund, 'received' => $received, 'data' => $data]);
+                    //  dd($details);
 
+                    return view('admin.pages.searchuser')->with(['pages' => 'My Dashboard', 'clientPay' => $clientPay, 'searchuser' => $details, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'invoiceLinkImport' => $invoiceLinkImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'allusers' => $allusers, 'getUserDetail' => $getUserDetail, 'getCard' => $getCard, 'getBank' => $getBank, 'getTax' => $getTax, 'withdraws' => $withdraws, 'pending' => $pending, 'allcountries' => $allcountries, 'refund' => $refund, 'received' => $received, 'data' => $data]);
                 }
 
 
@@ -15644,8 +15642,15 @@ class AdminController extends Controller
 
     public function claimingBusiness(Request $req)
     {
-        $id=$req->id;
-        $data = UnverifiedMerchant::where('id', $id)->first();
+        $id = $req->id;
+        $merchants = UnverifiedMerchant::where('id', $id)->first();
+        $merchantservices = $this->_merchantServices();
+        $data = [
+            'merchants' => $merchants,
+            'merchantservices' => $merchantservices,
+        ];
+
+        // dd($data);
 
         return view('admin.claimbusiness')->with(['data' => $data]);
     }
@@ -16671,6 +16676,542 @@ class AdminController extends Controller
 
 
 
+
+
+                        $this->mailListCategorize($req->firstname . ' ' . $req->lastname, $req->email, $req->address, $req->telephone, "New Merchants", $req->country, 'Subscription');
+
+                        Log::info("New merchant registration via web by: " . $req->firstname . ' ' . $req->lastname . " from " . $req->state . ", " . $req->country . " STATUS: " . $resInfo);
+
+                        $this->slack("New merchant registration via web by: " . $req->firstname . ' ' . $req->lastname . " from " . $req->state . ", " . $req->country . " STATUS: " . $resInfo, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+
+                        // $message = "success";
+                        // $title = "Great";
+                        // $link = "Admin";
+                        // $link = "merchant/dashboard";
+                        // $resInfo = "Hello ".$req->firstname.", Welcome to PaySprint!";
+
+
+
+                        $resData = ['res' => $resInfo, 'message' => $message, 'link' => $link];
+                    } else {
+                        $resData = ['res' => 'Something went wrong', 'message' => 'error'];
+                    }
+                }
+            }
+        }
+
+        return $this->returnJSON($resData, 200);
+    }
+
+    //claim business
+    public function ajaxclaimbusiness(Request $req)
+    {
+
+        // Check client record
+        $checkClient = ClientInfo::where('email', $req->email)->get();
+        if (count($checkClient) > 0) {
+            // Check Admin table
+            $checkAdmin = Admin::where('username', $req->username)->get();
+            if (count($checkAdmin) > 0) {
+                $resData = ['res' => 'Username already chosen', 'message' => 'error'];
+            }
+            // User already exist
+            $resData = ['res' => 'User with this email already exist', 'message' => 'error'];
+        } else {
+
+            // Check User Account if Email
+            $userExist = User::where('email', $req->email)->first();
+
+            $transCost = TransactionCost::where('method', "Merchant Minimum Withdrawal")->where('country', $req->country)->first();
+
+            if (isset($transCost)) {
+                $transactionLimit = $transCost->fixed;
+            } else {
+                $transactionLimit = 0;
+            }
+
+
+            // $getRef = User::where('ref_code', $req->referred_by)->first();
+
+            // if (isset($getRef)) {
+
+            //     $referral_points = $getRef->referral_points + 100;
+
+            //     User::where('id', $getRef->id)->update([
+            //         'referral_points' => $referral_points
+            //     ]);
+
+            //     // Add to generate link
+            //     $refGen = ReferralGenerate::where('ref_code', $req->referred_by)->first();
+
+            //     if (isset($refGen)) {
+            //         $ref_count = $refGen->referred_count + 1;
+
+            //         ReferralGenerate::where('ref_code', $req->referred_by)->update(['referred_count' => $ref_count]);
+            //     } else {
+            //         ReferralGenerate::insert([
+            //             'ref_code' => $req->referred_by,
+            //             'name' => $getRef->name,
+            //             'email' => $getRef->email,
+            //             'ref_link' => route('home') . '/register?ref_code=' . $req->referred_by,
+            //             'referred_count' => '1',
+            //             'country' => $getRef->country,
+            //             'is_admin' => false
+            //         ]);
+            //     }
+
+
+            //     ReferredUsers::insert(['ref_code' => $req->referred_by, 'referred_user' => $req->email, 'referral_points' => 100]);
+            // } else {
+            //     $getRef = ReferralGenerate::where('ref_code', $req->referred_by)->first();
+
+            //     if (isset($getRef)) {
+
+            //         ReferredUsers::insert(['ref_code' => $req->referred_by, 'referred_user' => $req->email, 'referral_points' => 100]);
+
+            //         $ref_count = $getRef->referred_count + 1;
+
+            //         ReferralGenerate::where('ref_code', $req->referred_by)->update(['referred_count' => $ref_count]);
+            //     }
+            // }
+
+
+            $userClosedExist = UserClosed::where('email', $req->email)->first();
+
+            if (isset($userExist)) {
+                // User already exist
+                $resData = ['res' => 'The email address already exist as an Individual account holder', 'message' => 'error'];
+            } elseif (isset($userClosedExist)) {
+                // User already exist
+                $resData = ['res' => 'Your account has already been created but currently not active on PaySprint. Contact the Admin for more information', 'message' => 'error'];
+            } else {
+
+                if ($req->how_your_heard_about_us == "Others") {
+                    $specifyHeardAbout = $req->specify_how_your_heard_about_us;
+                } else {
+                    $specifyHeardAbout = $req->how_your_heard_about_us;
+                }
+
+
+                if ($req->source_of_funds == "Others") {
+                    $source_of_funds = $req->specify_source;
+                } else {
+                    $source_of_funds = $req->source_of_funds;
+                }
+
+
+                if ($req->ref_code != null) {
+
+                    $getanonuser = AnonUsers::where('ref_code', $req->ref_code)->first();
+
+
+                    if ($req->type_of_service == "Add Service Type") {
+                        $merchantservice = $req->other_type_of_service;
+                    } else {
+                        $merchantservice = $req->type_of_service;
+                    }
+
+                    // Insert
+                    $insClient = ClientInfo::insert(['user_id' => $req->ref_code, 'business_name' => $req->business_name, 'address' => $req->business_address, 'corporate_type' => $req->corporate_type, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'email' => $getanonuser->email, 'country' => $req->country, 'state' => $req->state, 'city' => $req->city, 'zip_code' => $req->zip_code, 'industry' => $req->industry, 'telephone' => $req->business_telephone, 'website' => $req->website, 'api_secrete_key' => md5(uniqid($req->username, true)) . date('dmY') . time(), 'type_of_service' => $merchantservice]);
+
+                    $insAdmin = Admin::insert(['user_id' => $req->ref_code, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'password' => Hash::make($req->password), 'role' => 'Merchant', 'email' => $getanonuser->email]);
+
+
+                    $mycode = $this->getCountryCode($req->country);
+
+                    $currencyCode = $mycode->currencyCode;
+                    $currencySymbol = $mycode->currencySymbol;
+
+                    // Get all ref_codes
+
+
+                    // Insert to User
+
+                    $api_token = uniqid() . md5($req->email) . time();
+
+
+                    $data = ['code' => $mycode->callingCode, 'ref_code' => $req->ref_code, 'businessname' => $req->business_name, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'telephone' => $getanonuser->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'wallet_balance' => $getanonuser->wallet_balance, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by, 'knowAboutUs' => $specifyHeardAbout, 'accountPurpose' => $req->describe_purpose, 'transactionSize' => $req->size_of_transaction, 'sourceOfFunding' => $source_of_funds, 'shuftiproservice' => 0];
+
+
+                    User::updateOrCreate(['email' => $getanonuser->email], $data);
+
+                    if (isset($insAdmin)) {
+                        // Set session
+                        $getMerchant = User::where('ref_code', $req->ref_code)->first();
+
+
+                        $req->session()->put(['user_id' => $req->ref_code, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'role' => 'Merchant', 'email' => $getanonuser->email, 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $getanonuser->country, 'businessname' => $getanonuser->businessname, 'loginCount' => $getMerchant->loginCount, 'currencyCode' => $getMerchant->currencyCode]);
+
+                        $getMoney = Statement::where('user_id', $getanonuser->email)->get();
+
+                        if (count($getMoney) > 0) {
+                            foreach ($getMoney as $key => $value) {
+
+                                Statement::where('reference_code', $value->reference_code)->update(['status' => 'Delivered']);
+                            }
+                        } else {
+                            // Do nothing
+                        }
+
+
+                        AnonUsers::where('ref_code', $req->ref_code)->delete();
+
+                        Log::info("New merchant registration via web by: " . $req->firstname . ' ' . $req->lastname . " from " . $req->state . ", " . $req->country);
+
+                        $this->slack("New merchant registration via web by: " . $req->firstname . ' ' . $req->lastname . " from " . $req->state . ", " . $req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+
+                        $url = 'https://api.globaldatacompany.com/verifications/v1/verify';
+
+                        $minimuAge = date('Y') - $req->yearOfBirth;
+
+                        $countryApproval = AllCountries::where('name', $req->country)->where('approval', 1)->first();
+
+                        if (isset($countryApproval)) {
+                            $info = $this->identificationAPI($url, $req->firstname, $req->lastname, $req->dayOfBirth, $req->monthOfBirth, $req->yearOfBirth, $minimuAge, $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, $req->city, $req->country, $req->zip_code, $getanonuser->telephone, $getanonuser->email, $mycode->code);
+
+
+                            if (isset($info->TransactionID) == true) {
+
+                                $result = $this->transStatus($info->TransactionID);
+
+                                // if (isset($result)) {
+
+                                //     if (isset($result->TransactionRecordId)) {
+                                //         $transxID = $result->TransactionRecordId;
+                                //     } else {
+                                //         $transxID = $result['TransactionRecordId'];
+                                //     }
+
+                                //     Log::info(json_encode($transxID));
+
+                                //     $verifyRes = $this->getTransRec($transxID);
+
+                                //     $verRes = $verifyRes->Record->RecordStatus;
+                                // } else {
+                                //     $verRes = "nomatch";
+                                // }
+
+
+                                if ($info->Record->RecordStatus == "nomatch") {
+
+                                    // $message = "error";
+                                    // $title = "Oops!";
+                                    // $link = "contact";
+
+                                    $message = "success";
+                                    $title = "Great";
+                                    // $link = "Admin";
+                                    $link = "merchant/dashboard";
+
+
+                                    $resInfo = strtoupper($info->Record->RecordStatus) . ", Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.ca";
+                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'countryapproval' => 1, 'transactionRecordId' => $info->TransactionID]);
+
+
+                                    Auth::login($getMerchant);
+                                } else {
+                                    $message = "success";
+                                    $title = "Great";
+                                    // $link = "Admin";
+                                    $link = "merchant/dashboard";
+                                    $resInfo = strtoupper($info->Record->RecordStatus) . ", Congratulations!!!. Your account has been approved. Kindly complete the Quick Set up to enjoy the full benefits of  PaySprint.";
+
+                                    // Udpate User Info
+                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 1, 'countryapproval' => 1, 'bvn_verification' => 1, 'transactionRecordId' => $info->TransactionID]);
+
+                                    Auth::login($getMerchant);
+                                }
+                            } else {
+                                $message = "success";
+                                $title = "Great";
+                                // $link = "Admin";
+                                $link = "merchant/dashboard";
+                                $resInfo = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Pay Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. \nKindly follow these steps to upload the required information: \na. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca \nb. Go to profile page, take a Selfie of yourself and upload along with a copy of Goverment Issued Photo ID, a copy of Utility bills and business documents \nAll other features would be enabled for you as soon as Compliance Team verifies your information \nThank you for your interest in PaySprint.\nCompliance Team @PaySprint \ninfo@paysprint.ca";
+
+                                User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'countryapproval' => 1, 'transactionRecordId' => NULL]);
+
+                                Auth::login($getMerchant);
+
+                                // $resp = $info->Message;
+                            }
+
+                            $this->name = $req->firstname . ' ' . $req->lastname;
+                            // $this->email = "bambo@vimfile.com";
+                            $this->to = $req->email;
+                            $this->subject = "Welcome to PaySprint";
+
+                            $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, Pay received Invoice or Utility bills, but you will not be able to send or receive money or withdraw money from your Wallet pending the verification of Government issued Photo ID and Utility bill or Bank statement uploaded. <br> Kindly follow these steps to upload the required information: <br> a. login to PaySprint Account on Mobile App or Web app at www.paysprint.ca <br> b. Go to profile page and upload a copy of Goverment Issued Photo ID, a copy of Utility bill and business documents. <br> All other features would be enabled for you as soon as the Compliance Team verifies your information <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
+
+
+                            $this->message = '<p>' . $message . '</p>';
+
+
+                            $this->sendEmail($this->to, "Refund Request");
+
+
+                            if ($req->country == "India") {
+
+                                $this->name = $req->firstname . ' ' . $req->lastname;
+                                // $this->email = "bambo@vimfile.com";
+                                $this->email = $req->email;
+                                $this->subject = "Special Notice";
+
+                                $mailmessage = "Dear " . $req->fname . ", If you are presenting India Aadhaar Card as the form of identification, kindly upload your India Permanent Account Number card as well using same icon.Thanks";
+
+                                $this->message = '<p>' . $mailmessage . '</p>';
+
+
+                                $this->sendEmail($this->email, "Fund remittance");
+                            }
+                        } else {
+                            $message = "error";
+                            $title = "Oops!";
+                            $link = "contact";
+                            $resInfo = "PaySprint is currently not available in your country. You can contact our Customer Service Executives for further enquiries. Thanks";
+
+                            User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 0, 'transactionRecordId' => NULL]);
+                        }
+
+
+                        // TODO:: Kindly return to live when subscription live on ShuftiPro...
+
+                        if (env('APP_ENV') !== 'local') {
+                            $dob = $getMerchant->yearOfBirth . "-" . $getMerchant->monthOfBirth . "-" . $getMerchant->dayOfBirth;
+
+                            $thisusersname = explode(" ", $getMerchant->name);
+
+                            $getUsername = [
+                                'first_name' => $thisusersname[0],
+                                'middle_name' => '',
+                                'last_name' => $thisusersname[1],
+                            ];
+
+                            $shuftiVerify = new ShuftiProController();
+
+                            $checkAvalable = $shuftiVerify->shuftiAvailableCountries($getMerchant->country);
+
+                            if ($checkAvalable === true) {
+                                $checkAmlVerification = $shuftiVerify->callAmlCheck($getMerchant->ref_code, $dob, $getUsername, $getMerchant->email, $mycode->code);
+
+
+                                if ($checkAmlVerification->event !== 'verification.accepted') {
+                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
+                                } else {
+                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
+                                }
+                            }
+                        }
+
+
+
+                        $this->mailListCategorize($req->firstname . ' ' . $req->lastname, $req->email, $req->address, $req->telephone, "New Merchants", $req->country, 'Subscription');
+
+                        Log::info("New merchant registration via web by: " . $req->firstname . ' ' . $req->lastname . " from " . $req->state . ", " . $req->country . " STATUS: " . $resInfo);
+
+                        $this->slack("New merchant registration via web by: " . $req->firstname . ' ' . $req->lastname . " from " . $req->state . ", " . $req->country . " STATUS: " . $resInfo, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+
+                        // This is the response for now until trulioo activates us to LIVE..
+
+                        // $message = "success";
+                        // $title = "Great";
+                        // $link = "Admin";
+                        // $link = "merchant/dashboard";
+                        // $resInfo = "Hello ".$req->firstname.", Welcome to PaySprint...";
+
+
+
+                        $resData = ['res' => $resInfo, 'message' => $message, 'link' => $link];
+                    } else {
+                        $resData = ['res' => 'Something went wrong', 'message' => 'error'];
+                    }
+                } else {
+
+                    $ref_code = mt_rand(0000000, 9999999);
+
+
+                    $ref = User::all();
+
+                    if (count($ref) > 0) {
+                        foreach ($ref as $key => $value) {
+                            if ($value->ref_code == $ref_code) {
+                                $newRefcode = mt_rand(0000000, 9999999);
+                            } else {
+                                $newRefcode = $ref_code;
+                            }
+                        }
+                    } else {
+                        $newRefcode = $ref_code;
+                    }
+
+
+                    if ($req->type_of_service == "Add Service Type") {
+                        $merchantservice = $req->other_type_of_service;
+                    } else {
+                        $merchantservice = $req->type_of_service;
+                    }
+
+                    // Insert
+                    $insClient = ClientInfo::insert(['user_id' => $newRefcode, 'business_name' => $req->business_name, 'address' => $req->business_address, 'corporate_type' => $req->corporate_type, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'email' => $req->email, 'country' => $req->country, 'state' => $req->state, 'city' => $req->city, 'zip_code' => $req->zip_code, 'industry' => $req->industry, 'telephone' => $req->business_telephone, 'website' => $req->website, 'api_secrete_key' => md5(uniqid($req->username, true)) . date('dmY') . time(), 'type_of_service' => $merchantservice]);
+
+                    $insAdmin = Admin::insert(['user_id' => $newRefcode, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'password' => Hash::make($req->password), 'role' => 'Merchant', 'email' => $req->email]);
+
+
+                    $mycode = $this->getCountryCode($req->country);
+
+                    $currencyCode = $mycode->currencyCode;
+                    $currencySymbol = $mycode->currencySymbol;
+
+                    // Get all ref_codes
+
+
+                    // Insert to User
+
+                    $api_token = uniqid() . md5($req->email) . time();
+
+                    if (isset($mycode->callingCode)) {
+
+                        if ($req->country == "United States") {
+                            $phoneCode = "1";
+                        } else {
+                            $phoneCode = $mycode->callingCode;
+                        }
+                    } else {
+                        $phoneCode = "1";
+                    }
+
+
+                    $data = ['code' => $phoneCode, 'ref_code' => $newRefcode, 'businessname' => $req->business_name, 'name' => $req->firstname . ' ' . $req->lastname, 'email' => $req->email, 'password' => Hash::make($req->password), 'address' => $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, 'telephone' => $req->telephone, 'city' => $req->city, 'state' => $req->state, 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Merchant", 'corporationType' => $req->corporate_type, 'zip' => $req->zip_code, 'api_token' => $api_token, 'dayOfBirth' => $req->dayOfBirth, 'monthOfBirth' => $req->monthOfBirth, 'yearOfBirth' => $req->yearOfBirth, 'platform' => 'web', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $req->referred_by, 'knowAboutUs' => $specifyHeardAbout, 'accountPurpose' => $req->describe_purpose, 'transactionSize' => $req->size_of_transaction, 'sourceOfFunding' => $source_of_funds, 'shuftiproservice' => 0];
+
+
+                    User::updateOrCreate(['email' => $req->email], $data);
+
+                    if (isset($insAdmin)) {
+
+                        $getMerchant = User::where('ref_code', $newRefcode)->first();
+
+                        // Set session
+
+                        $req->session()->put(['user_id' => $newRefcode, 'firstname' => $req->firstname, 'lastname' => $req->lastname, 'username' => $req->username, 'role' => 'Merchant', 'email' => $req->email, 'api_token' => $api_token, 'myID' => $getMerchant->id, 'country' => $req->country, 'loginCount' => $getMerchant->loginCount, 'currencyCode' => $getMerchant->currencyCode]);
+
+                        Log::info("New merchant registration via web by: " . $req->firstname . ' ' . $req->lastname . " from " . $req->state . ", " . $req->country);
+
+                        $this->slack("New merchant registration via web by: " . $req->firstname . ' ' . $req->lastname . " from " . $req->state . ", " . $req->country, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                        $countryApproval = AllCountries::where('name', $req->country)->where('approval', 1)->first();
+
+                        $url = 'https://api.globaldatacompany.com/verifications/v1/verify';
+
+                        $minimuAge = date('Y') - $req->yearOfBirth;
+
+                        if (isset($countryApproval)) {
+
+                            $info = $this->identificationAPI($url, $req->firstname, $req->lastname, $req->dayOfBirth, $req->monthOfBirth, $req->yearOfBirth, $minimuAge, $req->street_number . ' ' . $req->street_name . ', ' . $req->city . ' ' . $req->state . ' ' . $req->country, $req->city, $req->country, $req->zip_code, $req->telephone, $req->email, $mycode->code);
+
+
+                            if (isset($info->TransactionID) == true) {
+
+                                $result = $this->transStatus($info->TransactionID);
+
+                                // $res = $this->getTransRec($result->TransactionRecordId);
+
+                                // if (isset($result)) {
+
+                                //     if (isset($result->TransactionRecordId)) {
+                                //         $transxID = $result->TransactionRecordId;
+                                //     } else {
+                                //         $transxID = $result['TransactionRecordId'];
+                                //     }
+
+                                //     Log::info(json_encode($transxID));
+
+                                //     $verifyRes = $this->getTransRec($transxID);
+
+                                //     $verRes = $verifyRes->Record->RecordStatus;
+                                // } else {
+                                //     $verRes = "nomatch";
+                                // }
+
+
+                                if ($info->Record->RecordStatus == "nomatch") {
+
+                                    $message = "success";
+                                    $title = "Great";
+                                    // $link = "Admin";
+                                    $link = "merchant/dashboard";
+
+                                    $resInfo = strtoupper($info->Record->RecordStatus) . ", Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You";
+                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 1, 'transactionRecordId' => $info->TransactionID]);
+
+                                    Auth::login($getMerchant);
+                                } else {
+                                    $message = "success";
+                                    $title = "Great";
+                                    // $link = "Admin";
+                                    $link = "merchant/dashboard";
+                                    $resInfo = strtoupper($info->Record->RecordStatus) . ", Congratulations!!!. Your account has been approved. Kindly complete the Quick Set up to enjoy the full benefits of PaySprint.";
+
+                                    // Udpate User Info
+                                    User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 1, 'countryapproval' => 1, 'bvn_verification' => 1, 'transactionRecordId' => $info->TransactionID]);
+
+                                    Auth::login($getMerchant);
+                                }
+                            } else {
+                                $message = "success";
+                                $title = "Great";
+                                // $link = "Admin";
+                                $link = "merchant/dashboard";
+                                $resInfo = "Our system is yet to complete your registration. Kindly upload a copy of Government-issued Photo ID, a copy of a Utility Bill or Bank Statement that matches your name with the current address and also take a Selfie of yourself (if using the mobile app) and upload in your profile setting to complete the verification process. Kindly contact the admin using the contact us form if you require further assistance. Thank You";
+
+                                User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 1, 'transactionRecordId' => NULL]);
+                                // $resp = $info->Message;
+
+                                Auth::login($getMerchant);
+                            }
+
+
+                            if (env('APP_ENV') !== 'local') {
+                                $dob = $getMerchant->yearOfBirth . "-" . $getMerchant->monthOfBirth . "-" . $getMerchant->dayOfBirth;
+
+                                $thisusersname = explode(" ", $getMerchant->name);
+
+                                $getUsername = [
+                                    'first_name' => $thisusersname[0],
+                                    'middle_name' => '',
+                                    'last_name' => $thisusersname[1],
+                                ];
+
+                                $shuftiVerify = new ShuftiProController();
+
+                                $checkAvalable = $shuftiVerify->shuftiAvailableCountries($getMerchant->country);
+
+                                if ($checkAvalable === true) {
+                                    $checkAmlVerification = $shuftiVerify->callAmlCheck($getMerchant->ref_code, $dob, $getUsername, $getMerchant->email, $countryApproval->code);
+
+                                    if ($checkAmlVerification->event !== 'verification.accepted') {
+                                        User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 1, 'shuftipro_verification' => 1]);
+                                    } else {
+                                        User::where('id', $getMerchant->id)->update(['accountLevel' => 2, 'approval' => 0, 'shuftipro_verification' => 0]);
+                                    }
+                                }
+                            }
+                        } else {
+
+                            $message = "error";
+                            $title = "Oops!";
+                            $link = "contact";
+                            $resInfo = "PaySprint is currently not available in your country. You can contact our Customer Service Executives for further enquiries. Thanks";
+
+                            User::where('id', $getMerchant->id)->update(['accountLevel' => 0, 'countryapproval' => 0, 'transactionRecordId' => NULL]);
+                        }
+
+                        UnverifiedMerchant::where('email', $req->email)->delete();
+
+                        $sendgrid = new SendGridController();
+
+                        $sendmail =$sendgrid->sendUsername($req->business_name,$req->username, $req->password);
 
 
                         $this->mailListCategorize($req->firstname . ' ' . $req->lastname, $req->email, $req->address, $req->telephone, "New Merchants", $req->country, 'Subscription');

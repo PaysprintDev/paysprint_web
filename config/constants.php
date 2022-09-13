@@ -18,6 +18,7 @@ return [
         'virtual_account' => "d-2a2c67d548e3423eaff7a2b7c79fd960",
         'publicize_merchant' => "d-170c383925bf41dc923dd19e282c98b5",
         'claimbusiness' => "d-28d1011e3ec54768b1202168730f818c",
+        'merchantusername' => "d-81278b52677249ffbe56aa18dbdfc8ad",
     ],
     'shuftipro' => [
         'baseurl' => 'https://api.shuftipro.com',

@@ -100,89 +100,311 @@
 			<form action="#" method="post">
 				<div class="form-group has-feedback">
 					<label for="business_name"><span class="reqField">*</span> Legal Entity Name</label>
-					<!-- <input type="hidden" name="ref_code" id="ref_code" @if ($ref_code !='' ) value="{{ $ref_code }}" readonly @else placeholder="Ref code" @endif> -->
-					<!-- <input type="hidden" name="user_id" id="user_id" class="form-control" value="{{ 'PaySprint_' . mt_rand(1000, 9999) }}"> -->
-					<input type="text" name="business_name" id="business_name" class="form-control" placeholder="Business Name*" value="{{ $data->name}}">
+
+					<input type="text" name="business_name" id="business_name" class="form-control" placeholder="Business Name*" value="{{ $data['merchants']->name}}" readonly>
 					<span class="glyphicon glyphicon-briefcase form-control-feedback"></span>
 				</div>
 				<div class="form-group has-feedback">
-					<label for="business_telephone"><span class="reqField">*</span> Business Telephone</label>
-					<input type="text" name="business_telephone" id="business_telephone" class="form-control" placeholder="Business Telephone*" value="{{ $data->phone}}">
-					<span class="glyphicon glyphicon-phone form-control-feedback"></span>
-				</div>
+					<label for="business_name"><span class="reqField">*</span> Business Telephone</label>
 
+					<input type="text" name="business_telephone" id="business_name" class="form-control" placeholder="Business Telephone*" value="{{ $data['merchants']->phone}}" readonly>
+					<span class="glyphicon glyphicon-briefcase form-control-feedback"></span>
+				</div>
 				<div class="form-group has-feedback disp-0">
 					<label for="business_address">Business Street Number & Name</label>
-					<input type="text" name="business_address" id="business_address" class="form-control" placeholder="Business Street Number & Name*" value="">
-					<span class="glyphicon glyphicon-screenshot form-control-feedback"></span>
+					<input type="text" name="business_address" id="business_address" class="form-control" placeholder="Business Street Number & Name*" value="{{ $data['merchants']->streetaddress}}">
+					<span class="glyphicon glyphicon-screenshot form-control-feedback" readonly></span>
 				</div>
-
-				<div class="form-group has-feedback disp-0">
+				<div class="form-group has-feedback">
+					<label for="industry"><span class="reqField">*</span> Industry</label>
+					<select name="industry" id="industry" class="form-control">
+						<optionn>
+							<option value="{{$data['merchants']->industry}}">{{$data['merchants']->industry}}</option>
+					</select>
+				</div>
+				<div class="form-group has-feedback">
+					<label for="website">Website</label>
 					<div class="row">
-
-						<div class="col-xs-6">
-							<label for="business_city">City</label>
-							<input type="text" name="business_city" id="business_city" class="form-control" placeholder="City*" value="">
+						<div class="col-xs-12">
+							<input type="text" name="website" id="website" class="form-control" placeholder="www.example.com" value="{{ $data['merchants']->web_address}}" readonly>
 						</div>
 						<!-- /.col -->
-
-						<div class="col-xs-6 disp-0">
-							<label for="business_zip_code">Postal/Zip Code</label>
-							<input type="text" name="business_zip_code" id="business_zip_code" class="form-control" placeholder="Postal/Zip Code" value="">
-						</div>
-						<!-- /.col -->
-
 
 					</div>
 				</div>
-
-
-				<div class="form-group has-feedback disp-0">
-					<label for="business_country">Country</label>
-					<input type="text" name="business_country" id="business_country" value="">
+				<div class="form-group has-feedback">
+					<label for="firstname"><span class="reqField">*</span> Contact Person</label>
+					<div class="row">
+						<div class="col-xs-6">
+							<input type="text" name="firstname" id="firstname" class="form-control" placeholder="First Name *" required>
+						</div>
+						<!-- /.col -->
+						<div class="col-xs-6">
+							<input type="text" name="lastname" id="lastname" class="form-control" placeholder="Last Name *" required>
+						</div>
+						<!-- /.col -->
+					</div>
+				</div>
+				<div class="form-group has-feedback">
+					<label for="country"><span class="reqField">*</span> Telephone</label>
+					<input type="text" name="telephone" id="telephone" class="form-control" placeholder="Telephone*" value="{{$data['merchants']->phone}}" readonly>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<label class="control-label"><span class="reqField">*</span> Street number</label>
+						<input class="form-control input_box" name="street_number" id="street_number" disabled="true" readonly value="{{$data['merchants']->streetno}}">
+					</div>
+					<div class="col-md-6">
+						<label class="control-label"><span class="reqField">*</span> Street Name/ Route</label>
+						<input class="form-control input_box" name="route" id="route" disabled="true" value="{{$data['merchants']->streetname}}" readonly>
+					</div>
 				</div>
 
+				<br>
 
-				<div class="form-group has-feedback disp-0">
-					<label for="business_state">Province/State</label>
-					<input name="business_state" id="business_state" class="form-control" value="">
+				<div class="row">
+					<div class="col-md-6">
+						<label class="control-label"><span class="reqField">*</span> City</label>
+						<input class="form-control input_box field" name="locality" id="locality" disabled="true" value="{{$data['merchants']->character}}">
+					</div>
+					<div class="col-md-6">
+						<label class="control-label"><span class="reqField">*</span> Postal/Zip code</label>
+						<input class="form-control input_box" name="postal_code" id="postal_code" value="{{$data['merchants']->postalcode}}" disabled="true">
+					</div>
+
+
 				</div>
-
-				<div class="form-group has-feedback disp-0">
-					<label for="corporate_type">Corporation Type</label>
-					<select name="corporate_type" id="corporate_type" class="form-control">
-						<option value="">Select Corporation Type</option>
-						<option value="Sole Proprietorship">Sole Proprietorship</option>
-						<option value="Partnership">Partnership</option>
-						<option value="Limited Liability Company">Limited Liability Company</option>
-						<option value="Public Company">Public Company</option>
-						<option value="Trust and Estate">Trust and Estate</option>
-					</select>
+				<br>
+				<div class="form-group has-feedback">
+					<label for="country"><span class="reqField">*</span> Country</label>
+					<select name="country" id="country" class="form-control" required></select>
 				</div>
-
-
-				<div class="form-group has-feedback disp-0">
-					<label for="type_of_service"><span class="reqField">*</span> Service Offer</label>
-					<select name="type_of_service" id="type_of_service" class="form-control">
-						<option value="">Select Service Offer</option>
-						<option value="Add Service Type">Add Service offer</option>
-						@if (count($data) > 0)
-						@foreach ($data as $item)
-						<option value="{{ $item->name }}">{{ $item->name }}</option>
-						@endforeach
-						@endif
-
-					</select>
-				</div>
-
-				<div class="form-group has-feedback otherservice disp-0">
-					<label for="type_of_service"><span class="reqField">*</span> Add Service offer</label>
-					<input type="text" name="other_type_of_service" id="other_type_of_service" class="form-control" placeholder="Service Type*">
-					<span class="glyphicon glyphicon-screenshot form-control-feedback"></span>
-				</div>
-
 
 				<div class="form-group has-feedback">
+					<label for="state"><span class="reqField">*</span> Province/State</label>
+					<select name="state" id="state" class="form-control"></select>
+				</div>
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="form-group has-feedback">
+							<label for="dayOfBirth"><span class="reqField">*</span> Day of Birth</label>
+
+							<select name="dayOfBirth" id="dayOfBirth" class="form-control">
+								@for ($i = 1; $i <= 31; $i++) <option value="{{ $i }}">{{ $i }}</option>
+									@endfor
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group has-feedback">
+							<label for="monthOfBirth"><span class="reqField">*</span> Month of Birth</label>
+							<select name="monthOfBirth" id="monthOfBirth" class="form-control">
+								<option selected value='1'>January</option>
+								<option value='2'>February</option>
+								<option value='3'>March</option>
+								<option value='4'>April</option>
+								<option value='5'>May</option>
+								<option value='6'>June</option>
+								<option value='7'>July</option>
+								<option value='8'>August</option>
+								<option value='9'>September</option>
+								<option value='10'>October</option>
+								<option value='11'>November</option>
+								<option value='12'>December</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group has-feedback">
+							<label for="yearOfBirth"><span class="reqField">*</span> Year of Birth</label>
+							<select name="yearOfBirth" id="yearOfBirth" class="form-control">
+								@for ($i = 1900; $i <= date('Y'); $i++) <option value="{{ $i }}">{{ $i }}</option>
+									@endfor
+							</select>
+						</div>
+					</div>
+				</div>
+				<br>
+				<div class="form-group has-feedback">
+					<label for="username"><span class="reqField">*</span> Username</label>
+					<input type="text" name="username" id="username" class="form-control" placeholder="Username*">
+					<span class="glyphicon glyphicon-user form-control-feedback"></span>
+				</div>
+				<div class="form-group has-feedback">
+					<label for="email"><span class="reqField">*</span> Email</label>
+					<input type="email" name="email" id="email" class="form-control" placeholder="Email Address *" required value="{{ $data['merchants']->email}}" readonly>
+					<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+				</div>
+				<div class="form-group has-feedback">
+					<!-- <label for="cemail"><span class="reqField">*</span> Confirm Email</label> -->
+					<input type="hidden" name="email" id="cemail" class="form-control" placeholder="Email Address *" required value="{{ $data['merchants']->email}}" readonly>
+					<!-- <span class="glyphicon glyphicon-envelope form-control-feedback"></span> -->
+				</div>
+				<div class="form-group has-feedback">
+					<div class="row">
+						<div class="col-xs-6">
+							<!-- <label for="password"><span class="reqField">*</span> Password</label> -->
+							<input type="hidden" name="password" id="password" class="form-control" placeholder="Password*" value="12345">
+						</div>
+						<!-- /.col -->
+						<div class="col-xs-6">
+							<!-- <label for="cpassword"><span class="reqField">*</span> Confirm Password</label> -->
+							<input type="hidden" name="cpassword" id="cpassword" class="form-control" placeholder="Confirm Password*" value="12345">
+						</div>
+						<!-- /.col -->
+					</div>
+				</div>
+				<div class="form-group has-feedback disp-0">
+					<label for="how_your_heard_about_us"><span class="reqField">*</span> How do you know about
+						us?</label>
+					<select name="how_your_heard_about_us" id="how_your_heard_about_us" class="form-control">
+						<option value="Others" selected>Others</option>
+					</select>
+				</div>
+
+
+				<div class="form-group has-feedback specify_know_about disp-0">
+					<label for="specify_how_your_heard_about_us">Specify how your heard about us</label>
+					<input type="text" name="specify_how_your_heard_about_us" id="specify_how_your_heard_about_us" class="form-control">
+					<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+				</div>
+
+				<div class="form-group has-feedback">
+					<!-- <label for=" describe_purpose"><span class="reqField">*</span> Purpose of opening the Account (please describe the purpose)</label> -->
+					<div class="row">
+						<div class="col-xs-12 disp-0">
+							<textarea type="text" name="describe_purpose" id="describe_purpose" class="form-control" placeholder=""> marketplace</textarea>
+						</div>
+					</div>
+				</div>
+				<div class="form-group has-feedback">
+					<div class="form-group has-feedback disp-0">
+						<label for="size_of_transaction"><span class="reqField">*</span> Size of Transaction to be
+							expected</label>
+						<select name="size_of_transaction" id="size_of_transaction" class="form-control">
+							<option value="">Select Transaction size</option>
+							<option value="0 - 10,000" selected>0 - 10,000</option>
+						</select>
+					</div>
+
+					<div class="form-group has-feedback disp-0">
+						<label for="source_of_funds"><span class="reqField">*</span> Source of Funds</label>
+						<select name="source_of_funds" id="source_of_funds" class="form-control">
+							<option value="Families and Friends" selected>Families and Friends</option>
+
+						</select>
+					</div>
+
+
+					<div class="form-group has-feedback specifySourceOfFunds disp-0">
+						<label for="specify_source">Specify Source of Funds</label>
+						<input type="text" name="specify_source" id="specify_source" class="form-control">
+						<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+					</div>
+
+
+					<div class="row australia disp-0">
+
+						<div class="col-12">
+
+							<div class="form-group">
+								<label for="australia">I confirm that i am authourised to provide the
+									personal details
+									presented
+									and i consent to my information being checked with the document issuer
+									or
+									official record holder
+									via third party systems for the prupose of confirming my
+									identity.</label>
+							</div>
+
+
+						</div>
+					</div>
+
+
+					<div class="row china disp-0">
+
+						<div class="col-12">
+
+							<div class="form-group">
+								<label for="australia">I confirm that i am authourised to provide the
+									personal details presented and i consent to my information being checked
+									with Chinese Identity
+									Verification Services (CIVS) via third party systems for the purpose of
+									confirming an identity under the <a href="http://www.npc.gov.cn/npc/c30834/202108/a8c4e3672c74491a80b53a172bb753fe.shtml" target="_blank">laws of China </a> (an unofficial
+									translation
+									of the Personal Information Protection Law (PIPL) available <a href="https://digichina.stanford.edu/work/translation-personal-information-protection-law-of-the-peoples-republic-of-china-effective-nov-1-2021/" target="_blank">here</a> and
+									Data Security Law available <a href="https://digichina.stanford.edu/work/translation-data-security-law-of-the-peoples-republic-of-china/" target="_blank">here</a> </label>
+							</div>
+
+
+						</div>
+					</div>
+
+
+
+					<div class="row">
+						<div class="col-xs-8 disp-0">
+							<div class="checkbox icheck">
+								<label>
+									<input type="checkbox" name="checkbox" id="checkBox" checked>
+								</label>
+								<a href="{{ route('terms of use') }}" target="_blank" lass="text-primary"><strong>Accept
+										Terms and Conditions</strong></a>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="form-group has-feedback">
+						{!! htmlFormSnippet() !!}
+					</div>
+
+
+
+
+					<div class="row">
+						<div class="col-xs-8">
+							<img src="https://cdn.dribbble.com/users/608059/screenshots/2032455/spinner.gif" class="spinner disp-0" style="width: auto; height: 40px;">
+							<div class="checkbox icheck disp-0">
+								<label>
+									<input type="checkbox"> Accept Terms & Conditions
+								</label>
+							</div>
+						</div>
+						<!-- /.col -->
+						<div class="col-md-12">
+							<button type="button" class="btn btn-success btn-block btn-flat" onclick="claimBusiness()">Submit</button>
+
+						</div>
+						<!-- /.col -->
+					</div>
+			</form>
+
+			<strong><small>Already have an account? <a href="{{ route('AdminLogin') }}">Login</a></small></strong><br>
+
+
+
+			<br>
+
+			<div class="row">
+				<div class="col-md-12">
+					<p style="font-size: 16px; font-weight: 600; text-align: center;"><img src="https://img.icons8.com/cute-clipart/40/undefined/security-checked.png" />
+						Protected by bank-level security</p>
+				</div>
+
+			</div>
+
+
+		</div>
+		<!-- /.login-box-body -->
+
+
+
+
+
+		<!-- <div class="form-group has-feedback">
 					<label for="industry"><span class="reqField">*</span> Industry</label>
 					<select name="industry" id="industry" class="form-control">
 						<option value="">Select Industry</option>
@@ -337,358 +559,12 @@
 						<option value="Wireless">Wireless</option>
 						<option value="Writing/Editing">Writing/Editing</option>
 					</select>
-				</div>
+				</div> -->
 
-				<div class="form-group has-feedback">
-					<label for="website">Website</label>
-					<div class="row">
-						<div class="col-xs-12">
-							<input type="text" name="website" id="website" class="form-control" placeholder="www.example.com">
-						</div>
-						<!-- /.col -->
 
-					</div>
-				</div>
+		</form>
 
-
-				<div class="form-group has-feedback">
-					<label for="firstname"><span class="reqField">*</span> Contact Person</label>
-					<div class="row">
-						<div class="col-xs-6">
-							<input type="text" name="firstname" id="firstname" class="form-control" @if ($fname !='' ) value="{{ $fname }}" readonly @else placeholder="First Name *" required @endif>
-						</div>
-						<!-- /.col -->
-						<div class="col-xs-6">
-							<input type="text" name="lastname" id="lastname" class="form-control" @if ($lname !='' ) value="{{ $lname }}" readonly @else placeholder="Last Name *" required @endif>
-						</div>
-						<!-- /.col -->
-					</div>
-				</div>
-
-
-
-				<div class="form-group has-feedback">
-					<label for="country"><span class="reqField">*</span> Telephone</label>
-					<input type="text" name="telephone" id="telephone" class="form-control" placeholder="Telephone*">
-				</div>
-
-
-
-				<label for="autocomplete">Auto complete address</label>
-				<input id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text" class="form-control input_box">
-
-				<br>
-
-				<div class="row">
-					<div class="col-md-6">
-						<label class="control-label"><span class="reqField">*</span> Street number</label>
-						<input class="form-control input_box" name="street_number" id="street_number" disabled="true" readonly>
-					</div>
-					<div class="col-md-6">
-						<label class="control-label"><span class="reqField">*</span> Street Name/ Route</label>
-						<input class="form-control input_box" name="route" id="route" disabled="true" readonly>
-					</div>
-				</div>
-
-				<br>
-
-				<div class="row">
-					<div class="col-md-6">
-						<label class="control-label"><span class="reqField">*</span> City</label>
-						<input class="form-control input_box field" name="locality" id="locality" disabled="true">
-					</div>
-					<div class="col-md-6">
-						<label class="control-label"><span class="reqField">*</span> Postal/Zip code</label>
-						<input class="form-control input_box" name="postal_code" id="postal_code" disabled="true">
-					</div>
-
-
-				</div>
-
-
-
-				{{-- <div class="form-group has-feedback">
-        <label for="address"><span class="reqField">*</span> Street Number & Name</label>
-        <input type="text" name="address" id="address" class="form-control" placeholder="Street Number & Name*">
-        <span class="glyphicon glyphicon-screenshot form-control-feedback"></span>
-      </div> --}}
-
-				{{-- <div class="form-group has-feedback">
-        <div class="row">
-
-          <div class="col-xs-6">
-              <label for="city"><span class="reqField">*</span> City</label>
-                <input type="text" name="city" id="city" class="form-control" placeholder="City*">
-            </div>
-            <!-- /.col -->
-
-            <div class="col-xs-6">
-              <label for="zip_code"><span class="reqField">*</span> Postal/Zip Code</label>
-                <input type="text" name="zip_code" id="zip_code" class="form-control" placeholder="Postal/Zip Code">
-            </div>
-            <!-- /.col -->
-
-
-        </div>
-      </div> --}}
-
-				<br>
-
-
-				<div class="form-group has-feedback">
-					<label for="country"><span class="reqField">*</span> Country</label>
-					<select name="country" id="country" class="form-control" required></select>
-				</div>
-
-
-				<div class="form-group has-feedback">
-					<label for="state"><span class="reqField">*</span> Province/State</label>
-					<select name="state" id="state" class="form-control"></select>
-				</div>
-
-
-				<div class="row">
-					<div class="col-sm-4">
-						<div class="form-group has-feedback">
-							<label for="dayOfBirth"><span class="reqField">*</span> Day of Birth</label>
-
-							<select name="dayOfBirth" id="dayOfBirth" class="form-control">
-								@for ($i = 1; $i <= 31; $i++) <option value="{{ $i }}">{{ $i }}</option>
-									@endfor
-							</select>
-						</div>
-					</div>
-					<div class="col-sm-4">
-						<div class="form-group has-feedback">
-							<label for="monthOfBirth"><span class="reqField">*</span> Month of Birth</label>
-							<select name="monthOfBirth" id="monthOfBirth" class="form-control">
-								<option selected value='1'>January</option>
-								<option value='2'>February</option>
-								<option value='3'>March</option>
-								<option value='4'>April</option>
-								<option value='5'>May</option>
-								<option value='6'>June</option>
-								<option value='7'>July</option>
-								<option value='8'>August</option>
-								<option value='9'>September</option>
-								<option value='10'>October</option>
-								<option value='11'>November</option>
-								<option value='12'>December</option>
-							</select>
-						</div>
-					</div>
-					<div class="col-sm-4">
-						<div class="form-group has-feedback">
-							<label for="yearOfBirth"><span class="reqField">*</span> Year of Birth</label>
-							<select name="yearOfBirth" id="yearOfBirth" class="form-control">
-								@for ($i = 1900; $i <= date('Y'); $i++) <option value="{{ $i }}">{{ $i }}</option>
-									@endfor
-							</select>
-						</div>
-					</div>
-				</div>
-
-
-
-
-				<div class="form-group has-feedback">
-					<label for="username"><span class="reqField">*</span> Username</label>
-					<input type="text" name="username" id="username" class="form-control" placeholder="Username*">
-					<span class="glyphicon glyphicon-user form-control-feedback"></span>
-				</div>
-
-				<div class="form-group has-feedback">
-					<label for="email"><span class="reqField">*</span> Email</label>
-					<input type="email" name="email" id="email" class="form-control" @if ($email !='' ) value="{{ $email }}" readonly @else placeholder="Email Address *" required @endif>
-					<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-				</div>
-
-				<div class="form-group has-feedback">
-					<label for="cemail"><span class="reqField">*</span> Confirm Email</label>
-					<input type="email" name="cemail" id="cemail" class="form-control" @if ($email !='' ) value="{{ $email }}" readonly @else placeholder="Confirm Email *" required @endif>
-					<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-				</div>
-
-				<div class="form-group has-feedback">
-					<div class="row">
-						<div class="col-xs-6">
-							<label for="password"><span class="reqField">*</span> Password</label>
-							<input type="password" name="password" id="password" class="form-control" placeholder="Password*">
-						</div>
-						<!-- /.col -->
-						<div class="col-xs-6">
-							<label for="cpassword"><span class="reqField">*</span> Confirm Password</label>
-							<input type="password" name="cpassword" id="cpassword" class="form-control" placeholder="Confirm Password*">
-						</div>
-						<!-- /.col -->
-					</div>
-				</div>
-
-
-				<div class="form-group has-feedback">
-					<label for="how_your_heard_about_us"><span class="reqField">*</span> How do you know about
-						us?</label>
-					<select name="how_your_heard_about_us" id="how_your_heard_about_us" class="form-control">
-						<option value="">Select option </option>
-						<option value="Google Ads">Google Ads</option>
-						<option value="Facebook">Facebook </option>
-						<option value="Youtube">Youtube </option>
-						<option value="Twitter">Twitter</option>
-						<option value="Search Engine">Search Engine</option>
-						<option value="Instagram">Instagram</option>
-						<option value="Email">Email</option>
-						<option value="Radio">Radio</option>
-						<option value="TV">TV</option>
-						<option value="Newspaper">Newspaper</option>
-						<option value="Word of mouth">Word of mouth</option>
-						<option value="Others">Others</option>
-					</select>
-				</div>
-
-
-				<div class="form-group has-feedback specify_know_about disp-0">
-					<label for="specify_how_your_heard_about_us">Specify how your heard about us</label>
-					<input type="text" name="specify_how_your_heard_about_us" id="specify_how_your_heard_about_us" class="form-control">
-					<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-				</div>
-
-
-
-
-
-
-
-				<div class="form-group has-feedback">
-					<label for=" describe_purpose"><span class="reqField">*</span> Purpose of opening the Account (please describe the purpose)</label>
-					<div class="row">
-						<div class="col-xs-12">
-							<textarea type="text" name="describe_purpose" id="describe_purpose" class="form-control" placeholder=""></textarea>
-						</div>
-					</div>
-				</div>
-
-
-
-				<div class="form-group has-feedback">
-					<label for="size_of_transaction"><span class="reqField">*</span> Size of Transaction to be
-						expected</label>
-					<select name="size_of_transaction" id="size_of_transaction" class="form-control">
-						<option value="">Select Transaction size</option>
-						<option value="0 - 10,000">0 - 10,000</option>
-						<option value="10,001 - 50,000">10,001 - 50,000</option>
-						<option value="50,000 - 500,000">50,000 - 500,000</option>
-						<option value="Above 500,001">Above 500,001</option>
-					</select>
-
-
-					<div class="form-group has-feedback">
-						<label for="source_of_funds"><span class="reqField">*</span> Source of Funds</label>
-						<select name="source_of_funds" id="source_of_funds" class="form-control">
-							<option value="">Select Source of Funds</option>
-							<option value="Salary, Pension, Social benefits">Salary, Pension, Social benefits</option>
-							<option value="Directors Remuneration Share of profits">Directors Remuneration Share of
-								profits
-							</option>
-							<option value="Dividend, interest on loan etc">Dividend, interest on loan etc</option>
-							<option value="Families and Friends">Families and Friends</option>
-							<option value="Others">Other (Please describe)</option>
-						</select>
-					</div>
-
-
-					<div class="form-group has-feedback specifySourceOfFunds disp-0">
-						<label for="specify_source">Specify Source of Funds</label>
-						<input type="text" name="specify_source" id="specify_source" class="form-control">
-						<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-					</div>
-
-					<div class="form-group has-feedback">
-						<label for="referred_by">Referred By <small class="reqField">(Optional)</small></label>
-						<input type="text" name="referred_by" id="referred_by" class="form-control" @if ($referred_by !='' ) value="{{ $referred_by }}" readonly @else placeholder="E.g 69212" @endif>
-						<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-
-					</div>
-
-					<div class="row australia disp-0">
-
-						<div class="col-12">
-
-							<div class="form-group">
-								<label for="australia">I confirm that i am authourised to provide the
-									personal details
-									presented
-									and i consent to my information being checked with the document issuer
-									or
-									official record holder
-									via third party systems for the prupose of confirming my
-									identity.</label>
-							</div>
-
-
-						</div>
-					</div>
-
-
-					<div class="row china disp-0">
-
-						<div class="col-12">
-
-							<div class="form-group">
-								<label for="australia">I confirm that i am authourised to provide the
-									personal details presented and i consent to my information being checked
-									with Chinese Identity
-									Verification Services (CIVS) via third party systems for the purpose of
-									confirming an identity under the <a href="http://www.npc.gov.cn/npc/c30834/202108/a8c4e3672c74491a80b53a172bb753fe.shtml" target="_blank">laws of China </a> (an unofficial
-									translation
-									of the Personal Information Protection Law (PIPL) available <a href="https://digichina.stanford.edu/work/translation-personal-information-protection-law-of-the-peoples-republic-of-china-effective-nov-1-2021/" target="_blank">here</a> and
-									Data Security Law available <a href="https://digichina.stanford.edu/work/translation-data-security-law-of-the-peoples-republic-of-china/" target="_blank">here</a> </label>
-							</div>
-
-
-						</div>
-					</div>
-
-
-
-					<div class="row">
-						<div class="col-xs-8">
-							<div class="checkbox icheck">
-								<label>
-									<input type="checkbox" name="checkbox" id="checkBox">
-								</label>
-								<a href="{{ route('terms of use') }}" target="_blank" lass="text-primary"><strong>Accept
-										Terms and Conditions</strong></a>
-							</div>
-						</div>
-
-					</div>
-
-					<div class="form-group has-feedback">
-						{!! htmlFormSnippet() !!}
-					</div>
-
-
-
-
-					<div class="row">
-						<div class="col-xs-8">
-							<img src="https://cdn.dribbble.com/users/608059/screenshots/2032455/spinner.gif" class="spinner disp-0" style="width: auto; height: 40px;">
-							<div class="checkbox icheck disp-0">
-								<label>
-									<input type="checkbox"> Accept Terms & Conditions
-								</label>
-							</div>
-						</div>
-						<!-- /.col -->
-						<div class="col-md-12">
-							<button type="button" class="btn btn-success btn-block btn-flat" onclick="signUp()">Register</button>
-
-						</div>
-						<!-- /.col -->
-					</div>
-			</form>
-
-			<strong><small>Already have an account? <a href="{{ route('AdminLogin') }}">Login</a></small></strong><br>
+		<!-- <strong><small>Already have an account? <a href="{{ route('AdminLogin') }}">Login</a></small></strong><br>
 
 
 
@@ -700,11 +576,11 @@
 						Protected by bank-level security</p>
 				</div>
 
-			</div>
+			</div> -->
 
 
-		</div>
-		<!-- /.login-box-body -->
+	</div>
+	<!-- /.login-box-body -->
 	</div>
 	<!-- /.login-box -->
 	<!-- jQuery 3 -->
@@ -862,9 +738,9 @@
 		});
 
 		// Register function
-		function signUp() {
+		function claimBusiness() {
 
-			var route = "{{ URL('Ajax/Adminregister') }}";
+			var route = "{{ URL('Ajax/claimmerchantbusiness') }}";
 			if (grecaptcha.getResponse() == "") {
 				swal('Oops', 'Check the captcha box', 'info');
 				return false;
@@ -952,7 +828,6 @@
 
 			var thisdata = {
 				user_id: $('#user_id').val(),
-				// ref_code: $('#ref_code').val(),
 				business_name: $('#business_name').val(),
 				business_telephone: $('#business_telephone').val(),
 				business_address: $('#business_address').val(),

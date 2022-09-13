@@ -624,4 +624,27 @@ class SendGridController extends Controller
             throw $th;
         }
     }
+
+    //send username and password
+    public function sendUsername($legalname, $username, $password)
+    {
+        try {
+
+            $name = $legalname;
+            $receiver = "duntanadebiyi@yahoo.com";
+            $data = [
+                "name"  => $name,
+                "message" => "<p>Congratulations!!! Welcome to  PaySprint Marketplace. <br><br> <span><strong>Here are your login details </strong><span><br><br><br> <span><strong>Username:<strong></span><span>$username</span> <br> <span><strong>Temporary Password:</strong></span> <span>$password</span>  </p>",
+                "url" => route('home') . '/AdminLogin',
+            ];
+
+            $template_id = config('constants.sendgrid.merchantusername');
+
+            $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
+            // dd($response);
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }
