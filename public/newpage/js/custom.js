@@ -1,6 +1,6 @@
 'use strict'
 $(document).ready(function() {
-    $('select').niceSelect();
+    // $('select').niceSelect();
 
     AOS.init();
     window.addEventListener('load', AOS.refresh);

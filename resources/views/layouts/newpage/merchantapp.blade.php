@@ -47,6 +47,8 @@
 
 
 
+
+
     @include('include.newpage.merchant.footerjs')
 
     

@@ -77,6 +77,9 @@
 
 
 <script>
+ 
+
+
   $('#pricing_country').change(function() {
     var country = $('#pricing_country').val();
     location.href = "/pricing?country=" + country;
@@ -95,6 +98,152 @@
     interval: 2000,
     autoControl: true
   });
+
+
+
+
+  $('#amount').keyup(function (){
+    $('.currencyResult').addClass('disp-0');
+   
+    $('.currencyShow');
+  });
+
+
+  function convertFee() {
+    
+    
+    const amount= $('#amount').val();
+   const sending= $('#sendingcountry').val();
+   // alert(sending)
+   const receiving= $('#receivingcountry').val();
+
+     const data = {
+       amount, sending, receiving
+     }
+
+     $('#shift').text('Loading...');
+
+     $.ajax({
+       
+       url: "/api/v1/conversionrate/"+ sending + '/' + receiving,
+       method:'GET' ,
+     
+       success: function (rsp){
+        $('.currencyResult').removeClass('disp-0');
+
+         const data = rsp;
+         const total = data * amount;
+         const convertrate = 1 / data
+        $('#result').text(total);
+       
+        $('#round').text(data);
+
+        var sender = 1 +' ' + sending + ' '+'=' +''+ parseFloat(data).toFixed(4)+ ' '+ receiving;
+        
+        $('#rate').text(sender);
+
+        var exchange = 1 + ' ' + receiving + '=' + convertrate.toFixed(4)+ ' ' + sending
+       
+        $('#local').text(exchange)
+        var price = amount + ' ' +  sending+ ''+'=' +''+total.toFixed(4) + ' ' + receiving;
+        $('#totalprice').text(price);
+       
+        $('#shift').text('Convert');
+      
+
+       }
+     });
+   
+ }
+
+ $('#paying').keyup(function (){
+    
+    $('.currencyDisplay').addClass('disp-0');
+    $('.currencyShow');
+  });
+
+  function rateFee() {
+    // alert(1234)
+    
+    
+    const pay= $('#paying').val();
+    
+   const local= $('#localcountry').val();
+   // alert(sending)
+   const foreign= $('#foreigncountry').val();
+
+     const data = {
+       pay,local,foreign
+     }
+     $('#shift2').text('Loading...');
+
+     $.ajax({
+       
+       url: "/api/v1/conversionrate/"+ local + "/" + foreign,
+       method:'GET' ,
+     
+       success: function (rsp){
+        $('.currencyDisplay').removeClass('disp-0');
+       
+         const total = rsp;
+         
+         const total_divide = total * pay;
+
+         const payer = 1 / total;
+         alert(payer);
+         
+        $('#result').text(total);
+        $('#resultrate').text(total_divide);
+        $('#round').text(total);
+        var sender = 1 + ' '+ local + ''+'=' +''+ parseFloat(total).toFixed(4) +' '+ foreign;
+        $('#rates').text(sender);
+
+        var exchange = 1 + ' ' + foreign + '' + '=' +payer.toFixed(4) + ' ' + local 
+        $('#locals').text(exchange)
+        
+        var pricetotal = pay +' '+local+ '' + '=' + '' +total_divide.toFixed(4) + ' ' + foreign;
+        $('#totalpricerate').text(pricetotal);
+
+        
+        $('#shift2').text('Convert');
+       }
+     });
+   
+ }
+
+  $('#receive_money').click(function(){
+      $('#receive_money').show();
+      $('#send_money').hide();
+  })
+
+  // Modification to Currency Rate and Fee
+
+  
+$('#amount').keyup(function (){
+    $('.currencyResult').addClass('disp-0');
+   
+    $('.currencyShow');
+  });
+
+
+
+ $('#paying').keyup(function (){
+    
+    $('.currencyDisplay').addClass('disp-0');
+    $('.currencyShow');
+  });
+
+
+  $('#receive_money').click(function(){
+      $('#receive_money').show();
+      $('#send_money').hide();
+  })
+  
+ 
+ 
+ 
+ 
+
 </script>
 
 
