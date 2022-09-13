@@ -330,17 +330,18 @@
                                             <=> {{ $data['othercurrencyCode']['data']->currencyCode }}
                                                 </p> --}}
 
+
                                                 <table class="table table-bordered table-striped">
                                                     <tbody>
                                                         <tr style="font-weight: bold;">
-                                                            <td>{{ $data['currencyCode']->currencyCode }}</td>
                                                             <td>{{ $data['othercurrencyCode']['data']->currencyCode }}
+                                                                <td>{{ $data['currencyCode']->currencyCode }}</td>
                                                             </td>
                                                         </tr>
                                                         <tr style="font-weight: bold;">
                                                             <td class="text-success">1</td>
                                                             <td class="text-primary">
-                                                                {{ $data['othercurrencyCode']['conversionrate'] }}
+                                                                {{ 1 / $data['othercurrencyCode']['conversionrate'] }}
                                                             </td>
                                                         </tr>
                                                     </tbody>

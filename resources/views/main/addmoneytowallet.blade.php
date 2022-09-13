@@ -159,15 +159,74 @@
                                         Please allow up to 24 hours for the funds to show in your wallet
                                     </ul>
                                 </div>
+
+                                <!-- electronic info starts-->
+                                <div class="alert alert-info" id="electronic" style="display:none;">
+                                    You can Top up your wallet with PaySprint through Electronic Transfer by following these Steps:
+                                    <ul>
+                                        <hr>
+                                        <!-- <li>
+                                            Identify the Partner's Nearby: <a href="{{ route('partner list') }}" target="_blank" style="font-weight: bold;">Click here to view</a>
+                                        </li>
+                                        <br> -->
+                                        <li>
+                                            Send money to PaySprint using the following details:
+                                        </li>
+
+                                    </ul>
+
+                                    <div class="alert alert-primary">
+                                        <h4>Receiver's Details</h4>
+                                        <hr>
+                                        <table class="table table-hover table-responsive">
+                                            <!-- <tr>
+                                                <td>Receiver's ID: </td>
+                                                <td><strong>{{ $data['paymentgateways']->code.'_'.uniqid() }}</strong></td>
+                                            </tr> -->
+                                            <tr>
+                                                <td class="text-center"><strong>Send eTransfer to info@paysprint.ca</strong></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                    <ul>
+                                        <hr>
+                                        <h3>
+                                            <strong>After sending the money to PaySprint</strong>
+                                        </h3>
+                                        <br>
+                                        <li>
+                                            Scroll down and type the Transaction ID and Amount sent to PaySprint
+                                        </li>
+                                        <br>
+                                        <li>
+                                            Submit
+                                        </li>
+                                        <hr>
+
+                                        Please allow up to 24 hours for the funds to show in your wallet
+                                    </ul>
+                                </div>
+                                <!-- electronic info ends -->
                                 <form role="form" action="#" method="POST" id="formElem">
                                     @csrf
 
                                     <!-- adding option for bank transfer or wire transfer -->
+                                    @if (Auth::user()->country == 'Canada')
                                     <label>Select Payment Option</label>
                                     <select class="form-control mb-3" name="payment_option" id="paymentoption">
                                         <option value="card" selected>Debit / Credit Card</option>
-                                        <option value="bank_transfer">Bank/Wire/Electronic Transfer</option>
+                                        <option value="bank_transfer">Bank/WireTransfer</option>
+                                        <option value="electronic_transfer">Electronic Transfer</option>
                                     </select>
+                                    @else
+                                    <label>Select Payment Option</label>
+                                    <select class="form-control mb-3" name="payment_option" id="paymentoption">
+                                        <option value="card" selected>Debit / Credit Card</option>
+                                        <option value="bank_transfer">Bank/WireTransfer</option>
+                                    </select>
+                                    @endif
+
 
                                     <!-- end of wire transfer -->
 
@@ -401,6 +460,10 @@
 
                                 </form>
                             </div>
+
+                            <!-- Electronic Transfer Info -->
+
+                            <!-- info ends here -->
                             <!-- Bank Transfer starts -->
                             <div id="bankshow">
                                 <form action="" method="post" id="bankform">
@@ -408,21 +471,24 @@
                                         <div class="col-md-12">
                                             <p class="form-group">
                                                 <label>Transaction ID</label>
-                                                <input type="text" name="transaction_id" class="form-control">
+                                                <input type="text" name="transaction_id" class="form-control" id="transfer_transaction_id" required>
                                             </p>
                                         </div>
                                         <div class="col-md-12">
                                             <p class="form-group">
                                                 <label>Amount Transferred</label>
-                                                <input type="text" name="amount" placeholder="Enter amount Transferred" class="form-control">
+                                                <input type="text" name="amount" placeholder="Enter amount Transferred" id="transfer_amount" class="form-control" required>
                                             </p>
                                         </div>
+                                        <input type="hidden" name="reference_number" value="{{ $data['paymentgateways']->code.'_'.uniqid() }}">
                                         <div class="col-md-12">
                                             <button class="btn btn-info form-control" type="button" id="bankbtns">Yes, I have made the Transfer</button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
+
+                            <!-- Electronic Transfer -->
                         </div>
                     </div>
 
@@ -466,10 +532,23 @@
                     $('#paymentoption1').show();
                     $('#bankshow').hide();
                     $('#board').hide();
+                } else if (option == 'electronic_transfer') {
+                    $('#paymentoption1').hide();
+                    $('#bankshow').show();
+                    $('#board').hide();
+                    $('#electronic').show();
                 }
             })
 
             $('#bankbtns').click(function() {
+                var transaction = $('#transfer_transaction_id').val();
+                var amount = $('#transfer_amount').val();
+
+                if (transaction == '' || amount == '') {
+                    return swal("Oops", 'Please Complete the Fields', "error");
+                }
+
+
                 formData = new FormData(bankform);;
 
                 var route;
@@ -1622,7 +1701,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
 
             var stripe = Stripe('{{ env('
-                STRIPE_LIVE_PUBLIC_KEY ') }}');
+                STRIPE_LIVE_PUBLIC_KEY ')}}');
             // var stripe = Stripe('{{ env('STRIPE_LOCAL_PUBLIC_KEY') }}');
 
             var elements = stripe.elements();

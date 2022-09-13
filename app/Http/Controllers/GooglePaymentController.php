@@ -367,12 +367,12 @@ class GooglePaymentController extends Controller
                                                         $recWallet = $client->wallet_balance + $creditAmount;
                                                         $walletstatus = "Delivered";
 
-                                                        $recMsg = "Hi " . $this->coy_name . ", You have received " . $req->localcurrency . ' ' . number_format($dataInfo, 2) . " in your PaySprint wallet for " . $service . " from " . $user->name . ". You now have " . $req->localcurrency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
+                                                        $recMsg = "Hi " . $this->coy_name . ", You have received " . $req->localcurrency . ' ' . number_format($creditAmount, 2) . " in your PaySprint wallet for " . $service . " from " . $user->name . ". You now have " . $req->localcurrency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
                                                     } else {
                                                         $recWallet = $client->wallet_balance;
                                                         $walletstatus = "Pending";
 
-                                                        $recMsg = "Hi " . $this->coy_name . ", You have received " . $req->localcurrency . ' ' . number_format($dataInfo, 2) . " for " . $service . " from " . $user->name . ". Your wallet balance is " . $req->localcurrency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
+                                                        $recMsg = "Hi " . $this->coy_name . ", You have received " . $req->localcurrency . ' ' . number_format($creditAmount, 2) . " for " . $service . " from " . $user->name . ". Your wallet balance is " . $req->localcurrency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
                                                     }
 
 

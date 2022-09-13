@@ -205,7 +205,8 @@ use App\Http\Controllers\User; ?>
 
 
 
-        @if (Auth::user()->approval == 0 || Auth::user()->accountLevel == 0)
+        {{-- @if (Auth::user()->approval == 0 || Auth::user()->accountLevel == 0) --}}
+        @if (Auth::user()->nin_front == NULL && Auth::user()->drivers_license_front == NULL && Auth::user()->international_passport_front == NULL && Auth::user()->incorporation_doc_front == NULL && Auth::user()->idvdoc == NULL)
         <div class="row">
             <div class="alert alert-danger alert-dismissible show" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">

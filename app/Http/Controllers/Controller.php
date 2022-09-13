@@ -358,6 +358,7 @@ class Controller extends BaseController
         // Get Markup
         $markuppercent = $this->markupPercentage();
 
+
         $markValue = (1 + ($markuppercent[0]->percentage / 100));
         $markdownValue = (1 - ($markuppercent[0]->percentage / 100));
 
@@ -392,28 +393,38 @@ class Controller extends BaseController
             // This amount is in dollars
 
 
+            if($currencyA !== 'USDUSD'){
+                if ($result->quotes->$currencyA > 1) {
 
-            if ($result->quotes->$currencyA > 1) {
-
-                // $convRateA = $result->quotes->$currencyA / $markValue;
-                $convRateA = $result->quotes->$currencyA;
-            } elseif ($result->quotes->$currencyA < 1) {
-                // $convRateA = $result->quotes->$currencyA * $markdownValue;
-                $convRateA = $result->quotes->$currencyA;
-            } else {
-                $convRateA = $result->quotes->$currencyA;
+                    // $convRateA = $result->quotes->$currencyA / $markValue;
+                    $convRateA = $result->quotes->$currencyA;
+                } elseif ($result->quotes->$currencyA < 1) {
+                    // $convRateA = $result->quotes->$currencyA * $markdownValue;
+                    $convRateA = $result->quotes->$currencyA;
+                } else {
+                    $convRateA = $result->quotes->$currencyA;
+                }
+            }
+            else{
+                $convRateA = 1;
             }
 
 
-            if ($result->quotes->$currencyB > 1) {
 
-                // $convRateB = $result->quotes->$currencyB / $markValue;
-                $convRateB = $result->quotes->$currencyB;
-            } elseif ($result->quotes->$currencyB < 1) {
-                // $convRateB = $result->quotes->$currencyB * $markdownValue;
-                $convRateB = $result->quotes->$currencyB;
-            } else {
-                $convRateB = $result->quotes->$currencyB;
+            if($currencyB !== 'USDUSD'){
+                if ($result->quotes->$currencyB > 1) {
+
+                        // $convRateB = $result->quotes->$currencyB / $markValue;
+                        $convRateB = $result->quotes->$currencyB;
+                    } elseif ($result->quotes->$currencyB < 1) {
+                        // $convRateB = $result->quotes->$currencyB * $markdownValue;
+                        $convRateB = $result->quotes->$currencyB;
+                    } else {
+                        $convRateB = $result->quotes->$currencyB;
+                    }
+            }
+            else{
+                $convRateB = 1;
             }
 
             $actualRate = $convRateA / $convRateB;
