@@ -7,6 +7,7 @@ use Session;
 use App\MarkUp;
 use App\Points;
 use App\PromoDate;
+use App\MarketplaceNews;
 use App\TrialDate;
 use App\watchlist;
 use App\merchantTrial;
@@ -1618,6 +1619,7 @@ class AdminController extends Controller
         }
     }
 
+    
 
 
     public function investorSubscriber(Request $req)
@@ -1869,6 +1871,13 @@ class AdminController extends Controller
         return back()->with("msg", "<div class='alert alert-success'>News Deleted Successfully</div>");
     }
 
+    public function deleteMarketplaceNews(Request $req, $id)
+    {
+        $post = MarketplaceNews::where('id', $id)->delete();
+        
+        return back()->with("msg", "<div class='alert alert-success'>News Deleted Successfully</div>");
+    }
+
     public function updateInvestorNews(Request $req, $id)
     {
 
@@ -1900,6 +1909,40 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('investors news')->with("msg", "<div class='alert alert-success'>News Updated Successfully</div>");
+    }
+
+    //update marketplace news
+     public function updateMarketplaceNews(Request $req, $id)
+    {
+
+        $getPost = MarketplaceNews::where('id', $id)->first();
+
+        $docPath = $getPost->file;
+
+        if ($req->hasFile('file')) {
+            //Get filename with extension
+            $filenameWithExt = $req->file('file')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just extension
+            $extension = $req->file('file')->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+
+
+            $path = $req->file('file')->move(public_path('../../marketplacenews/'), $fileNameToStore);
+
+
+            $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/marketplacerelnews/" . $fileNameToStore;
+        }
+
+        $post = MarketplaceNews::where('id', $id)->update([
+            'title' => $req->title,
+            'description' => $req->description,
+            'file' => $docPath
+        ]);
+
+        return redirect()->route('marketplacenews')->with("msg", "<div class='alert alert-success'>News Updated Successfully</div>");
     }
 
     public function editInvestorPosts(Request $req, $id)
@@ -2030,6 +2073,44 @@ class AdminController extends Controller
             'description' => $req->description,
             'file' => $docPath,
 
+        ]);
+
+        return back()->with("msg", "<div class='alert alert-success'>News Created Successfully</div>");
+    }
+
+    //create marketplace News
+    public function createMarketplaceNews(Request $req)
+    {
+
+
+        $validation = $req->validate([
+            'title' => 'required',
+            'description' => 'required'
+        ]);
+
+        $docPath = "";
+
+        if ($req->hasFile('file')) {
+            //Get filename with extension
+            $filenameWithExt = $req->file('file')->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just extension
+            $extension = $req->file('file')->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+
+
+            $path = $req->file('file')->move(public_path('../../marketplacenews/'), $fileNameToStore);
+
+
+            $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/marketplacedocs/" . $fileNameToStore;
+        }
+
+        $post = MarketplaceNews::insert([
+            'title' => $req->title,
+            'description' => $req->description,
+            'file' => $docPath,
         ]);
 
         return back()->with("msg", "<div class='alert alert-success'>News Created Successfully</div>");
@@ -12943,50 +13024,7 @@ class AdminController extends Controller
         return back()->with("msg", "<div class='alert alert-success'> Imported Successfully</div>");
     }
 
-    //unveirifed merchant view
-    public function unverifiedMerchants(Request $req)
-    {
-
-        if ($req->session()->has('username') == true) {
-            // dd(Session::all());
-
-            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing" || session('role') == "Customer Success") {
-                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
-                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
-                $payInvoice = DB::table('client_info')
-                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
-                    ->orderBy('invoice_payment.created_at', 'DESC')
-                    ->get();
-
-                $otherPays = DB::table('organization_pay')
-                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
-                    ->orderBy('organization_pay.created_at', 'DESC')
-                    ->get();
-            } else {
-                $adminUser = Admin::where('username', session('username'))->get();
-                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
-                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
-
-                $otherPays = DB::table('invoice_payment')
-                    ->select(DB::raw('invoice_payment.transactionid, invoice_payment.name, invoice_payment.email, import_excel.amount as invoice_amount, invoice_payment.invoice_no, invoice_payment.service, invoice_payment.created_at as transaction_date, import_excel.description as description, invoice_payment.remaining_balance as runningbalance, invoice_payment.amount as amount_paid, import_excel.status, invoice_payment.mystatus'))->distinct()
-                    ->join('import_excel', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')
-                    ->where('import_excel.uploaded_by', session('user_id'))
-                    ->orderBy('invoice_payment.created_at', 'DESC')->get();
-            }
-
-
-            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
-
-            $transCost = $this->transactionCost();
-
-            $servicetypes = $this->getServiceTypes();
-
-
-            return view('merchant\pages.uploadunverifiedmerchant')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes]);
-        } else {
-            return redirect()->route('AdminLogin');
-        }
-    }
+   
 
     //uploading the unverified merchants into database
     public function uploadUnverifiedMerchants(Request $req)

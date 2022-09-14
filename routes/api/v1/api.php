@@ -30,6 +30,7 @@ Route::prefix('/v1')->group(function () {
     Route::get('latestmerchant',  ['uses' => 'MarketplaceController@newestMerchant'])->name('newest merchant');
     Route::get('findproduct',  ['uses' => 'MarketplaceController@findProduct'])->name('find product');
     Route::get('getallproducts',  ['uses' => 'MarketplaceController@getProducts'])->name('get products');
+    Route::get('getallnews',  ['uses' => 'MarketplaceController@getNews'])->name('get news');
 
 
     Route::group(['middleware' => ['appkey']], function () {

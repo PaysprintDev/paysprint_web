@@ -119,6 +119,22 @@
                     </span>
                 </a>
             </li>
+            <li class="">
+                <a href="{{ route('new marketplace post') }}">
+                    <i class="fa fa-book"></i>
+                    <span>Create Marketplace News</span>
+                    <span class="pull-right-container">
+                    </span>
+                </a>
+            </li>
+            <li class="">
+                <a href="{{ route('marketplacenews') }}">
+                    <i class="fa fa-book"></i>
+                    <span>All Marketplace News</span>
+                    <span class="pull-right-container">
+                    </span>
+                </a>
+            </li>
 
 
 

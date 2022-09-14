@@ -36,6 +36,8 @@ use App\EscrowAccount;
 
 use App\HistoryReport;
 
+use App\MarketplaceNews;
+
 use App\ReferralClaim;
 
 use App\ReferredUsers;
@@ -341,11 +343,29 @@ class MarketplaceController extends Controller
         return response()->json($response, $code);
     }
 
-    //getting all unverified merchants
 
+    //getting all marketplace News
+    public function getNews(Request $req)
+    {
+        try {
+            $data = MarketplaceNews::orderBy('created_at', 'DESC')->get();
 
+            $response = [
+                'data' => $data,
+                'status' => 'success',
+            ];
 
-    //opening an account for unverified merchants
+            $code = 200;
+        } catch (\Throwable $th) {
+            $response = [
+                'data' => [],
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ];
 
-    
+            $code = 400;
+        }
+
+        return response()->json($response, $code);
+    }
 }

@@ -33,6 +33,9 @@ Route::post('search', ['uses' => 'HomeController@searchCountry', 'as' => 'search
 //import data
 Route::get('importdata', ['uses' => 'MoexController@importData', 'as' => 'import data']);
 
+//scrapping data
+Route::get('scrapewebsite', ['uses' => 'ScraperController@getScraper', 'as' => 'scrape website']);
+
 // App Logger
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
@@ -930,6 +933,8 @@ Route::prefix('Admin/')->group(function () {
 	});
 
 
+
+
 	//Routes for image upload
 
 	Route::post('uploaduserdoc', ['uses' => 'ImageController@imageUploadPost', 'as' => 'upload user doc']);
@@ -1122,7 +1127,6 @@ Route::post('exporttoPdf', ['uses' => 'HomeController@exportToPdf', 'as' => 'exp
 //testng upload excel to DB skima
 Route::get('/promopage', ['uses' => 'AdminController@promoPage', 'as' => 'promo page']);
 Route::post('/uploadpromousers', ['uses' => 'AdminController@uploadPromoUsers', 'as' => 'upload promo users']);
-Route::get('/unverifiedmerchants', ['uses' => 'AdminController@unverifiedMerchants', 'as' => 'unverified merchants']);
 Route::post('/uploadunverifiedmerchants', ['uses' => 'AdminController@uploadUnverifiedMerchants', 'as' => 'upload unverified merchants']);
 Route::get('/promousers', ['uses' => 'AdminController@promoUsers', 'as' => 'promo users']);
 Route::get('/promoreport', ['uses' => 'AdminController@promoReport', 'as' => 'promo report']);
@@ -1250,6 +1254,13 @@ Route::prefix('Admin/estore')->group(function () {
 	Route::post('/updatestate/{id}', ['uses' => 'StoreController@updateState', 'as' => 'update state']);
 	Route::post('/activate/{id}', ['uses' => 'StoreController@activateStore', 'as' => 'activate store']);
 	Route::get('/activatestore', ['uses' => 'StoreController@activateEstore', 'as' => 'activate e-store']);
+	Route::get('/unverifiedmerchants', ['uses' => 'StoreController@unverifiedMerchants', 'as' => 'unverified merchants']);
+	Route::get('marketplace', ['uses' => 'StoreController@newMarketplacePost', 'as' => 'new marketplace post']);
+	Route::post('createnews', ['uses' => 'AdminController@createMarketplaceNews', 'as' => 'create marketplace news']);
+	Route::get('/marketplacenews', ['uses' => 'StoreController@FetchMarketplaceNews', 'as' => 'marketplacenews']);
+	Route::get('editmarketplacenews/{id}', ['uses' => 'StoreController@editMarketplaceNews', 'as' => 'edit marketplace news']);
+	Route::post('updatemarketplacenews/{id}', ['uses' => 'AdminController@updateMarketplaceNews', 'as' => 'update marketplace news']);
+	Route::post('deletemarketplacenews/{id}', ['uses' => 'AdminController@deleteMarketplaceNews', 'as' => 'delete marketplace news']);
 });
 
 
