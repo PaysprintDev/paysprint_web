@@ -1,7 +1,7 @@
 @extends('layouts.newpage.app')
 
 <style>
-    .eclipse-slider img {
+  .eclipse-slider img {
         width: 60px;
         height: 60px;
         object-fit: contain;
@@ -59,6 +59,8 @@
             border: 1px solid #ffe29f;
         }
     }
+
+ 
 </style>
 
 @section('content')
@@ -201,7 +203,21 @@
     </div>
 </div>
 
+{{-- Box tab --}}
+{{-- <nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Home</button>
+      <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</button>
+      <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</button>
+    </div>
+  </nav>
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">qswadesfrgthy</div>
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">bola</div>
+    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">..dgfhj.</div>
+  </div> --}}
 
+{{-- End of tab box --}}
 
 <div class="content-section pt-13 pt-lg-12 pb-11 pb-lg-22 hover-tilt bg-default-6">
     <div class="container">

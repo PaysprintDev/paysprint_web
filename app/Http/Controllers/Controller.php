@@ -283,6 +283,8 @@ class Controller extends BaseController
     public function getConversionRate($localcountry, $foreign, $route = null)
     {
 
+       
+
 
         // Get Markup
         $markuppercent = $this->markupPercentage();
@@ -317,11 +319,21 @@ class Controller extends BaseController
         $result = json_decode($response);
 
         if ($result->success == true) {
-            // This amount is in dollars
-            $convRateA = $result->quotes->$currencyA;
-            // $convRateA = $result->quotes->$currencyA * $markValue;
-            $convRateB = $result->quotes->$currencyB;
-            // $convRateB = $result->quotes->$currencyB * $markValue;
+            
+            if($currencyA !== 'USDUSD'){
+                $convRateA = $result->quotes->$currencyA;
+            }
+            else{
+                $convRateA = 1;
+            }
+
+
+            if($currencyB !== 'USDUSD'){
+                $convRateB = $result->quotes->$currencyB;
+            }
+            else{
+                $convRateB = 1;
+            }
 
             $actualRate = $convRateA / $convRateB;
 

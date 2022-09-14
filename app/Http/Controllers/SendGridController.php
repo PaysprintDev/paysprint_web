@@ -293,8 +293,8 @@ class SendGridController extends Controller
 
 
 
-                    //  $receiver = $user->email;
-                    $receiver = "olasunkanmimunirat@gmail.com";
+                     $receiver = $user->email;
+                    // $receiver = "olasunkanmimunirat@gmail.com";
 
 
 
