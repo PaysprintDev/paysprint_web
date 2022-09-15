@@ -30,6 +30,8 @@ Route::prefix('/v1')->group(function () {
     Route::get('latestmerchant',  ['uses' => 'MarketplaceController@newestMerchant'])->name('newest merchant');
     Route::get('findproduct',  ['uses' => 'MarketplaceController@findProduct'])->name('find product');
 
+    Route::get('conversionrate/{local}/{foreign}',  ['uses' => 'Controller@getConversionRate']);
+
 
     Route::group(['middleware' => ['appkey']], function () {
 
@@ -52,7 +54,7 @@ Route::prefix('/v1')->group(function () {
         Route::post('currencyconversion',  ['uses' => 'CurrencyConverterApiController@mycurrencyConvert']);
 
 
-        Route::get('conversionrate/{local}/{foreign}',  ['uses' => 'Controller@getConversionRate']);
+        
 
         Route::get('classifiedbusinessdirectory',  ['uses' => 'api\v1\UserController@classifiedBusinessDirectory']);
 

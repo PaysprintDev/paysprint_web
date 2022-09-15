@@ -41,6 +41,9 @@
     <link rel="stylesheet" href="{{ asset('newpage/css/theme-mode-custom.css') }}">
     <!-- Custom stylesheet -->
 
+    <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
     <style>
         .disp-0 {
             display: none !important;
@@ -79,6 +82,8 @@
         t = d.getElementsByTagName("script")[0];
         t.parentNode.insertBefore(s, t);
     </script>
+
+    
 
 </head>
 

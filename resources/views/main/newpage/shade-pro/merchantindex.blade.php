@@ -24,6 +24,66 @@
         background-color: rgb(213, 213, 213);
         cursor: pointer;
     }
+
+     .tab-menu { 
+        margin-top:34px; 
+    }
+   .tab-menu ul {
+    margin:0;
+    padding:0;
+    list-style:none;
+    display: -webkit-box; 
+    display: -webkit-flex; display: -ms-flexbox; 
+    display: flex;
+     }
+  .tab-menu ul li {
+     -ms-flex-preferred-size: 0;
+      flex-basis: 0;
+     -ms-flex-positive: 1;
+     flex-grow: 1;
+      max-width: 100%;
+    text-align:center;
+   }
+.tab-menu ul li a {
+    color: #fff; 
+    text-transform: uppercase; 
+    letter-spacing: 0.44px; 
+    
+    font-weight:bold; 
+    display:inline-block;
+    padding:18px 26px;
+    display:block; 
+    text-decoration:none;
+    transition:0.5s all;
+    background: #e8aa07; 
+    border: 2px solid #e8aa07;
+    border-bottom: 0;
+     }
+.tab-menu ul li a:hover {
+ background:#e8aa07;
+color:#fff; 
+text-decoration:none; }
+.tab-menu ul li a.active {
+background:#f2f2f2;
+color:#000;
+ text-decoration:none; 
+}
+.tab-box {
+ display:none;
+ }
+
+*/.tab-teaser {
+max-width:100%;
+width:100%; 
+margin:0 auto; 
+
+ } 
+ .tab-main-box { 
+background:##f2f2f2;
+padding: 10px 30px;
+border:2px solid #f8ca56;
+margin-top:-2px  */
+} 
 </style>
 
 <!-- Hero Area -->
@@ -735,40 +795,16 @@
         </div>
     </div>
 </div>
-<!-- merchant -->
-<!-- <div class="container">
-    <div class="row justify-content-center mt-2">
-        <div class="col-md-2 mb-2" style="border-right: 1px solid black; border-left:1px solid grey">
-            <h6 class="text-center">Automotive</h6>
-            <p><img src="{{asset('images/soar_logo.png')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;" class="mt-2"></p>
+{{-- Box tab --}}
+@include('include.newpage.currencyconversion')
 
-            <p><img src="{{asset('images/busywrench_logo.png')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:contain;"></p>
+{{-- End of tab box --}}
 
-            <p><img src="{{asset('images/vimcare_logo.jpg')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;"></p>
-
-            <p><img src="{{asset('images/vimfile_logo.jpg')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:contain;"></p>
-        </div>
-        <div class="col-md-2" style="border-right: 1px solid black;">
-            <h6 class="text-center">Technology</h6>
-            <p><img src="{{asset('images/prochatr_logo.png')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;" class="mt-2"></p>
-        </div>
-        <div class="col-md-2" style="border-right: 1px solid black;">
-            <h6 style="font-size:14px;" class="text-center">Professional Services</h6>
-            <p><img src="{{asset('images/oaco_logo.jpg')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;" class="mt-2"></p>
-            <p><img src="{{asset('images/mvaf_logo.jpg')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;"></p>
-        </div>
-        <div class="col-md-2" style="border-right: 1px solid black;">
-            <h6 class="text-center">Not-for-Profit</h6>
-            <p><img src="{{asset('images/pro_executes_logo.jpeg')}}" alt="oaco_logo" style="width:100%;height:50px; object-fit:cover;" class="mt-2"></p>
-        </div>
-    </div>
-</div> -->
-<!-- end -->
 {{-- Avalable country --}}
 <div class="container mt-8 mb-5">
     <div class="row justify-content-center align-items-center">
-        <div class="col-xl-5 col-lg-6 col-md-8">
-            <h2 class="title gr-text-4 mb-8">Cross Border Business Payments from {{($data['country'])}} to {{count($data['availablecountry'] )}} Countries</h2>
+        <div class="">
+            <h2 class="title gr-text-4 mb-4">Cross Border Business Payments from {{($data['country'])}} to {{count($data['availablecountry'] )}} Countries</h2><br>
         </div>
     </div>
     <div class="row mx-auto">
@@ -833,28 +869,5 @@
     </div>
 </div>
 </div>
-<!-- Available countries -->
-<div class="container mt-8 mb-5">
-    <div class="row justify-content-center align-items-center">
-        <div class="col-xl-5 col-lg-6 col-md-8">
-            <h2 class="title gr-text-4 mb-8">Avaliable in {{count($data['availablecountry'])}} Countries</h2>
-        </div>
-    </div>
-    <div class="row mx-auto">
 
-        @if (count($data['availablecountry']))
-
-        @foreach ($data['availablecountry'] as $country)
-        <div id="eclipse6">
-            <div class="eclipse-slider">
-                <div> <img src="{{$country->logo}}" alt="{{$country->name}}" title="{{$country->name}}"></div>
-
-            </div>
-        </div>
-        @endforeach
-
-        @endif
-
-    </div>
-</div>
 @endsection

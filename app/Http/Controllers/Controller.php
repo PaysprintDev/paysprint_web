@@ -284,6 +284,8 @@ class Controller extends BaseController
     {
 
 
+
+
         // Get Markup
         $markuppercent = $this->markupPercentage();
 
