@@ -162,7 +162,7 @@
 
               </div>
               <div class="col-md-4">
-                <a class="btn btn-warning" href="{{ route('AdminLogin') }}" role="button">Click to Send Now</a>
+                <a class="btn btn-warning" href="{{ route('Ajaxlogin') }}" role="button">Click to Send Now</a>
               </div>
             </div>
           </div>
@@ -231,7 +231,7 @@
 
               </div>
               <div class="col-md-4">
-                <a class="btn btn-warning" href="{{ route('AdminLogin') }}" role="button">Click to Send Now</a>
+                <a class="btn btn-warning" href="{{ route('Ajaxlogin') }}" role="button">Click to Send Now</a>
               </div>
             </div>
           </div>
