@@ -4,13 +4,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
+use App\Http\Controllers\MoexController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\FlutterwaveController;
 use App\Http\Controllers\DusupayController;
+use App\Http\Controllers\TriggerController;
+use App\Http\Controllers\FlutterwaveController;
 use App\Http\Controllers\MerchantPageController;
 use App\Http\Controllers\WalletCreditController;
-use App\Http\Controllers\TriggerController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -167,6 +168,12 @@ Route::get('reversal', 'CheckSetupController@reverseFund');
 
 Route::get('creditsubscription', 'MonthlySubController@creditSubAccount');
 Route::get('correctstatement', 'MonthlySubController@correctStatementRecord');
+
+
+
+
+// Test MoexController
+Route::get('testmoex', [MoexController::class, 'cashpot4'])->name('testmoex');
 
 
 

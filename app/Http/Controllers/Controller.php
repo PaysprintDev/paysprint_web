@@ -283,7 +283,7 @@ class Controller extends BaseController
     public function getConversionRate($localcountry, $foreign, $route = null)
     {
 
-       
+
 
 
         // Get Markup
@@ -319,7 +319,7 @@ class Controller extends BaseController
         $result = json_decode($response);
 
         if ($result->success == true) {
-            
+
             if($currencyA !== 'USDUSD'){
                 $convRateA = $result->quotes->$currencyA;
             }
@@ -338,7 +338,6 @@ class Controller extends BaseController
             $actualRate = $convRateA / $convRateB;
 
             $convRate = $actualRate * 95 / 100;
-
 
             $this->calculateBufferedTransaction($actualRate, $convRate, $route);
         } else {

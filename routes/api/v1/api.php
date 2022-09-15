@@ -436,7 +436,8 @@ Route::prefix('/v1')->group(function () {
 
     Route::get('/ps-account-details', ['uses' => 'CurrencyFxController@paysprintAccountDetails', 'as' => 'get paysprint account details']);
 
-    Route::get('sync/countries',  ['uses' => 'ThirdPartyHandshakeController@availableCountriesonPS']);
+    Route::get('sync/countries',  ['uses' => 'ThirdPartyHandshakeController@
+    ']);
 
     Route::get('/transaction-fee',  ['uses' => 'ThirdPartyHandshakeController@transactionFeeCharge']);
 });

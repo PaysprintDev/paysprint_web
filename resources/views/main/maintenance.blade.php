@@ -104,9 +104,7 @@
 
                                         <label for="property_owner">Select Property Manager <span
                                                 class="importantfield">*</span></label>
-
-
-                                        <select name="property_owner" class="form-control billinginput_box"
+                                                <select name="property_owner" class="form-control billinginput_box"
                                             id="property_owner" required data-live-search="true">
                                             @if (count($clientInfo) > 0)
                                                 <option value="{{ $clientInfo[0]->user_id }}" selected>

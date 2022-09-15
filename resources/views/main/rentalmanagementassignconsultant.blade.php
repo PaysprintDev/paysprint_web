@@ -84,19 +84,19 @@
                                     <div class="subtittle">
                                         <h2>Assign Service Provider</h2>
                                     </div>
-        
+
                                     <form method="POST" action="{{ route('assignconsultant') }}">
-        
+
                                     @csrf
                                     <div class="billingIns">
                                         <input type="hidden" name="post_id" id="post_id" value="{{ $data['maintenance'][0]->post_id }}">
                                         <input type="hidden" name="tenant_email" id="tenant_email" value="{{ $data['maintenance'][0]->tenant_email }}">
                                         <input type="hidden" name="owner_email" id="owner_email" value="{{ session('email') }}">
-        
+
                                         <label for="maintenance_status">Current Maintenace Status </label>
                                          <input type="text" name="maintenance_status" id="maintenance_status" class="form-control billinginput_box" value="{{ $data['maintenance'][0]->status }}" readonly>
                                     </div>
-        
+
                                     <div class="billingIns">
                                         <label for="maintenance_status_update">Change Maintenace Status <span class="importantfield">*</span></label>
                                         <select name="maintenance_status_update" id="maintenance_status_update" class="form-control billinginput_box" required>
@@ -114,7 +114,7 @@
 
                                     <div class="billingIns">
 
-                                        
+
                                         <div class="alert alert-info">
                                             <ul>
                                                 <li style="font-weight: bold;">What you want done: <img src="https://img.icons8.com/emoji/20/000000/hammer-and-wrench.png"/> {{ $data['maintenance'][0]->subject }}</li>
@@ -127,14 +127,14 @@
                                     </div>
 
 
-        
-        
+
+
                                     <div class="billingIns">
                                         <label for="assign_consultant">Select Service Provider <span class="importantfield">*</span></label>
                                         <select name="assign_consultant" id="assign_consultant" class="form-control billinginput_box" required>
-        
+
                                             @if (count($data['consult']) > 0)
-        
+
                                             <option value="">Select Service Provider</option>
                                                 @foreach ($data['consult'] as $consultant)
                                                     <option value="{{ $consultant->id }}">{{ $consultant->consultant_name.' (E: '.$consultant->consultant_email.' - M: '.$consultant->consultant_telephone.')' }}</option>
@@ -143,41 +143,41 @@
                                                 <option value="">You have not created a service provider</option>
                                             @endif
                                         </select>
-        
+
                                         @if (count($data['consult']) > 0)
                                         {{--  Do nothing  --}}
                                         @else
                                             <a href="{{ route('consultant') }}" style="color:navy; font-weight: bold; text-decoration: underline" target="_blank">Click here to create service provider</a>
                                         @endif
-                                        
+
                                     </div>
-        
+
                                     <div class="billingIns">
                                         <label for="consultant_phone">Detailed Note <span class="importantfield">*</span></label>
                                         <textarea name="response_note" id="response_note" cols="30" rows="10" class="form-control" required></textarea>
                                     </div>
-        
+
                                     <div class="billingIns">
                                         <label for="consultant_deadline">Deadline Date <span class="importantfield">*</span></label>
                                         <input type="date" name="maintenance_deadline" id="maintenance_deadline" class="form-control billinginput_box">
                                     </div>
-        
+
                                     <button type="submit" class="btn btn-primary btn-block">Proceed</button>
-        
+
                                     <br>
                                     <br>
                                     <br>
                                     <br>
                                     <br>
                                     <br>
-        
+
                                     </form>
                                 </div>
 
                             </div>
 
-                            
-                            
+
+
                             <div id="menu1" class="tab-pane fade">
                                 <br>
 
@@ -196,23 +196,23 @@
                                         </select>
                                     </div>
                                 </div>
-        
-        
+
+
                                 <br>
                                 <br>
 
 
                             </div>
-    
-    
-                            
+
+
+
 
 
 
                         </div>
 
 
-                        
+
 
 
 
