@@ -358,7 +358,7 @@
             <div class="col-md-8">
                 {{-- <p class="gr-text-9 text-center mb-7">Trusted and Featured on:
                 </p> --}}
-                <h2 class="gr-text-4 text-center mb-8">Featured on</h2>
+                <h2 class="gr-text-4 text-center mb-8">As Featured on</h2>
             </div>
             <div class="col-12">
                 <div class="brand-logos d-flex justify-content-center justify-content-xl-between align-items-center mx-n9 flex-wrap">

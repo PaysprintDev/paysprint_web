@@ -144,22 +144,29 @@
           </div><br>
           <div class="row">
             <div class="col-md-2">
-              <button type="button" class="btn btn-warning " id="shift" onClick='convertFee();'>Get Result</button>
+              <button type="button" class="btn" style="background-color:#e8aa07;" id="shift" onClick='convertFee();'>Get Result</button>
             </div>
-            <div class="col-md-10 ps-2">
-              <span id="rate" style="font-size:15px; font-weight:bold;"></span> <br> <span id="local" style="font-size:15px; font-weight:bold"></span>
+            <div class="col-md-10 ps-2 pt-3">
+              <span id="rate" style="font-size:15px; font-weight:bolder; color:#000"></span> <br> <span id="local" style="font-size:15px; font-weight:bolder; color:#000"></span>
             </div>
           </div>
 
           <div class="currencyResult disp-0">
             <div class="row" style="margin-top: 2rem">
-              <div class="col-md-12">
+              <div class="col-md-4">
                 {{-- <h4>Charge Fee<span>0.00</span></h4> --}}
-                <h4><span id="totalprice"></span></h4>
+                <h6><span id="totalamount" style="font-style: underline;"></span></h6>
+                <h6 id="totalprice"></h6>
+                <h6 id="paymethod1" style="font-style: underline;"></h6>
                 <h6 id="paymethod"></h6>
+
+              </div>
+              <div class="col-md-4"></div>
+              <div class="col-md-4">
+                <a class="btn" style="background-color:#e8aa07;" href="{{ route('Ajaxlogin') }}" role="button">Click to Send Now</a>
               </div>
             </div>
-            <div class="row">
+            <!-- <div class="row">
               <div class="col-md-4">
                 <h6 style="font-size:13px"><span id="rate"></span></h6>
                 <h6 style="font-size:13px"><span id="local"></span></h6>
@@ -168,10 +175,8 @@
               <div class="col-md-4 mx-auto">
 
               </div>
-              <div class="col-md-4">
-                <a class="btn btn-warning" href="{{ route('Ajaxlogin') }}" role="button">Click to Send Now</a>
-              </div>
-            </div>
+              
+            </div> -->
           </div>
 
 
@@ -197,7 +202,7 @@
             </div>
 
             <div class="col-md-4">
-              <label for="text" class="form-label">Receive To</label>
+              <label for="text" class="form-label">Receive In</label>
               {{-- <img src="{{$country->logo}}"> --}}
               <select class="form-control" name="foreigncountry" id="foreigncountry">
                 @if (count($data['availablecountry']))
@@ -221,30 +226,32 @@
           </div><br>
           <div class="row">
             <div class="col-md-2">
-              <button type="button" class="btn btn-warning " id="shift2" onClick='rateFee()'>Get Result</button>
+              <button type="button" class="btn" style="background-color:#e8aa07;" id="shift2" onClick='rateFee()'>Get Result</button>
             </div>
-            <div class="col-md-10 ps-2">
-              <span id="rates" style="font-size:15px; font-weight:bold;"></span> <br> <span id="locals" style="font-size:15px; font-weight:bold"></span>
+            <div class="col-md-10 ps-2 pt-3">
+              <span id="rates" style="font-size:15px; font-weight:bolder; color:#000;"></span> <br> <span id="locals" style="font-size:15px; font-weight:bolder; color:#000 ;"></span>
             </div>
           </div>
           <div class="currencyDisplay disp-0">
             <div class="row" style="margin-top: 2rem">
 
-              <div class="col-md-12">
-                <h4><span id="totalpricerate"></span></h4>
+              <div class="col-md-4">
+                <h6 id="totalpricerate1"></h6>
+                <h6><span id="totalpricerate"></span></h6>
+                <h6 id="paysmethod1"></h6>
                 <h6 id="paysmethod"></h6>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-md-4">
-              </div>
               <div class="col-md-4 mx-auto">
-
               </div>
               <div class="col-md-4">
-                <a class="btn btn-warning" href="{{ route('Ajaxlogin') }}" role="button">Click to Receive Now</a>
+                <a class="btn" style="background-color:#e8aa07;" href="{{ route('Ajaxlogin') }}" role="button">Click to Receive Now</a>
               </div>
             </div>
+            <!-- <div class="row">
+              <div class="col-md-4">
+              </div>
+              
+            </div> -->
           </div>
 
 
@@ -254,17 +261,17 @@
 
       <div class="tab-box" id="tab-3">
 
-        <p>Holding currencies when rates are low is a smart way to hedge against adverse rates. With PaySprint FX,you can create multipie currency wallets when the rates are low to save on exchange rate when the rates are high</p>
+        <p>Holding currencies when rates are low is a smart way to hedge against adverse rates. With PaySprint FX, you can create multipie currency wallets when the rates are low to save on exchange rate when the rates are high</p>
       </div>
 
       <div class="tab-box" id="tab-4">
 
-        <p>Buy and Sell Foreign Currencies at your own desired rate and make huge Profit</p>
+        <p>Buy and Sell Foreign Currencies at your own desired rate and make huge Profit.</p>
       </div>
 
       <div class="tab-box" id="tab-5">
 
-        <p>Do you need to pay invoices in other currencies other than your local currency? No problem! Pay invoices directly from your FX walet and take advantage of great exchange rates</p>
+        <p>Do you need to pay invoices in other currencies other than your local currency? No problem! Pay invoices directly from your FX wallet and take advantage of great exchange rates.</p>
       </div>
 
     </div>
