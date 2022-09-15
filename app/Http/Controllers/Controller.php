@@ -321,7 +321,7 @@ class Controller extends BaseController
         if ($result->success == true) {
 
             if($currencyA !== 'USDUSD'){
-                $convRateA = $result->quotes->$currencyA;
+                $convRateA = $result->quotes->$currencyA * $markValue;
             }
             else{
                 $convRateA = 1;
@@ -329,7 +329,7 @@ class Controller extends BaseController
 
 
             if($currencyB !== 'USDUSD'){
-                $convRateB = $result->quotes->$currencyB;
+                $convRateB = $result->quotes->$currencyB * $markValue;
             }
             else{
                 $convRateB = 1;

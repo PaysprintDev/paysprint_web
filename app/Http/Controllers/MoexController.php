@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use SoapClient;
 use App\AllCountries;
 use App\Classes\TWSauth;
 use Illuminate\Http\Request;
@@ -2524,7 +2523,7 @@ class MoexController extends Controller
         $phone->ReceiverExitPrefix = '+';
         $phone->IncReceiverHyphen = false;
 
-        $url_wsdl = "https://ws.moneyexchange.es/wsdl/IWSmoney";
+        $url_wsdl = "https://ws.moneyexchange.es:42710/wsdl/IWSmoney";
 
 
         try {

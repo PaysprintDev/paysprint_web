@@ -407,7 +407,6 @@ class AdminController extends Controller
 
 
 
-
             return view('admin.getcurrencyconversion')->with(['pages' => 'My Dashboard', 'transCost' => $transCost, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
@@ -1619,7 +1618,7 @@ class AdminController extends Controller
         }
     }
 
-    
+
 
 
     public function investorSubscriber(Request $req)
@@ -1874,7 +1873,7 @@ class AdminController extends Controller
     public function deleteMarketplaceNews(Request $req, $id)
     {
         $post = MarketplaceNews::where('id', $id)->delete();
-        
+
         return back()->with("msg", "<div class='alert alert-success'>News Deleted Successfully</div>");
     }
 
@@ -13024,7 +13023,7 @@ class AdminController extends Controller
         return back()->with("msg", "<div class='alert alert-success'> Imported Successfully</div>");
     }
 
-   
+
 
     //uploading the unverified merchants into database
     public function uploadUnverifiedMerchants(Request $req)

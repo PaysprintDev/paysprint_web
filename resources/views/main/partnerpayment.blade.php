@@ -95,6 +95,10 @@
                                 <form role="form" action="#" method="POST" id="formElem">
                                     @csrf
 
+                                    @php
+                                        $receiveCode = $data['paymentgateway']->code.'_'.uniqid();
+                                    @endphp
+
                                     <div class="alert alert-info">
 
 
@@ -117,7 +121,7 @@
                                                     <table class="table table-hover table-responsive">
                                                         <tr>
                                                             <td>Receiver's ID: </td>
-                                                            <td><strong>{{ $data['paymentgateway']->code.'_'.uniqid() }}</strong></td>
+                                                            <td><strong>{{ $receiveCode }}</strong></td>
                                                         </tr>
                                                         <tr>
                                                             <td>Receiver's Name: </td>
@@ -190,7 +194,17 @@
                                             <h6>Transaction ID</h6>
                                         </label>
                                         <div class="input-group">
-                                             <input type="text" name="transaction_id" id="transaction_id" class="form-control" required>
+                                             <input type="number" step="{{ time() }}" min="{{ time() }}" name="transaction_id" id="transaction_id" class="form-control" required>
+                                             <input type="hidden" name="receiver_code" id="receiver_code" class="form-control" value="{{ $receiveCode }}">
+                                        </div>
+                                    </div>
+
+
+                                     <div class="form-group"> <label for="amount">
+                                            <h6>Description</h6>
+                                        </label>
+                                        <div class="input-group">
+                                             <input type="text" name="description" id="description" class="form-control">
                                         </div>
                                     </div>
 

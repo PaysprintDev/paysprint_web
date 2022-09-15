@@ -107,12 +107,17 @@
                                     </ul>
 
                                     <div class="alert alert-primary">
+
+                                        @php
+                                        $receiveCode = $data['paymentgateways']->code.'_'.uniqid();
+                                    @endphp
+
                                         <h4>Receiver's Details</h4>
                                         <hr>
                                         <table class="table table-hover table-responsive">
                                             <tr>
                                                 <td>Receiver's ID: </td>
-                                                <td><strong>{{ $data['paymentgateways']->code.'_'.uniqid() }}</strong></td>
+                                                <td><strong>{{ $receiveCode }}</strong></td>
                                             </tr>
                                             <tr>
                                                 <td>Receiver's Name: </td>
@@ -471,13 +476,20 @@
                                         <div class="col-md-12">
                                             <p class="form-group">
                                                 <label>Transaction ID</label>
-                                                <input type="text" name="transaction_id" class="form-control" id="transfer_transaction_id" required>
+                                                <input type="number" step="{{ time() }}" min="{{ time() }}" name="transaction_id" id="transaction_id" class="form-control" required>
+                                                <input type="hidden" name="receiver_code" id="receiver_code" class="form-control" value="{{ $receiveCode }}">
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <p class="form-group">
+                                                <label>Description</label>
+                                                <input type="text" name="description" id="description" class="form-control">
                                             </p>
                                         </div>
                                         <div class="col-md-12">
                                             <p class="form-group">
                                                 <label>Amount Transferred</label>
-                                                <input type="text" name="amount" placeholder="Enter amount Transferred" id="transfer_amount" class="form-control" required>
+                                                <input type="number" min="0.00" step="0.01" name="amount" placeholder="Enter amount Transferred" id="transfer_amount" class="form-control" required>
                                             </p>
                                         </div>
                                         <input type="hidden" name="reference_number" value="{{ $data['paymentgateways']->code.'_'.uniqid() }}">

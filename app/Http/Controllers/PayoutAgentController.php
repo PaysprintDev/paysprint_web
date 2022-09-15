@@ -239,6 +239,8 @@ class PayoutAgentController extends Controller
 
     public function partnerAddMoneyToWallet(Request $req)
     {
+
+
         try {
             $monerisAction = new MonerisController();
 
@@ -250,7 +252,9 @@ class PayoutAgentController extends Controller
                 $status = 400;
             } else {
 
-                $referenced_code = $req->transaction_id;
+                $referenced_code = "partner-" . $req->receiver_code;
+                $etransfer_ref_code = $req->transaction_id;
+
 
                 $walletBal = $thisuser->wallet_balance;
                 $holdBal = $thisuser->hold_balance + $req->amount;
@@ -270,7 +274,7 @@ class PayoutAgentController extends Controller
                 $regards = $thisuser->ref_code;
                 $statement_route = "wallet";
 
-                $monerisAction->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1);
+                $monerisAction->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1, $etransfer_ref_code);
 
                 $monerisAction->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, 0, $req->amount);
 
@@ -348,7 +352,7 @@ class PayoutAgentController extends Controller
 
                 $data = $userInfo;
                 $status = 200;
-                $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your wallet';
+                $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your wallet'.'. '.$req->description;
 
                 $monerisAction->createNotification($thisuser->ref_code, $sendMsg);
 
@@ -394,7 +398,8 @@ class PayoutAgentController extends Controller
                 $status = 400;
             } else {
 
-                $referenced_code = $req->transaction_id;
+                $referenced_code = "partner-" . $req->receiver_code;
+                $etransfer_ref_code = $req->transaction_id;
 
                 $walletBal = $thisuser->wallet_balance;
                 $holdBal = $thisuser->hold_balance + $req->amount;
@@ -414,7 +419,7 @@ class PayoutAgentController extends Controller
                 $regards = $thisuser->ref_code;
                 $statement_route = "wallet";
 
-                $monerisAction->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1, $req->reference_number);
+                $monerisAction->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1, $etransfer_ref_code);
 
                 $monerisAction->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, 0, $req->amount);
 
@@ -492,7 +497,7 @@ class PayoutAgentController extends Controller
 
                 $data = $userInfo;
                 $status = 200;
-                $message = 'You have successfully added ' . $currencycode . ' ' . number_format($req->amount, 2) . ' to your wallet';
+                $message = 'You have successfully added ' . $currencycode . ' ' . number_format($req->amount, 2) . ' to your wallet'.'. '.$req->description;
 
                 $monerisAction->createNotification($thisuser->ref_code, $sendMsg);
 
