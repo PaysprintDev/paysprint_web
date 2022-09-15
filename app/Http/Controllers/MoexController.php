@@ -1,23 +1,28 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use SoapClient;
 use App\AllCountries;
+use App\Classes\TWSauth;
 use Illuminate\Http\Request;
+use App\Classes\TWSPhoneConfig;
 
 class MoexController extends Controller
 {
 
 
-    public function importData(){
+    public function importData()
+    {
 
-        $data=$this->importPartnerFee();
+        $data = $this->importPartnerFee();
         // dd($data);
 
 
 
 
 
-        for ($i=0; $i < count($data) ; $i++) {
+        for ($i = 0; $i < count($data); $i++) {
             Allcountries::where('name', ucfirst(strtolower($data[$i]['country'])))->update([
                 'range' => json_encode($data[$i]['range']),
                 'fee' => json_encode($data[$i]['fee']),
@@ -28,18 +33,11 @@ class MoexController extends Controller
 
             ]);
         }
-
-
-
-
     }
-
-
-
 
     public function importPartnerFee()
     {
-        $list= [
+        $list = [
             '0' => [
                 'country' => 'ALBANIA',
                 'range' => [
@@ -66,11 +64,11 @@ class MoexController extends Controller
                     'CASH',
                     'CASH'
                 ],
-                'partner' =>[
-                   'RAEA FINANCIAL SERVICES LTD'
+                'partner' => [
+                    'RAEA FINANCIAL SERVICES LTD'
                 ],
-                'collection' =>[
-                  'PARTNER'
+                'collection' => [
+                    'PARTNER'
                 ],
             ],
             '1' => [
@@ -87,12 +85,12 @@ class MoexController extends Controller
                 'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'MAXPAY'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
             '2' => [
                 'country' => 'ARGENTINA',
@@ -108,16 +106,16 @@ class MoexController extends Controller
                 'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'ARGENPER SRL',
                     'JET PERU S.A',
                     'LATIN EXPRESS'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
             '3' => [
                 'country' => 'ARMENIA',
@@ -133,12 +131,12 @@ class MoexController extends Controller
                 'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'INTEL EXPRESS'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
             '4' => [
                 'country' => 'AUSTRALIA',
@@ -154,13 +152,13 @@ class MoexController extends Controller
                 'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'JET PERU S.A'
-                 ],
-                 'collection' =>[
-                   'PARTNER,PAYSPRINT',
+                ],
+                'collection' => [
+                    'PARTNER,PAYSPRINT',
 
-                 ],
+                ],
             ],
             '5' => [
                 'country' => 'BANGLADESH',
@@ -180,14 +178,14 @@ class MoexController extends Controller
                     'CASH',
                     'MOBILE WALLET'
                 ],
-                'partner' =>[
+                'partner' => [
                     'PRABHU GROUP INC',
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
             '6' => [
                 'country' => 'BELGIUM',
@@ -203,14 +201,14 @@ class MoexController extends Controller
                 'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'ATENA MONEY TRANSFER'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '7' =>[
+            '7' => [
                 'country' => 'BENIN',
                 'range' => [
                     '0 - ONWARDS',
@@ -228,18 +226,18 @@ class MoexController extends Controller
                     'CASH',
                     'MOBILE WALLET'
                 ],
-                'partner' =>[
+                'partner' => [
                     'BANQUE REGIONALE DE MARCHES(BRM)',
                     'JUBA EXPRESS',
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '8' =>[
+            '8' => [
                 'country' => 'BOLIVIA',
                 'range' => [
                     '0 - ONWARDS',
@@ -257,22 +255,22 @@ class MoexController extends Controller
                     'CASH',
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'EUROENIVOS',
                     'MORE MT'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '9' =>[
+            '9' => [
                 'country' => 'BRAZIL',
                 'range' => [
                     '0 - ONWARDS'
                 ],
                 'fee' => [
-                  '2.00USD + 0.50%'
+                    '2.00USD + 0.50%'
                 ],
                 'payoutcurrency' => [
                     'BRL'
@@ -280,19 +278,19 @@ class MoexController extends Controller
                 'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'BANCO RENDIMENTO',
                     'MORE MT'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '10' =>[
+            '10' => [
                 'country' => 'BULGARIA',
                 'range' => [
-                   '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
                 'fee' => [
                     '1.50%',
@@ -303,14 +301,14 @@ class MoexController extends Controller
                 'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'MONEYTRANS'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '11' =>[
+            '11' => [
                 'country' => 'BURKINA FASO',
                 'range' => [
                     '0 - ONWARDS',
@@ -328,18 +326,18 @@ class MoexController extends Controller
                     'CASH',
                     'MOBILE WALLET'
                 ],
-                'partner' =>[
+                'partner' => [
                     'BANQUE REGIONALE DE MARCHES(BRM)',
                     'JUBA EXPRESS',
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '12' =>[
+            '12' => [
                 'country' => 'BURUNDI',
                 'range' => [
                     '0 - ONWARDS'
@@ -353,22 +351,22 @@ class MoexController extends Controller
                 'payoutmethod' => [
                     'MOBILE WALLET'
                 ],
-                'partner' =>[
+                'partner' => [
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'MOBILE MONEY/PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'MOBILE MONEY/PARTNER'
+                ],
             ],
-            '13' =>[
+            '13' => [
                 'country' => 'CAMEROON',
                 'range' => [
-                   '0 - ONWARDS',
-                   '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
                 'fee' => [
                     '1.75%',
-                   '1.25USD + 0.50%'
+                    '1.25USD + 0.50%'
                 ],
                 'payoutcurrency' => [
                     'XAF',
@@ -378,349 +376,349 @@ class MoexController extends Controller
                     'CASH',
                     'MOBILE WALLET/BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'CREDIT COMMUNAUTAIRE DE AFRIQUE',
                     'JUBA EXPRESS',
                     'TERRA PAY'
-                 ],
-                 'collection' =>[
-                   'MOBILE MONEY/PARTNER',
-                   'MOBILE MONEY/PARTNER',
-                   'MOBILE MONEY/PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'MOBILE MONEY/PARTNER',
+                    'MOBILE MONEY/PARTNER',
+                    'MOBILE MONEY/PARTNER'
+                ],
             ],
-            '14' =>[
+            '14' => [
                 'country' => 'CAPE VERDE',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
                 'fee' => [
                     '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'CVE'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH/BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'CORREIOS DE CABO VERDE',
                     'MAXPAY'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '15' =>[
+            '15' => [
                 'country' => 'CENTRAL AFRICAN REPUBLIC',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.25USD + 0.50%'
+                'fee' => [
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'XAF'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'JUBA EXPRESS-EUROS'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '16' =>[
+            '16' => [
                 'country' => 'CHAD',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.25USD + 0.50%'
+                'fee' => [
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'XAF'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'JUBA EXPRESS'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '17' =>[
+            '17' => [
                 'country' => 'CHILE',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '0.75%',
-                     '0.75%'
+                'fee' => [
+                    '0.75%',
+                    '0.75%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'CLP',
                     'CLP'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH',
                     'BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'AFEX CHILE',
                     'INTERCREDIT'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '18' =>[
+            '18' => [
                 'country' => 'COLOMBIA',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
+                'fee' => [
                     '1.25USD + 0.50%',
                     '1.25USD + 0.50%',
                     '0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'CLP',
                     'CLP'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'BANK DEPOSIT',
                     'MOBILE WALLET',
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'MORE MT',
                     'MORE MT(DAVIVIENDA)',
                     'PAGOS INTERNACIONALES',
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '19' =>[
+            '19' => [
                 'country' => 'CONGO',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.25USD + 0.50%'
+                'fee' => [
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'XAF'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'JUBA EXPRESS'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '20' =>[
+            '20' => [
                 'country' => 'CONGO REP DEMOCRATIC',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.75%'
+                'fee' => [
+                    '1.75%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'USD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'FBNBANK RDC EX(B.I.C)',
                     'JUBA EXPRESS'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '21' =>[
+            '21' => [
                 'country' => 'COASTA RICA',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '2.25USD + 0.50%'
+                'fee' => [
+                    '2.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'USD,CRC'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'RED CHAPINA',
                     'TELEDOLAR S.A'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '22' =>[
+            '22' => [
                 'country' => 'CUBA',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '5.00USD'
+                'fee' => [
+                    '5.00USD'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'CUP,USD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH/CARD'
                 ],
-                'partner' =>[
+                'partner' => [
                     'FINCIMEX'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '23' =>[
+            '23' => [
                 'country' => 'CYPRUS',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%'
+                'fee' => [
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'EUR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'INTEL EXPRESS'
                 ],
-                 'collection' =>[
-                   'PARTNER'
+                'collection' => [
+                    'PARTNER'
                 ],
 
             ],
-            '24' =>[
+            '24' => [
                 'country' => 'CZECH REPUBLIC',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%'
+                'fee' => [
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'USD,EUR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'INTEL EXPRESS DOLARES'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '25' =>[
+            '25' => [
                 'country' => 'DJIBOUTI',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     ' 3.00%',
-                     '1.75%'
+                'fee' => [
+                    ' 3.00%',
+                    '1.75%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'DOP',
                     'DOP'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH',
                     'BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'DAHABCHIIL',
                     'JUBA EXPRESS'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '26' =>[
+            '26' => [
                 'country' => 'DOMINICAN REPUBLIC',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '0.90USD + 0.50%',
-                     '0.50USD + 0.50%',
+                'fee' => [
+                    '0.90USD + 0.50%',
+                    '0.50USD + 0.50%',
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'DOP',
                     'DOP'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH',
                     'BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'CIBAO',
                     'REMESAS DOMINICANAS BDHS'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
 
-                 ],
+                ],
             ],
-            '27' =>[
+            '27' => [
                 'country' => 'ECUADOR',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS',
-                     '0 - ONWARDS',
-                     '0 - 200USD',
-                     '200USD - 1000USD',
+                    '0 - ONWARDS',
+                    '0 - ONWARDS',
+                    '0 - ONWARDS',
+                    '0 - 200USD',
+                    '200USD - 1000USD',
                     '2000USD - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.10%',
-                     '1.00%',
-                     '1.50USD + 0.50%',
-                     '1.70USD + 0.50%',
-                     '2.40USD + 0.50%',
-                     '4.50USD + 0.50%',
-                     '9.00USD + 0.50%',
+                'fee' => [
+                    '1.10%',
+                    '1.00%',
+                    '1.50USD + 0.50%',
+                    '1.70USD + 0.50%',
+                    '2.40USD + 0.50%',
+                    '4.50USD + 0.50%',
+                    '9.00USD + 0.50%',
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'USD',
                     'USD',
                     'USD',
@@ -729,7 +727,7 @@ class MoexController extends Controller
                     'USD',
                     'USD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'ARGENPER',
                     'BOLIVARIANO/BANK DEPOSIT',
                     'PICHINCHA/BANK DEPOSIT ',
@@ -738,1773 +736,1818 @@ class MoexController extends Controller
                     'CASH',
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'ARGENPER SRL',
                     'BANCO BOLIVARIANO ECUAGIROS',
                     'BANCO BICHINCHA',
                     'DELAGO TRAVEL ECUADOR'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
                 ],
             ],
-            '28' =>[
+            '28' => [
                 'country' => 'EGYPT',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%'
+                'fee' => [
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'EGP,USD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH/BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'BANQUE DU CAIRE',
                     'THE UNITED BANK'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '29' =>[
+            '29' => [
                 'country' => 'EL SALVADOR',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS',
-                     '0 - 1000USD',
-                     '1000USD - ONWARDS '
+                    '0 - ONWARDS',
+                    '0 - ONWARDS',
+                    '0 - 1000USD',
+                    '1000USD - ONWARDS '
                 ],
-                    'fee' => [
-                     '1.75USD + 0.50%',
-                     '2.25USD + 0.50%',
-                     '2.25USD + 0.50%',
-                     '1.50%'
+                'fee' => [
+                    '1.75USD + 0.50%',
+                    '2.25USD + 0.50%',
+                    '2.25USD + 0.50%',
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'USD',
                     'USD',
                     'USD',
                     'USD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH',
                     'CASH / BANK DEPOSIT',
                     'CASH / BANK DEPOSIT',
                     'TELEDOR',
                 ],
-                'partner' =>[
+                'partner' => [
                     'FEDECACES',
                     'RED CHAPINA',
                     'TELEDOLAR S.A'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '30' =>[
+            '30' => [
                 'country' => 'EQUATORIAL GUINEA',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%'
+                'fee' => [
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'XOF'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH/BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'DONN GRUPO'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '31' =>[
+            '31' => [
                 'country' => 'ETHIOPIA',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
+                'fee' => [
                     '2.00%',
                     '1.00%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'ETB',
                     'USD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH',
                     'BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'AWASH BANK',
                     'DAHABSHIIL',
                     'OROMIA INTERNATIONAL BANK',
 
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '32' =>[
+            '32' => [
                 'country' => 'FRANCE',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%'
+                'fee' => [
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'EUR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'MONEYTRANS'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '33' =>[
+            '33' => [
                 'country' => 'GABON',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.25USD + 0.50%'
+                'fee' => [
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'XOF'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'JUBA EXPRESS-EUROS'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '34' =>[
+            '34' => [
                 'country' => 'GAMBIA',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '0.50%'
+                'fee' => [
+                    '0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'GMD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH/BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'EASY FINANCIAL SERVICES',
                     'UNITY EXPRESS',
                     'YONNA FOREX BUREAU'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '35' =>[
+            '35' => [
                 'country' => 'GEORGIA',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%'
+                'fee' => [
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'EUR,GEL'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'INTEL EXPRESS-EURO'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '36' =>[
+            '36' => [
                 'country' => 'GERMANY',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%'
+                'fee' => [
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'EUR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH/BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'ITRANSFER'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '37' =>[
+            '37' => [
                 'country' => 'GHANA',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%',
-                     '1.25USD + 1.50%'
+                'fee' => [
+                    '1.50%',
+                    '1.25USD + 1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'GHS',
                     'CSA'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH',
                     'MOBILE WALLET/ BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'GHANA COMMERCIAL BANK LTD',
                     'TERRAPAY',
                     'TRANSFERZERO',
                     'UNIVERSAL MERCHANT BANK LTD'
-                 ],
-                 'collection' =>[
-                   'MOBILE MONEY/PARTNER',
-                   'MOBILE MONEY/PARTNER',
-                   'MOBILE MONEY/PARTNER',
-                   'MOBILE MONEY/PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'MOBILE MONEY/PARTNER',
+                    'MOBILE MONEY/PARTNER',
+                    'MOBILE MONEY/PARTNER',
+                    'MOBILE MONEY/PARTNER'
+                ],
             ],
-            '38' =>[
+            '38' => [
                 'country' => 'GREECE',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%'
+                'fee' => [
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'EUR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'INTEL EXPRESS EURO'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '39' =>[
+            '39' => [
                 'country' => 'GUATEMALA',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '2.00USD + 0.50%'
+                'fee' => [
+                    '2.00USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'GTQ'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH/BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'MORE MT',
                     'RED CHAPINA'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '40' =>[
+            '40' => [
                 'country' => 'GUINEA',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '0.50%',
-                     '1.25USD + 0.50%'
+                'fee' => [
+                    '0.50%',
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'GNF',
                     'GNF'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH',
                     'MOBILE WALLET'
                 ],
-                'partner' =>[
+                'partner' => [
                     'AFRO INTERNATIONAL LTD',
                     'GLOBAL EXPRESS CHANGE',
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '41' =>[
+            '41' => [
                 'country' => 'GUINEA-BISSAU',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.25USD + 0.50%'
+                'fee' => [
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'XOF'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'MOBILE WALLET'
                 ],
-                'partner' =>[
+                'partner' => [
                     'BANQUE REGIONALE DU MARCHES (BRM)',
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '42' =>[
+            '42' => [
                 'country' => 'HONDURAS',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '2.25USD + 0.50%'
+                'fee' => [
+                    '2.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'HNL'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH/BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'MORE MT',
                     'RED CHAPINA',
                     'UREMIT INTERNATIONAL'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '43' =>[
+            '43' => [
                 'country' => 'HONG KONG',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '4.00USD + 0.50%'
+                'fee' => [
+                    '4.00USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'HKD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'UREMIT INTERNATIONAL'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '44' =>[
+            '44' => [
                 'country' => 'INDIA',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.25USD + 0.50%',
-                     '3.00USD + 0.50%',
+                'fee' => [
+                    '1.25USD + 0.50%',
+                    '3.00USD + 0.50%',
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'INR',
                     'INR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'BANK DEPOSIT',
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'UREMIT INTERNATIONAL',
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT',
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT',
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '45' =>[
+            '45' => [
                 'country' => 'INDONESIA',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '5.00USD + 0.50%',
-                     '3.00USD + 0.50%',
-                     '1.50USD + 0.50%',
+                'fee' => [
+                    '5.00USD + 0.50%',
+                    '3.00USD + 0.50%',
+                    '1.50USD + 0.50%',
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'IDR',
                     'IDR',
                     'IDR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH',
                     'CASH',
                     'BANK DEPOSIT'
 
                 ],
-                'partner' =>[
+                'partner' => [
                     'INTEL EXPRESS',
                     'SURICHANGE',
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '46' =>[
+            '46' => [
                 'country' => 'ISRAEL',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%',
-                     '1.50%',
+                'fee' => [
+                    '1.50%',
+                    '1.50%',
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'EUR',
                     'EUR/USD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH',
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'INTEL EXPRESS',
                     'UNIGIROS LTD'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT',
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT',
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '47' =>[
+            '47' => [
                 'country' => 'ITALY',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%'
+                'fee' => [
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'EUR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'INTEL EXPRESS EURO',
                     'ITRANSFER',
                     'MONEY EXCHANGE ITALIA'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT',
-                   'PARTNER/PAYSPRINT',
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT',
+                    'PARTNER/PAYSPRINT',
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '48' =>[
+            '48' => [
                 'country' => 'IVORY COAST',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.25USD + 0.50%'
+                'fee' => [
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'XOF'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH / MOBILE WALLET'
                 ],
-                'partner' =>[
+                'partner' => [
                     'BANQUE REGIONALE DU MARCHE(BRM)',
                     'JUDA EXPRESS',
                     'TERRAPAY EUROS'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '49' =>[
+            '49' => [
                 'country' => 'JAPAN',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '15USD + 0.50%'
+                'fee' => [
+                    '15USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'JPY'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'PRABHU GROUP INC'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT'
+                ],
 
             ],
-            '50' =>[
+            '50' => [
                 'country' => 'JORDAN',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '4.00USD + 0.50%'
+                'fee' => [
+                    '4.00USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'JOD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'UREMIT INTERNATIONAL'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '51' =>[
+            '51' => [
                 'country' => 'KENYA',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.25USD + 0.50%',
-                     '3.00%',
+                'fee' => [
+                    '1.25USD + 0.50%',
+                    '3.00%',
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'KES',
                     'USD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'MOBILE WALLET / BANK DEPOSIT',
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'DAHABSHIIL',
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'MOBILE MONEY/PARTNER',
-                   'MOBILE MONEY/PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'MOBILE MONEY/PARTNER',
+                    'MOBILE MONEY/PARTNER'
+                ],
             ],
-            '52' =>[
+            '52' => [
                 'country' => 'KOSOVO',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%(MIN 2.50USD)'
+                'fee' => [
+                    '1.50%(MIN 2.50USD)'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'EUR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'UPT ODEME'
                 ],
-                'partner' =>[
+                'partner' => [
                     'UPT ODEME'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '53' =>[
+            '53' => [
                 'country' => 'KUWAIT',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '3.50USD + 0.50%'
+                'fee' => [
+                    '3.50USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'KED'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'UREMIT INTERNATIONAL'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '54' =>[
+            '54' => [
                 'country' => 'MADAGASCAR',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.25USD + 0.50%'
+                'fee' => [
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'MGA'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'MOBILE WALLET'
                 ],
-                'partner' =>[
+                'partner' => [
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '55' =>[
+            '55' => [
                 'country' => 'MALI',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.25USD + 0.50%',
-                     '2.00USD + 0.50%',
-                     '1.80%',
+                'fee' => [
+                    '1.25USD + 0.50%',
+                    '2.00USD + 0.50%',
+                    '1.80%',
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'XOF',
                     'XOF',
                     'XOF'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'MOBILE WALLET',
                     'BANK DEPOSIT',
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'BANQUE MALIENNE DE SOLIDARITE(B.M.S)',
                     'BANQUE DE DEVELOPMENT DU MALI(B.D.M)',
                     'CHEICK SALL SERVICES',
                     'TERRAPAY EUROS',
                     'TIMBUCTU EXCHANGE'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '56' =>[
+            '56' => [
                 'country' => 'MEXICO',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '3.00USD + 0.50%'
+                'fee' => [
+                    '3.00USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'MXN'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'ORDER EXPRESS'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '57' =>[
+            '57' => [
                 'country' => 'MOLDOVA',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%(MIN 1.00USD)'
+                'fee' => [
+                    '1.50%(MIN 1.00USD)'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'USD,MDL,EUR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'I.S. POSTA MOLDOVEI S.A',
                     'INTEL EXPRESS',
                     'SMITH $ SMITH'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
 
             ],
-            '58' =>[
+            '58' => [
                 'country' => 'MOROCCO',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.70%'
+                'fee' => [
+                    '1.70%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'MAD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'CASH PLUS',
                     'DAMANE CASH',
                     'TRANSFERT EXPRESS S.A'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '59' =>[
+            '59' => [
                 'country' => 'MOZAMBIQUE',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.25USD + 0.50%'
+                'fee' => [
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'MZN'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'MOBILE WALLET'
                 ],
-                'partner' =>[
+                'partner' => [
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '60' =>[
+            '60' => [
                 'country' => 'NEPAL',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '3.50USD + 0.50%',
-                     '1.25USD + 0.50%'
+                'fee' => [
+                    '3.50USD + 0.50%',
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'NPR',
                     'NPR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH',
                     'MOBILE WALLET'
                 ],
-                'partner' =>[
+                'partner' => [
                     'BANK OF KATHMANDU LTD',
                     'PRABHU GROUP INC',
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '61' =>[
+            '61' => [
                 'country' => 'NETHERLANDS',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%'
+                'fee' => [
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'EUR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'SURICHANGE'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '62' =>[
+            '62' => [
                 'country' => 'NICARAGUA',
                 'range' => [
-                     '0 - 1000USD',
-                     '1000USD - ONWARDS'
+                    '0 - 1000USD',
+                    '1000USD - ONWARDS'
                 ],
-                    'fee' => [
-                     '2.25USD + 0.50%',
-                     '1.50%'
+                'fee' => [
+                    '2.25USD + 0.50%',
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'USD',
                     'USD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH',
                     'BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'MORE MT',
                     'TELEDOLAR S.A'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '63' =>[
+            '63' => [
                 'country' => 'NIGER',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.25USD + 0.50%'
+                'fee' => [
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'XOF'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'BANQUE REGIONALE DE MARCHES(BRM)',
                     'JUDA EXPRESS-EURO'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '64' =>[
+            '64' => [
                 'country' => 'NIGERIA',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '2.00USD + 0.50%'
+                'fee' => [
+                    '2.00USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'NGN / USD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'CASH POT LTD(USD)',
                     'NAIRAGRAM',
                     'SWISS REMIT GMBH'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT',
-                   'PARTNER/PAYSPRINT',
-                   'PARTNER/PAYSPRINT',
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT',
+                    'PARTNER/PAYSPRINT',
+                    'PARTNER/PAYSPRINT',
+                ],
             ],
-            '65' =>[
+            '65' => [
                 'country' => 'PAKISTAN',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%'
+                'fee' => [
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'PKR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'HABIB METRO BANK'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
 
-            '66' =>[
+            '66' => [
                 'country' => 'PANAMA',
                 'range' => [
-                     '0 - 300USD',
-                     '300USD - ONWARDS'
+                    '0 - 300USD',
+                    '300USD - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50USD + 0.50%',
-                     '1.00%'
+                'fee' => [
+                    '1.50USD + 0.50%',
+                    '1.00%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'USD',
                     'USD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH',
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'DOL CORPORATION INC',
                     'RED PLUS'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '67' =>[
+            '67' => [
                 'country' => 'PARAGUAY',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '2.75USD + 0.50%',
-                     '0.50%'
+                'fee' => [
+                    '2.75USD + 0.50%',
+                    '0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'USD',
                     'PYG'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH',
                     'BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'BANCO FAMILIAR',
                     'MORE MT'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '68' =>[
+            '68' => [
                 'country' => 'PERU',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%',
-                     '1.70USD + 0.50%'
+                'fee' => [
+                    '1.50%',
+                    '1.70USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'USD,EUR',
                     'PEN'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH / BANK DEPOSIT',
                     'CASH / BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'ARGENPER SRL',
                     'AREGNPER SRL EUROS',
                     'JET PERU EUROS',
                     'JET PERU S.A',
                     'MORE MT'
                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '69' =>[
+            '69' => [
                 'country' => 'PHILIPPINES',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.00%',
-                     '1.25USD + 0.50%',
-                     '3.50USD + 0.50%'
+                'fee' => [
+                    '1.00%',
+                    '1.25USD + 0.50%',
+                    '3.50USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'PHP',
                     'PHP',
                     'PHP'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH / BANK DEPOSIT ONLY AUB',
                     'BANK DEPOSIT - ALL BANK',
                     'MLHULLIER - CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'ASIA UNITED BANK',
                     'LBC EXPRESS INC',
                     'MLHUILLIER',
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT',
-                   'PARTNER/PAYSPRINT',
-                   'PARTNER/PAYSPRINT',
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT',
+                    'PARTNER/PAYSPRINT',
+                    'PARTNER/PAYSPRINT',
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '70' =>[
+            '70' => [
                 'country' => 'PORTUGAL',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%'
+                'fee' => [
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'EUR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'MAXPAY',
                     'REAL TRANSFER'
-                 ],
-                 'collection' =>[
+                ],
+                'collection' => [
                     'PARTNER',
-                   'PARTNER/PAYSPRINT'
-                 ],
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '71' =>[
+            '71' => [
                 'country' => 'PUERTO RICO',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '2.00%'
+                'fee' => [
+                    '2.00%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'USD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'LA NACIONAL'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '72' =>[
+            '72' => [
                 'country' => 'ROMANIA',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.30%'
+                'fee' => [
+                    '1.30%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'LED,EUR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'MONEY TRANS',
                     'SMITH $ SMITH'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '73' =>[
+            '73' => [
                 'country' => 'RWANDA',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '3.00%',
-                     '1.50%',
-                     '1.25USD + 0.50%'
+                'fee' => [
+                    '3.00%',
+                    '1.50%',
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'RWF',
                     'RWF',
                     'RWF'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH - DAHAB',
                     'CASH / BANK DEPOSIT - MAICO',
                     'MOBILE WALLET / BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'DAHABSHIIL',
                     'MAICO MONEY TRANSFER LTD',
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'MOBILE MONEY/PARTNER',
-                   'MOBILE MONEY/PARTNER',
-                   'MOBILE MONEY/PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'MOBILE MONEY/PARTNER',
+                    'MOBILE MONEY/PARTNER',
+                    'MOBILE MONEY/PARTNER'
+                ],
             ],
-            '74' =>[
+            '74' => [
                 'country' => 'SENEGAL',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%',
-                     '1.25USD + 0.50%'
+                'fee' => [
+                    '1.50%',
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'XOF',
                     'XOF'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASHMINUTE',
                     'MOBILE WALLET'
                 ],
-                'partner' =>[
+                'partner' => [
                     'ARICA P.WALLER/BANCO',
                     'BANQUE REGIONALE DE MARCHES(BRM)',
                     'CASH MINUTE',
                     'TERRAPAY',
                     'TRANSFERZERO'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '75' =>[
+            '75' => [
                 'country' => 'SIERRA LEONE',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '0.50%'
+                'fee' => [
+                    '0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'SLL'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH / BANK DEPOSIT / WALLET'
                 ],
-                'partner' =>[
+                'partner' => [
                     'AFRICA P.CASH',
                     'AFRO INTERNATIONAL LTD',
                     'CASHMINUTE',
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '76' =>[
+            '76' => [
                 'country' => 'SOMALIA',
                 'range' => [
-                     '0 - ONWARDS'
-                ],
-                    'fee' => [
-                     '1.75%'
-                ],
-                    'payoutcurrency' => [
-                    'USD'
-                ],
-                    'payoutmethod' => [
-                    'CASH'
-                ],
-                'partner' =>[
-                    'DAHABSHIIL',
-                    'JUBA EXPRESS'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
-            ],
-            '77' =>[
-                'country' => 'SOUTH AFRICA',
-                'range' => [
-                     '0 - ONWARDS'
-                ],
-                    'fee' => [
-                     '1.25%'
-                ],
-                    'payoutcurrency' => [
-                    'ZAR'
-                ],
-                    'payoutmethod' => [
-                    'BANK DEPOSIT'
-                ],
-                'partner' =>[
-                    'JUBA EXPRESS'
-                 ],
-                 'collection' =>[
-                   'MOBILE MONEY/PARTNER'
-                 ],
-            ],
-            '78' =>[
-                'country' => 'SOUTH SUDAN',
-                'range' => [
-                     '0 - ONWARDS'
-                ],
-                    'fee' => [
-                     '1.75%'
-                ],
-                    'payoutcurrency' => [
-                    'USD'
-                ],
-                    'payoutmethod' => [
-                    'CASH'
-                ],
-                'partner' =>[
-                    'JUBA EXPRESS'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
-            ],
-            '79' =>[
-                'country' => 'SPAIN',
-                'range' => [
-                     '0 - ONWARDS'
-                ],
-                    'fee' => [
-                     '1.50%'
-                ],
-                    'payoutcurrency' => [
-                    'EUR'
-                ],
-                    'payoutmethod' => [
-                    'CASH / BANK DEPOSIT'
-                ],
-                 'partner' =>[
-                    'MONEY EXCHANCE ESPANA'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT'
-                 ],
-            ],
-            '80' =>[
-                'country' => 'SRI LANKA',
-                'range' => [
-                     '0 - ONWARDS'
-                ],
-                    'fee' => [
-                     '1.25USD + 0.50%'
-                ],
-                    'payoutcurrency' => [
-                    'LRK'
-                ],
-                    'payoutmethod' => [
-                    'CASH / BANK DEPOSIT'
-                ],
-                'partner' =>[
-                    'SAMPATH BANK',
-                    'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
-            ],
-            '81' =>[
-                'country' => 'SUDAN',
-                'range' => [
-                     '0 - ONWARDS'
-                ],
-                    'fee' => [
-                     '1.75%'
-                ],
-                    'payoutcurrency' => [
-                    'SDG,USD'
-                ],
-                    'payoutmethod' => [
-                    'CASH'
-                ],
-                'partner' =>[
-                    'DAHABSHIIL',
-                    'JUBA EXPRESS'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
-            ],
-            '82' =>[
-                'country' => 'SURINAME',
-                'range' => [
-                     '0 - ONWARDS',
                     '0 - ONWARDS'
                 ],
-                    'fee' => [
-                    '1.50USD + 0.50%',
-                     '1.7%(MIN 1.50USD)'
+                'fee' => [
+                    '1.75%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
+                    'USD'
+                ],
+                'payoutmethod' => [
+                    'CASH'
+                ],
+                'partner' => [
+                    'DAHABSHIIL',
+                    'JUBA EXPRESS'
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
+            ],
+            '77' => [
+                'country' => 'SOUTH AFRICA',
+                'range' => [
+                    '0 - ONWARDS'
+                ],
+                'fee' => [
+                    '1.25%'
+                ],
+                'payoutcurrency' => [
+                    'ZAR'
+                ],
+                'payoutmethod' => [
+                    'BANK DEPOSIT'
+                ],
+                'partner' => [
+                    'JUBA EXPRESS'
+                ],
+                'collection' => [
+                    'MOBILE MONEY/PARTNER'
+                ],
+            ],
+            '78' => [
+                'country' => 'SOUTH SUDAN',
+                'range' => [
+                    '0 - ONWARDS'
+                ],
+                'fee' => [
+                    '1.75%'
+                ],
+                'payoutcurrency' => [
+                    'USD'
+                ],
+                'payoutmethod' => [
+                    'CASH'
+                ],
+                'partner' => [
+                    'JUBA EXPRESS'
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
+            ],
+            '79' => [
+                'country' => 'SPAIN',
+                'range' => [
+                    '0 - ONWARDS'
+                ],
+                'fee' => [
+                    '1.50%'
+                ],
+                'payoutcurrency' => [
+                    'EUR'
+                ],
+                'payoutmethod' => [
+                    'CASH / BANK DEPOSIT'
+                ],
+                'partner' => [
+                    'MONEY EXCHANCE ESPANA'
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT'
+                ],
+            ],
+            '80' => [
+                'country' => 'SRI LANKA',
+                'range' => [
+                    '0 - ONWARDS'
+                ],
+                'fee' => [
+                    '1.25USD + 0.50%'
+                ],
+                'payoutcurrency' => [
+                    'LRK'
+                ],
+                'payoutmethod' => [
+                    'CASH / BANK DEPOSIT'
+                ],
+                'partner' => [
+                    'SAMPATH BANK',
+                    'TERRAPAY'
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
+            ],
+            '81' => [
+                'country' => 'SUDAN',
+                'range' => [
+                    '0 - ONWARDS'
+                ],
+                'fee' => [
+                    '1.75%'
+                ],
+                'payoutcurrency' => [
+                    'SDG,USD'
+                ],
+                'payoutmethod' => [
+                    'CASH'
+                ],
+                'partner' => [
+                    'DAHABSHIIL',
+                    'JUBA EXPRESS'
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
+            ],
+            '82' => [
+                'country' => 'SURINAME',
+                'range' => [
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
+                ],
+                'fee' => [
+                    '1.50USD + 0.50%',
+                    '1.7%(MIN 1.50USD)'
+                ],
+                'payoutcurrency' => [
                     'SDR',
                     'EUR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH ',
                     'BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'SURICHANGE'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '83' =>[
+            '83' => [
                 'country' => 'SWITZERLAND',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%'
+                'fee' => [
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'CHF'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'ME MONEY EXCHANGE GMBH'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '84' =>[
+            '84' => [
                 'country' => 'TANZANIA',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.25USD + 0.50%'
+                'fee' => [
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'TZS'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'MOBILE WALLET/ BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'MOBILE MONEY/PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'MOBILE MONEY/PARTNER'
+                ],
             ],
-            '85' =>[
+            '85' => [
                 'country' => 'TOGO',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.25USD + 0.50%'
+                'fee' => [
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'XOF'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'BANQUE REGIONALE DE MARCHES(BRM)',
                     'JUBA EXPRESS-EUROS'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '86' =>[
+            '86' => [
                 'country' => 'TUNISIA',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '0.50%'
+                'fee' => [
+                    '0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'TND'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'BANQUE DE LE-HABITAT-TUNNEX'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '87' =>[
+            '87' => [
                 'country' => 'TURKEY',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.70%(MIN 2.50USD)'
+                'fee' => [
+                    '1.70%(MIN 2.50USD)'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'TRY,EUR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
                 ],
-                'partner' =>[
+                'partner' => [
                     'INTEL EXPRESS',
                     'TERRAPAY',
                     'OPT ODEME'
-                 ],
-                 'collection' =>[
-                   'PARTNER',
-                   'PARTNER',
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '88' =>[
+            '88' => [
                 'country' => 'UGANDA',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
+                'fee' => [
                     '0.75%',
-                     '1.25USD + 0.50%'
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'EUR',
                     'UGR'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH',
                     'MOBILE WALLET'
                 ],
-                'partner' =>[
+                'partner' => [
                     'JUBA EXPRESS',
                     'TERRAPAY'
-                 ],
-                 'collection' =>[
-                   'MOBILE MONEY/PARTNER',
-                   'MOBILE MONEY/PARTNER'
+                ],
+                'collection' => [
+                    'MOBILE MONEY/PARTNER',
+                    'MOBILE MONEY/PARTNER'
 
-                 ],
+                ],
             ],
-            '89' =>[
+            '89' => [
                 'country' => 'UKRAINE',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
+                'fee' => [
                     '1.50%',
-                     '1.50%'
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'USD,EUR',
                     'UAH'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH',
                     'CARD PAYMENT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'INTEL EXPRESS'
-                 ],
-                 'collection' =>[
-                   'PARTNER'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '90' =>[
+            '90' => [
                 'country' => 'UNITED ARAB EMIRATES',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.75%'
+                'fee' => [
+                    '1.75%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'AED'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH'
-                    ],
-                    'partner' =>[
-                        'JUBA EXPRESS',
-                        'UREMIT INTERNATIONAL'
-                     ],
-                     'collection' =>[
-                       'PARTNER/PAYSPRINT',
-                       'PARTNER/PAYSPRINT'
-                     ],
+                ],
+                'partner' => [
+                    'JUBA EXPRESS',
+                    'UREMIT INTERNATIONAL'
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT',
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '91' =>[
+            '91' => [
                 'country' => 'UNITED KINGDOM',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%'
+                'fee' => [
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'GBP'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH / BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'INAIRA TRANSFER',
                     'INTEL EXPRESS EUROS'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT',
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT',
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '92' =>[
+            '92' => [
                 'country' => 'UNITED STATES',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
+                'fee' => [
                     '2.00%',
-                     '1.80%'
+                    '1.80%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'USD',
                     'USD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'CASH',
                     'BANK DEPOSIT'
                 ],
-                'partner' =>[
+                'partner' => [
                     'DELGADO TRAVEL(USA)',
                     'JET PERU S.A',
                     'LA NACIONAL',
                     'MORE MT',
                     'ORDER EXPRESS'
-                 ],
-                 'collection' =>[
-                   'PARTNER/PAYSPRINT',
-                   'PARTNER/PAYSPRINT',
-                   'PARTNER/PAYSPRINT',
-                   'PARTNER/PAYSPRINT',
-                   'PARTNER/PAYSPRINT'
-                 ],
+                ],
+                'collection' => [
+                    'PARTNER/PAYSPRINT',
+                    'PARTNER/PAYSPRINT',
+                    'PARTNER/PAYSPRINT',
+                    'PARTNER/PAYSPRINT',
+                    'PARTNER/PAYSPRINT'
+                ],
             ],
-            '93' =>[
+            '93' => [
                 'country' => 'URUGUAY',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50%'
+                'fee' => [
+                    '1.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'UYU'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'BANK DEPOSIT'
-                    ],
-                    'partner' =>[
-                        'GIROS MORE URUGUAY'
-                     ],
-                     'collection' =>[
-                       'PARTNER'
-                     ],
+                ],
+                'partner' => [
+                    'GIROS MORE URUGUAY'
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '94' =>[
+            '94' => [
                 'country' => 'VENEZUELA',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS',
-                     '0 - ONWARDS'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS',
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
+                'fee' => [
                     '1.00USD + 0.50%',
                     '1.50USD + 4.50%',
                     '1.50USD + 4.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'VES',
                     'USD',
                     'EUR'
                 ],
-                    'payoutmethod' => [
-                   'BANK DEPOSIT',
-                   'CASH',
-                   'CASH'
+                'payoutmethod' => [
+                    'BANK DEPOSIT',
+                    'CASH',
+                    'CASH'
 
-                    ],
-                    'partner' =>[
-                        'CASA DE CAMBIOS INSULAR',
-                        'DOL INCORPORATION INC',
-                        'INTERCREDIT'
-                     ],
-                     'collection' =>[
-                       'PARTNER',
-                       'PARTNER',
-                       'PARTNER'
-                     ],
+                ],
+                'partner' => [
+                    'CASA DE CAMBIOS INSULAR',
+                    'DOL INCORPORATION INC',
+                    'INTERCREDIT'
+                ],
+                'collection' => [
+                    'PARTNER',
+                    'PARTNER',
+                    'PARTNER'
+                ],
             ],
-            '95' =>[
+            '95' => [
                 'country' => 'VIETNAM',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.50USD + 0.50%'
+                'fee' => [
+                    '1.50USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'VND'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'BANK DEPOSIT'
-                    ],
-                    'partner' =>[
-                        'TERRAPAY'
-                     ],
-                     'collection' =>[
-                       'PARTNER'
-                     ],
+                ],
+                'partner' => [
+                    'TERRAPAY'
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '96' =>[
+            '96' => [
                 'country' => 'ZAMBIA',
                 'range' => [
-                     '0 - ONWARDS'
+                    '0 - ONWARDS'
                 ],
-                    'fee' => [
-                     '1.25USD + 0.50%'
+                'fee' => [
+                    '1.25USD + 0.50%'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'ZMW'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'MOBILE WALLET'
-                    ],
-                    'partner' =>[
-                        'TERRAPAY'
-                     ],
-                     'collection' =>[
-                       'PARTNER'
-                     ],
+                ],
+                'partner' => [
+                    'TERRAPAY'
+                ],
+                'collection' => [
+                    'PARTNER'
+                ],
             ],
-            '97' =>[
+            '97' => [
                 'country' => 'CANADA',
                 'range' => [
-                     '0 - ONWARDS',
-                     '0 - ONWARDS',
-                     '0 - ONWARD'
+                    '0 - ONWARDS',
+                    '0 - ONWARDS',
+                    '0 - ONWARD'
                 ],
-                    'fee' => [
-                     '1.25USD ',
-                     '1.5%',
-                     '2.50USD'
+                'fee' => [
+                    '1.25USD ',
+                    '1.5%',
+                    '2.50USD'
                 ],
-                    'payoutcurrency' => [
+                'payoutcurrency' => [
                     'CAD',
                     'CAD',
                     'CAD'
                 ],
-                    'payoutmethod' => [
+                'payoutmethod' => [
                     'E-TRANSFER',
                     'BANK DEPOSIT',
                     'PREPAID CARD'
-                    ],
-                    'partner' =>[
-                        'PAYSPRINT'
-                     ],
-                     'collection' =>[
-                       'PAYSPRINT'
-                     ],
+                ],
+                'partner' => [
+                    'PAYSPRINT'
+                ],
+                'collection' => [
+                    'PAYSPRINT'
+                ],
             ],
         ];
 
 
-     return $list;
-
-
+        return $list;
     }
 
+
+
+
+    // This is the Section where the SOAP integration starts..
+    public function cashpot4()
+    {
+
+
+        $login = new TWSauth();
+        $login->Username = '8349';
+        $login->Password = 'X84G1F2ARH63';
+        $login->Version = '1';
+
+        $phone = new TWSPhoneConfig();
+        $phone->IncSenderCountryCode = true;
+        $phone->SenderExitPrefix = '+';
+        $phone->IncSenderHyphen = false;
+        $phone->IncReceiverCountryCode = true;
+        $phone->ReceiverExitPrefix = '+';
+        $phone->IncReceiverHyphen = false;
+
+        $url_wsdl = "https://ws.moneyexchange.es/wsdl/IWSmoney";
+
+
+        try {
+        $clientSoap = new \SoapClient($url_wsdl);
+
+            $TransactionMoEx = $clientSoap->__soapCall("MEGetExtTransactionMoEx", [
+                "Login"       => $login,
+                "Reference"   =>  "004500002313",
+                "phoneConfig" => $phone
+            ]);
+        } catch (\Exception $e) {
+            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+        }
+
+        var_dump($TransactionMoEx);
+
+        if ($TransactionMoEx['return'] == 0) {
+
+            $traMoEx = (object) $TransactionMoEx['transaction'];
+            //example for access element
+            echo 'TransactionId: ' . $traMoEx->TransactionId . '<br>';
+            //Show all elements of Class $TransactionMoEx
+            var_dump($traMoEx);
+        } else return "error";
+    }
 }

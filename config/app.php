@@ -221,7 +221,8 @@ return [
         'ReCaptcha' => Biscolab\ReCaptcha\Facades\ReCaptcha::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Newsletter' => Spatie\Newsletter\NewsletterFacade::class,
-        'Image' => Intervention\Image\Facades\Image::class
+        'Image' => Intervention\Image\Facades\Image::class,
+        'SoapClient' => SoapClient::class
 
     ],
 
