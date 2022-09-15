@@ -795,10 +795,10 @@ margin-top:-2px  */
         </div>
     </div>
 </div>
-{{-- Box tab --}}
+<!-- {{-- Box tab --}}
 @include('include.newpage.currencyconversion')
 
-{{-- End of tab box --}}
+{{-- End of tab box --}} -->
 
 {{-- Avalable country --}}
 <div class="container mt-8 mb-5">
