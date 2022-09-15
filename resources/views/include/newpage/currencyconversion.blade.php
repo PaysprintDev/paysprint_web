@@ -136,20 +136,27 @@
 
               <div class="col-md-4">
                 <label for="text" class="form-label">Amount to Send</label>
-                <input type="number" class="form-control" name="amount" id="amount" aria-describedby="select" placeholder="Input your amount">
+                <input type="number" class="form-control" name="amount" id="amount" aria-describedby="select" placeholder="Type amount">
               </div>
 
 
             </div>
           </div><br>
-          <button type="button" class="btn btn-warning " id="shift" onclick="convertFee()">Convert</button>
-          <br>
+          <div class="row">
+            <div class="col-md-2">
+              <button type="button" class="btn btn-warning " id="shift" onClick='convertFee();'>Get Result</button>
+            </div>
+            <div class="col-md-10 ps-2">
+              <span id="rate" style="font-size:15px; font-weight:bold;"></span> <br> <span id="local" style="font-size:15px; font-weight:bold"></span>
+            </div>
+          </div>
 
           <div class="currencyResult disp-0">
             <div class="row" style="margin-top: 2rem">
               <div class="col-md-12">
                 {{-- <h4>Charge Fee<span>0.00</span></h4> --}}
                 <h4><span id="totalprice"></span></h4>
+                <h6 id="paymethod"></h6>
               </div>
             </div>
             <div class="row">
@@ -162,7 +169,7 @@
 
               </div>
               <div class="col-md-4">
-                <a class="btn btn-warning" href="{{ route('AdminLogin') }}" role="button">Click to Send Now</a>
+                <a class="btn btn-warning" href="{{ route('Ajaxlogin') }}" role="button">Click to Send Now</a>
               </div>
             </div>
           </div>
@@ -204,7 +211,7 @@
             </div>
             <div class="col-md-4">
               <label for="text" class="form-label">Amount to Receive</label>
-              <input type="number" step="0.01" min="0.01" class="form-control" name="paying" id="paying" aria-describedby="select" placeholder="Input your amount">
+              <input type="number" step="0.01" min="0.01" class="form-control" name="paying" id="paying" aria-describedby="select" placeholder="Type Amount">
             </div>
 
 
@@ -212,26 +219,30 @@
 
 
           </div><br>
-          <button type="button" class="btn btn-warning " id="shift2" onClick='rateFee()'>Convert</button>
-          <br>
+          <div class="row">
+            <div class="col-md-2">
+              <button type="button" class="btn btn-warning " id="shift2" onClick='rateFee()'>Get Result</button>
+            </div>
+            <div class="col-md-10 ps-2">
+              <span id="rates" style="font-size:15px; font-weight:bold;"></span> <br> <span id="locals" style="font-size:15px; font-weight:bold"></span>
+            </div>
+          </div>
           <div class="currencyDisplay disp-0">
             <div class="row" style="margin-top: 2rem">
 
               <div class="col-md-12">
                 <h4><span id="totalpricerate"></span></h4>
+                <h6 id="paysmethod"></h6>
               </div>
             </div>
             <div class="row">
               <div class="col-md-4">
-                <h6 style="font-size:13px"><span id="rates"></span></h6>
-                <h6 style="font-size:13px"><span id="locals"></span></h6>
-
               </div>
               <div class="col-md-4 mx-auto">
 
               </div>
               <div class="col-md-4">
-                <a class="btn btn-warning" href="{{ route('AdminLogin') }}" role="button">Click to Send Now</a>
+                <a class="btn btn-warning" href="{{ route('Ajaxlogin') }}" role="button">Click to Receive Now</a>
               </div>
             </div>
           </div>

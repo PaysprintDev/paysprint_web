@@ -181,7 +181,7 @@ class MarketplaceController extends Controller
     {
 
         try {
-            $clients = ClientInfo::get('industry');
+            $clients = ClientInfo::orderBy('industry', 'ASC')->groupBy('industry')->get();
             $data = $clients;
 
             $status = 200;

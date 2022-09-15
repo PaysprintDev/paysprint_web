@@ -269,9 +269,44 @@
         $('#shift').text('Convert');
 
 
+
+        const pay = payoutMethod(receiving);
+
+
       }
     });
 
+  }
+
+
+  function payoutMethod(code) {
+
+    $.ajax({
+
+      url: "/api/v1/payoutmethod/" + code,
+      method: 'GET',
+
+      success: function(rsp) {
+        let result = JSON.parse(rsp.data.payoutmethod);
+        var finalresult = 'Pay Method:' + ' ' + result;
+        $('#paymethod').text(finalresult);
+      }
+    });
+  }
+
+  function receivepayoutMethod(code) {
+
+    $.ajax({
+
+      url: "/api/v1/payoutmethod/" + code,
+      method: 'GET',
+
+      success: function(rsp) {
+        let result = JSON.parse(rsp.data.payoutmethod);
+        var finalresult = 'Pay Method:' + ' ' + result;
+        $('#paysmethod').text(finalresult);
+      }
+    });
   }
 
   $('#paying').keyup(function() {
@@ -326,6 +361,9 @@
 
 
         $('#shift2').text('Convert');
+
+        const pays = receivepayoutMethod(foreign);
+
       }
     });
 
