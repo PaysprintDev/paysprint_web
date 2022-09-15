@@ -36,6 +36,8 @@ use App\EscrowAccount;
 
 use App\HistoryReport;
 
+use App\MarketplaceNews;
+
 use App\ReferralClaim;
 
 use App\ReferredUsers;
@@ -49,6 +51,8 @@ use App\Mail\sendEmail;
 use App\Traits\Trulioo;
 
 use App\InvestorRelation;
+
+use App\UnverifiedMerchant;
 
 use App\ReferralGenerate;
 
@@ -165,10 +169,13 @@ use App\TransactionCost as TransactionCost;
 use App\BVNVerificationList as BVNVerificationList;
 use App\StoreProducts;
 use App\StoreMainShop;
+use App\FlutterwaveModel;
+use App\Traits\SendgridMail;
 use Illuminate\Http\Response;
 
 class MarketplaceController extends Controller
 {
+    use SendgridMail;
     //
     public function getmarketCategory(Request $req)
     {
@@ -248,6 +255,7 @@ class MarketplaceController extends Controller
         return response()->json($response, $code);
     }
 
+
     //latest merchant
     public function newestMerchant(Request $req)
     {
@@ -271,6 +279,7 @@ class MarketplaceController extends Controller
 
         return response()->json($response, $code);
     }
+
 
     //find product
     public function findProduct(Request $req)
@@ -307,9 +316,56 @@ class MarketplaceController extends Controller
         return response()->json($response, $code);
     }
 
-    //join our community
-    public function joinCommunity(Request $Req)
+
+    //Get Products
+    public function getProducts(Request $Req)
     {
-        
+        try {
+
+            $data = StoreProducts::get();
+
+            $response = [
+                'data' => $data,
+                'status' => 'success',
+            ];
+
+            $code = 200;
+        } catch (\Throwable $th) {
+            $response = [
+                'data' => [],
+                'message' => $th->getMessage(),
+                'status' => 'error'
+            ];
+
+            $code = 400;
+        }
+
+        return response()->json($response, $code);
+    }
+
+
+    //getting all marketplace News
+    public function getNews(Request $req)
+    {
+        try {
+            $data = MarketplaceNews::orderBy('created_at', 'DESC')->get();
+
+            $response = [
+                'data' => $data,
+                'status' => 'success',
+            ];
+
+            $code = 200;
+        } catch (\Throwable $th) {
+            $response = [
+                'data' => [],
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ];
+
+            $code = 400;
+        }
+
+        return response()->json($response, $code);
     }
 }
