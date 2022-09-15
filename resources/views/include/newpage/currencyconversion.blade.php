@@ -136,13 +136,13 @@
 
               <div class="col-md-4">
                 <label for="text" class="form-label">Amount to Send</label>
-                <input type="number" class="form-control" name="amount" id="amount" aria-describedby="select" placeholder="Input your amount">
+                <input type="number" class="form-control" name="amount" id="amount" aria-describedby="select" placeholder="Type amount">
               </div>
 
 
             </div>
           </div><br>
-          <button type="button" class="btn btn-warning " id="shift" onclick="convertFee()">Convert</button>
+          <button type="button" class="btn btn-warning " id="shift" onclick="convertFee()">Get Result</button>
           <br>
 
           <div class="currencyResult disp-0">
@@ -204,7 +204,7 @@
             </div>
             <div class="col-md-4">
               <label for="text" class="form-label">Amount to Receive</label>
-              <input type="number" step="0.01" min="0.01" class="form-control" name="paying" id="paying" aria-describedby="select" placeholder="Input your amount">
+              <input type="number" step="0.01" min="0.01" class="form-control" name="paying" id="paying" aria-describedby="select" placeholder="Type Amount">
             </div>
 
 
@@ -212,7 +212,7 @@
 
 
           </div><br>
-          <button type="button" class="btn btn-warning " id="shift2" onClick='rateFee()'>Convert</button>
+          <button type="button" class="btn btn-warning " id="shift2" onClick='rateFee()'>Get Result</button>
           <br>
           <div class="currencyDisplay disp-0">
             <div class="row" style="margin-top: 2rem">
@@ -225,13 +225,12 @@
               <div class="col-md-4">
                 <h6 style="font-size:13px"><span id="rates"></span></h6>
                 <h6 style="font-size:13px"><span id="locals"></span></h6>
-
               </div>
               <div class="col-md-4 mx-auto">
 
               </div>
               <div class="col-md-4">
-                <a class="btn btn-warning" href="{{ route('Ajaxlogin') }}" role="button">Click to Send Now</a>
+                <a class="btn btn-warning" href="{{ route('Ajaxlogin') }}" role="button">Click to Receive Now</a>
               </div>
             </div>
           </div>
