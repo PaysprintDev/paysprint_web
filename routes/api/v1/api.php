@@ -33,6 +33,7 @@ Route::prefix('/v1')->group(function () {
     Route::get('getallnews',  ['uses' => 'MarketplaceController@getNews'])->name('get news');
 
     Route::get('conversionrate/{local}/{foreign}',  ['uses' => 'Controller@getConversionRate']);
+    Route::get('payoutmethod/{foreign}',  ['uses' => 'Controller@getPayoutMethod']);
 
 
     Route::group(['middleware' => ['appkey']], function () {

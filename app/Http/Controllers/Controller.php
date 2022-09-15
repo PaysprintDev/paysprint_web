@@ -160,75 +160,74 @@ class Controller extends BaseController
 
 
 
-        // Get Markup
-        $markuppercent = $this->markupPercentage();
+            // Get Markup
+            $markuppercent = $this->markupPercentage();
 
-        $markValue = (1 + ($markuppercent[0]->percentage / 100));
-
-
-
-        $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
-
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://api.currencylayer.com/live?access_key=' . $access_key,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-            CURLOPT_HTTPHEADER => array(
-                'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
-            ),
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
-        $result = json_decode($response);
+            $markValue = (1 + ($markuppercent[0]->percentage / 100));
 
 
-        $query = [];
-        $official = [];
-        $countryQuery = [];
 
-        foreach ($result->quotes as $value) {
+            $access_key = '6173fa628b16d8ce1e0db5cfa25092ac';
 
-            if ($value == 1) {
-                $query[] = $value;
-            } else {
-                $query[] = $value * $markValue;
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'http://api.currencylayer.com/live?access_key=' . $access_key,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+                CURLOPT_HTTPHEADER => array(
+                    'Cookie: __cfduid=d430682460804be329186d07b6e90ef2f1616160177'
+                ),
+            ));
+
+            $response = curl_exec($curl);
+
+            curl_close($curl);
+
+            $result = json_decode($response);
+
+
+            $query = [];
+            $official = [];
+            $countryQuery = [];
+
+            foreach ($result->quotes as $value) {
+
+                if ($value == 1) {
+                    $query[] = $value;
+                } else {
+                    $query[] = $value * $markValue;
+                }
+
+                $official[] = $value;
             }
 
-            $official[] = $value;
-        }
+
+
+            $countryRec = ConversionCountry::orderBy('id', 'ASC')->get();
 
 
 
-        $countryRec = ConversionCountry::orderBy('id', 'ASC')->get();
+            foreach ($countryRec as $country) {
+                $countryQuery[] = $country->country;
+            }
+
+            $dataInfo = [
+                'country' => $countryQuery,
+                'query' => $query,
+                'official' => $official,
+            ];
 
 
 
-        foreach ($countryRec as $country) {
-            $countryQuery[] = $country->country;
-        }
-
-        $dataInfo = [
-            'country' => $countryQuery,
-            'query' => $query,
-            'official' => $official,
-        ];
-
-
-
-        for ($i = 0; $i < count($countryQuery); $i++) {
-            ConversionCountry::where('country', $dataInfo['country'][$i])->update(['rate' => $dataInfo['query'][$i], 'official' => $dataInfo['official'][$i]]);
-        }
-
+            for ($i = 0; $i < count($countryQuery); $i++) {
+                ConversionCountry::where('country', $dataInfo['country'][$i])->update(['rate' => $dataInfo['query'][$i], 'official' => $dataInfo['official'][$i]]);
+            }
         } catch (\Throwable $th) {
             //throw $th;
         }
@@ -282,10 +281,6 @@ class Controller extends BaseController
 
     public function getConversionRate($localcountry, $foreign, $route = null)
     {
-
-
-
-
         // Get Markup
         $markuppercent = $this->markupPercentage();
 
@@ -320,18 +315,16 @@ class Controller extends BaseController
 
         if ($result->success == true) {
 
-            if($currencyA !== 'USDUSD'){
+            if ($currencyA !== 'USDUSD') {
                 $convRateA = $result->quotes->$currencyA;
-            }
-            else{
+            } else {
                 $convRateA = 1;
             }
 
 
-            if($currencyB !== 'USDUSD'){
+            if ($currencyB !== 'USDUSD') {
                 $convRateB = $result->quotes->$currencyB;
-            }
-            else{
+            } else {
                 $convRateB = 1;
             }
 
@@ -346,6 +339,31 @@ class Controller extends BaseController
 
 
         return $convRate;
+    }
+
+    public function getPayoutMethod($foreign)
+    {
+        try {
+            $info = AllCountries::where('currencyCode', $foreign)->where('approval', 1)->where('payoutmethod', '!=', '')->first();
+            $data = json_decode($info);
+            $response = [
+                'data' => $data,
+                'status' => 'success',
+            ];
+
+            $code = 200;
+        } catch (\Throwable $th) {
+            //throw $th;
+            $response = [
+                'data' => [],
+                'message' => $th->getMessage(),
+                'status' => 'error'
+            ];
+
+            $code = 400;
+        }
+
+        return response()->json($response, $code);
     }
 
 
@@ -392,7 +410,7 @@ class Controller extends BaseController
             // This amount is in dollars
 
 
-            if($currencyA !== 'USDUSD'){
+            if ($currencyA !== 'USDUSD') {
                 if ($result->quotes->$currencyA > 1) {
 
                     // $convRateA = $result->quotes->$currencyA / $markValue;
@@ -403,26 +421,24 @@ class Controller extends BaseController
                 } else {
                     $convRateA = $result->quotes->$currencyA;
                 }
-            }
-            else{
+            } else {
                 $convRateA = 1;
             }
 
 
 
-            if($currencyB !== 'USDUSD'){
+            if ($currencyB !== 'USDUSD') {
                 if ($result->quotes->$currencyB > 1) {
 
-                        // $convRateB = $result->quotes->$currencyB / $markValue;
-                        $convRateB = $result->quotes->$currencyB;
-                    } elseif ($result->quotes->$currencyB < 1) {
-                        // $convRateB = $result->quotes->$currencyB * $markdownValue;
-                        $convRateB = $result->quotes->$currencyB;
-                    } else {
-                        $convRateB = $result->quotes->$currencyB;
-                    }
-            }
-            else{
+                    // $convRateB = $result->quotes->$currencyB / $markValue;
+                    $convRateB = $result->quotes->$currencyB;
+                } elseif ($result->quotes->$currencyB < 1) {
+                    // $convRateB = $result->quotes->$currencyB * $markdownValue;
+                    $convRateB = $result->quotes->$currencyB;
+                } else {
+                    $convRateB = $result->quotes->$currencyB;
+                }
+            } else {
                 $convRateB = 1;
             }
 

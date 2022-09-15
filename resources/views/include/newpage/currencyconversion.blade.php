@@ -142,14 +142,21 @@
 
             </div>
           </div><br>
-          <button type="button" class="btn btn-warning " id="shift" onclick="convertFee()">Get Result</button>
-          <br>
+          <div class="row">
+            <div class="col-md-2">
+              <button type="button" class="btn btn-warning " id="shift" onClick='convertFee();'>Get Result</button>
+            </div>
+            <div class="col-md-10 ps-2">
+              <span id="rate" style="font-size:15px; font-weight:bold;"></span> <br> <span id="local" style="font-size:15px; font-weight:bold"></span>
+            </div>
+          </div>
 
           <div class="currencyResult disp-0">
             <div class="row" style="margin-top: 2rem">
               <div class="col-md-12">
                 {{-- <h4>Charge Fee<span>0.00</span></h4> --}}
                 <h4><span id="totalprice"></span></h4>
+                <h6 id="paymethod"></h6>
               </div>
             </div>
             <div class="row">
@@ -212,19 +219,24 @@
 
 
           </div><br>
-          <button type="button" class="btn btn-warning " id="shift2" onClick='rateFee()'>Get Result</button>
-          <br>
+          <div class="row">
+            <div class="col-md-2">
+              <button type="button" class="btn btn-warning " id="shift2" onClick='rateFee()'>Get Result</button>
+            </div>
+            <div class="col-md-10 ps-2">
+              <span id="rates" style="font-size:15px; font-weight:bold;"></span> <br> <span id="locals" style="font-size:15px; font-weight:bold"></span>
+            </div>
+          </div>
           <div class="currencyDisplay disp-0">
             <div class="row" style="margin-top: 2rem">
 
               <div class="col-md-12">
                 <h4><span id="totalpricerate"></span></h4>
+                <h6 id="paysmethod"></h6>
               </div>
             </div>
             <div class="row">
               <div class="col-md-4">
-                <h6 style="font-size:13px"><span id="rates"></span></h6>
-                <h6 style="font-size:13px"><span id="locals"></span></h6>
               </div>
               <div class="col-md-4 mx-auto">
 
