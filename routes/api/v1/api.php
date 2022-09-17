@@ -31,6 +31,7 @@ Route::prefix('/v1')->group(function () {
     Route::get('findproduct',  ['uses' => 'MarketplaceController@findProduct'])->name('find product');
     Route::get('getallproducts',  ['uses' => 'MarketplaceController@getProducts'])->name('get products');
     Route::get('getallnews',  ['uses' => 'MarketplaceController@getNews'])->name('get news');
+    Route::get('merchantname/{id}',  ['uses' => 'MarketplaceController@index'])->name('get merchant name');
 
     Route::get('conversionrate/{local}/{foreign}',  ['uses' => 'Controller@getConversionRate']);
     Route::get('payoutmethod/{foreign}',  ['uses' => 'Controller@getPayoutMethod']);
@@ -57,7 +58,7 @@ Route::prefix('/v1')->group(function () {
         Route::post('currencyconversion',  ['uses' => 'CurrencyConverterApiController@mycurrencyConvert']);
 
 
-        
+
 
         Route::get('classifiedbusinessdirectory',  ['uses' => 'api\v1\UserController@classifiedBusinessDirectory']);
 

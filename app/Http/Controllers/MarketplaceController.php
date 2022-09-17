@@ -260,11 +260,28 @@ class MarketplaceController extends Controller
     public function newestMerchant(Request $req)
     {
         try {
+
+            $result = [];
+
             $data = StoreMainShop::where('publish', '1')->where('status', 'active')->orderBy('created_at', 'DESC')->get();
+
+
+            for ($i = 0; $i < count($data); $i++) {
+                $item = $data[$i];
+
+
+                $merchant = User::where('id', $item->merchantId)->first();
+
+
+
+                $result[] = ['data' => $item, 'merchant' => $merchant];
+            }
+
+
             $code = 200;
 
             $response = [
-                'data' => $data,
+                'data' => $result,
                 'message' => 'success'
             ];
         } catch (\Throwable $th) {
@@ -357,6 +374,32 @@ class MarketplaceController extends Controller
 
             $code = 200;
         } catch (\Throwable $th) {
+            $response = [
+                'data' => [],
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ];
+
+            $code = 400;
+        }
+
+        return response()->json($response, $code);
+    }
+
+    //getting business name 
+    public function index(Request $request, $id)
+    {
+        try {
+            $details = User::where('id', $id)->first();
+            $data = $details->businessname;
+            $response = [
+                'data' => $data,
+                'status' => 'success',
+            ];
+
+            $code = 200;
+        } catch (\Throwable $th) {
+            //throw $th;
             $response = [
                 'data' => [],
                 'status' => 'error',

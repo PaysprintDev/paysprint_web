@@ -163,7 +163,7 @@
               </div>
               <div class="col-md-4"></div>
               <div class="col-md-4">
-                <a class="btn" style="background-color:#e8aa07;" href="{{ route('Ajaxlogin') }}" role="button">Click to Send Now</a>
+                <a class="btn" style="background-color:#e8aa07;" href="{{ route('login') }}" role="button">Click to Send Now</a>
               </div>
             </div>
             <!-- <div class="row">
@@ -244,7 +244,7 @@
               <div class="col-md-4 mx-auto">
               </div>
               <div class="col-md-4">
-                <a class="btn" style="background-color:#e8aa07;" href="{{ route('Ajaxlogin') }}" role="button">Click to Receive Now</a>
+                <a class="btn" style="background-color:#e8aa07;" href="{{ route('login') }}" role="button">Click to Receive Now</a>
               </div>
             </div>
             <!-- <div class="row">

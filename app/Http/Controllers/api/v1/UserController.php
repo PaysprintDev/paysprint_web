@@ -1560,7 +1560,7 @@ class UserController extends Controller
                         'approval' => 2,
                         'accountLevel' => 3,
                         'gov_check' => 1,
-                        'account_check' => 1
+                        'account_check' => 2
                     ]);
 
 
