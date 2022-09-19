@@ -278,7 +278,6 @@ class Controller extends BaseController
         }
     }
 
-
     public function getConversionRate($localcountry, $foreign, $route = null)
     {
         // Get Markup
@@ -342,6 +341,7 @@ class Controller extends BaseController
 
         return $actualRate;
     }
+
 
     public function getPayoutMethod($foreign)
     {
