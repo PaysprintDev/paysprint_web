@@ -615,17 +615,17 @@ trait ExpressPayment
                 $localConv = 1;
             }
             else{
-                $localConv = $result->quotes->$localCurrency;
+                $localConv = $result->quotes->$localCurrency * $markValue;
             }
 
             $convertLocal = $amount / $localConv;
 
 
             // Converting your USD value to other currency ie CAD * Y
-            $convRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
+            $convRate = ($currency !== 'USDUSD' ? ($result->quotes->$currency * $markValue) : 1) * $convertLocal;
 
 
-            $actualRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
+            $actualRate = ($currency !== 'USDUSD' ? ($result->quotes->$currency * $markValue) : 1) * $convertLocal;
                 // $convRate = $actualRate * 95/100;
 
 

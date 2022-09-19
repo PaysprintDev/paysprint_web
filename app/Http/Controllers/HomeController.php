@@ -6190,7 +6190,7 @@ class HomeController extends Controller
 
         $resData = ['data' => $amountReceive, 'message' => 'success', 'state' => $state, 'collection' => $collection, 'walletCheck' => $walletCheck, ''];
 
-        
+
 
         return $this->returnJSON($resData, 200);
     }
@@ -6302,7 +6302,7 @@ class HomeController extends Controller
             if ($localCurrency === 'USDUSD') {
                 $localConv = 1;
             } else {
-                $localConv = $result->quotes->$localCurrency;
+                $localConv = $result->quotes->$localCurrency *  $markValue;
             }
 
             $convertLocal = $amount / $localConv;
@@ -6311,12 +6311,12 @@ class HomeController extends Controller
             // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
 
             if ($currency != "USDUSD") {
-                $convRate = $result->quotes->$currency * $convertLocal;
+                $convRate = ($result->quotes->$currency *  $markValue) * $convertLocal;
             }
 
             $convRate = 1 * $convertLocal;
 
-            $convRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
+            $convRate = ($currency !== 'USDUSD' ? ($result->quotes->$currency *  $markValue) : 1) * $convertLocal;
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }
