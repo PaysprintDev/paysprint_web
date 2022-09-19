@@ -17248,7 +17248,7 @@ class AdminController extends Controller
 
                         $sendgrid = new SendGridController();
 
-                        $sendmail =$sendgrid->sendUsername($req->business_name,$req->username, $req->password);
+                        $sendmail =$sendgrid->sendUsername($req->business_name,$req->email,$req->username, $req->password);
 
 
                         $this->mailListCategorize($req->firstname . ' ' . $req->lastname, $req->email, $req->address, $req->telephone, "New Merchants", $req->country, 'Subscription');

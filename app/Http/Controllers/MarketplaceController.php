@@ -297,6 +297,47 @@ class MarketplaceController extends Controller
         return response()->json($response, $code);
     }
 
+    //special promo
+    public function specialPromo(Request $req)
+    {
+        try {
+
+            $result = [];
+
+            $data = StoreProducts::get();
+
+
+            for ($i = 0; $i < count($data); $i++) {
+                $item = $data[$i];
+
+
+                $merchant = User::where('id', $item->merchantId)->first();
+
+
+
+                $result[] = ['data' => $item, 'merchant' => $merchant];
+            }
+
+
+            $code = 200;
+
+            $response = [
+                'data' => $result,
+                'message' => 'success'
+            ];
+        } catch (\Throwable $th) {
+            //throw $th;
+            $response = [
+                'data' => [],
+                'message' => $th->getMessage()
+            ];
+
+            $code = 400;
+        }
+
+        return response()->json($response, $code);
+    }
+
 
     //find product
     public function findProduct(Request $req)

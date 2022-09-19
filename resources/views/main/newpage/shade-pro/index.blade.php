@@ -184,6 +184,19 @@
                                     <h5 class="w-title gr-text-8 mb-0">Unlimited Transactions.</h5>
                                 </div>
                             </div>
+
+
+                            @if ($data['country'] == 'canada')
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
+                                    </div>
+                                    <h5 class="w-title gr-text-8 mb-0">Add money to Wallet from Debit or Credit Cards, Interac(R) eTransfer or Electronic fund transfer.
+                                    </h5>
+                                </div>
+                            </div>
+                            @else
                             <div class="col-md-8">
                                 <div class="single-widget d-flex align-items-center py-2">
                                     <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
@@ -193,6 +206,7 @@
                                     </h5>
                                 </div>
                             </div>
+                            @endif
 
                             <div class="col-md-8">
                                 <div class="single-widget d-flex align-items-center py-2">

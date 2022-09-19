@@ -28,6 +28,7 @@ Route::prefix('/v1')->group(function () {
     Route::post('/becomepayoutagent', ['uses' => 'PayoutAgentController@beAnAgent', 'as' => 'be an agent on paysprint']);
 
     Route::get('latestmerchant',  ['uses' => 'MarketplaceController@newestMerchant'])->name('newest merchant');
+    Route::get('specialpromo',  ['uses' => 'MarketplaceController@specialPromo'])->name('special promo');
     Route::get('findproduct',  ['uses' => 'MarketplaceController@findProduct'])->name('find product');
     Route::get('getallproducts',  ['uses' => 'MarketplaceController@getProducts'])->name('get products');
     Route::get('getallnews',  ['uses' => 'MarketplaceController@getNews'])->name('get news');
@@ -35,6 +36,7 @@ Route::prefix('/v1')->group(function () {
 
     Route::get('conversionrate/{local}/{foreign}',  ['uses' => 'Controller@getConversionRate']);
     Route::get('payoutmethod/{foreign}',  ['uses' => 'Controller@getPayoutMethod']);
+    Route::post('comment',  ['uses' => 'MarketplaceController@store'])->name('comment');
 
 
     Route::group(['middleware' => ['appkey']], function () {

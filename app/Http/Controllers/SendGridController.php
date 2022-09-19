@@ -293,7 +293,7 @@ class SendGridController extends Controller
 
 
 
-                     $receiver = $user->email;
+                    $receiver = $user->email;
                     // $receiver = "olasunkanmimunirat@gmail.com";
 
 
@@ -604,7 +604,7 @@ class SendGridController extends Controller
 
                 foreach ($thisuser as $user) {
                     $name = $user->name;
-                    $receiver = "youngskima@gmail.com";
+                    $receiver = $user->email;
                     $data = [
                         "name"  => $name,
                         "message" => "<p>PaySprint Market Place is one of the fastest growing global marketplaces. <br> At PaySprint Market Place, we connect merchant with customers and drive more traffic to their business at no extra costs. <br> To make sure your business is eligible to show up on PaySprint Marketplace,  </p>",
@@ -625,13 +625,15 @@ class SendGridController extends Controller
         }
     }
 
+
+
     //send username and password
-    public function sendUsername($legalname, $username, $password)
+    public function sendUsername($legalname, $email, $username, $password)
     {
         try {
 
             $name = $legalname;
-            $receiver = "duntanadebiyi@yahoo.com";
+            $receiver = $email;
             $data = [
                 "name"  => $name,
                 "message" => "<p>Congratulations!!! Welcome to  PaySprint Marketplace. <br><br> <span><strong>Here are your login details </strong><span><br><br><br> <span><strong>Username:<strong></span><span>$username</span> <br> <span><strong>Temporary Password:</strong></span> <span>$password</span>  </p>",
