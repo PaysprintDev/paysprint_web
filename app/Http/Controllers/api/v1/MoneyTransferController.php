@@ -1615,14 +1615,14 @@ class MoneyTransferController extends Controller
                 $localConv = 1;
             }
             else{
-                $localConv = $result->quotes->$localCurrency;
+                $localConv = $result->quotes->$localCurrency *  $markValue;
             }
 
             $convertLocal = $amount / $localConv;
 
                 // Conversion Rate USD to Local currency
 
-                $actualRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
+                $actualRate = ($currency !== 'USDUSD' ? ($result->quotes->$currency *  $markValue) : 1) * $convertLocal;
                 $convRate = $actualRate * 95/100;
 
 
@@ -1633,9 +1633,9 @@ class MoneyTransferController extends Controller
 
                 // Conversion Rate USD to Local currency
                 // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
-                $convertLocal = ($amount / $result->quotes->$localCurrency);
+                $convertLocal = ($amount / $result->quotes->$localCurrency *  $markValue);
 
-                $actualRate = $result->quotes->$currency * $convertLocal;
+                $actualRate = ($result->quotes->$currency *  $markValue) * $convertLocal;
                 $convRate = $actualRate * 95/100;
 
 
@@ -1645,11 +1645,12 @@ class MoneyTransferController extends Controller
             }
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
+            $actualRate = "Sorry we can not process your transaction this time, try again later!.";
         }
 
 
 
-        return $convRate;
+        return $actualRate;
     }
 
 
