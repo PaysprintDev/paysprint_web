@@ -215,7 +215,7 @@ class HomeController extends Controller
                     'referred' => $this->referral(Auth::user()->ref_code),
                     'userdetails' => $this->checkTrial(Auth::id()),
                     'pending' => User::where('id', Auth::id())->where('account_check', 2)->first(),
-                    'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first()
+                    'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first(),
                 );
 
                 $view = 'home';
@@ -1035,7 +1035,7 @@ class HomeController extends Controller
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
             'continent' => $this->timezone[0],
-            'availablecountry' =>$allcountry
+            'availablecountry' => $allcountry
         );
 
         // dd($data);
@@ -6012,8 +6012,6 @@ class HomeController extends Controller
                 // dd($req->localcurrency);
 
                 $dataInfo = $this->convertCurrencyRate($req->foreigncurrency, $req->localcurrency, $req->amount);
-
-
             } else {
                 $dataInfo = $req->amount;
             }

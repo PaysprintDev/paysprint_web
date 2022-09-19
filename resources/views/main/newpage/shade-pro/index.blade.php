@@ -186,7 +186,7 @@
                             </div>
 
 
-                            @if ($data['country'] == 'canada')
+                            @if ($data['country'] == 'Canada')
                             <div class="col-md-8">
                                 <div class="single-widget d-flex align-items-center py-2">
                                     <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
