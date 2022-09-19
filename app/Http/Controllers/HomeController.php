@@ -6305,7 +6305,17 @@ class HomeController extends Controller
                 $localConv = $result->quotes->$localCurrency *  $markValue;
             }
 
-            $convertLocal = $amount / $localConv;
+
+
+             if($localCurrency === $currency){
+                    $convertLocal = $amount / $localConv;
+            }
+            elseif($localCurrency !== 'USDUSD' && $currency !== 'USDUSD'){
+                $convertLocal = ($amount / $localConv) * $markValue;
+            }
+            else{
+                $convertLocal = $amount / $localConv;
+            }
 
             // Conversion Rate USD to Local currency
             // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;

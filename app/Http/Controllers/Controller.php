@@ -104,7 +104,7 @@ class Controller extends BaseController
         // Get Markup
         $markuppercent = $this->markupPercentage();
 
-        // $markValue = (1 + ($markuppercent[0]->percentage / 100));
+        $markValue = (1 + ($markuppercent[0]->percentage / 100));
         // $markdownValue = (1 - ($markuppercent[0]->percentage / 100));
 
         $currency = 'USD' . $curCurrency;
@@ -140,7 +140,7 @@ class Controller extends BaseController
 
 
 
-            $convRate = ($amount / ($currency !== 'USDUSD' ? $result->quotes->$currency : 1));
+            $convRate = ($amount / ($currency !== 'USDUSD' ? $result->quotes->$currency * $markValue : 1));
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }
@@ -329,13 +329,27 @@ class Controller extends BaseController
                 $convRateB = 1;
             }
 
-            $actualRate = $convRateA / $convRateB;
+
+
+            if($currencyA === $currencyB){
+                    $actualRate = $convRateA / $convRateB;
+            }
+            elseif($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD'){
+                $actualRate = ($convRateA / $convRateB) * $markValue;
+            }
+            else{
+                $actualRate = $convRateA / $convRateB;
+            }
+
+
+
 
             $convRate = $actualRate * 95 / 100;
 
             $this->calculateBufferedTransaction($actualRate, $convRate, $route);
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
+            $actualRate = "Sorry we can not process your transaction this time, try again later!.";
         }
 
 
@@ -444,7 +458,15 @@ class Controller extends BaseController
                 $convRateB = 1;
             }
 
-            $actualRate = $convRateA / $convRateB;
+            if($currencyA === $currencyB){
+                    $actualRate = $convRateA / $convRateB;
+            }
+            elseif($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD'){
+                $actualRate = ($convRateA / $convRateB) * $markValue;
+            }
+            else{
+                $actualRate = $convRateA / $convRateB;
+            }
 
             $convRate = $actualRate * 95 / 100;
 

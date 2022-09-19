@@ -618,7 +618,17 @@ trait ExpressPayment
                 $localConv = $result->quotes->$localCurrency * $markValue;
             }
 
-            $convertLocal = $amount / $localConv;
+
+
+            if($localCurrency === $currency){
+                    $convertLocal = $amount / $localConv;
+            }
+            elseif($localCurrency !== 'USDUSD' && $currency !== 'USDUSD'){
+                $convertLocal = ($amount / $localConv) * $markValue;
+            }
+            else{
+                $convertLocal = $amount / $localConv;
+            }
 
 
             // Converting your USD value to other currency ie CAD * Y
