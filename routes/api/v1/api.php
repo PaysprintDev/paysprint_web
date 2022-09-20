@@ -36,7 +36,9 @@ Route::prefix('/v1')->group(function () {
 
     Route::get('conversionrate/{local}/{foreign}',  ['uses' => 'Controller@getConversionRate']);
     Route::get('payoutmethod/{foreign}',  ['uses' => 'Controller@getPayoutMethod']);
-    Route::post('comment',  ['uses' => 'MarketplaceController@store'])->name('comment');
+    Route::post('comment',  ['uses' => 'MarketplaceController@makeComment'])->name('comment');
+    Route::post('claimmarketbusiness',  ['uses' => 'MarketplaceController@claimMarketBusiness'])->name('claim market business');
+    Route::get('getallunverifiedmerchants',  ['uses' => 'MarketplaceController@getUnverifiedMerchants'])->name('get unverfieid merchants');
 
 
     Route::group(['middleware' => ['appkey']], function () {

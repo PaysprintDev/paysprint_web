@@ -54,6 +54,8 @@ use App\InvestorRelation;
 
 use App\UnverifiedMerchant;
 
+use App\MarketplaceReviews;
+
 use App\ReferralGenerate;
 
 use App\Traits\Xwireless;
@@ -445,6 +447,112 @@ class MarketplaceController extends Controller
                 'data' => [],
                 'status' => 'error',
                 'message' => $th->getMessage()
+            ];
+
+            $code = 400;
+        }
+
+        return response()->json($response, $code);
+    }
+
+    //get unverified merchants
+    public function getUnverifiedMerchants(Request $request)
+    {
+        try {
+            $data = UnverifiedMerchant::get();
+
+            $response = [
+                'data' => $data,
+                'status' => 'success'
+            ];
+
+            $code = 200;
+        } catch (\Throwable $th) {
+
+            $response = [
+                'data' => [],
+                'message' => $th->getMessage(),
+                'status' => 'error'
+            ];
+
+            $code = 400;
+        }
+
+        return response()->json($response, $code);
+    }
+
+    //claim business
+    public function claimMarketBusiness(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'email' => 'required'
+        ]);
+
+        try {
+            //checking if email is im the database
+            $mail = UnverifiedMerchant::where('email', $request->email)->first();
+
+            if ($mail == null) {
+                $response = [
+                    'data' => [],
+                    'status' => 'error',
+                    'message' => 'Business with this email does not exist'
+                ];
+
+                $code = 400;
+            } else {
+                $sendgrid = new SendGridController;
+                $sendmail = $sendgrid->marketplaceClaim($request->email);
+                $response = [
+                    'message' => 'Business claimed Successfully, Kindly check your email',
+                    'status' => 'success'
+                ];
+
+                $code = 200;
+            }
+        } catch (\Throwable $th) {
+            $response = [
+                'data' => [],
+                'message' => $th->getMessage(),
+                'status' => 'error'
+            ];
+
+            $code = 400;
+        }
+
+        return response()->json($response, $code);
+    }
+
+    //comment and review on marketplace products
+    public function makeComment(Request $req)
+    {
+        $validation = Validator::make($req->all(), [
+            'comment' => 'required',
+            'email' => 'required',
+            'name_sender' => 'required',
+            'merchant_id' => 'required'
+        ]);
+
+        try {
+
+            $data = MarketplaceReviews::create([
+                'merchant_id' => $req->merchant_id,
+                'name_of_sender' => $req->name_sender,
+                'email_of_sender' => $req->email,
+                'comment' => $req->comment
+            ]);
+
+            $response = [
+                'status' => 'success',
+                'message' => 'Comment submitted successfully'
+            ];
+
+            $code = 200;
+        } catch (\Throwable $th) {
+            $response = [
+                'data' => [],
+                'message' => $th->getMessage(),
+                'status' => 'error'
             ];
 
             $code = 400;
