@@ -198,7 +198,16 @@ class CurrencyConverterApiController extends Controller
         }
 
 
-        $amountConvert = $convRate;
+
+        if($localCurrency === $currency){
+                    $amountConvert = $convRate;
+            }
+            elseif($localCurrency !== 'USDUSD' && $currency !== 'USDUSD'){
+                $amountConvert = $convRate * $markValue;
+            }
+            else{
+                $amountConvert = $convRate;
+            }
 
 
 
