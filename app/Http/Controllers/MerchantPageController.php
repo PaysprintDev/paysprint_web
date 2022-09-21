@@ -7,6 +7,7 @@ use Session;
 use App\Points;
 
 use App\Statement;
+use App\MerchantCashback;
 
 //Session
 use App\ClientInfo;
@@ -75,7 +76,8 @@ class MerchantPageController extends Controller
             'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
             'merchantstatus' => $this->checkMerchantStatus(Auth::user()->ref_code),
             'trial' => merchantTrial::where('user_id', Auth::user()->ref_code)->first(),
-            'referral' => User::where('referred_by', Auth::user()->ref_code)->count()
+            'referral' => User::where('referred_by', Auth::user()->ref_code)->count(),
+            'cashback' => MerchantCashback::where('merchant_id', Auth::user()->id)->first()
         ];
 
         return view('merchant.pages.dashboard')->with(['pages' => 'dashboard', 'data' => $data]);
@@ -182,6 +184,24 @@ class MerchantPageController extends Controller
         ];
 
         return view('merchant.pages.setuptax')->with(['pages' => 'set up tax', 'data' => $data]);
+    }
+
+    public function cashback(Request $req)
+    {
+        $id = $req->id;
+        MerchantCashback::create([
+            'merchant_id' => $id,
+        ]);
+
+        return back()->with('msg', "<div class='alert alert-success'>Joined Successfully</div>");
+    }
+
+    public function endcashback(Request $req)
+    {
+        $id = $req->id;
+        MerchantCashback::where('merchant_id', $id)->delete();
+
+        return back()->with('msg', "<div class='alert alert-success'>Cashback Ended Successfully</div>");
     }
 
     public function invoiceStatement()

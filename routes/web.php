@@ -523,7 +523,8 @@ Route::prefix('merchant')->group(function () {
 
 
 	Route::post('/setupestore', [ShopController::class, 'setupEstore'])->name('setup estore');
-
+	Route::post('/cashback', [MerchantPageController::class, 'cashback'])->name('cashback');
+	Route::post('/endcashback', [MerchantPageController::class, 'endcashback'])->name('endcashback');
 
 
 
