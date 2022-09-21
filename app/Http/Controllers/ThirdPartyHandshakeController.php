@@ -20,6 +20,8 @@ class ThirdPartyHandshakeController extends Controller
 {
     public function handshakeRegistration(Request $req)
     {
+
+
         try {
             $record = new AdminController();
             $documentRecord = new api\v1\UserController();
@@ -151,7 +153,7 @@ class ThirdPartyHandshakeController extends Controller
                         $currencySymbol = $mycode->currencySymbol;
 
 
-                        $data = ['code' => $mycode->callingCode, 'ref_code' => $ref_code, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => $generatedPassword, 'address' => '', 'telephone' => $getanonuser->telephone, 'city' => '', 'state' => '', 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Individual", 'corporationType' => '', 'zip' => '', 'wallet_balance' => $getanonuser->wallet_balance, 'dayOfBirth' => '', 'monthOfBirth' => '', 'yearOfBirth' => '', 'platform' => $bearer->business_name . ' api', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $bearer->user_id, 'knowAboutUs' => $bearer->business_name . ' api', 'accountPurpose' => $bearer->business_name . ' api transaction', 'transactionSize' => '', 'sourceOfFunding' => $bearer->business_name . ' api', 'avatar' => $avatar];
+                        $data = ['code' => $mycode->callingCode, 'ref_code' => $ref_code, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => $generatedPassword, 'address' => '', 'telephone' => $getanonuser->telephone, 'city' => '', 'state' => '', 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Individual", 'corporationType' => '', 'zip' => '', 'wallet_balance' => $getanonuser->wallet_balance, 'dayOfBirth' => '', 'monthOfBirth' => '', 'yearOfBirth' => '', 'platform' => $bearer->business_name . ' api', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $bearer->user_id, 'knowAboutUs' => $bearer->business_name . ' api', 'accountPurpose' => $bearer->business_name . ' api transaction', 'transactionSize' => '', 'sourceOfFunding' => $bearer->business_name . ' api', 'avatar' => $avatar, 'nin_front' => $req->national_id_card, 'drivers_license_front' => $req->drivers_license, 'international_passport_front' => $req->international_passport, 'incorporation_doc_front' => $req->utility_bill];
 
                         if (getallheaders()["dev_mode"] != 'test') {
                             User::updateOrCreate(['email' => $getanonuser->email], $data);
@@ -314,7 +316,7 @@ class ThirdPartyHandshakeController extends Controller
                             $phoneCode = "1";
                         }
 
-                        $data = ['code' => $phoneCode, 'ref_code' => $newRefcode, 'name' => $req->firstname . ' ' . $req->lastname, 'email' => $req->email, 'password' => $generatedPassword, 'address' => '', 'telephone' => $req->telephone, 'city' => '', 'state' => '', 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Individual", 'corporationType' => '', 'zip' => '', 'dayOfBirth' => '', 'monthOfBirth' => '', 'yearOfBirth' => '', 'platform' => $bearer->business_name . ' api', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $bearer->user_id, 'knowAboutUs' => $bearer->business_name . ' api', 'accountPurpose' => $bearer->business_name . ' api transaction', 'transactionSize' => '', 'sourceOfFunding' => $bearer->business_name . ' api', 'avatar' => $avatar];
+                        $data = ['code' => $phoneCode, 'ref_code' => $newRefcode, 'name' => $req->firstname . ' ' . $req->lastname, 'email' => $req->email, 'password' => $generatedPassword, 'address' => '', 'telephone' => $req->telephone, 'city' => '', 'state' => '', 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Individual", 'corporationType' => '', 'zip' => '', 'dayOfBirth' => '', 'monthOfBirth' => '', 'yearOfBirth' => '', 'platform' => $bearer->business_name . ' api', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $bearer->user_id, 'knowAboutUs' => $bearer->business_name . ' api', 'accountPurpose' => $bearer->business_name . ' api transaction', 'transactionSize' => '', 'sourceOfFunding' => $bearer->business_name . ' api', 'avatar' => $avatar, 'nin_front' => $req->national_id_card, 'drivers_license_front' => $req->drivers_license, 'international_passport_front' => $req->international_passport, 'incorporation_doc_front' => $req->utility_bill];
 
                         if (getallheaders()["dev_mode"] != 'test') {
                             User::updateOrCreate(['email' => $req->email], $data);

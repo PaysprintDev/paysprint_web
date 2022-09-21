@@ -973,6 +973,7 @@ Route::prefix('Admin/')->group(function () {
 
 
 	Route::get('industrycategorybycountry', ['uses' => 'AdminController@industryCategoryByCountry', 'as' => 'industry category by country']);
+	Route::get('allpsmerchants', ['uses' => 'AdminController@allPsMerchants', 'as' => 'allpsmerchants']);
 	Route::get('industrycategory', ['uses' => 'AdminController@industryCategory', 'as' => 'industrycategory']);
 
 

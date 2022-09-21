@@ -146,8 +146,8 @@ class UserController extends Controller
                     'country' => $request->country,
                     'zip' => $request->zipcode,
                     'accountType' => 'Individual',
-                    'currencyCode' => $mycode->currencyCode,
-                    'currencySymbol' => $mycode->currencySymbol,
+                    'currencyCode' => $mycode->currencyCode != null ? $mycode->currencyCode : null,
+                    'currencySymbol' => $mycode->currencySymbol != null ? $mycode->currencySymbol : null,
                     'api_token' => uniqid() . md5($request->email),
                     'password' => Hash::make($request->password),
                     'approval' => 0,
@@ -458,6 +458,7 @@ class UserController extends Controller
 
     public function updateProfile(Request $request, User $user)
     {
+
 
         $user = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'dayOfBirth', 'monthOfBirth', 'yearOfBirth', 'cardRequest', 'bvn_number', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification')->where('api_token', $request->bearerToken())->first();
 
