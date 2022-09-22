@@ -841,6 +841,8 @@ Route::prefix('Admin/overview/report')->group(function () {
 
 	Route::get('business', ['uses' => 'AdminController@businessReport', 'as' => 'business report']);
 	Route::get('revenue', ['uses' => 'AdminController@revenueReport', 'as' => 'revenue report']);
+	Route::get('psfxreport', ['uses' => 'AdminController@paysprintFxReport', 'as' => 'paysprint fx report']);
+	Route::get('fxreportbycountry', ['uses' => 'AdminController@paysprintFxReportByCountry', 'as' => 'fx report by country']);
 	Route::get('accountreport', ['uses' => 'AdminController@accountReport', 'as' => 'account report']);
 	Route::get('invoicecommission', ['uses' => 'AdminController@invoiceCommissionReport', 'as' => 'invoice commission']);
 	Route::get('businessreport', ['uses' => 'AdminController@getBusinessReport', 'as' => 'get business report']);

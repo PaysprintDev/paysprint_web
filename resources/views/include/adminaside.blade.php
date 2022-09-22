@@ -277,6 +277,13 @@
                 </a>
 
             </li>
+            <li>
+                <a href="{{ route('paysprint fx report', 'month='.date('m')) }}">
+                    <i class="fa fa-book"></i>
+                    <span>PS FX Report</span>
+                </a>
+
+            </li>
 
             <li>
                 <a href="{{ route('account report') }}">
