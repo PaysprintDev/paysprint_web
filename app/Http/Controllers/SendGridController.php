@@ -588,7 +588,7 @@ class SendGridController extends Controller
         }
     }
 
-    //marketplace claim your business
+    //marketplace claim your business with cron
     public function claimBusiness()
     {
         try {
@@ -625,6 +625,31 @@ class SendGridController extends Controller
         }
     }
 
+    //marketplace claim your business from marketplace website
+    public function marketplaceClaim($email)
+    {
+        try {
+            $user = UnverifiedMerchant::where('email', $email)->first();
+
+            $name = $user->name;
+            $receiver = $user->email;
+            $data = [
+                "name"  => $name,
+                "message" => "<p>PaySprint Market Place is one of the fastest growing global marketplaces. <br> At PaySprint Market Place, we connect merchant with customers and drive more traffic to their business at no extra costs. <br> To make sure your business is eligible to show up on PaySprint Marketplace,  </p>",
+                "url" => route('home') . '/claimmerchantbusiness?id=' . $user->id,
+            ];
+
+            $template_id = config('constants.sendgrid.claimbusiness');
+
+
+
+            $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
+            // dd($response);
+            // echo 'done';
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 
 
     //send username and password
