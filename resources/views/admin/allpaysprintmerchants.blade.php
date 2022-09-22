@@ -37,6 +37,8 @@
                         <!-- /.box-header -->
                         <div class="box-body table table-responsive">
 
+
+
                             <table class="table table-bordered table-striped" id="example3">
 
                                 <thead>
@@ -59,23 +61,23 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if (count($data['merchants']) > 0)
+                                    @if (count($data) > 0)
                                         <?php $i = 1;
                                         $accountState = 'Closed account'; ?>
-                                        @foreach ($data['merchants'] as $data)
-                                            @if ($archivedMerchant = \App\User::where('email', $data->email)->where('countryapproval', 1)->where('archive', 1)->first())
+                                        @foreach ($data as $dataItem)
+                                            @if ($archivedMerchant = \App\User::where('email', $dataItem->email)->where('countryapproval', 1)->where('archive', 1)->first())
                                                 @php
                                                     $accountState = 'Archived';
                                                 @endphp
                                             @endif
 
-                                            @if ($existingMerchant = \App\User::where('email', $data->email)->where('archive', 0)->where('countryapproval', 1)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->first())
+                                            @if ($existingMerchant = \App\User::where('email', $dataItem->email)->where('archive', 0)->where('countryapproval', 1)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->first())
                                                 @php
                                                     $accountState = 'Existing';
                                                 @endphp
                                             @endif
 
-                                            @if ($newUsers = \App\User::where('email', $data->email)->where('archive', 0)->where('countryapproval', 1)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->first())
+                                            @if ($newUsers = \App\User::where('email', $dataItem->email)->where('archive', 0)->where('countryapproval', 1)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->first())
                                                 @php
                                                     $accountState = 'New';
                                                 @endphp
@@ -84,13 +86,13 @@
                                             <tr>
                                                 <td>{{ $i++ }}</td>
 
-                                                <td>{{ $data->firstname }}</td>
-                                                <td>{{ $data->lastname }}</td>
+                                                <td>{{ $dataItem->firstname }}</td>
+                                                <td>{{ $dataItem->lastname }}</td>
 
-                                                <td>{{ $data->email }}</td>
-                                                <td>{{ $data->telephone }}</td>
+                                                <td>{{ $dataItem->email }}</td>
+                                                <td>{{ $dataItem->telephone }}</td>
                                                 <td>{{ $accountState }}</td>
-                                                <td>{{ $data->country }}</td>
+                                                <td>{{ $dataItem->country }}</td>
 
                                             </tr>
                                         @endforeach
@@ -101,7 +103,21 @@
                                     @endif
                                 </tbody>
                             </table>
+
+
+
+
+
                         </div>
+
+                        <nav aria-label="...">
+                                        <ul class="pagination pagination-md">
+
+                                            <li class="page-item">
+                                                {{ $data->links() }}
+                                            </li>
+                                        </ul>
+                                    </nav>
                         <!-- /.box-body -->
                     </div>
                     <!-- /.box -->

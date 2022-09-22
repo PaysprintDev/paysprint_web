@@ -1439,9 +1439,7 @@ class AdminController extends Controller
 
             $getxPay = $this->getxpayTrans();
 
-            $data = array(
-                'merchants' => $this->getallClient(),
-            );
+            $data = $this->getallpsClient();
 
 
             return view('admin.allpaysprintmerchants')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'data' => $data]);
@@ -19687,6 +19685,13 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     public function getallClient()
     {
         $getClient = ClientInfo::orderBy('created_at', 'DESC')->get();
+
+        return $getClient;
+    }
+
+    public function getallpsClient()
+    {
+        $getClient = ClientInfo::orderBy('created_at', 'DESC')->paginate(500);
 
         return $getClient;
     }
