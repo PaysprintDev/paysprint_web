@@ -520,7 +520,7 @@
                                 <label for="referred_by">Referred By <small class="reqField">(Optional)</small>
                                 </label>
                                 <input type="text" name="referred_by" id="referred_by" class="form-control input_box"
-                                    @if ($referred_by != '') value="{{ $referred_by }}" readonly @else placeholder="E.g 69212" @endif>
+                                    @if ($referred_by != '') value="{{ $referred_by }}" readonly @else placeholder="E.g 11111" @endif>
 
 
 

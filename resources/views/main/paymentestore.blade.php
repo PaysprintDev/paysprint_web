@@ -243,7 +243,7 @@
                                                                             src="https://img.icons8.com/emoji/25/000000/keycap-number-sign-emoji.png" /></span>
                                                                 </div> <input type="text" name="accountNumber"
                                                                     id="accountNumber" class="form-control"
-                                                                    placeholder="6921229" required>
+                                                                    placeholder="11111" required>
 
                                                                 <input type="hidden" name="route" value="estore">
                                                                 <input type="hidden" name="mode"

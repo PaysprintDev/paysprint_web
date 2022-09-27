@@ -479,7 +479,12 @@
                                                 <input type="number" step="{{ time() }}" min="{{ time() }}" name="transaction_id" id="transaction_id" class="form-control" required>
                                                 <input type="hidden" name="receiver_code" id="receiver_code" class="form-control" value="{{ $receiveCode }}">
                                             </p>
+
                                         </div>
+
+
+
+
                                         <div class="col-md-12">
                                             <p class="form-group">
                                                 <label>Description</label>
@@ -489,7 +494,7 @@
                                         <div class="col-md-12">
                                             <p class="form-group">
                                                 <label>Amount Transferred</label>
-                                                <input type="number" min="0.00" step="0.01" name="amount" placeholder="Enter amount Transferred" id="transfer_amount" class="form-control" required>
+                                                <input type="number" min="0.00" step="0.01" name="amount" placeholder="Enter amount Transferred" id="transfer_amount" class="form-control" value="0.00" required>
                                             </p>
                                         </div>
                                         <input type="hidden" name="reference_number" value="{{ $data['paymentgateways']->code.'_'.uniqid() }}">
@@ -637,6 +642,7 @@
             }
 
         });
+
 
 
         function runCardType() {

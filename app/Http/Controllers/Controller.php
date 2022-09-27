@@ -280,6 +280,8 @@ class Controller extends BaseController
 
     public function getConversionRate($localcountry, $foreign, $route = null)
     {
+
+
         // Get Markup
         $markuppercent = $this->markupPercentage();
 
@@ -467,6 +469,7 @@ class Controller extends BaseController
             else{
                 $actualRate = $convRateA / $convRateB;
             }
+
 
             $convRate = $actualRate * 95 / 100;
 
