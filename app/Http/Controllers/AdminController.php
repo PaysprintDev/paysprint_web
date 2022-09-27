@@ -17331,6 +17331,14 @@ class AdminController extends Controller
         return $this->returnJSON($resData, 200);
     }
 
+    //decline claim business
+    public function declineclaimbusiness(Request $req)
+    {
+        $id=$req->id;
+        UnverfiedMerchant::where('id',$id)->delete();
+        return redirect()->route('home');
+    }
+
 
 
     public function ajaxgetmyStatement(Request $req)

@@ -244,7 +244,15 @@ Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 
 Route::get('/accounts', ['uses' => 'HomeController@getStartedAccounts', 'as' => 'accounts']);
 
 Route::get('/home', ['uses' => 'HomeController@authIndex', 'as' => 'user home']);
+
 Route::get('/referred', ['uses' => 'HomeController@referredDetails', 'as' => 'referred details']);
+
+Route::get('/viewreviews', ['uses' => 'MerchantPageController@viewReviews', 'as' => 'view reviews']);
+
+Route::post('/merchantreply', ['uses' => 'MerchantPageController@merchantReply', 'as' => 'merchant reply']);
+
+Route::get('/viewreply/{id}', ['uses' => 'MerchantPageController@viewmarketReplies', 'as' => 'view replies']);
+
 
 
 
@@ -1270,6 +1278,9 @@ Route::prefix('Admin/estore')->group(function () {
 	Route::get('editmarketplacenews/{id}', ['uses' => 'StoreController@editMarketplaceNews', 'as' => 'edit marketplace news']);
 	Route::post('updatemarketplacenews/{id}', ['uses' => 'AdminController@updateMarketplaceNews', 'as' => 'update marketplace news']);
 	Route::post('deletemarketplacenews/{id}', ['uses' => 'AdminController@deleteMarketplaceNews', 'as' => 'delete marketplace news']);
+	Route::get('/estoreproducts', ['uses' => 'StoreController@estoreProducts', 'as' => 'estore products']);
+	Route::get('/editestoreproducts/{id}', ['uses' => 'StoreController@editEstoreProducts', 'as' => 'edit estore product']);
+	Route::post('/updateestoreproducts/{id}', ['uses' => 'StoreController@updateEstoreProducts', 'as' => 'update estore product']);
 });
 
 
@@ -1317,6 +1328,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 	Route::post('Adminlogout', ['uses' => 'AdminController@ajaxadminLogout', 'as' => 'AjaxAdminlogout']);
 	Route::post('Adminregister', ['uses' => 'AdminController@ajaxadminregister', 'as' => 'AjaxAdminRegister']);
 	Route::post('claimmerchantbusiness', ['uses' => 'AdminController@ajaxclaimbusiness', 'as' => 'AjaxClaimBusinesss']);
+	Route::post('declineclaimbusiness', ['uses' => 'AdminController@declineclaimbusiness', 'as' => 'DeclineClaimBusinesss']);
 	Route::post('CreateEvent', ['uses' => 'AdminController@ajaxcreateEvent', 'as' => 'AjaxCreateEvent']);
 	Route::post('WithdrawCash', ['uses' => 'AdminController@ajaxWithdrawCash', 'as' => 'AjaxWithdrawCash']);
 	Route::post('getmyStatement', ['uses' => 'AdminController@ajaxgetmyStatement', 'as' => 'AjaxgetmyStatement']);

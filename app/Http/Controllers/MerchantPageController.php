@@ -21,7 +21,7 @@ use App\AllCountries;
 use App\User as User;
 
 use App\ClaimedPoints;
-
+use App\MarketplaceReviews;
 use App\HistoryReport;
 use App\merchantTrial;
 use App\Notifications;
@@ -30,6 +30,7 @@ use App\StoreDiscount;
 use App\StoreMainShop;
 use App\StoreProducts;
 use App\StoreShipping;
+use App\MerchantReply;
 
 use App\StoreWishList;
 use App\Traits\MyEstore;
@@ -45,6 +46,7 @@ use App\ImportExcel as ImportExcel;
 use Illuminate\Support\Facades\Auth;
 use App\InvoicePayment as InvoicePayment;
 use App\ImportExcelLink as ImportExcelLink;
+use illuminate\Support\Facades\Validator;
 
 class MerchantPageController extends Controller
 {
@@ -77,7 +79,8 @@ class MerchantPageController extends Controller
             'merchantstatus' => $this->checkMerchantStatus(Auth::user()->ref_code),
             'trial' => merchantTrial::where('user_id', Auth::user()->ref_code)->first(),
             'referral' => User::where('referred_by', Auth::user()->ref_code)->count(),
-            'cashback' => MerchantCashback::where('merchant_id', Auth::user()->id)->first()
+            'cashback' => MerchantCashback::where('merchant_id', Auth::user()->id)->first(),
+            'reviews' => MarketplaceReviews::where('merchant_id', Auth::user()->id)->count()
         ];
 
         return view('merchant.pages.dashboard')->with(['pages' => 'dashboard', 'data' => $data]);
@@ -202,6 +205,50 @@ class MerchantPageController extends Controller
         MerchantCashback::where('merchant_id', $id)->delete();
 
         return back()->with('msg', "<div class='alert alert-success'>Cashback Ended Successfully</div>");
+    }
+
+    public function viewReviews(Request $Req)
+    {
+        $id = Auth::id();
+        $data =
+            [
+                'reviews' => MarketplaceReviews::where('merchant_id', $id)->orderBy('created_at', 'DESC')->get(),
+
+            ];
+        return view('merchant\pages.marketplacereviews')->with(['data' => $data]);
+    }
+
+    public function viewmarketReplies(Request $req, $id)
+    {
+
+        $data = [
+            'comments' => MerchantReply::where('comment_id', $id)->get(),
+        ];
+
+        // dd($data['comments']);
+        return view('merchant\pages.viewreply')->with(['data' => $data]);
+    }
+
+    public function merchantReply(Request $req)
+    {
+
+        $id = Auth::id();
+
+        $validation = Validator::make($req->all(), [
+            "merchant_comment" => "required"
+        ]);
+
+        MerchantReply::create([
+            "merchant_id" => $id,
+            "comment_id" => $req->comment_id,
+            "merchant_reply" => $req->merchant_comment,
+        ]);
+
+        MarketplaceReviews::where('id', $req->comment_id)->update([
+            "status" => "Replied"
+        ]);
+
+        return back()->with("msg", "<div class='alert alert-success'>Reply Added Successfully</div>");
     }
 
     public function invoiceStatement()

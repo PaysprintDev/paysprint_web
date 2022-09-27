@@ -637,6 +637,8 @@ class SendGridController extends Controller
                 "name"  => $name,
                 "message" => "<p>PaySprint Market Place is one of the fastest growing global marketplaces. <br> At PaySprint Market Place, we connect merchant with customers and drive more traffic to their business at no extra costs. <br> To make sure your business is eligible to show up on PaySprint Marketplace,  </p>",
                 "url" => route('home') . '/claimmerchantbusiness?id=' . $user->id,
+                "decline" => route('home') . '/declineclaimbusiness?id=' . $user->id,
+                "remove" => route('home') . '/declineclaimbusiness?id=' . $user->id,
             ];
 
             $template_id = config('constants.sendgrid.claimbusiness');

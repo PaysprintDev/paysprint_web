@@ -182,12 +182,12 @@ class MarketplaceController extends Controller
     public function getmarketCategory(Request $req)
     {
 
-        $result = [];
         try {
             // $data = ClientInfo::orderBy('industry', 'ASC')->groupBy('industry')->get();
 
-            $data = ClientInfo::groupBy('industry')->select('industry', DB::raw('count(*) as total'))->get();
-
+            $clients = ClientInfo::groupBy('industry')->select('industry', DB::raw('count(*) as total'))->get();
+            $unverified = UnverifiedMerchant::groupBy('industry')->select('industry', DB::raw('count(*) as total'))->get();
+            $data = array_merge($clients->toArray(), $unverified->toArray());
             $status = 200;
 
             $response = [
@@ -203,7 +203,6 @@ class MarketplaceController extends Controller
 
             $status = 400;
         }
-
 
         return response()->json($response, $status);
     }
@@ -308,7 +307,7 @@ class MarketplaceController extends Controller
 
             $result = [];
 
-            $data = StoreProducts::get();
+            $data = StoreProducts::whereRaw('previousAmount > amount')->get();
 
 
             for ($i = 0; $i < count($data); $i++) {
@@ -385,10 +384,24 @@ class MarketplaceController extends Controller
     {
         try {
 
+            $result = [];
+
             $data = StoreProducts::get();
 
+            for ($i = 0; $i < count($data); $i++) {
+                $item = $data[$i];
+
+
+                $merchant = User::where('id', $item->merchantId)->first();
+
+
+
+                $result[] = ['data' => $item, 'merchant' => $merchant];
+            }
+
+
             $response = [
-                'data' => $data,
+                'data' => $result,
                 'status' => 'success',
             ];
 
@@ -499,7 +512,7 @@ class MarketplaceController extends Controller
                 $response = [
                     'data' => [],
                     'status' => 'error',
-                    'message' => 'Business with this email does not exist'
+                    'message' => 'Business with this email does not exist, claim your business using business phone number'
                 ];
 
                 $code = 400;
@@ -507,7 +520,7 @@ class MarketplaceController extends Controller
                 $sendgrid = new SendGridController;
                 $sendmail = $sendgrid->marketplaceClaim($request->email);
                 $response = [
-                    'message' => 'Business claimed Successfully, Kindly check your email',
+                    'message' => 'The link to claim your business has been sent to you. Kindly check your email. Thanks',
                     'status' => 'success'
                 ];
 
@@ -542,7 +555,8 @@ class MarketplaceController extends Controller
                 'merchant_id' => $req->merchant_id,
                 'name_of_sender' => $req->name_sender,
                 'email_of_sender' => $req->email,
-                'comment' => $req->comment
+                'comment' => $req->comment,
+                'status' => 'pending',
             ]);
 
             $response = [
@@ -622,7 +636,7 @@ class MarketplaceController extends Controller
 
         try {
             //checking if email is im the database
-            $mail = UnverifiedMerchant::where('email', $req->phone_number)->first();
+            $mail = UnverifiedMerchant::where('phone', $req->phone_number)->first();
 
             if ($mail == null) {
                 $response = [

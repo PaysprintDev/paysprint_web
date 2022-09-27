@@ -308,7 +308,7 @@ use App\Http\Controllers\AllCountries; ?>
                                 <form action="{{route('cashback')}}" method="post" id="formcashback">
                                     @csrf
                                     <input type="hidden" name="id" value="{{Auth::id()}}">
-                                    <a href="javascript:void()" class="btn btn-primary" id="cashback" onclick="$('#formcashback').submit()">Participate in Cashback</a>
+                                    <a href="javascript:void()" class="btn btn-primary" id="cashback" onclick="$('#formcashback').submit()">Click to participate in Cashback</a>
                                 </form>
                                 @else
                                 <form action="{{route('endcashback')}}" method="post" id="endformcashback">
@@ -736,6 +736,8 @@ use App\Http\Controllers\AllCountries; ?>
 
                             </div>
                         </div>
+
+
                         <div class="parrten">
                             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                                 <g>
@@ -752,10 +754,27 @@ use App\Http\Controllers\AllCountries; ?>
         </div>
         @endif
 
+        <div class="row">
+            <div class="col-xl-12 col-md-6 col-sm-12 box-col-6 des-xl-25 rate-sec">
+                <div class="card income-card card-secondary">
+                    <div class="card-body text-center">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p style="font-size:20px; font-weight:bold">Marketplace Reviews</p>
+                                <p style="font-weight:bold; font-size:20px;">{{$data['reviews']}}</p>
+                                <a type="button" class="btn btn-success" href="{{route('view reviews')}}">View Marketplace Reviews</a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card income-card">
             <div class="card-header">
                 <div class="header-top d-sm-flex align-items-center">
-                    <h5>Sales overview</h5>
+                    <h5>Merchant Journey</h5>
                     <div class="center-content">
                         <p class="d-sm-flex align-items-center">
                             {{-- <span
@@ -766,7 +785,7 @@ use App\Http\Controllers\AllCountries; ?>
                             @else
                             0%
                             @endif --}}
-                            (Coming Soon)
+
                             <!-- merchant journey -->
                         <div class="row">
                             <div class="col-md-12">
