@@ -52,12 +52,16 @@
                                     </div>
                                     <tr>
                                         <th>S/N</th>
-                                        <th>Firstname</th>
-                                        <th>Lastname</th>
+                                        <th>Name</th>
+                                        <th>Legal Entity Name</th>
+                                        <th>Industry</th>
                                         <th>Email</th>
                                         <th>Phone</th>
                                         <th>Category</th>
                                         <th>Country</th>
+                                        <th>City</th>
+                                        <th>Date of Account Opening</th>
+                                        <th>PS Acct. Number</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -86,19 +90,22 @@
                                             <tr>
                                                 <td>{{ $i++ }}</td>
 
-                                                <td>{{ $dataItem->firstname }}</td>
-                                                <td>{{ $dataItem->lastname }}</td>
-
+                                                <td>{{ $dataItem->firstname.' '.$dataItem->lastname }}</td>
+                                                <td>{{ $dataItem->business_name }}</td>
+                                                <td>{{ $dataItem->industry }}</td>
                                                 <td>{{ $dataItem->email }}</td>
                                                 <td>{{ $dataItem->telephone }}</td>
                                                 <td>{{ $accountState }}</td>
                                                 <td>{{ $dataItem->country }}</td>
+                                                <td>{{ $dataItem->city }}</td>
+                                                <td>{{ date('d/M/Y', strtotime($dataItem->created_at)) }}</td>
+                                                <td>{{ $dataItem->user_id }}</td>
 
                                             </tr>
                                         @endforeach
                                     @else
                                         <tr>
-                                            <td colspan="7" align="center">No record available</td>
+                                            <td colspan="11" align="center">No record available</td>
                                         </tr>
                                     @endif
                                 </tbody>
