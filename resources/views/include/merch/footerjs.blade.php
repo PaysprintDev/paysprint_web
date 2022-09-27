@@ -5,9 +5,7 @@
 <!-- latest jquery-->
 <script src=" {{ asset('merchantassets/assets/js/jquery-3.5.1.min.js') }}"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"
-    integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- feather icon js-->
 <script src=" {{ asset('merchantassets/assets/js/icons/feather-icon/feather.min.js') }}"></script>
 <script src=" {{ asset('merchantassets/assets/js/icons/feather-icon/feather-icon.js') }}"></script>
@@ -70,13 +68,12 @@
 <script src="{{ asset('merchantassets/assets/js/theme-customizer/customizer.js') }}"></script>
 <!-- Plugin used-->
 <script src="{{ asset('js/country-state-select.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
-    integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script language="javascript">
     populateCountries("delivery_country", "delivery_state");
 </script>
+
 
 <script>
     $(document).ready(function() {
@@ -1750,8 +1747,8 @@
     async function serviceSetup(id, value) {
         try {
 
-            $('.'+value).removeClass('disp-0');
-            $('.'+value+id).addClass('disp-0');
+            $('.' + value).removeClass('disp-0');
+            $('.' + value + id).addClass('disp-0');
 
             var formData;
 
@@ -1791,15 +1788,15 @@
 
             const response = await axios(config);
 
-            $('.'+value).addClass('disp-0');
-            $('.'+value+id).removeClass('disp-0');
+            $('.' + value).addClass('disp-0');
+            $('.' + value + id).removeClass('disp-0');
 
             iziMessage(true, 'Good', response.data.message);
 
         } catch (error) {
 
-            $('.'+value).addClass('disp-0');
-            $('.'+value+id).removeClass('disp-0');
+            $('.' + value).addClass('disp-0');
+            $('.' + value + id).removeClass('disp-0');
 
             if (error.response) {
                 iziMessage(false, 'Error', error.response.data.message);
@@ -1811,31 +1808,30 @@
         }
     }
 
-    function getMyPaymentLink(id)
-    {
-        $('#paymentLinkModal'+id).click();
+    function getMyPaymentLink(id) {
+        $('#paymentLinkModal' + id).click();
         $('#acceptLinkBtn').attr('disabled', true);
     }
 
-    function acceptLinkTerms()
-    {
+    function acceptLinkTerms() {
         $('#myPaymentLinkUp').submit();
     }
 
     $('#paylink_checkbox').change(function() {
 
-        if($('#paylink_checkbox').prop('checked') === false){
+        if ($('#paylink_checkbox').prop('checked') === false) {
             $('#acceptLinkBtn').attr('disabled', true);
-        }
-        else{
+        } else {
             $('#acceptLinkBtn').attr('disabled', false);
         }
 
     });
 
-    function becomeAnAgent(ref_code){
+    function becomeAnAgent(ref_code) {
 
-        let data = {ref_code: ref_code};
+        let data = {
+            ref_code: ref_code
+        };
 
         var headers = {
             'X-CSRF-TOKEN': "{{ csrf_token() }}",
@@ -1887,10 +1883,12 @@
     }
 
 
-    function payoutProcessFund(transaction_id){
+    function payoutProcessFund(transaction_id) {
 
 
-        let data = {transaction_id};
+        let data = {
+            transaction_id
+        };
 
         var headers = {
             'X-CSRF-TOKEN': "{{ csrf_token() }}",
@@ -1907,7 +1905,7 @@
             .then(async (willDelete) => {
                 if (willDelete) {
 
-                $('#processbtn'+transaction_id).text('Please wait...');
+                    $('#processbtn' + transaction_id).text('Please wait...');
 
 
                     try {
@@ -1922,7 +1920,7 @@
 
                         const response = await axios(config);
 
-                        $('#processbtn'+transaction_id).text('Process fund');
+                        $('#processbtn' + transaction_id).text('Process fund');
 
                         iziMessage(true, 'Good', response.data.message);
 
@@ -1931,7 +1929,7 @@
                         }, 1000);
 
                     } catch (error) {
-                        $('#processbtn'+transaction_id).text('Process fund');
+                        $('#processbtn' + transaction_id).text('Process fund');
 
                         if (error.response) {
                             iziMessage(false, 'Error', error.response.data.message);

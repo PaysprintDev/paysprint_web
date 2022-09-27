@@ -4,9 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class StoreCart extends Model
+class MerchantReply extends Model
 {
+    //
     protected $guarded = [];
-
-    protected $table = "estore_cart";
 }

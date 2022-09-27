@@ -112,6 +112,14 @@
                 </a>
             </li>
             <li class="">
+                <a href="{{ route('estore products') }}">
+                    <i class="fa fa-book"></i>
+                    <span>Edit Estore Products</span>
+                    <span class="pull-right-container">
+                    </span>
+                </a>
+            </li>
+            <li class="">
                 <a href="{{ route('unverified merchants') }}">
                     <i class="fa fa-book"></i>
                     <span>Upload Unverified Merchants List</span>

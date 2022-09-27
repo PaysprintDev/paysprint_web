@@ -216,6 +216,7 @@ class HomeController extends Controller
                     'userdetails' => $this->checkTrial(Auth::id()),
                     'pending' => User::where('id', Auth::id())->where('account_check', 2)->first(),
                     'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first(),
+                    'specialpromo' => $this->specialpromoCount()
                 );
 
                 $view = 'home';
@@ -342,7 +343,8 @@ class HomeController extends Controller
                     'referred' => $this->referral(Auth::user()->ref_code),
                     'userdetails' => $this->checkTrial(Auth::id()),
                     'pending' => User::where('id', Auth::id())->where('account_check', 2)->first(),
-                    'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first()
+                    'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first(),
+                    'specialpromo' => $this->specialpromoCount()
                 );
 
                 $view = 'home';
@@ -397,7 +399,8 @@ class HomeController extends Controller
                     'referred' => $this->referral(Auth::user()->ref_code),
                     'userdetails' => $this->checkTrial(Auth::id()),
                     'pending' => User::where('id', Auth::id())->where('account_check', 2)->first(),
-                    'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first()
+                    'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first(),
+                    'specialpromo' => $this->specialpromoCount()
 
                 );
             } else {
@@ -6311,13 +6314,11 @@ class HomeController extends Controller
 
 
 
-             if($localCurrency === $currency){
-                    $convertLocal = $amount / $localConv;
-            }
-            elseif($localCurrency !== 'USDUSD' && $currency !== 'USDUSD'){
+            if ($localCurrency === $currency) {
+                $convertLocal = $amount / $localConv;
+            } elseif ($localCurrency !== 'USDUSD' && $currency !== 'USDUSD') {
                 $convertLocal = ($amount / $localConv) * $markValue;
-            }
-            else{
+            } else {
                 $convertLocal = $amount / $localConv;
             }
 
