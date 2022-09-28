@@ -156,6 +156,15 @@ trait Moex
     {
 
         $data['paymentBranchId'] = env('APP_ENV') === 'local' ? '8349-0001' : '0001-0001';
+        $data['receiverCountry'] = env('APP_ENV') === 'local' ? 'CAN' : $data['receiverCountry'];
+        $data['senderCountry'] = env('APP_ENV') === 'local' ? 'ESP' : $data['senderCountry'];
+        $data['originCountry'] = env('APP_ENV') === 'local' ? 'ESP' : $data['originCountry'];
+        $data['currencyToPay'] = env('APP_ENV') === 'local' ? 'CAD' : $data['currencyToPay'];
+        $data['currencySent'] = env('APP_ENV') === 'local' ? 'CAD' : $data['currencySent'];
+
+        // dd($data);
+
+
 
         $doc = new \DOMDocument('1.0', 'utf-8');
         $responseData = [];
@@ -220,6 +229,7 @@ trait Moex
 
 
         $result = $this->moExPostCurl();
+
 
         $doc->loadXML($result);
 

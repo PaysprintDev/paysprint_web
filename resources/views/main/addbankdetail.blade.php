@@ -275,10 +275,10 @@
 
 
                                         <div class="form-group">
-                                            <label for="transitNumber">Transit Number</label>
+                                            <label for="transitNumber">Transit Number (optional)</label>
 
                                             <div class="input-group"> <input type="text" name="transitNumber"
-                                                    id="transitNumber" class="form-control" required>
+                                                    id="transitNumber" class="form-control">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text text-muted"> <i
                                                             class="fas fa-sort-numeric-up-alt"></i></span>
@@ -289,10 +289,10 @@
 
 
                                         <div class="form-group">
-                                            <label for="branchCode">Branch Code</label>
+                                            <label for="branchCode">Branch Code (optional)</label>
 
                                             <div class="input-group"> <input type="text" name="branchCode"
-                                                    id="branchCode" class="form-control" required>
+                                                    id="branchCode" class="form-control">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text text-muted"> <i
                                                             class="fas fa-code-branch"></i></span>

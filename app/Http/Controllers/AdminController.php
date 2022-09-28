@@ -19795,7 +19795,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function getallpsClient()
     {
-        $getClient = ClientInfo::orderBy('created_at', 'DESC')->paginate(500);
+        $getClient = ClientInfo::orderBy('created_at', 'DESC')->get();
 
         return $getClient;
     }
