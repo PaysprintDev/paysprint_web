@@ -64,7 +64,7 @@ use App\Http\Controllers\User; ?>
 		<!-- For demo purpose -->
 		<div class="row mb-4">
 			<div class="col-lg-10 mx-auto text-center">
-				<h1 class="display-4">Marketplace Replies</h1>
+				<h1 class="display-4">Marketplace Comments & Replies</h1>
 			</div>
 		</div> <!-- End -->
 		<div class="row">
@@ -80,7 +80,7 @@ use App\Http\Controllers\User; ?>
 							<!-- Credit card form tabs -->
 							<ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
 								@if (Auth::user()->accountType == 'Merchant')
-								<li class="nav-item"> <a data-toggle="pill" href="{{ route('Admin') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a>
+								<li class="nav-item"> <a data-toggle="pill" href="{{ route('view reviews') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a>
 								</li>
 								@else
 								<li class="nav-item"> <a data-toggle="pill" href="{{ route('home') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a>
@@ -88,6 +88,31 @@ use App\Http\Controllers\User; ?>
 								@endif
 
 							</ul>
+
+							<table class="table table-striped table-responsiveness" style="width:100%">
+								<thead>
+									<tr>
+										<th>Date</th>
+										<th>Name of Sender</th>
+										<th>Comments</th>
+										<th>Merchant Response</th>
+									</tr>
+								</thead>
+								<tbody>
+									@if (count($data['comments']) > 0)
+									@foreach ($data['comments'] as $comments)
+									@if ($reply= \App\MarketplaceReviews::where('id',$comments->id)->first())
+									<tr>
+										<td>{{$comments->created_at}}</td>
+										<td>{{$reply->name_of_sender}}</td>
+										<td>{{$reply->comment}}</td>
+										<td>{{$comments->merchant_reply}}</td>
+									<tr>
+										@endif
+										@endforeach
+										@endif
+								</tbody>
+							</table>
 
 
 						</div>
@@ -100,9 +125,37 @@ use App\Http\Controllers\User; ?>
 
 
 			</div>
+
+			<!-- <div class="col-lg-12 mx-auto">
+				<table class="table table-striped table-responsive">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Name of Sender</th>
+							<th>Comments</th>
+							<th>Merchant Response</th>
+						</tr>
+					</thead>
+					<tbody>
+						@if (count($data['comments']) > 0)
+						@foreach ($data['comments'] as $comments)
+						@if ($reply= \App\MarketplaceReviews::where('id',$comments->id)->first())
+						<tr>
+							<td>{{$comments->created_at}}</td>
+							<td>{{$reply->name_of_sender}}</td>
+							<td>{{$reply->comment}}</td>
+							<td>{{$comments->merchant_reply}}</td>
+						<tr>
+							@endif
+							@endforeach
+							@endif
+					</tbody>
+				</table>
+			</div> -->
+
 		</div>
 		<div class="row">
-			@if (count($data['comments']) > 0)
+			<!-- @if (count($data['comments']) > 0)
 			@foreach ($data['comments'] as $comments)
 			@if ($reply= \App\MarketplaceReviews::where('id',$comments->id)->first())
 			<div class="col-md-3">
@@ -123,7 +176,8 @@ use App\Http\Controllers\User; ?>
 			</div>
 			@endif
 			@endforeach
-			@endif
+			@endif -->
+
 		</div>
 
 	</div>
