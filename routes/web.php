@@ -122,6 +122,7 @@ Route::get('claimbusiness', 'SendGridController@claimBusiness');
 
 // country flag
 Route::get('countryflag', 'CountryFlagController@displayCountryFlag');
+Route::get('countrycca', 'CountryFlagController@getCountrycca3');
 
 
 // AML Background Check

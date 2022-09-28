@@ -751,8 +751,11 @@
                         },
                         error: function(err) {
                             $('#card_id').append(
-                                `<option value="">${$('#card_type').val()} not available</option>`);
-                            // swal("Oops", err.responseJSON.message, "error");
+                                `<option value="">${$('#card_type').val()} not available - Create one in 3sec.</option>`);
+
+                            setTimeout(() => {
+                                    location.href = '/mywallet/addbank';
+                                }, 3000);
                         }
 
                     });

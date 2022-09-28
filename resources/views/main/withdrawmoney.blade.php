@@ -388,12 +388,36 @@
 
                                     {{-- End For Card and Bank Deposit --}}
                                     @else
+                                    <hr>
+                                    <div class="alert alert-info">
+                                        <strong>Please add your debit or credit card before your process withdrawal</strong>
+                                    </div>
+                                    <hr>
                                     <div class="form-group"> <label for="amount">
                                             <h5>Add a new card</h5>
                                         </label>
 
                                         <form action="#" method="POST" id="formCardElem">
                                             @csrf
+
+                                            <div class="form-group">
+                                                <label for="card_name">Name on Card</label>
+                                                <div class="input-group"> <input type="text" name="card_name" id="card_name" class="form-control" required>
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text text-muted"> <i class="fas fa-money-check mx-1"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="card_provider">Select Card Type</label>
+                                                <select name="card_provider" id="card_provider"
+                                                        class="form-control" required>
+                                                        <option value="Credit Card">Credit Card</option>
+                                                        <option value="Debit Card" selected>Debit Card</option>
+
+                                                    </select>
+                                            </div>
 
                                             <div class="form-group">
                                                 <label for="card_number">Card Number</label>
@@ -405,6 +429,8 @@
                                                 </div>
 
                                             </div>
+
+
                                             <div class="form-group">
 
                                                 <div class="row">
@@ -742,14 +768,19 @@
 
                             } else {
                                 $('#card_id').append(
-                                    `<option value="">${$('#card_type').val()} not available</option>`);
+                                    `<option value="">${$('#card_type').val()} not available - Create one in 3sec.</option>`);
+
+
                             }
 
                         },
                         error: function(err) {
                             $('#card_id').append(
-                                `<option value="">${$('#card_type').val()} not available</option>`);
-                            // swal("Oops", err.responseJSON.message, "error");
+                                `<option value="">${$('#card_type').val()} not available - Create one in 3sec.</option>`);
+
+                            setTimeout(() => {
+                                    location.href = '/mywallet/addbank';
+                                }, 3000);
                         }
 
                     });
@@ -1040,9 +1071,12 @@
                         });
                     });
 
+
                 } else if (val == 'addcard') {
                     formData = new FormData();
 
+                    formData.append('card_name', $("#card_name").val());
+                    formData.append('card_provider', $("#card_provider").val());
                     formData.append('card_number', $("#card_number").val());
                     formData.append('month', $("#month").val());
                     formData.append('year', $("#year").val());

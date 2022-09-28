@@ -8,6 +8,8 @@ use App\AddCard;
 use App\Statement;
 use App\ClientInfo;
 use App\PayoutAgent;
+use App\Traits\Moex;
+use App\AllCountries;
 use App\BankWithdrawal;
 use App\Traits\IDVCheck;
 use App\TransactionCost;
@@ -15,7 +17,6 @@ use App\PayoutWithdrawal;
 use App\SpecialInformation;
 use Illuminate\Http\Request;
 use App\Traits\PaymentGateway;
-use App\Traits\Moex;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -550,6 +551,8 @@ class PayoutAgentController extends Controller
         $monerisAction = new MonerisController();
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
+        $getCountry = AllCountries::where('name', $thisuser->country)->first();
+
 
         if ($req->amount < 0) {
             $data = [];
@@ -682,7 +685,7 @@ class PayoutAgentController extends Controller
                                         'receiver' => $thisuser->name,
                                         'receiverName' => explode(' ', $thisuser->name)[0],
                                         'receiverLastName' => explode(' ', $thisuser->name)[1],
-                                        'receiverCountry' => 'CAN',
+                                        'receiverCountry' => $getCountry->cca3,
                                         'bankDeposit' => $req->card_type == "Bank Account" ? 'TRUE' : 'FALSE',
                                         'bankName' => $bankDetails->bankName !== null ? $bankDetails->bankName : '',
                                         'bankAddress' => $bankDetails->bankName !== null ? $bankDetails->bankName.' '.$thisuser->country : '',

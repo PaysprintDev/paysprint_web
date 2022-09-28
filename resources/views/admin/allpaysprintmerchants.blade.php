@@ -69,25 +69,36 @@
                                         <?php $i = 1;
                                         $accountState = 'Closed account'; ?>
                                         @foreach ($data as $dataItem)
-                                            @if ($archivedMerchant = \App\User::where('email', $dataItem->email)->where('countryapproval', 1)->where('archive', 1)->first())
+                                            @if ($archivedMerchant = \App\User::where('email', $dataItem->email)->first())
+
+                                                @if ($archivedMerchant->archive === 1)
+
                                                 @php
                                                     $accountState = 'Archived';
                                                 @endphp
-                                            @endif
 
-                                            @if ($existingMerchant = \App\User::where('email', $dataItem->email)->where('archive', 0)->where('countryapproval', 1)->where('created_at', '<', date('Y-m-d', strtotime('-30 days')))->first())
+                                                @endif
+
+
+                                                @if ($archivedMerchant->created_at < date('Y-m-d', strtotime('-30 days')))
+
                                                 @php
                                                     $accountState = 'Existing';
                                                 @endphp
-                                            @endif
 
-                                            @if ($newUsers = \App\User::where('email', $dataItem->email)->where('archive', 0)->where('countryapproval', 1)->where('created_at', '>=', date('Y-m-d', strtotime('-30 days')))->first())
+                                                @endif
+
+
+                                                @if ($archivedMerchant->created_at >= date('Y-m-d', strtotime('-30 days')))
+
                                                 @php
                                                     $accountState = 'New';
                                                 @endphp
-                                            @endif
 
-                                            <tr>
+                                                @endif
+
+
+                                                <tr>
                                                 <td>{{ $i++ }}</td>
 
                                                 <td>{{ $dataItem->firstname.' '.$dataItem->lastname }}</td>
@@ -102,6 +113,13 @@
                                                 <td>{{ $dataItem->user_id }}</td>
 
                                             </tr>
+
+
+                                            @endif
+
+
+
+
                                         @endforeach
                                     @else
                                         <tr>
@@ -117,14 +135,7 @@
 
                         </div>
 
-                        <nav aria-label="...">
-                                        <ul class="pagination pagination-md">
 
-                                            <li class="page-item">
-                                                {{ $data->links() }}
-                                            </li>
-                                        </ul>
-                                    </nav>
                         <!-- /.box-body -->
                     </div>
                     <!-- /.box -->

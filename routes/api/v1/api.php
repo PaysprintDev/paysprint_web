@@ -47,6 +47,7 @@ Route::prefix('/v1')->group(function () {
 
     Route::post('confirmtransaction',  ['uses' => 'MoexController@confirmThisTransactionId'])->name('confirm this transaction');
 
+
     Route::group(['middleware' => ['appkey']], function () {
 
         // Registration
