@@ -156,7 +156,7 @@ return [
          * Package Service Providers...
          */
 
-         Weidner\Goutte\GoutteServiceProvider::class,
+        //  Weidner\Goutte\GoutteServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -225,7 +225,7 @@ return [
         'Newsletter' => Spatie\Newsletter\NewsletterFacade::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'SoapClient' => SoapClient::class,
-        'Goutte' => Weidner\Goutte\GoutteFacade::class
+        // 'Goutte' => Weidner\Goutte\GoutteFacade::class
 
     ],
 

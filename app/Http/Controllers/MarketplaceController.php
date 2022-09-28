@@ -668,4 +668,14 @@ class MarketplaceController extends Controller
 
         return response()->json($response, $code);
     }
+
+    //pulling all merchant Replies
+    public function merchantReplies(Request $req, $id)
+    {
+        try {
+
+        }catch(\Throwable $th) {
+            $response = [];
+        }
+    }
 }

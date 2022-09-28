@@ -18,6 +18,7 @@ use App\StoreProducts;
 use App\MarketplaceNews;
 use App\StoreDelivery;
 use App\StoreMainShop;
+use App\UnverifiedMerchant;
 use App\ActivationEstore;
 
 use App\Admin as Admin;
@@ -199,6 +200,7 @@ class StoreController extends Controller
                 'getTax' => $this->getTax(session('myID')),
                 'stores' => StoreMainShop::get()->count('merchantid'),
                 'activate' => ActivationEstore::get()->count('user_id'),
+                'unverifiedmerchants' => UnverifiedMerchant::get()->count('id')
                 // 'listbank' => $this->getBankList(),
                 // 'escrowfund' => $this->getEscrowFunding(),
             );
