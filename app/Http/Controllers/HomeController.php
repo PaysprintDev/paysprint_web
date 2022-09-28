@@ -1454,7 +1454,11 @@ class HomeController extends Controller
                 'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
                 'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
                 'partner' => $this->getPartners(),
+                'providers' => MobileMoney::where('user_id', Auth::id())->get(),
+            'subscription' => $this->getConsumerCost(Auth::user()->country)
             );
+
+
         } else {
             return redirect()->route('dashboard');
         }
@@ -2269,7 +2273,7 @@ class HomeController extends Controller
 
         $data = $this->getCountryCode($userData->country);
 
-        $data['conversionrate'] = $this->getOfficialConversionRate(Auth::user()->currencyCode, $data->currencyCode);
+        $data['conversionrate'] = $this->getConversionRate($data->currencyCode, Auth::user()->currencyCode);
 
         $resp = [
             'data' => $data,
@@ -2279,6 +2283,8 @@ class HomeController extends Controller
 
         return $resp;
     }
+
+
 
 
     public function getthisInvoice($invoice)

@@ -459,7 +459,7 @@ use App\Http\Controllers\FlutterwaveModel; ?>
                                     <label for="account_number">Account Number</label><br>
                                     <small style="color: red; font-weight: 700;">Kindly enter the PS account number
                                         to link</small>
-                                    <input type="text" name="account_number" id="link_account_number" class="form-control" placeholder="E.g 69212">
+                                    <input type="text" name="account_number" id="link_account_number" class="form-control" placeholder="E.g 11111">
                                 </div>
 
                                 <div class="form-group">
@@ -493,7 +493,7 @@ use App\Http\Controllers\FlutterwaveModel; ?>
                                     <label for="account_number">Account Number</label><br>
                                     <small style="color: red; font-weight: 700;">Kindly enter the PS account number
                                         you want to vouch for</small>
-                                    <input type="text" name="account_number" id="vouch_account_number" class="form-control" placeholder="E.g 69212">
+                                    <input type="text" name="account_number" id="vouch_account_number" class="form-control" placeholder="E.g 11111">
                                 </div>
 
                                 <div class="form-group">

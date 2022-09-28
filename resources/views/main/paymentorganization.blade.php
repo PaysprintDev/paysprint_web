@@ -341,7 +341,7 @@
                                                         <tr style="font-weight: bold;">
                                                             <td class="text-success">1</td>
                                                             <td class="text-primary" id="int_convert">
-                                                                {{ 1 / $data['othercurrencyCode']['conversionrate'] }}
+                                                                {{ $data['othercurrencyCode']['conversionrate'] }}
                                                             </td>
                                                         </tr>
                                                     </tbody>

@@ -216,7 +216,7 @@
                                                 <pre class="prettyprint lang-html">
 curl --location --request POST '{baseUrl}/customers' \
 --header 'Authorization: Bearer {bearerKey}' \
---form 'accountNumber="69212"' \ //Customer's PaySprint account number
+--form 'accountNumber="11111"' \ //Customer's PaySprint account number
 --form 'amount="50"' \ //Amount to charge
 --form 'purpose="Contribution"' \ // Purpose of Payment
 --form 'transactionPin="1234"' \ // PaySprint transaction pin

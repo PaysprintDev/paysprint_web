@@ -3788,6 +3788,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     public function addMoneyToWallet(Request $req)
     {
 
+
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
         if ($thisuser->flagged === 1) {
@@ -6846,6 +6847,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 }
 
                                                                 $this->createNotification($thisuser->ref_code, $sendMsg);
+
+
+                                                                $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount to withdraw: " . $req->currencyCode . ' ' . number_format($req->amount, 2) . "</p><p>Bank Name: ".$bankDetails->bankName."</p><p>Bank Account Number: ".$bankDetails->accountNumber."</p><p>Status: Successful</p>";
+
+                                                                $this->notifyAdmin("Bank withdrawal outflow", $adminMessage);
 
                                                                 // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
                                                                 $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);

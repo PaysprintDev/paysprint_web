@@ -27,5 +27,12 @@ return [
         'new_secret_key' => env('SHUFTI_PRO_NEW_SECRET_KEY'),
         'basic_auth' => env('SHUFTI_PRO_BASIC_AUTH'),
     ],
+    'moex' => [
+        'baseurl' => env('MOEX_BASEURL'),
+        'username' => env('MOEX_USERNAME'),
+        'password' => env('MOEX_PASSWORD'),
+        'version' => env('MOEX_VERSION'),
+        'sender_licence' => env('MOEX_SENDER_DRL'),
+    ],
 
 ];

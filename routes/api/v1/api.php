@@ -38,11 +38,14 @@ Route::prefix('/v1')->group(function () {
     Route::get('payoutmethod/{foreign}',  ['uses' => 'Controller@getPayoutMethod']);
     Route::post('comment',  ['uses' => 'MarketplaceController@makeComment'])->name('comment');
     Route::post('claimmarketbusiness',  ['uses' => 'MarketplaceController@claimMarketBusiness'])->name('claim market business');
+
     Route::get('getallunverifiedmerchants',  ['uses' => 'MarketplaceController@getUnverifiedMerchants'])->name('get unverfieid merchants');
     Route::get('viewcomments/{id}',  ['uses' => 'MarketplaceController@viewComments'])->name('view comments');
     Route::get('countcomments/{id}',  ['uses' => 'MarketplaceController@countComment'])->name('view comment');
     Route::post('claimbusinesswithphone',  ['uses' => 'MarketplaceController@claimbusinessPhone'])->name('claim business phone');
 
+
+    Route::post('confirmtransaction',  ['uses' => 'MoexController@confirmThisTransactionId'])->name('confirm this transaction');
 
     Route::group(['middleware' => ['appkey']], function () {
 
@@ -271,6 +274,9 @@ Route::prefix('/v1')->group(function () {
         Route::post('/partneraddmoneytowallet', ['uses' => 'PayoutAgentController@partnerAddMoneyToWallet', 'as' => 'partner add money to wallet']);
 
         Route::post('moneywithdrawal',  ['uses' => 'MonerisController@moneyWithdrawal'])->name('withdraw from wallet');
+
+
+        Route::post('partnerwithdrawal',  ['uses' => 'PayoutAgentController@partnerMoneyWithdrawal'])->name('withdraw from wallet');
 
         Route::post('payutilitybills',  ['uses' => 'MonerisController@payUtilityBills'])->name('pay utility bills');
 
