@@ -215,7 +215,8 @@ class MerchantPageController extends Controller
                 'reviews' => MarketplaceReviews::where('merchant_id', $id)->orderBy('created_at', 'DESC')->get(),
 
             ];
-        return view('merchant\pages.marketplacereviews')->with(['data' => $data]);
+
+        return view('merchant.pages.marketplacereviews')->with(['data' => $data]);
     }
 
     public function viewmarketReplies(Request $req, $id)
@@ -225,8 +226,8 @@ class MerchantPageController extends Controller
             'comments' => MerchantReply::where('comment_id', $id)->get(),
         ];
 
-        // dd($data['comments']);
-        return view('merchant\pages.viewreply')->with(['data' => $data]);
+
+        return view('merchant.pages.viewreply')->with(['data' => $data]);
     }
 
     public function merchantReply(Request $req)
