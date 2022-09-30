@@ -637,7 +637,7 @@ class SendGridController extends Controller
                 "name"  => $name,
                 "message" => "<p>PaySprint Market Place is one of the fastest growing global marketplaces. <br> At PaySprint Market Place, we connect merchant with customers and drive more traffic to their business at no extra costs. <br> To make sure your business is eligible to show up on PaySprint Marketplace,  </p>",
                 "url" => route('home') . '/claimmerchantbusiness?id=' . $user->id,
-                "decline" => route('home') . '/declineclaimbusiness?id=' . $user->id,
+                "decline" => 'https://paysprintmarketplace.com',
                 "remove" => route('home') . '/declineclaimbusiness?id=' . $user->id,
             ];
 
@@ -671,6 +671,26 @@ class SendGridController extends Controller
 
             $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
             // dd($response);
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    //request review
+    public function requestReview($email, $id,$name)
+    {
+        try {
+            $receiver = $email;
+            $data = [
+                "name" => "Hi there,",
+                "message" => "<p>As a valued customer, we at $name,would appreciate your sincere opinion on our products/services so we can serve you better.</p>",
+                "url" => route('home') . '/makereview?id=' . $id,
+            ];
+
+            $template_id = config('constants.sendgrid.requestreview');
+
+            $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
 
         } catch (\Throwable $th) {
             throw $th;

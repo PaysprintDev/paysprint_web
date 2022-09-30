@@ -191,12 +191,32 @@ class MerchantPageController extends Controller
 
     public function cashback(Request $req)
     {
-        $id = $req->id;
-        MerchantCashback::create([
-            'merchant_id' => $id,
+        $validation = Validator::make($req->all(), [
+            'agree' => 'required'
         ]);
+        if ($validation->passes()) {
+            $accept = $req->agree;
 
-        return back()->with('msg', "<div class='alert alert-success'>Joined Successfully</div>");
+            $id = Auth::id();
+            MerchantCashback::create([
+                'merchant_id' => $id,
+                'accept' => $accept
+            ]);
+
+            return back()->with('msg', "<div class='alert alert-success'>Joined Successfully</div>");
+        } else {
+            return back()->with('msg', "<div class='alert alert-danger'>Kindly accept the terms and conditons</div>");
+        }
+    }
+
+    public function requestReview(Request $req)
+    {
+        $id = Auth::id();
+        $data = User::where('id', $id)->first();
+        $mailer = new SendGridController;
+        $mailer->requestReview($req->customer_email, $id, $data->businessname);
+
+        return back()->with('msgs', "<div class='alert alert-success'>Review Request Sent Successfully</div>");
     }
 
     public function endcashback(Request $req)
@@ -210,6 +230,7 @@ class MerchantPageController extends Controller
     public function viewReviews(Request $Req)
     {
         $id = Auth::id();
+
         $data =
             [
                 'reviews' => MarketplaceReviews::where('merchant_id', $id)->orderBy('created_at', 'DESC')->get(),

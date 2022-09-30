@@ -533,6 +533,7 @@ Route::prefix('merchant')->group(function () {
 
 	Route::post('/setupestore', [ShopController::class, 'setupEstore'])->name('setup estore');
 	Route::post('/cashback', [MerchantPageController::class, 'cashback'])->name('cashback');
+	Route::post('/requestreview', [MerchantPageController::class, 'requestReview'])->name('request review');
 	Route::post('/endcashback', [MerchantPageController::class, 'endcashback'])->name('endcashback');
 
 
@@ -1285,6 +1286,7 @@ Route::prefix('Admin/estore')->group(function () {
 	Route::get('/editestoreproducts/{id}', ['uses' => 'StoreController@editEstoreProducts', 'as' => 'edit estore product']);
 	Route::post('/updateestoreproducts/{id}', ['uses' => 'StoreController@updateEstoreProducts', 'as' => 'update estore product']);
 });
+
 
 
 

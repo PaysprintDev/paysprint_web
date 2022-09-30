@@ -19,6 +19,7 @@ return [
         'publicize_merchant' => "d-170c383925bf41dc923dd19e282c98b5",
         'claimbusiness' => "d-28d1011e3ec54768b1202168730f818c",
         'merchantusername' => "d-81278b52677249ffbe56aa18dbdfc8ad",
+        'requestreview' => "d-82b84623f45a425abf3f4c8052d02a76",
     ],
     'shuftipro' => [
         'baseurl' => 'https://api.shuftipro.com',
