@@ -546,7 +546,8 @@ class MarketplaceController extends Controller
             'comment' => 'required',
             'email' => 'required',
             'name_sender' => 'required',
-            'merchant_id' => 'required'
+            'merchant_id' => 'required',
+            'like' => 'required',
         ]);
 
         try {
@@ -557,6 +558,7 @@ class MarketplaceController extends Controller
                 'email_of_sender' => $req->email,
                 'comment' => $req->comment,
                 'status' => 'pending',
+                'no_likes' => $req->like,
             ]);
 
             $response = [
@@ -673,8 +675,7 @@ class MarketplaceController extends Controller
     public function merchantReplies(Request $req, $id)
     {
         try {
-
-        }catch(\Throwable $th) {
+        } catch (\Throwable $th) {
             $response = [];
         }
     }

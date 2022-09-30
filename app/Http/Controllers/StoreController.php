@@ -1138,6 +1138,7 @@ class StoreController extends Controller
 
 
 
+
             return view('estore.editstore')->with(['pages' => 'Estore Dashboard', 'data' => $data, 'received' => $received, 'withdraws' => $withdraws, 'pending' => $pending, 'refund' => $refund, 'allusers' => $allusers, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'invoiceLinkImport' => $invoiceLinkImport, 'transCost' => $transCost]);
         } else {
             return redirect()->route('AdminLogin');

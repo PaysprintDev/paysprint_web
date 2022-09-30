@@ -302,24 +302,11 @@ use App\Http\Controllers\AllCountries; ?>
                                     {{-- <i
                                             class="toprightarrow-secondary fa fa-arrow-up me-2"></i>{{ count($data['invoiceList']) != 0 ? round($data['paidInvoiceCount'] / count($data['invoiceList']), 2) : 0 }}% --}}
                                 </a>
-                                <!-- cashback button -->
-                                {!! session('msg') !!}
-                                @if ( empty($data['cashback']))
-                                <form action="{{route('cashback')}}" method="post" id="formcashback">
-                                    @csrf
-                                    <input type="hidden" name="id" value="{{Auth::id()}}">
-                                    <a href="javascript:void()" class="btn btn-primary" id="cashback" onclick="$('#formcashback').submit()">Click to participate in Cashback</a>
-                                </form>
-                                @else
-                                <form action="{{route('endcashback')}}" method="post" id="endformcashback">
-                                    @csrf
-                                    <input type="hidden" name="id" value="{{Auth::id()}}">
-                                    <a href="javascript:void()" class="btn btn-danger" id="cashback" onclick="$('#endformcashback').submit()">End Cashback Promo</a>
-                                </form>
-                                @endif
 
 
-                                <!-- end of cashback -->
+
+
+
                                 <div class="parrten">
                                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
                                         <g>
@@ -333,6 +320,8 @@ use App\Http\Controllers\AllCountries; ?>
                             </div>
                         </div>
                     </div>
+
+
 
                     @if ($data['clientInfo']->accountMode == 'test')
 
@@ -760,11 +749,110 @@ use App\Http\Controllers\AllCountries; ?>
                     <div class="card-body text-center">
                         <div class="row">
                             <div class="col-md-12">
-                                <p style="font-size:20px; font-weight:bold">Marketplace Reviews</p>
-                                <p style="font-weight:bold; font-size:20px;">{{$data['reviews']}}</p>
-                                <a type="button" class="btn btn-success" href="{{route('view reviews')}}">View Marketplace Reviews</a>
+                                <h3>Marketplace</h3>
+                            </div>
+                            <div class="col-md-3">
+                                <!-- 
+                                <p style="font-weight:bold; font-size:20px;"></p> -->
+                                <a type="button" class="btn btn-success" href="{{route('view reviews')}}">{{$data['reviews']}} <br>Manage Reviews</a>
 
                             </div>
+                            <div class="col-md-3">
+
+                                <!-- cashback button -->
+                                {!! session('msgs') !!}
+                                {!! session('msg') !!}
+                                @if ( empty($data['cashback']))
+                                <!-- <form action="{{route('cashback')}}" method="post" id="formcashback">
+                                @csrf
+                                <input type="hidden" name="id" value="{{Auth::id()}}">
+                                <a href="javascript:void()" class="btn btn-primary" id="cashback" onclick="$('#formcashback').submit()">Click to participate in Cashback</a>
+                            </form> -->
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    Click to participate in cashback
+                                </button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="staticBackdropLabel">Accept Terms and Conditions</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{route('cashback')}}" method="post">
+                                                    @csrf
+                                                    <p>PaySprint Merchant Cashback is an incentive program to customers to buy more from the participating merchant eStore.</p>
+                                                    <h2 style="color:black; font-size:15px;">How does it work?</h2>
+                                                    <p>Every Participating merchant contributes 2% of every sale proceed to the Cash-Back program (that is 2% is debited to the merchant wallet). The customer that purchased from the merchant's eStore receives 1% of the paid price as a cashback wallet credit from the program. The remaining 1% is used to cover cost of promoting participating merchant's eStore on social media and the cost of other promotional activities.</p>
+                                                    <p>Merchant can END the participation in the program ANYTIME by simply clicking on "End Cash Back Promo" button.</p>
+                                                    <p>To participate in the program, simply checkmark the button below and click the submit button.
+                                                        Accept terms and conditions before proceeding</p>
+
+                                                    <input type="checkbox" name="agree" value="1"><span style="color:blue; margin-left:10px;" required> Accept terms and conditions before proceeding</span>
+
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-success">Yes, I Agree</button>
+                                            </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                @else
+                                <form action="{{route('endcashback')}}" method="post" id="endformcashback">
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{Auth::id()}}">
+                                    <a href="javascript:void()" class="btn btn-danger" id="cashback" onclick="$('#endformcashback').submit()">End Cashback Promo</a>
+                                </form>
+                                @endif
+                                <!-- end of cashback -->
+
+                            </div>
+
+                            <!-- beginning of request review-->
+                            <div class="col-md-3">
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop2">
+                                    Request for Review
+                                </button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="staticBackdropLabel">Request for Review</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{route('request review')}}" method="post">
+                                                    @csrf
+                                                    <div class="form-group">
+                                                        <label>Enter Email Of Customer</label>
+                                                        <input type="text" name="customer_email" class="form-control">
+                                                    </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Request Review</button>
+                                            </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end -->
+
+                            <!-- manage E-store -->
+                            <div class="col-md-3">
+                                <a href="{{route('ordering system')}}" target="_blank" class="btn btn-warning">Manage E-Store</a>
+                            </div>
+                            <!-- end e-store -->
                         </div>
                     </div>
                 </div>
