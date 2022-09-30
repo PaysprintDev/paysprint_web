@@ -251,7 +251,7 @@ class GooglePaymentController extends Controller
 
                                                 $resData = ['res' => $checkForOverDraft['message'] . ". Please add money to continue transaction", 'message' => 'error', 'title' => 'Oops!'];
 
-                                                $response = 'You cannot send money to yourself.';
+                                                $response = $checkForOverDraft['message'] . ". Please add money to continue transaction";
                                                 $respaction = 'error';
 
                                                 return redirect()->back()->with($respaction, $response);

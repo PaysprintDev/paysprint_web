@@ -460,6 +460,7 @@ class Controller extends BaseController
                 $convRateB = 1;
             }
 
+
             if($currencyA === $currencyB){
                     $actualRate = $convRateA / $convRateB;
             }
@@ -467,7 +468,7 @@ class Controller extends BaseController
                 $actualRate = ($convRateA / $convRateB) * $markValue;
             }
             else{
-                $actualRate = $convRateA / $convRateB;
+                $actualRate = ($convRateA / $convRateB) * $markValue;
             }
 
 

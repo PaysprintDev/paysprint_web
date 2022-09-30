@@ -579,6 +579,8 @@ class PayoutAgentController extends Controller
 
                 if ($validator->passes()) {
 
+                    $transaction_id = "wallet-" . date('dmY') . time();
+
                     $checkIdv = $this->checkUsersPassAccount($thisuser->id);
 
                     if (in_array('withdraw money', $checkIdv['access'])) {
@@ -673,6 +675,8 @@ class PayoutAgentController extends Controller
                                         $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
                                     }
 
+
+
                                     $dob = $thisuser->yearOfBirth.''.($thisuser->monthOfBirth <= 9 ? "0".$thisuser->monthOfBirth : $thisuser->monthOfBirth).''.$thisuser->dayOfBirth;
 
                                     // Do MOEX MEAddTransaction....
@@ -689,9 +693,9 @@ class PayoutAgentController extends Controller
                                         'receiverLastName' => explode(' ', $thisuser->name)[1],
                                         'receiverCountry' => $getCountry->cca3,
                                         'bankDeposit' => $req->card_type == "Bank Account" ? 'TRUE' : 'FALSE',
-                                        'bankName' => $bankDetails->bankName !== null ? $bankDetails->bankName : '',
-                                        'bankAddress' => $bankDetails->bankName !== null ? $bankDetails->bankName.' '.$thisuser->country : '',
-                                        'bankAccount' => $bankDetails->bankName !== null ? $bankDetails->accountNumber : '',
+                                        'bankName' => isset($bankDetails) ? $bankDetails->bankName : '',
+                                        'bankAddress' => isset($bankDetails) ? $bankDetails->bankName.' '.$thisuser->country : '',
+                                        'bankAccount' => isset($bankDetails) ? $bankDetails->accountNumber : '',
                                         'amountToPay' => $req->amount,
                                         'currencyToPay' => $req->currencyCode,
                                         'amountSent' => $req->amount,
@@ -701,7 +705,8 @@ class PayoutAgentController extends Controller
                                             'SenderBirthDate' => $dob,
                                             'SenderBirthPlace' => "",
                                             'SenderBirthCountry' => $getCountry->cca3
-                                        ]
+                                        ],
+                                        'reference' => $transaction_id
                                     );
 
 
@@ -733,7 +738,7 @@ class PayoutAgentController extends Controller
 
                                                     if (isset($bankDetails)) {
 
-                                                        $transaction_id = "wallet-" . date('dmY') . time();
+
 
                                                         $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amount, 'country' => $thisuser->country]);
 
@@ -805,8 +810,6 @@ class PayoutAgentController extends Controller
 
                                                     if (isset($getTrans) == true) {
                                                         $transaction_id = $getTrans->reference_code;
-                                                    } else {
-                                                        $transaction_id = "wallet-" . date('dmY') . time();
                                                     }
 
                                                     $customer_id = $thisuser->ref_code;
@@ -931,7 +934,6 @@ class PayoutAgentController extends Controller
                                                     if ($req->card_type == "Bank Account") {
 
                                                         $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
-                                                        $transaction_id = "wallet-" . date('dmY') . time();
 
                                                         $insRec = BankWithdrawal::updateOrInsert(['transaction_id' => $transaction_id], ['transaction_id' => $transaction_id, 'ref_code' => $thisuser->ref_code, 'bank_id' => $req->card_id, 'amountToSend' => $req->amount, 'country' => $thisuser->country]);
 
@@ -1000,8 +1002,6 @@ class PayoutAgentController extends Controller
 
                                                         if (isset($getTrans) == true) {
                                                             $transaction_id = $getTrans->reference_code;
-                                                        } else {
-                                                            $transaction_id = "wallet-" . date('dmY') . time();
                                                         }
 
                                                         $customer_id = $thisuser->ref_code;

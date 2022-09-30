@@ -6,6 +6,13 @@ var placeSearch, autocomplete;
     postal_code: 'short_name'
   };
 
+var componentKey = Object.keys(componentForm);
+
+for (let i = 0; i < componentKey.length; i++) {
+    const element = componentKey[i];
+    document.getElementById(element).removeAttribute('disabled');
+}
+
 function initAutocomplete() {
   // Create the autocomplete object, restricting the search to geographical
   // location types.
@@ -23,6 +30,7 @@ function fillInAddress() {
   var place = autocomplete.getPlace();
 
   for (var component in componentForm) {
+
     document.getElementById(component).value = '';
     document.getElementById(component).disabled = false;
   }

@@ -441,11 +441,11 @@
                     <div class="col-md-6">
                         <label class="control-label"><span class="reqField">*</span> Street number</label>
                         <input class="form-control input_box" name="street_number" id="street_number" disabled="true"
-                            readonly>
+                        >
                     </div>
                     <div class="col-md-6">
                         <label class="control-label"><span class="reqField">*</span> Street Name/ Route</label>
-                        <input class="form-control input_box" name="route" id="route" disabled="true" readonly>
+                        <input class="form-control input_box" name="route" id="route" disabled="true">
                     </div>
                 </div>
 
