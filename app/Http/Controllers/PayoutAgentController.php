@@ -11,6 +11,7 @@ use App\PayoutAgent;
 use App\Traits\Moex;
 use App\AllCountries;
 use App\BankWithdrawal;
+use App\MoexTransaction;
 use App\Traits\IDVCheck;
 use App\TransactionCost;
 use App\PayoutWithdrawal;
@@ -672,6 +673,7 @@ class PayoutAgentController extends Controller
                                         $bankDetails = AddBank::where('id', $req->card_id)->where('user_id', $thisuser->id)->first();
                                     }
 
+                                    $dob = $thisuser->yearOfBirth.''.($thisuser->monthOfBirth <= 9 ? "0".$thisuser->monthOfBirth : $thisuser->monthOfBirth).''.$thisuser->dayOfBirth;
 
                                     // Do MOEX MEAddTransaction....
                                     $moexProperties = array(
@@ -694,8 +696,12 @@ class PayoutAgentController extends Controller
                                         'currencyToPay' => $req->currencyCode,
                                         'amountSent' => $req->amount,
                                         'currencySent' => $req->currencyCode,
-                                        'paymentBranchId' => $bankDetails->bankName !== null ? $bankDetails->branchCode : '',
-                                        'originCountry' => 'CAN'
+                                        'originCountry' => 'CAN',
+                                        'auxiliaryInfo' => [
+                                            'SenderBirthDate' => $dob,
+                                            'SenderBirthPlace' => "",
+                                            'SenderBirthCountry' => $getCountry->cca3
+                                        ]
                                     );
 
 
@@ -708,6 +714,8 @@ class PayoutAgentController extends Controller
                                         $status = 400;
                                     }
                                     else{
+
+                                        MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex)]);
 
                                         // Get Transaction record for last money added to wallet
                                         $getTrans = Statement::where('reference_code', 'LIKE', '%ord-%')->where('reference_code', 'LIKE', '%wallet-%')->where('user_id', $thisuser->email)->latest()->first();
