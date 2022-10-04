@@ -195,7 +195,7 @@
                                             <h6>Transaction ID</h6>
                                         </label>
                                         <div class="input-group">
-                                             <input type="number" step="{{ time() }}" min="{{ time() }}" name="transaction_id" id="transaction_id" class="form-control" required>
+                                             <input type="text" step="{{ time() }}" min="{{ time() }}" name="transaction_id" id="transaction_id" class="form-control" required>
                                              <input type="hidden" name="receiver_code" id="receiver_code" class="form-control" value="{{ $receiveCode }}">
                                         </div>
 
@@ -342,6 +342,8 @@
                 const response = await axios(config);
 
                 $('.moexResponse').removeClass('disp-0');
+
+                console.log(response.data.data);
 
                 if(response.data.data.length === 0){
                     $('.moexResponse').removeClass('alert alert-info');

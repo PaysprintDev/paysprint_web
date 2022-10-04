@@ -165,24 +165,16 @@ trait Moex
 
         $getBranchId = $this->availableBranchList($data['receiverCountry']);
 
-        if($getBranchId['branchId'] === '-12'){
+        if ($getBranchId['branchId'] === '-12') {
 
             $responseData = [
                 'error' => "Sorry payout is not available to this country at the moment."
             ];
 
             return $responseData;
-        }
-        else{
+        } else {
             $data['paymentBranchId'] = $getBranchId['branchId'];
         }
-
-
-
-
-
-
-
 
 
         $doc = new \DOMDocument('1.0', 'utf-8');
@@ -198,32 +190,32 @@ trait Moex
                     <Version xsi:type="xsd:string">' . config("constants.moex.version") . '</Version>
                 </login>
                 <transaction xsi:type="urn:TWStransaction" xmlns:urn="urn:WSmoneyClasses">
-                    <TransactionId xsi:type="xsd:string">?</TransactionId>
-                    <TransactionDate xsi:type="xsd:dateTime">'.date('Y-m-d h:i:s').'</TransactionDate>
-                    <SenderId xsi:type="xsd:string">?</SenderId>
+                    <TransactionId xsi:type="xsd:string"></TransactionId>
+                    <TransactionDate xsi:type="xsd:dateTime">' . date('Y-m-d h:i:s') . '</TransactionDate>
+                    <SenderId xsi:type="xsd:string"></SenderId>
                     <Sender xsi:type="xsd:string">' . $data['sender'] . '</Sender>
                     <SenderName xsi:type="xsd:string">' . $data['senderName'] . '</SenderName>
                     <SenderLastName xsi:type="xsd:string">' . $data['senderLastName'] . '</SenderLastName>
-                    <SenderLastName2 xsi:type="xsd:string">?</SenderLastName2>
+                    <SenderLastName2 xsi:type="xsd:string"></SenderLastName2>
                     <SenderAddress xsi:type="xsd:string">' . $data['senderAddress'] . '</SenderAddress>
-                    <SenderCity xsi:type="xsd:string">?</SenderCity>
+                    <SenderCity xsi:type="xsd:string"></SenderCity>
                     <SenderCountry xsi:type="xsd:string">' . $data['senderCountry'] . '</SenderCountry>
                     <SenderIdDocumentNumber xsi:type="xsd:string">' . $data['senderIdDocumentNumber'] . '</SenderIdDocumentNumber>
                     <SenderIdDocumentType xsi:type="xsd:string">' . $data['senderIdDocumentType'] . '</SenderIdDocumentType>
-                    <SenderReference xsi:type="xsd:string">?</SenderReference>
-                    <ReceiverId xsi:type="xsd:string">?</ReceiverId>
+                    <SenderReference xsi:type="xsd:string"></SenderReference>
+                    <ReceiverId xsi:type="xsd:string"></ReceiverId>
                     <Receiver xsi:type="xsd:string">' . $data['receiver'] . '</Receiver>
                     <ReceiverName xsi:type="xsd:string">' . $data['receiverName'] . '</ReceiverName>
                     <ReceiverLastName xsi:type="xsd:string">' . $data['receiverLastName'] . '</ReceiverLastName>
-                    <ReceiverLastName2 xsi:type="xsd:string">?</ReceiverLastName2>
-                    <ReceiverAddress xsi:type="xsd:string">?</ReceiverAddress>
-                    <ReceiverCity xsi:type="xsd:string">?</ReceiverCity>
+                    <ReceiverLastName2 xsi:type="xsd:string"></ReceiverLastName2>
+                    <ReceiverAddress xsi:type="xsd:string"></ReceiverAddress>
+                    <ReceiverCity xsi:type="xsd:string"></ReceiverCity>
                     <ReceiverCountry xsi:type="xsd:string">' . $data['receiverCountry'] . '</ReceiverCountry>
-                    <ReceiverPhone xsi:type="xsd:string">?</ReceiverPhone>
-                    <ReceiverPhone2 xsi:type="xsd:string">?</ReceiverPhone2>
-                    <ReceiverIdDocumentNumber xsi:type="xsd:string">?</ReceiverIdDocumentNumber>
-                    <ReceiverIdDocumentType xsi:type="xsd:string">?</ReceiverIdDocumentType>
-                    <ReceiverReference xsi:type="xsd:string">?</ReceiverReference>
+                    <ReceiverPhone xsi:type="xsd:string"></ReceiverPhone>
+                    <ReceiverPhone2 xsi:type="xsd:string"></ReceiverPhone2>
+                    <ReceiverIdDocumentNumber xsi:type="xsd:string"></ReceiverIdDocumentNumber>
+                    <ReceiverIdDocumentType xsi:type="xsd:string"></ReceiverIdDocumentType>
+                    <ReceiverReference xsi:type="xsd:string"></ReceiverReference>
                     <BankDeposit xsi:type="xsd:boolean">' . $data['bankDeposit'] . '</BankDeposit>
                     <BankName xsi:type="xsd:string">' . $data['bankName'] . '</BankName>
                     <BankAddress xsi:type="xsd:string">' . $data['bankAddress'] . '</BankAddress>
@@ -232,15 +224,15 @@ trait Moex
                     <CurrencyToPay xsi:type="xsd:string">' . $data['currencyToPay'] . '</CurrencyToPay>
                     <AmountSent xsi:type="xsd:double">' . $data['amountSent'] . '</AmountSent>
                     <CurrencySent xsi:type="xsd:string">' . $data['currencySent'] . '</CurrencySent>
-                    <SenderMessage xsi:type="xsd:string">?</SenderMessage>
+                    <SenderMessage xsi:type="xsd:string"></SenderMessage>
                     <PaymentBranchId xsi:type="xsd:string">' . $data['paymentBranchId'] . '</PaymentBranchId>
-                    <PaymentBranchName xsi:type="xsd:string">?</PaymentBranchName>
-                    <PaymentBranchAddress xsi:type="xsd:string">?</PaymentBranchAddress>
-                    <PaymentBranchPhone xsi:type="xsd:string">?</PaymentBranchPhone>
-                    <PaymentBranchAuxId xsi:type="xsd:string">?</PaymentBranchAuxId>
+                    <PaymentBranchName xsi:type="xsd:string"></PaymentBranchName>
+                    <PaymentBranchAddress xsi:type="xsd:string"></PaymentBranchAddress>
+                    <PaymentBranchPhone xsi:type="xsd:string"></PaymentBranchPhone>
+                    <PaymentBranchAuxId xsi:type="xsd:string"></PaymentBranchAuxId>
                     <OriginCountry xsi:type="xsd:string">' . $data['originCountry'] . '</OriginCountry>
-                    <Reference xsi:type="xsd:string">?</Reference>
-                    <AuxiliaryInfo xsi:type="xsd:string">'.json_encode($data['auxiliaryInfo']).'</AuxiliaryInfo>
+                    <Reference xsi:type="xsd:string">'.$data['reference'].'</Reference>
+                    <AuxiliaryInfo xsi:type="xsd:string">' . json_encode($data['auxiliaryInfo']) . '</AuxiliaryInfo>
                         </transaction>
                     </urn:MEAddTransaction>
                 </soapenv:Body>
@@ -279,7 +271,7 @@ trait Moex
         $PaymentBranchAddress     = $doc->getElementsByTagName("PaymentBranchAddress");
         $PaymentBranchAuxId     = $doc->getElementsByTagName("PaymentBranchAuxId");
         $OriginCountry     = $doc->getElementsByTagName("OriginCountry");
-        $TransactionStatus     = $doc->getElementsByTagName("TransactionStatus");
+        $AuxiliaryInfo     = $doc->getElementsByTagName("AuxiliaryInfo");
 
         $Description = $doc->getElementsByTagName("Description");
 
@@ -312,7 +304,7 @@ trait Moex
             $paymentBranchAddress = $PaymentBranchAddress->item(0)->nodeValue;
             $paymentBranchAuxId = $PaymentBranchAuxId->item(0)->nodeValue;
             $originCountry = $OriginCountry->item(0)->nodeValue;
-            $transactionStatus = $TransactionStatus->item(0)->nodeValue;
+            $auxiliaryInfo = $AuxiliaryInfo->item(0)->nodeValue;
             $description = $Description->item(0)->nodeValue;
 
             $responseData = [
@@ -344,17 +336,15 @@ trait Moex
                 'paymentBranchAddress' => $paymentBranchAddress,
                 'paymentBranchAuxId' => $paymentBranchAuxId,
                 'originCountry' => $originCountry,
-                'transactionStatus' => $transactionStatus,
+                'auxiliaryInfo' => $auxiliaryInfo,
                 'description' => $description
             ];
-        }
-        else{
+        } else {
             $description = $Description->item(0)->nodeValue;
             $responseData = [
                 'error' => $description
             ];
         }
-
 
 
         return $responseData;
@@ -379,7 +369,7 @@ trait Moex
                     <Password xsi:type="xsd:string">' . config("constants.moex.password") . '</Password>
                     <Version xsi:type="xsd:string">' . config("constants.moex.version") . '</Version>
                 </login>
-                <IdCountry xsi:type="xsd:string">'.$country.'</IdCountry>
+                <IdCountry xsi:type="xsd:string">' . $country . '</IdCountry>
                 </urn:MEGetActiveExtBranchesMoEx>
                 </soapenv:Body>
                 </soapenv:Envelope>';
@@ -399,8 +389,6 @@ trait Moex
         }
 
         return $responseData;
-
-
     }
 
 

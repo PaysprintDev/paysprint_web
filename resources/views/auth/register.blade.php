@@ -355,13 +355,13 @@
                                             <label class="control-label"><span class="reqField">*</span> Street
                                                 Number</label>
                                             <input class="form-control input_box" name="street_number"
-                                                id="street_number" disabled="false" readonly>
+                                                id="street_number" disabled="false">
                                         </div>
                                         <div class="col-md-6">
                                             <label class="control-label"><span class="reqField">*</span> Street
                                                 Name/Route</label>
                                             <input class="form-control input_box" name="route" id="route"
-                                                disabled="false" readonly>
+                                                disabled="false">
                                         </div>
                                     </div>
                                     <div class="row">
