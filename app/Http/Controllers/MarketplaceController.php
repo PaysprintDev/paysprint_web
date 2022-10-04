@@ -10,6 +10,7 @@ use App\PromoDate;
 use App\TrialDate;
 use App\watchlist;
 use App\merchantTrial;
+use App\MarketplaceReviews;
 
 use Carbon\Carbon;
 
@@ -53,8 +54,6 @@ use App\Traits\Trulioo;
 use App\InvestorRelation;
 
 use App\UnverifiedMerchant;
-
-use App\MarketplaceReviews;
 
 use App\ReferralGenerate;
 
@@ -400,6 +399,7 @@ class MarketplaceController extends Controller
             }
 
 
+
             $response = [
                 'data' => $result,
                 'status' => 'success',
@@ -475,7 +475,7 @@ class MarketplaceController extends Controller
     public function getUnverifiedMerchants(Request $request)
     {
         try {
-            $data = UnverifiedMerchant::get();
+            $data = UnverifiedMerchant::orderBy('name')->get();
 
             $response = [
                 'data' => $data,
@@ -678,5 +678,29 @@ class MarketplaceController extends Controller
         } catch (\Throwable $th) {
             $response = [];
         }
+    }
+
+    //totalcounts of likes
+    public function totallikesCount(Request $req, $id)
+    {
+        try {
+            $data = MarketplaceReviews::where('merchant_id', $id)->sum('no_likes');
+            $response = [
+                'data' => $data,
+                'status' => 'success'
+            ];
+
+            $code = 200;
+        } catch (\Throwable $th) {
+            $response = [
+                'data' => [],
+                'message' => $th->getMessage(),
+                'status' => 'error'
+            ];
+
+            $code = 400;
+        }
+
+        return response()->json($response, $code);
     }
 }

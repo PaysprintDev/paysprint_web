@@ -197,7 +197,8 @@ class MerchantPageController extends Controller
         if ($validation->passes()) {
             $accept = $req->agree;
 
-            $id = Auth::id();
+            $id = $req->merchant_id;
+
             MerchantCashback::create([
                 'merchant_id' => $id,
                 'accept' => $accept

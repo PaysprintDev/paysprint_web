@@ -747,6 +747,7 @@ use App\Http\Controllers\AllCountries; ?>
             <div class="col-xl-12 col-md-6 col-sm-12 box-col-6 des-xl-25 rate-sec">
                 <div class="card income-card card-secondary">
                     <div class="card-body text-center">
+                        {!! session('msg') !!} {!! session('msgs') !!}
                         <div class="row">
                             <div class="col-md-12">
                                 <h3>Marketplace</h3>
@@ -759,9 +760,7 @@ use App\Http\Controllers\AllCountries; ?>
                             </div>
                             <div class="col-md-3">
 
-                                <!-- cashback button -->
-                                {!! session('msgs') !!}
-                                {!! session('msg') !!}
+
                                 @if ( empty($data['cashback']))
                                 <!-- <form action="{{route('cashback')}}" method="post" id="formcashback">
                                 @csrf
@@ -769,8 +768,9 @@ use App\Http\Controllers\AllCountries; ?>
                                 <a href="javascript:void()" class="btn btn-primary" id="cashback" onclick="$('#formcashback').submit()">Click to participate in Cashback</a>
                             </form> -->
                                 <!-- Button trigger modal -->
+
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                    Click to participate in cashback
+                                    Cashback. <br> Click to participate
                                 </button>
 
                                 <!-- Modal -->
@@ -784,17 +784,18 @@ use App\Http\Controllers\AllCountries; ?>
                                             <div class="modal-body">
                                                 <form action="{{route('cashback')}}" method="post">
                                                     @csrf
-                                                    <p>PaySprint Merchant Cashback is an incentive program to customers to buy more from the participating merchant eStore.</p>
-                                                    <h2 style="color:black; font-size:15px;">How does it work?</h2>
-                                                    <p>Every Participating merchant contributes 2% of every sale proceed to the Cash-Back program (that is 2% is debited to the merchant wallet). The customer that purchased from the merchant's eStore receives 1% of the paid price as a cashback wallet credit from the program. The remaining 1% is used to cover cost of promoting participating merchant's eStore on social media and the cost of other promotional activities.</p>
-                                                    <p>Merchant can END the participation in the program ANYTIME by simply clicking on "End Cash Back Promo" button.</p>
-                                                    <p>To participate in the program, simply checkmark the button below and click the submit button.
+                                                    <p style="text-align:left">PaySprint Merchant Cashback is an incentive program to customers to buy more from the participating merchant eStore.</p>
+                                                    <h2 style="color:black; font-size:15px; text-align:left; font-weight:bold">How does it work?</h2>
+                                                    <p style="text-align:left">Every Participating merchant contributes 2% of every sale proceed to the Cash-Back program (that is 2% is debited to the merchant wallet). The customer that purchased from the merchant's eStore receives 1% of the paid price as a cashback wallet credit from the program. The remaining 1% is used to cover cost of promoting participating merchant's eStore on social media and the cost of other promotional activities.</p>
+                                                    <p style="text-align:left">Merchant can END the participation in the program ANYTIME by simply clicking on "End Cash Back Promo" button.</p>
+                                                    <p style="text-align:left">To participate in the program, simply checkmark the button below and click the submit button.
                                                         Accept terms and conditions before proceeding</p>
 
-                                                    <input type="checkbox" name="agree" value="1"><span style="color:blue; margin-left:10px;" required> Accept terms and conditions before proceeding</span>
+                                                    <input type="checkbox" name="agree" value="1"><span style="color:blue; margin-left:10px; text-align:left" required> Accept terms and conditions before proceeding</span>
 
 
                                             </div>
+                                            <input type="hidden" name="merchant_id" value="{{Auth::user()->id}}">
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                                                 <button type="submit" class="btn btn-success">Yes, I Agree</button>
@@ -850,7 +851,7 @@ use App\Http\Controllers\AllCountries; ?>
 
                             <!-- manage E-store -->
                             <div class="col-md-3">
-                                <a href="{{route('ordering system')}}" target="_blank" class="btn btn-warning">Manage E-Store</a>
+                                <a href="{{route('ordering system')}}" target="_blank" class="btn btn-warning">Manage <br>E-Store</a>
                             </div>
                             <!-- end e-store -->
                         </div>
