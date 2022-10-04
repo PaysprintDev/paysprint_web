@@ -441,11 +441,11 @@
                     <div class="col-md-6">
                         <label class="control-label"><span class="reqField">*</span> Street number</label>
                         <input class="form-control input_box" name="street_number" id="street_number" disabled="true"
-                            readonly>
+                        >
                     </div>
                     <div class="col-md-6">
                         <label class="control-label"><span class="reqField">*</span> Street Name/ Route</label>
-                        <input class="form-control input_box" name="route" id="route" disabled="true" readonly>
+                        <input class="form-control input_box" name="route" id="route" disabled="true">
                     </div>
                 </div>
 
@@ -671,7 +671,7 @@
                     <div class="form-group has-feedback">
                         <label for="referred_by">Referred By <small class="reqField">(Optional)</small></label>
                         <input type="text" name="referred_by" id="referred_by" class="form-control"
-                            @if ($referred_by != '') value="{{ $referred_by }}" readonly @else placeholder="E.g 69212" @endif>
+                            @if ($referred_by != '') value="{{ $referred_by }}" readonly @else placeholder="E.g 11111" @endif>
                         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
 
                     </div>

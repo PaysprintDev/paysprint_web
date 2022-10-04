@@ -56,10 +56,10 @@ use \App\Http\Controllers\MonthlyFee; ?>
 									<button type="submit" class="btn btn-success form-control">Import List</button>
 								</div>
 							</form>
+
+							<a href="{{asset('images/merchant_sample.png')}}" target="_blank" alt="sample of upload list">View Sample of Upload Format</a>
 						</div>
-						<!-- <div class="col-md-12">
-              <p><a href="images/file_sample.PNG" target="_blank">Click here to view sample of excel format</a></p>
-            </div> -->
+
 
 					</div>
 

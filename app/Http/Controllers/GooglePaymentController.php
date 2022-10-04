@@ -251,7 +251,7 @@ class GooglePaymentController extends Controller
 
                                                 $resData = ['res' => $checkForOverDraft['message'] . ". Please add money to continue transaction", 'message' => 'error', 'title' => 'Oops!'];
 
-                                                $response = 'You cannot send money to yourself.';
+                                                $response = $checkForOverDraft['message'] . ". Please add money to continue transaction";
                                                 $respaction = 'error';
 
                                                 return redirect()->back()->with($respaction, $response);
@@ -1751,15 +1751,25 @@ class GooglePaymentController extends Controller
             if ($localCurrency === 'USDUSD') {
                 $localConv = 1;
             } else {
-                $localConv = $result->quotes->$localCurrency;
+                $localConv = $result->quotes->$localCurrency *  $markValue;
             }
 
-            $convertLocal = $amount / $localConv;
+
+            if($localCurrency === $currency){
+                    $convertLocal = $amount / $localConv;
+            }
+            elseif($localCurrency !== 'USDUSD' && $currency !== 'USDUSD'){
+                $convertLocal = ($amount / $localConv) * $markValue;
+            }
+            else{
+                $convertLocal = $amount / $localConv;
+            }
+
 
             // Conversion Rate USD to Local currency
             // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
 
-            $convRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
+            $convRate = ($currency !== 'USDUSD' ? ($result->quotes->$currency *  $markValue) : 1) * $convertLocal;
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }

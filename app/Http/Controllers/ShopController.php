@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 
 use App\StoreCart;
+use App\CashbackRecords;
+use App\MerchantCashback;
 use App\ClientInfo;
 use App\ProductTax;
 use App\StoreOrders;
@@ -62,7 +64,7 @@ class ShopController extends Controller
         $getMerchant = ClientInfo::where('user_id', $thisuser->ref_code)->first();
 
 
-        if($getMerchant->accountMode === 'live'){
+        if ($getMerchant->accountMode === 'live') {
 
 
             $getCurrencyCode = $this->getPaymentGateway($this->location->country);
@@ -76,17 +78,12 @@ class ShopController extends Controller
                 'mycurrencyCode' => $this->getCountryCode($getCurrencyCode->name),
             );
 
-        // dd($data);
+            // dd($data);
 
             return view('main.shop.index')->with(['data' => $data]);
-
-        }
-        else{
+        } else {
             return view('errors.paymentunavailable')->with(['pages' => $getMerchant->business_name]);
         }
-
-
-
     }
 
 
@@ -548,7 +545,7 @@ class ShopController extends Controller
                 StoreShipping::insert($query);
 
                 $status = 'success';
-                $message = 'Shipping address successfully setup for ' . $req->city.', '.$req->state;
+                $message = 'Shipping address successfully setup for ' . $req->city . ', ' . $req->state;
             } else {
                 $status = 'error';
                 $message = implode(",", $validator->messages()->all());
@@ -593,7 +590,7 @@ class ShopController extends Controller
                 StoreShipping::where('id', $id)->update($query);
 
                 $status = 'success';
-                $message = 'Shipping address successfully updated for ' . $req->city.', '.$req->state;
+                $message = 'Shipping address successfully updated for ' . $req->city . ', ' . $req->state;
             } else {
                 $status = 'error';
                 $message = implode(",", $validator->messages()->all());
@@ -612,17 +609,16 @@ class ShopController extends Controller
     {
         try {
 
-            ProductTax::updateOrCreate(['merchantId' => Auth::id(), 'taxName' => $req->taxName],['merchantId' => Auth::id(), 'taxName' => $req->taxName, 'taxValue' => $req->taxValue, 'created_at' => now(), 'updated_at' => now()]);
+            ProductTax::updateOrCreate(['merchantId' => Auth::id(), 'taxName' => $req->taxName], ['merchantId' => Auth::id(), 'taxName' => $req->taxName, 'taxValue' => $req->taxValue, 'created_at' => now(), 'updated_at' => now()]);
 
             $status = 'success';
             $message = 'Product tax successfully created';
-
         } catch (\Throwable $th) {
             $status = 'error';
             $message = $th->getMessage();
         }
 
-         return redirect()->back()->with($status, $message);
+        return redirect()->back()->with($status, $message);
     }
 
     public function editProductTax(Request $req, $id)
@@ -633,13 +629,12 @@ class ShopController extends Controller
 
             $status = 'success';
             $message = 'Product tax successfully updated';
-
         } catch (\Throwable $th) {
             $status = 'error';
             $message = $th->getMessage();
         }
 
-         return redirect()->back()->with($status, $message);
+        return redirect()->back()->with($status, $message);
     }
 
     public function setupEstore(Request $req)
@@ -860,17 +855,15 @@ class ShopController extends Controller
 
             $data = StoreCart::where('userId', $req->userId)->orderBy('created_at', 'DESC')->get();
 
-            if(count($data) > 0){
-            $merchant = User::where('id', $data[0]->merchantId)->first();
-
-            }
-            else{
+            if (count($data) > 0) {
+                $merchant = User::where('id', $data[0]->merchantId)->first();
+            } else {
                 $merchant = [];
             }
 
 
-           $status = 200;
-            $resData = ['data' => $data, 'message' => 'Success', 'merchant' => $merchant ];
+            $status = 200;
+            $resData = ['data' => $data, 'message' => 'Success', 'merchant' => $merchant];
         } catch (\Throwable $th) {
             $status = 400;
             $resData = ['data' => [], 'message' => $th->getMessage()];
@@ -922,16 +915,16 @@ class ShopController extends Controller
 
 
                 $stop_date = date('Y-m-d');
-                $expDate = date('Y-m-d', strtotime($stop_date . ' +'.$getProduct->deliveryDate));
+                $expDate = date('Y-m-d', strtotime($stop_date . ' +' . $getProduct->deliveryDate));
 
 
                 $this->subject = 'Your item ' . $getProduct->productName . ' is out for delivery';
-                $this->message = '<p>We have just dispatched your items from your order ' . $req->orderId . '.</p><p>The package will be delivered by our delivery agent once it gets to the delivery hub at the following address: ' . $getBilling->shippingAddress . ' </p><p>Kindly click on the link: ' . $link . ' and enter the code: <b>' . $code . '</b> to confirm your package as soon as our delivery associate get them to you. This code expires on ' . date('d/m/Y', strtotime($expDate)) . ' ('.$getProduct->deliveryDate.') if order is not verified.</p>';
+                $this->message = '<p>We have just dispatched your items from your order ' . $req->orderId . '.</p><p>The package will be delivered by our delivery agent once it gets to the delivery hub at the following address: ' . $getBilling->shippingAddress . ' </p><p>Kindly click on the link: ' . $link . ' and enter the code: <b>' . $code . '</b> to confirm your package as soon as our delivery associate get them to you. This code expires on ' . date('d/m/Y', strtotime($expDate)) . ' (' . $getProduct->deliveryDate . ') if order is not verified.</p>';
 
 
 
 
-                $sendMsg = "Hi " . $getUser->name . ", We have just dispatched your items from your order " . $req->orderId . ". Kindly click on the link: " . $link . " and enter the code: " . $code . " to confirm your package as soon as our delivery associate get them to you. This code expires in " . date('d/m/Y', strtotime($expDate)) . " (".$getProduct->deliveryDate.")  if order is not verified." . $getMerchant->businessname;
+                $sendMsg = "Hi " . $getUser->name . ", We have just dispatched your items from your order " . $req->orderId . ". Kindly click on the link: " . $link . " and enter the code: " . $code . " to confirm your package as soon as our delivery associate get them to you. This code expires in " . date('d/m/Y', strtotime($expDate)) . " (" . $getProduct->deliveryDate . ")  if order is not verified." . $getMerchant->businessname;
 
                 $getPhone = User::where('email', $getUser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -972,17 +965,16 @@ class ShopController extends Controller
     }
 
 
-    public function deliveryOptionDetails(Request $req){
+    public function deliveryOptionDetails(Request $req)
+    {
         try {
-            if($req->userSelection == "Home Delivery"){
+            if ($req->userSelection == "Home Delivery") {
                 $data = StoreShipping::where('merchantId', $req->merchantId)->where('city', $req->city)->orWhere('state', $req->state)->first();
                 $message = 'Success';
-            }
-            elseif($req->userSelection == "In Store Pick Up"){
+            } elseif ($req->userSelection == "In Store Pick Up") {
                 $data = StorePickup::where('merchantId', $req->merchantId)->first();
                 $message = 'Success';
-            }
-            else{
+            } else {
                 $data = [];
                 $message = 'No delivery options available';
             }
@@ -992,8 +984,6 @@ class ShopController extends Controller
 
             $status = 200;
             $resData = ['data' => $data, 'message' => $message];
-
-
         } catch (\Throwable $th) {
             $status = 400;
             $resData = ['data' => [], 'message' => $th->getMessage()];
@@ -1042,76 +1032,173 @@ class ShopController extends Controller
 
 
                         $productPrice = $getProduct->amount * $getOrder->quantity;
+                        $cashbackvalue = 0.02 * $productPrice;
+                        $newprice = $productPrice - $cashbackvalue;
                         $escrowBalance = $getMerchant->escrow_balance - $productPrice;
                         $walletBalance = $getMerchant->wallet_balance + $productPrice;
+                        $cashbackmerchant = $getMerchant->wallet_balance + $newprice;
 
-                        User::where('id', $getOrder->merchantId)->update(['wallet_balance' => $walletBalance, 'escrow_balance' => $escrowBalance]);
+                        //cashback checks and deductions
+                        $merchantcheck = MerchantCashback::where('merchant_id', $getOrder->merchantId)->first();
+
+                        if (isset($merchantcheck)) {
+                            User::where('id', $getOrder->merchantId)->update(['wallet_balance' => $cashbackmerchant, 'escrow_balance' => $escrowBalance]);
+
+                            $customerwallet = $getUser->wallet_balance;
+                            $cashtouser = $cashbackvalue / 2;
+                            $newcustomerbalance = $customerwallet + $cashtouser;
+
+                            User::where('id', $getOrder->userId)->update([
+                                'wallet_balance' => $newcustomerbalance,
+                            ]);
+
+                            CashbackRecords::create([
+                                'merchant_id' => $getOrder->merchantId,
+                                'product_id' =>  $getOrder->productId,
+                                'user_id' => $getOrder->userId,
+                                'user_cashback_amount' => $cashtouser,
+                                'merchant_cashback_amount' => $newprice,
+                                'paysprint_cashback' => $cashtouser
+                            ]);
+
+                            // Mail Merchant ...
+                            $this->name = $getMerchant->name;
+                            $this->email = $getMerchant->email;
+                            $this->subject = $getMerchant->currencyCode . ' ' . number_format($newprice, 2) . " now added to your wallet with PaySprint";
+
+                            $this->message = '<p>Item with order ' . $req->orderId . ' has successfully been confirmed and delivered to customer: ' . $getUser->name . '. <strong>' . $getMerchant->currencyCode . ' ' . number_format($newprice, 2) . '</strong> has been added to your wallet with PaySprint. You have <strong>' . $getMerchant->currencyCode . ' ' . number_format($cashbackmerchant, 2) . '</strong> balance in your account</p>';
+
+                            $sendMsg = 'Item with order ' . $req->orderId . ' has successfully been confirmed and delivered to customer: ' . $getUser->name . '. ' . $getMerchant->currencyCode . ' ' . number_format($newprice, 2) . ' has been added to your wallet with PaySprint. You have ' . $getMerchant->currencyCode . ' ' . number_format($cashbackmerchant, 2) . ' balance in your account';
 
 
-                        // Mail Merchant ...
-                        $this->name = $getMerchant->name;
-                        $this->email = $getMerchant->email;
-                        $this->subject = $getMerchant->currencyCode . ' ' . number_format($productPrice, 2) . " now added to your wallet with PaySprint";
+                            $userPhone = User::where('email', $getMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
 
-                        $this->message = '<p>Item with order ' . $req->orderId . ' has successfully been confirmed and delivered to customer: ' . $getUser->name . '. <strong>' . $getMerchant->currencyCode . ' ' . number_format($productPrice, 2) . '</strong> has been added to your wallet with PaySprint. You have <strong>' . $getMerchant->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
+                            if (isset($userPhone)) {
 
-                        $sendMsg = 'Item with order ' . $req->orderId . ' has successfully been confirmed and delivered to customer: ' . $getUser->name . '. ' . $getMerchant->currencyCode . ' ' . number_format($productPrice, 2) . ' has been added to your wallet with PaySprint. You have ' . $getMerchant->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
+                                $sendPhone = $getMerchant->telephone;
+                            } else {
+                                $sendPhone = "+" . $getMerchant->code . $getMerchant->telephone;
+                            }
+
+                            if ($getMerchant->country == "Nigeria") {
+
+                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                $this->sendSms($sendMsg, $correctPhone);
+                            } else {
+                                $this->sendMessage($sendMsg, $sendPhone);
+                            }
 
 
-                        $userPhone = User::where('email', $getMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+                            // Send Mail to Merchant...
+                            $this->estoreMail($getMerchant->email, $getMerchant->name, $this->subject, $this->message);
 
-                        if (isset($userPhone)) {
 
-                            $sendPhone = $getMerchant->telephone;
+                            // Mail Consumer...
+
+                            $subject = 'Item with order ' . $req->orderId . ' delivered!';
+
+                            $message = '<p>Item with order ' . $req->orderId . ' has successfully been confirmed and delivered. Thank you for your patronage!</p>';
+
+
+                            $sendMsg2 = 'Item with order ' . $req->orderId . ' has successfully been confirmed and delivered. Thank you for your patronage!';
+
+
+                            $userPhone2 = User::where('email', $getUser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                            if (isset($userPhone2)) {
+
+                                $sendPhone2 = $getUser->telephone;
+                            } else {
+                                $sendPhone2 = "+" . $getUser->code . $getUser->telephone;
+                            }
+
+                            if ($getUser->country == "Nigeria") {
+
+                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone2);
+                                $this->sendSms($sendMsg2, $correctPhone);
+                            } else {
+                                $this->sendMessage($sendMsg2, $sendPhone2);
+                            }
+
+
+
+                            // Send Mail to Merchant...
+                            $this->estoreMail($getUser->email, $getUser->name, $subject, $message);
+
+
+                            $data = true;
+                            $message = 'Delivery confirmed!';
+                            $status = 200;
+                            $action = 'success';
                         } else {
-                            $sendPhone = "+" . $getMerchant->code . $getMerchant->telephone;
+                            User::where('id', $getOrder->merchantId)->update(['wallet_balance' => $walletBalance, 'escrow_balance' => $escrowBalance]);
+
+
+
+                            // Mail Merchant ...
+                            $this->name = $getMerchant->name;
+                            $this->email = $getMerchant->email;
+                            $this->subject = $getMerchant->currencyCode . ' ' . number_format($productPrice, 2) . " now added to your wallet with PaySprint";
+
+                            $this->message = '<p>Item with order ' . $req->orderId . ' has successfully been confirmed and delivered to customer: ' . $getUser->name . '. <strong>' . $getMerchant->currencyCode . ' ' . number_format($productPrice, 2) . '</strong> has been added to your wallet with PaySprint. You have <strong>' . $getMerchant->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> balance in your account</p>';
+
+                            $sendMsg = 'Item with order ' . $req->orderId . ' has successfully been confirmed and delivered to customer: ' . $getUser->name . '. ' . $getMerchant->currencyCode . ' ' . number_format($productPrice, 2) . ' has been added to your wallet with PaySprint. You have ' . $getMerchant->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your account';
+
+
+                            $userPhone = User::where('email', $getMerchant->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                            if (isset($userPhone)) {
+
+                                $sendPhone = $getMerchant->telephone;
+                            } else {
+                                $sendPhone = "+" . $getMerchant->code . $getMerchant->telephone;
+                            }
+
+                            if ($getMerchant->country == "Nigeria") {
+
+                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                $this->sendSms($sendMsg, $correctPhone);
+                            } else {
+                                $this->sendMessage($sendMsg, $sendPhone);
+                            }
+
+
+                            // Send Mail to Merchant...
+                            $this->estoreMail($getMerchant->email, $getMerchant->name, $this->subject, $this->message);
+
+
+                            // Mail Consumer...
+
+                            $subject = 'Item with order ' . $req->orderId . ' delivered!';
+
+                            $message = '<p>Item with order ' . $req->orderId . ' has successfully been confirmed and delivered. Thank you for your patronage!</p>';
+
+
+                            $sendMsg2 = 'Item with order ' . $req->orderId . ' has successfully been confirmed and delivered. Thank you for your patronage!';
+
+
+                            $userPhone2 = User::where('email', $getUser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                            if (isset($userPhone2)) {
+
+                                $sendPhone2 = $getUser->telephone;
+                            } else {
+                                $sendPhone2 = "+" . $getUser->code . $getUser->telephone;
+                            }
+
+                            if ($getUser->country == "Nigeria") {
+
+                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone2);
+                                $this->sendSms($sendMsg2, $correctPhone);
+                            } else {
+                                $this->sendMessage($sendMsg2, $sendPhone2);
+                            }
+
+
+
+                            // Send Mail to Merchant...
+                            $this->estoreMail($getUser->email, $getUser->name, $subject, $message);
                         }
-
-                        if ($getMerchant->country == "Nigeria") {
-
-                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                            $this->sendSms($sendMsg, $correctPhone);
-                        } else {
-                            $this->sendMessage($sendMsg, $sendPhone);
-                        }
-
-
-                        // Send Mail to Merchant...
-                        $this->estoreMail($getMerchant->email, $getMerchant->name, $this->subject, $this->message);
-
-
-                        // Mail Consumer...
-
-                        $subject = 'Item with order ' . $req->orderId . ' delivered!';
-
-                        $message = '<p>Item with order ' . $req->orderId . ' has successfully been confirmed and delivered. Thank you for your patronage!</p>';
-
-
-                        $sendMsg2 = 'Item with order ' . $req->orderId . ' has successfully been confirmed and delivered. Thank you for your patronage!';
-
-
-                        $userPhone2 = User::where('email', $getUser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                        if (isset($userPhone2)) {
-
-                            $sendPhone2 = $getUser->telephone;
-                        } else {
-                            $sendPhone2 = "+" . $getUser->code . $getUser->telephone;
-                        }
-
-                        if ($getUser->country == "Nigeria") {
-
-                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone2);
-                            $this->sendSms($sendMsg2, $correctPhone);
-                        } else {
-                            $this->sendMessage($sendMsg2, $sendPhone2);
-                        }
-
-
-
-                        // Send Mail to Merchant...
-                        $this->estoreMail($getUser->email, $getUser->name, $subject, $message);
-
 
                         $data = true;
                         $message = 'Delivery confirmed!';
@@ -1137,11 +1224,12 @@ class ShopController extends Controller
             $action = 'error';
         }
 
-         return redirect()->route('epsresponseback', 'status='.$action.'&message='.$message)->with($action, $message);
+        return redirect()->route('epsresponseback', 'status=' . $action . '&message=' . $message)->with($action, $message);
     }
 
 
-    public function removeCartItem(Request $req){
+    public function removeCartItem(Request $req)
+    {
         try {
 
             // Delete This Cart Item...
@@ -1151,15 +1239,12 @@ class ShopController extends Controller
 
             $resData = ['data' => true, 'message' => 'Deleted'];
             $status = 200;
-
         } catch (\Throwable $th) {
             $status = 400;
             $resData = ['data' => [], 'message' => $th->getMessage()];
         }
 
         return $this->returnJSON($resData, $status);
-
-
     }
 
 
@@ -1167,47 +1252,41 @@ class ShopController extends Controller
     {
 
         try {
-                    //Get filename with extension
-        $filenameWithExt = $file->getClientOriginalName();
-        // Get just filename
-        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-        // Get just extension
-        $extension = $file->getClientOriginalExtension();
-        // Filename to store
-        $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+            //Get filename with extension
+            $filenameWithExt = $file->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just extension
+            $extension = $file->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore = rand() . '_' . time() . '.' . $extension;
 
-        $img = Image::make($file)->fit($width, $height);
+            $img = Image::make($file)->fit($width, $height);
 
-        $img->save('shopstore/' . $fileroute . '/'.$fileNameToStore);
+            $img->save('shopstore/' . $fileroute . '/' . $fileNameToStore);
 
-        // $file->move(public_path('../../shopstore/' . $fileroute . '/'), $fileNameToStore);
+            // $file->move(public_path('../../shopstore/' . $fileroute . '/'), $fileNameToStore);
 
 
-        $docPath = route('home') . "/shopstore/" . $fileroute . "/" . $fileNameToStore;
-
+            $docPath = route('home') . "/shopstore/" . $fileroute . "/" . $fileNameToStore;
         } catch (\Throwable $th) {
             //Get filename with extension
-        $filenameWithExt = $file->getClientOriginalName();
-        // Get just filename
-        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-        // Get just extension
-        $extension = $file->getClientOriginalExtension();
-        // Filename to store
-        $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+            $filenameWithExt = $file->getClientOriginalName();
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            // Get just extension
+            $extension = $file->getClientOriginalExtension();
+            // Filename to store
+            $fileNameToStore = rand() . '_' . time() . '.' . $extension;
 
 
-        $path = $file->move(public_path('../../shopstore/' . $fileroute . '/'), $fileNameToStore);
+            $path = $file->move(public_path('../../shopstore/' . $fileroute . '/'), $fileNameToStore);
 
 
-        $docPath = route('home') . "/shopstore/" . $fileroute . "/" . $fileNameToStore;
-
-
+            $docPath = route('home') . "/shopstore/" . $fileroute . "/" . $fileNameToStore;
         }
 
         return $docPath;
-
-
-
     }
 
     public function getPaymentGateway($country)

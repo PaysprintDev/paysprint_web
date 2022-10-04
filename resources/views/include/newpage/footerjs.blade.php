@@ -261,12 +261,13 @@
         $('#rate').text(sender);
 
         var exchange = 1 + ' ' + receiving + '=' + convertrate.toFixed(4) + ' ' + sending
-
+        var amountto = 'Amount to receive:';
         $('#local').text(exchange)
         var price = amount + ' ' + sending + '' + '=' + '' + total.toFixed(4) + ' ' + receiving;
+        $('#totalamount').text(amountto);
         $('#totalprice').text(price);
 
-        $('#shift').text('Convert');
+        $('#shift').text('Exchange Rate');
 
 
 
@@ -288,7 +289,8 @@
 
       success: function(rsp) {
         let result = JSON.parse(rsp.data.payoutmethod);
-        var finalresult = 'Pay Method:' + ' ' + result;
+        var finalresult = result;
+        $('#paymethod1').text('Payment Method:');
         $('#paymethod').text(finalresult);
       }
     });
@@ -303,7 +305,8 @@
 
       success: function(rsp) {
         let result = JSON.parse(rsp.data.payoutmethod);
-        var finalresult = 'Pay Method:' + ' ' + result;
+        var finalresult = result;
+        $('#paysmethod1').text('Payment Method:');
         $('#paysmethod').text(finalresult);
       }
     });
@@ -357,10 +360,11 @@
         $('#locals').text(exchange)
 
         var pricetotal = pay + ' ' + local + '' + '=' + '' + total_divide.toFixed(4) + ' ' + foreign;
+        $('#totalpricerate1').text('Amount to receive:');
         $('#totalpricerate').text(pricetotal);
 
 
-        $('#shift2').text('Convert');
+        $('#shift2').text('Exchange Rate');
 
         const pays = receivepayoutMethod(foreign);
 

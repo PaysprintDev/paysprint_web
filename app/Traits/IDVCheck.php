@@ -133,7 +133,7 @@ trait IDVCheck
         }
 
         if ($value == "nobusinessdocument" && $check == "true") {
-            
+
             User::where('id', $id)->update(['business_check' => 0]);
 
             $data = "Level 3";
@@ -148,7 +148,7 @@ trait IDVCheck
             $response = "Kindly upload your business document in your profile for verification.";
         }
 
-    
+
 
         if (in_array($value, ["incorporationcheck", "directorcheck", "shareholdercheck", "proofcheck", "proof2check", "amlcheck", "auditcheck", "orgchartcheck", "financecheck"]) && $check == "true") {
 
@@ -191,11 +191,9 @@ trait IDVCheck
             $message = "<p>Your PaySprint wallet has been prepared and ready for use.</p><p>However, you can only <strong>RECEIVE</strong> funds to your wallet until you have completed the required identity verification process that would enable you <em>'to Add Money/Top Up Wallet' and 'Send Money from Wallet'</em></p><br><p>To Complete the identity verification processes, kindly follow these steps:</p><p>a. Login to your PaySprint Account on your mobile app or at: www.paysprint.ca</p><p>b. Go to Profile section and upload the following:</p><p>1. Selfie of yourself</p><p>2. Utility Bill ( Electricity, Hydro etc. Note that Bank or Credit Card Statements are not accepted)</p><br><p>Thank you for choosing us.</p>";
         } elseif ($data == "Level 2") {
             $message = "<p>Your PaySprint wallet has been prepared and ready for use.</p><p>However, you can only <strong>SEND</strong> and <strong>RECEIVE</strong> funds to your wallet until you have completed the required identity verification process that would enable you <em>'to Add Money/Top Up Wallet'</em></p><br><p>To Complete the identity verification processes, kindly follow these steps:</p><p>a. Login to your PaySprint Account on your mobile app or at: www.paysprint.ca</p><p>b. Go to Profile section and upload the following:</p><p>1. Utility Bill ( Electricity, Hydro etc. Note that Bank or Credit Card Statements are not accepted)</p><br><p>Thank you for choosing us.</p>";
-        }
-        elseif ($data == "Level 3") {
+        } elseif ($data == "Level 3") {
             $message = "<p>Kindly upload your business document in your profile for verification.</p><br><p>Thank you for choosing us.</p>";
-        }
-        else{
+        } else {
             $message = "<p>Your PaySprint wallet has been prepared and ready for use.</p><p>However, you can only <strong>RECEIVE</strong> funds to your wallet until you have completed the required identity verification process that would enable you <em>'to Add Money/Top Up Wallet' and 'Send Money from Wallet'</em></p><br><p>To Complete the identity verification processes, kindly follow these steps:</p><p>a. Login to your PaySprint Account on your mobile app or at: www.paysprint.ca</p><p>b. Go to Profile section and upload the following:</p><p>1. Selfie of yourself</p><p>2. Utility Bill ( Electricity, Hydro etc. Note that Bank or Credit Card Statements are not accepted)</p><br><p>Thank you for choosing us.</p>";
         }
 
@@ -207,6 +205,35 @@ trait IDVCheck
         $this->messageuser = $message;
 
         $this->sendEmail($this->touser, $this->subjectuser);
+    }
+
+    public function getNumberOfWitdrawals(Int $id, String $country, String $amount)
+    {
+        $castedAmount = $this->castNumber($amount);
+        $thisuser = User::where('id', $id)->first();
+
+        $charge = 0.00;
+
+        if ($thisuser->number_of_withdrawals >= 1) {
+            if ($country === "Nigeria") {
+                if ($castedAmount <= 5000) {
+                    $charge = 10.75;
+                } elseif ($castedAmount > 5000 && $castedAmount <= 50000) {
+                    $charge = 26.88;
+                } elseif ($castedAmount >= 50000) {
+                    $charge = 50;
+                }
+            }
+        }
+
+        return $charge;
+    }
+
+
+    public function castNumber($n)
+    {
+        if (!is_numeric($n)) return 0;
+        return (is_float($n)) ? (float) $n : (int) $n;
     }
 
 

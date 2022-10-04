@@ -112,29 +112,55 @@
                 </a>
             </li>
             <li class="">
-                <a href="{{ route('unverified merchants') }}">
+                <a href="{{ route('estore products') }}">
                     <i class="fa fa-book"></i>
-                    <span>Upload Unverified Merchants List</span>
+                    <span>Edit Estore Products</span>
                     <span class="pull-right-container">
                     </span>
                 </a>
             </li>
-            <li class="">
-                <a href="{{ route('new marketplace post') }}">
-                    <i class="fa fa-book"></i>
-                    <span>Create Marketplace News</span>
+            <!-- marketplace -->
+            <li class="active treeview">
+                <a href="#">
+                    <i class="fa fa-dashboard"></i> <span>Marketplace</span>
                     <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
+                <ul class="treeview-menu">
+                    <li class="">
+                        <a href="{{ route('unverified merchants') }}">
+                            <i class="fa fa-book"></i>
+                            <span>Upload Unverified Merchants List</span>
+                            <span class="pull-right-container">
+                            </span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="{{ route('new marketplace post') }}">
+                            <i class="fa fa-book"></i>
+                            <span>Create Marketplace News</span>
+                            <span class="pull-right-container">
+                            </span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="{{ route('marketplacenews') }}">
+                            <i class="fa fa-book"></i>
+                            <span>All Marketplace News</span>
+                            <span class="pull-right-container">
+                            </span>
+                        </a>
+                    </li>
+
+
+
+
+
+                </ul>
             </li>
-            <li class="">
-                <a href="{{ route('marketplacenews') }}">
-                    <i class="fa fa-book"></i>
-                    <span>All Marketplace News</span>
-                    <span class="pull-right-container">
-                    </span>
-                </a>
-            </li>
+            <!-- end -->
+
 
 
 

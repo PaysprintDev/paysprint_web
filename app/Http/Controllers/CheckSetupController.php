@@ -739,7 +739,7 @@ your PaySprint Account.You need to provide the outstanding information and compl
     public function updateNumberofWithdrawal()
     {
         try {
-            $users = User::where('accountType', 'Individual')->get();
+            $users = User::where('accountType', 'Individual')->where('number_of_withdrawals', '>=', 1)->get();
             foreach ($users as $user) {
                 User::where('id', $user->id)->update(['number_of_withdrawals' => 0]);
 
@@ -754,7 +754,7 @@ your PaySprint Account.You need to provide the outstanding information and compl
     public function updateMerchantNumberofWithdrawal()
     {
         try {
-            $users = User::where('accountType', 'Merchant')->get();
+            $users = User::where('accountType', 'Merchant')->where('number_of_withdrawals', '>=', 1)->get();
             foreach ($users as $user) {
                 User::where('id', $user->id)->update(['number_of_withdrawals' => 0]);
 

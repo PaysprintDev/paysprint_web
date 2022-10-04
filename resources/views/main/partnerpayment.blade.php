@@ -190,14 +190,18 @@
                                         </div>
                                     </div>
 
+
                                      <div class="form-group"> <label for="amount">
                                             <h6>Transaction ID</h6>
                                         </label>
                                         <div class="input-group">
-                                             <input type="number" step="{{ time() }}" min="{{ time() }}" name="transaction_id" id="transaction_id" class="form-control" required>
+                                             <input type="text" step="{{ time() }}" min="{{ time() }}" name="transaction_id" id="transaction_id" class="form-control" required>
                                              <input type="hidden" name="receiver_code" id="receiver_code" class="form-control" value="{{ $receiveCode }}">
                                         </div>
+
                                     </div>
+
+                                        <div class="moexResponse"></div>
 
 
                                      <div class="form-group"> <label for="amount">
@@ -214,7 +218,7 @@
                                         </label>
                                         <div class="input-group">
                                             <div class="input-group-append"> <span class="input-group-text text-muted">
-                                                    {{ $data['currencyCode']->currencySymbol }} </span> </div> <input type="number" min="0.00" step="0.01" name="amount" id="amount" class="form-control" required>
+                                                    {{ $data['currencyCode']->currencySymbol }} </span> </div> <input type="number" min="0.00" step="0.01" name="amount" id="transfer_amount" class="form-control" required readonly>
 
                                             <input type="hidden" name="currencyCode" class="form-control" id="curCurrency" value="{{ $data['currencyCode']->currencyCode }}" readonly>
                                             <input type="hidden" name="name" class="form-control" id="nameInput" value="{{ Auth::user()->name }}" readonly>
@@ -318,6 +322,66 @@
 
 
         }
+
+        $('#transaction_id').keyup(async function() {
+
+            $('.moexResponse').html('');
+
+            try {
+                const transactionId = $('#transaction_id').val();
+
+                if (transactionId !== null && transactionId.length > 5) {
+
+                    var config = {
+                    method: 'post',
+                    url: "{{ URL('/api/v1/confirmtransaction') }}",
+                    data: {transactionId}
+                };
+
+
+                const response = await axios(config);
+
+                $('.moexResponse').removeClass('disp-0');
+
+                console.log(response.data.data);
+
+                if(response.data.data.length === 0){
+                    $('.moexResponse').removeClass('alert alert-info');
+                        $('.moexResponse').addClass('alert alert-danger');
+                    $('.moexResponse').html('<b>Invalid Transaction ID!</b>. Please check your transaction ID and try again.');
+                }
+                else{
+                    $('.moexResponse').removeClass('alert alert-danger');
+                    $('.moexResponse').addClass('alert alert-info');
+                    $('.moexResponse').html(`
+                        <ul>
+                            <li><b>Transaction ID:</b> ${response.data.data.transactionId}</li>
+                            <li><b>Name:</b> ${response.data.data.sender}</li>
+                            <li><b>Bank Deposit:</b> ${response.data.data.bankDeposit}</li>
+                            <li><b>Amount Sent:</b> ${response.data.data.currencySent+' '+Number(response.data.data.amountSent).toFixed(4)}</li>
+                        </ul>
+                    `);
+
+                    $('#transfer_amount').val(Number(response.data.data.amountSent).toFixed(4));
+
+                }
+
+
+                }
+
+            } catch (error) {
+                $('.moexResponse').addClass('alert alert-danger');
+                $('.moexResponse').removeClass('disp-0');
+                console.log(error);
+            }
+
+
+
+
+
+
+
+        });
 
 
         function setHeaders() {

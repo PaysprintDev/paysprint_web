@@ -20,6 +20,8 @@ class ThirdPartyHandshakeController extends Controller
 {
     public function handshakeRegistration(Request $req)
     {
+
+
         try {
             $record = new AdminController();
             $documentRecord = new api\v1\UserController();
@@ -151,7 +153,7 @@ class ThirdPartyHandshakeController extends Controller
                         $currencySymbol = $mycode->currencySymbol;
 
 
-                        $data = ['code' => $mycode->callingCode, 'ref_code' => $ref_code, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => $generatedPassword, 'address' => '', 'telephone' => $getanonuser->telephone, 'city' => '', 'state' => '', 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Individual", 'corporationType' => '', 'zip' => '', 'wallet_balance' => $getanonuser->wallet_balance, 'dayOfBirth' => '', 'monthOfBirth' => '', 'yearOfBirth' => '', 'platform' => $bearer->business_name . ' api', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $bearer->user_id, 'knowAboutUs' => $bearer->business_name . ' api', 'accountPurpose' => $bearer->business_name . ' api transaction', 'transactionSize' => '', 'sourceOfFunding' => $bearer->business_name . ' api', 'avatar' => $avatar];
+                        $data = ['code' => $mycode->callingCode, 'ref_code' => $ref_code, 'name' => $getanonuser->name, 'email' => $getanonuser->email, 'password' => $generatedPassword, 'address' => '', 'telephone' => $getanonuser->telephone, 'city' => '', 'state' => '', 'country' => $getanonuser->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Individual", 'corporationType' => '', 'zip' => '', 'wallet_balance' => $getanonuser->wallet_balance, 'dayOfBirth' => '', 'monthOfBirth' => '', 'yearOfBirth' => '', 'platform' => $bearer->business_name . ' api', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $bearer->user_id, 'knowAboutUs' => $bearer->business_name . ' api', 'accountPurpose' => $bearer->business_name . ' api transaction', 'transactionSize' => '', 'sourceOfFunding' => $bearer->business_name . ' api', 'avatar' => $avatar, 'nin_front' => $req->national_id_card, 'drivers_license_front' => $req->drivers_license, 'international_passport_front' => $req->international_passport, 'incorporation_doc_front' => $req->utility_bill];
 
                         if (getallheaders()["dev_mode"] != 'test') {
                             User::updateOrCreate(['email' => $getanonuser->email], $data);
@@ -219,7 +221,7 @@ class ThirdPartyHandshakeController extends Controller
                             $record->to = $req->email;
                             $record->subject = "Welcome to PaySprint";
 
-                            $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, Pay received Invoice or Utility bills and Withdraw money as soon as the Compliance Team verifies your information. <br> Login to PaySprint Account on Mobile App or Web app at <a href='" . route('login') . "'>www.paysprint.ca/login</a> with the information below <hr><br> Email: <strong>" . $req->email . "</strong> <br> Password: <strong>" . $req->firstname . "</strong> <hr> <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
+                            $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. <br><br> You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, Pay received Invoice or Utility bills and Withdraw money as soon as the Compliance Team verifies your information. <br><br> Login to PaySprint Account on Mobile App or Web app at <a href='" . route('login') . "'>www.paysprint.ca/login</a> with the information below <hr><br> Email: <strong>" . $req->email . "</strong> <br> Password: <strong>" . $req->firstname . "</strong> <hr> <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
 
 
                             $record->message = '<p>' . $message . '</p>';
@@ -314,7 +316,7 @@ class ThirdPartyHandshakeController extends Controller
                             $phoneCode = "1";
                         }
 
-                        $data = ['code' => $phoneCode, 'ref_code' => $newRefcode, 'name' => $req->firstname . ' ' . $req->lastname, 'email' => $req->email, 'password' => $generatedPassword, 'address' => '', 'telephone' => $req->telephone, 'city' => '', 'state' => '', 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Individual", 'corporationType' => '', 'zip' => '', 'dayOfBirth' => '', 'monthOfBirth' => '', 'yearOfBirth' => '', 'platform' => $bearer->business_name . ' api', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $bearer->user_id, 'knowAboutUs' => $bearer->business_name . ' api', 'accountPurpose' => $bearer->business_name . ' api transaction', 'transactionSize' => '', 'sourceOfFunding' => $bearer->business_name . ' api', 'avatar' => $avatar];
+                        $data = ['code' => $phoneCode, 'ref_code' => $newRefcode, 'name' => $req->firstname . ' ' . $req->lastname, 'email' => $req->email, 'password' => $generatedPassword, 'address' => '', 'telephone' => $req->telephone, 'city' => '', 'state' => '', 'country' => $req->country, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'accountType' => "Individual", 'corporationType' => '', 'zip' => '', 'dayOfBirth' => '', 'monthOfBirth' => '', 'yearOfBirth' => '', 'platform' => $bearer->business_name . ' api', 'accountLevel' => 2, 'withdrawal_per_transaction' => $transactionLimit, 'referred_by' => $bearer->user_id, 'knowAboutUs' => $bearer->business_name . ' api', 'accountPurpose' => $bearer->business_name . ' api transaction', 'transactionSize' => '', 'sourceOfFunding' => $bearer->business_name . ' api', 'avatar' => $avatar, 'nin_front' => $req->national_id_card, 'drivers_license_front' => $req->drivers_license, 'international_passport_front' => $req->international_passport, 'incorporation_doc_front' => $req->utility_bill];
 
                         if (getallheaders()["dev_mode"] != 'test') {
                             User::updateOrCreate(['email' => $req->email], $data);
@@ -373,7 +375,7 @@ class ThirdPartyHandshakeController extends Controller
                             $record->to = $req->email;
                             $record->subject = "Welcome to PaySprint";
 
-                            $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, Pay received Invoice or Utility bills and Withdraw money as soon as the Compliance Team verifies your information. <br> Login to PaySprint Account on Mobile App or Web app at <a href='" . route('login') . "'>www.paysprint.ca/login</a> with the information below <hr><br> Email: <strong>" . $req->email . "</strong> <br> Password: <strong>" . $req->firstname . "</strong> <hr> <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
+                            $message = "Welcome to PaySprint, World's #1 Affordable Payment Method that enables you to send and receive money, pay Invoice and bills and getting paid at anytime. <br><br> You will be able to add money to your wallet, Create and Send Invoice, Accept and Receive payment from all the channels, Pay received Invoice or Utility bills and Withdraw money as soon as the Compliance Team verifies your information. <br><br> Login to PaySprint Account on Mobile App or Web app at <a href='" . route('login') . "'>www.paysprint.ca/login</a> with the information below <hr><br> Email: <strong>" . $req->email . "</strong> <br> Password: <strong>" . $req->firstname . "</strong> <hr> <br> Thank you for your interest in PaySprint. <br><br> Compliance Team @PaySprint <br> info@paysprint.ca";
 
 
                             $record->message = '<p>' . $message . '</p>';

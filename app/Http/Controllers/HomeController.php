@@ -216,7 +216,8 @@ class HomeController extends Controller
                     'referred' => $this->referral(Auth::user()->ref_code),
                     'userdetails' => $this->checkTrial(Auth::id()),
                     'pending' => User::where('id', Auth::id())->where('account_check', 2)->first(),
-                    'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first()
+                    'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first(),
+                    'specialpromo' => $this->specialpromoCount()
                 );
 
                 $view = 'home';
@@ -356,7 +357,8 @@ class HomeController extends Controller
                     'referred' => $this->referral(Auth::user()->ref_code),
                     'userdetails' => $this->checkTrial(Auth::id()),
                     'pending' => User::where('id', Auth::id())->where('account_check', 2)->first(),
-                    'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first()
+                    'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first(),
+                    'specialpromo' => $this->specialpromoCount()
                 );
 
                 $view = 'home';
@@ -411,7 +413,8 @@ class HomeController extends Controller
                     'referred' => $this->referral(Auth::user()->ref_code),
                     'userdetails' => $this->checkTrial(Auth::id()),
                     'pending' => User::where('id', Auth::id())->where('account_check', 2)->first(),
-                    'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first()
+                    'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first(),
+                    'specialpromo' => $this->specialpromoCount()
 
                 );
             } else {
@@ -1048,7 +1051,7 @@ class HomeController extends Controller
             'getCard' => $this->getUserCard(),
             'getBank' => $this->getUserBank(),
             'continent' => $this->timezone[0],
-            'availablecountry' =>$allcountry
+            'availablecountry' => $allcountry
         );
 
         // dd($data);
@@ -1464,7 +1467,11 @@ class HomeController extends Controller
                 'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
                 'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
                 'partner' => $this->getPartners(),
+                'providers' => MobileMoney::where('user_id', Auth::id())->get(),
+            'subscription' => $this->getConsumerCost(Auth::user()->country)
             );
+
+
         } else {
             return redirect()->route('dashboard');
         }
@@ -2279,7 +2286,7 @@ class HomeController extends Controller
 
         $data = $this->getCountryCode($userData->country);
 
-        $data['conversionrate'] = $this->getOfficialConversionRate(Auth::user()->currencyCode, $data->currencyCode);
+        $data['conversionrate'] = $this->getConversionRate($data->currencyCode, Auth::user()->currencyCode);
 
         $resp = [
             'data' => $data,
@@ -2289,6 +2296,8 @@ class HomeController extends Controller
 
         return $resp;
     }
+
+
 
 
     public function getthisInvoice($invoice)
@@ -6116,8 +6125,6 @@ class HomeController extends Controller
                 // dd($req->localcurrency);
 
                 $dataInfo = $this->convertCurrencyRate($req->foreigncurrency, $req->localcurrency, $req->amount);
-
-
             } else {
                 $dataInfo = $req->amount;
             }
@@ -6294,7 +6301,7 @@ class HomeController extends Controller
 
         $resData = ['data' => $amountReceive, 'message' => 'success', 'state' => $state, 'collection' => $collection, 'walletCheck' => $walletCheck, ''];
 
-        
+
 
         return $this->returnJSON($resData, 200);
     }
@@ -6406,21 +6413,29 @@ class HomeController extends Controller
             if ($localCurrency === 'USDUSD') {
                 $localConv = 1;
             } else {
-                $localConv = $result->quotes->$localCurrency;
+                $localConv = $result->quotes->$localCurrency *  $markValue;
             }
 
-            $convertLocal = $amount / $localConv;
+
+
+            if ($localCurrency === $currency) {
+                $convertLocal = $amount / $localConv;
+            } elseif ($localCurrency !== 'USDUSD' && $currency !== 'USDUSD') {
+                $convertLocal = ($amount / $localConv) * $markValue;
+            } else {
+                $convertLocal = $amount / $localConv;
+            }
 
             // Conversion Rate USD to Local currency
             // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
 
             if ($currency != "USDUSD") {
-                $convRate = $result->quotes->$currency * $convertLocal;
+                $convRate = ($result->quotes->$currency *  $markValue) * $convertLocal;
             }
 
             $convRate = 1 * $convertLocal;
 
-            $convRate = ($currency !== 'USDUSD' ? $result->quotes->$currency : 1) * $convertLocal;
+            $convRate = ($currency !== 'USDUSD' ? ($result->quotes->$currency *  $markValue) : 1) * $convertLocal;
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }

@@ -7,6 +7,7 @@ use Session;
 use App\Points;
 
 use App\Statement;
+use App\MerchantCashback;
 
 //Session
 use App\ClientInfo;
@@ -20,7 +21,7 @@ use App\AllCountries;
 use App\User as User;
 
 use App\ClaimedPoints;
-
+use App\MarketplaceReviews;
 use App\HistoryReport;
 use App\merchantTrial;
 use App\Notifications;
@@ -29,6 +30,7 @@ use App\StoreDiscount;
 use App\StoreMainShop;
 use App\StoreProducts;
 use App\StoreShipping;
+use App\MerchantReply;
 
 use App\StoreWishList;
 use App\Traits\MyEstore;
@@ -44,6 +46,7 @@ use App\ImportExcel as ImportExcel;
 use Illuminate\Support\Facades\Auth;
 use App\InvoicePayment as InvoicePayment;
 use App\ImportExcelLink as ImportExcelLink;
+use illuminate\Support\Facades\Validator;
 
 class MerchantPageController extends Controller
 {
@@ -75,7 +78,9 @@ class MerchantPageController extends Controller
             'myplan' => UpgradePlan::where('userId', Auth::user()->ref_code)->first(),
             'merchantstatus' => $this->checkMerchantStatus(Auth::user()->ref_code),
             'trial' => merchantTrial::where('user_id', Auth::user()->ref_code)->first(),
-            'referral' => User::where('referred_by', Auth::user()->ref_code)->count()
+            'referral' => User::where('referred_by', Auth::user()->ref_code)->count(),
+            'cashback' => MerchantCashback::where('merchant_id', Auth::user()->id)->first(),
+            'reviews' => MarketplaceReviews::where('merchant_id', Auth::user()->id)->count()
         ];
 
         return view('merchant.pages.dashboard')->with(['pages' => 'dashboard', 'data' => $data]);
@@ -182,6 +187,90 @@ class MerchantPageController extends Controller
         ];
 
         return view('merchant.pages.setuptax')->with(['pages' => 'set up tax', 'data' => $data]);
+    }
+
+    public function cashback(Request $req)
+    {
+        $validation = Validator::make($req->all(), [
+            'agree' => 'required'
+        ]);
+        if ($validation->passes()) {
+            $accept = $req->agree;
+
+            $id = Auth::id();
+            MerchantCashback::create([
+                'merchant_id' => $id,
+                'accept' => $accept
+            ]);
+
+            return back()->with('msg', "<div class='alert alert-success'>Joined Successfully</div>");
+        } else {
+            return back()->with('msg', "<div class='alert alert-danger'>Kindly accept the terms and conditons</div>");
+        }
+    }
+
+    public function requestReview(Request $req)
+    {
+        $id = Auth::id();
+        $data = User::where('id', $id)->first();
+        $mailer = new SendGridController;
+        $mailer->requestReview($req->customer_email, $id, $data->businessname);
+
+        return back()->with('msgs', "<div class='alert alert-success'>Review Request Sent Successfully</div>");
+    }
+
+    public function endcashback(Request $req)
+    {
+        $id = $req->id;
+        MerchantCashback::where('merchant_id', $id)->delete();
+
+        return back()->with('msg', "<div class='alert alert-success'>Cashback Ended Successfully</div>");
+    }
+
+    public function viewReviews(Request $Req)
+    {
+        $id = Auth::id();
+
+        $data =
+            [
+                'reviews' => MarketplaceReviews::where('merchant_id', $id)->orderBy('created_at', 'DESC')->get(),
+
+            ];
+
+        return view('merchant.pages.marketplacereviews')->with(['data' => $data]);
+    }
+
+    public function viewmarketReplies(Request $req, $id)
+    {
+
+        $data = [
+            'comments' => MerchantReply::where('comment_id', $id)->get(),
+        ];
+
+
+        return view('merchant.pages.viewreply')->with(['data' => $data]);
+    }
+
+    public function merchantReply(Request $req)
+    {
+
+        $id = Auth::id();
+
+        $validation = Validator::make($req->all(), [
+            "merchant_comment" => "required"
+        ]);
+
+        MerchantReply::create([
+            "merchant_id" => $id,
+            "comment_id" => $req->comment_id,
+            "merchant_reply" => $req->merchant_comment,
+        ]);
+
+        MarketplaceReviews::where('id', $req->comment_id)->update([
+            "status" => "Replied"
+        ]);
+
+        return back()->with("msg", "<div class='alert alert-success'>Reply Added Successfully</div>");
     }
 
     public function invoiceStatement()

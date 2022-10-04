@@ -293,7 +293,7 @@ class SendGridController extends Controller
 
 
 
-                     $receiver = $user->email;
+                    $receiver = $user->email;
                     // $receiver = "olasunkanmimunirat@gmail.com";
 
 
@@ -588,7 +588,7 @@ class SendGridController extends Controller
         }
     }
 
-    //marketplace claim your business
+    //marketplace claim your business with cron
     public function claimBusiness()
     {
         try {
@@ -604,7 +604,7 @@ class SendGridController extends Controller
 
                 foreach ($thisuser as $user) {
                     $name = $user->name;
-                    $receiver = "youngskima@gmail.com";
+                    $receiver = $user->email;
                     $data = [
                         "name"  => $name,
                         "message" => "<p>PaySprint Market Place is one of the fastest growing global marketplaces. <br> At PaySprint Market Place, we connect merchant with customers and drive more traffic to their business at no extra costs. <br> To make sure your business is eligible to show up on PaySprint Marketplace,  </p>",
@@ -625,13 +625,42 @@ class SendGridController extends Controller
         }
     }
 
+    //marketplace claim your business from marketplace website
+    public function marketplaceClaim($email)
+    {
+        try {
+            $user = UnverifiedMerchant::where('email', $email)->first();
+
+            $name = $user->name;
+            $receiver = $user->email;
+            $data = [
+                "name"  => $name,
+                "message" => "<p>PaySprint Market Place is one of the fastest growing global marketplaces. <br> At PaySprint Market Place, we connect merchant with customers and drive more traffic to their business at no extra costs. <br> To make sure your business is eligible to show up on PaySprint Marketplace,  </p>",
+                "url" => route('home') . '/claimmerchantbusiness?id=' . $user->id,
+                "decline" => 'https://paysprintmarketplace.com',
+                "remove" => route('home') . '/declineclaimbusiness?id=' . $user->id,
+            ];
+
+            $template_id = config('constants.sendgrid.claimbusiness');
+
+
+
+            $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
+            // dd($response);
+            // echo 'done';
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+
     //send username and password
-    public function sendUsername($legalname, $username, $password)
+    public function sendUsername($legalname, $email, $username, $password)
     {
         try {
 
             $name = $legalname;
-            $receiver = "duntanadebiyi@yahoo.com";
+            $receiver = $email;
             $data = [
                 "name"  => $name,
                 "message" => "<p>Congratulations!!! Welcome to  PaySprint Marketplace. <br><br> <span><strong>Here are your login details </strong><span><br><br><br> <span><strong>Username:<strong></span><span>$username</span> <br> <span><strong>Temporary Password:</strong></span> <span>$password</span>  </p>",
@@ -642,6 +671,26 @@ class SendGridController extends Controller
 
             $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
             // dd($response);
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    //request review
+    public function requestReview($email, $id,$name)
+    {
+        try {
+            $receiver = $email;
+            $data = [
+                "name" => "Hi there,",
+                "message" => "<p>As a valued customer, we at $name,would appreciate your sincere opinion on our products/services so we can serve you better.</p>",
+                "url" => route('home') . '/makereview?id=' . $id,
+            ];
+
+            $template_id = config('constants.sendgrid.requestreview');
+
+            $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
 
         } catch (\Throwable $th) {
             throw $th;

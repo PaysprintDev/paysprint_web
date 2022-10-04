@@ -184,6 +184,19 @@
                                     <h5 class="w-title gr-text-8 mb-0">Unlimited Transactions.</h5>
                                 </div>
                             </div>
+
+
+                            @if ($data['country'] == 'Canada')
+                            <div class="col-md-8">
+                                <div class="single-widget d-flex align-items-center py-2">
+                                    <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
+                                        <i class="icon icon-check-simple"></i>
+                                    </div>
+                                    <h5 class="w-title gr-text-8 mb-0">Add money to Wallet from Debit or Credit Cards, Interac(R) eTransfer or Electronic fund transfer.
+                                    </h5>
+                                </div>
+                            </div>
+                            @else
                             <div class="col-md-8">
                                 <div class="single-widget d-flex align-items-center py-2">
                                     <div class="widget-icon text-primary mr-6 gr-text-8 d-flex align-items-center">
@@ -193,6 +206,7 @@
                                     </h5>
                                 </div>
                             </div>
+                            @endif
 
                             <div class="col-md-8">
                                 <div class="single-widget d-flex align-items-center py-2">
@@ -358,7 +372,7 @@
             <div class="col-md-8">
                 {{-- <p class="gr-text-9 text-center mb-7">Trusted and Featured on:
                 </p> --}}
-                <h2 class="gr-text-4 text-center mb-8">Featured on</h2>
+                <h2 class="gr-text-4 text-center mb-8">As Featured on</h2>
             </div>
             <div class="col-12">
                 <div class="brand-logos d-flex justify-content-center justify-content-xl-between align-items-center mx-n9 flex-wrap">
@@ -401,6 +415,8 @@
     </div>
 </div>
 
+
+
 {{-- Box tab --}}
 {{-- <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -413,7 +429,8 @@
     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">qswadesfrgthy</div>
     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">bola</div>
     <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">..dgfhj.</div>
-  </div> --}}
+  </div> 
+--}}
 
 {{-- End of tab box --}}
 

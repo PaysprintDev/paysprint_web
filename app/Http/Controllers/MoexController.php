@@ -6,10 +6,11 @@ use App\AllCountries;
 use App\Classes\TWSauth;
 use Illuminate\Http\Request;
 use App\Classes\TWSPhoneConfig;
+use App\Traits\Moex;
 
 class MoexController extends Controller
 {
-
+    use Moex;
 
     public function importData()
     {
@@ -2503,50 +2504,23 @@ class MoexController extends Controller
     }
 
 
-
-
-    // This is the Section where the SOAP integration starts..
-    public function cashpot4()
+    // Confirm Transaction ID...
+    public function confirmThisTransactionId(Request $req)
     {
-
-
-        $login = new TWSauth();
-        $login->Username = '8349';
-        $login->Password = 'X84G1F2ARH63';
-        $login->Version = '1';
-
-        $phone = new TWSPhoneConfig();
-        $phone->IncSenderCountryCode = true;
-        $phone->SenderExitPrefix = '+';
-        $phone->IncSenderHyphen = false;
-        $phone->IncReceiverCountryCode = true;
-        $phone->ReceiverExitPrefix = '+';
-        $phone->IncReceiverHyphen = false;
-
-        $url_wsdl = "https://ws.moneyexchange.es:42710/wsdl/IWSmoney";
-
-
         try {
-        $clientSoap = new \SoapClient($url_wsdl);
 
-            $TransactionMoEx = $clientSoap->__soapCall("MEGetExtTransactionMoEx", [
-                "Login"       => $login,
-                "Reference"   =>  "004500002313",
-                "phoneConfig" => $phone
-            ]);
-        } catch (\Exception $e) {
-            echo 'Excepción capturada: ',  $e->getMessage(), "\n";
+            $data = $this->confirmMoexTransactionId($req->transactionId);
+
+            $status = 200;
+
+            $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
+
+        } catch (\Throwable $th) {
+            $status = 400;
+            $resData = ['data' => [], 'message' => $th->getMessage(), 'status' => $status];
         }
 
-        var_dump($TransactionMoEx);
-
-        if ($TransactionMoEx['return'] == 0) {
-
-            $traMoEx = (object) $TransactionMoEx['transaction'];
-            //example for access element
-            echo 'TransactionId: ' . $traMoEx->TransactionId . '<br>';
-            //Show all elements of Class $TransactionMoEx
-            var_dump($traMoEx);
-        } else return "error";
+        return $this->returnJSON($resData, $status);
     }
+
 }

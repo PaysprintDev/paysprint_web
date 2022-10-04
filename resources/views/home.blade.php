@@ -18,7 +18,7 @@ use App\Http\Controllers\User; ?>
         <br>
         <br>
         <div class="row builder_all">
-            <div class="col-md-3 col-sm-6 builder walletInformation">
+            <div class="col-md-2 col-sm-6 builder walletInformation">
                 <div class="alert alert-warning">
                     <div class="row">
                         <div class="col-md-12">
@@ -27,15 +27,15 @@ use App\Http\Controllers\User; ?>
                         </div>
                         <br>
                         <div class="col-md-12">
-                            <h3>
+                            <h3 style="font-size:18px">
                                 {{ $data['currencyCode']->currencySymbol . '' .
-                                number_format(Auth::user()->wallet_balance, 4) }}
+                                number_format(Auth::user()->wallet_balance, 2) }}
                             </h3>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6 builder walletInformation">
+            <div class="col-md-2 col-sm-6 builder walletInformation">
                 <div class="alert alert-info">
                     <div class="row">
                         <div class="col-md-12">
@@ -44,14 +44,14 @@ use App\Http\Controllers\User; ?>
                             </h4>
                         </div>
                         <div class="col-md-12">
-                            <h3>
+                            <h3 style="font-size:18px">
                                 {{ number_format(Auth::user()->number_of_withdrawals) }}
                             </h3>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6 builder walletInformation">
+            <div class="col-md-2 col-sm-6 builder walletInformation">
                 <div class="alert alert-success">
                     <div class="row">
                         <div class="col-md-12">
@@ -66,14 +66,14 @@ use App\Http\Controllers\User; ?>
 
                     <div class="row">
 
-                        <div class="col-md-4">
-                            <h3>
+                        <div class="col-md-12">
+                            <h3 style="font-size:18px">
                                 {{ isset($data['mypoints']) ? $data['mypoints']->points_acquired : 0 }}
 
                             </h3>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <small>
                                 <a style="font-weight: 700; font-size: 11px" href="{{ route('consumer points') }}">
                                     Earned Points
@@ -82,7 +82,7 @@ use App\Http\Controllers\User; ?>
                         </div>
 
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <form action="{{ route('claim point') }}" method="POST" id="claimmypoint">
                                 @csrf
                                 <small><a type='button' href="javascript:void()" onclick="$('#claimmypoint').submit()" style="font-weight: 700; font-size: 11px">Redeem
@@ -95,7 +95,7 @@ use App\Http\Controllers\User; ?>
 
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6 builder walletInformation">
+            <div class="col-md-2 col-sm-6 builder walletInformation">
                 <div class="alert alert-success">
                     <div class="row">
                         <div class="col-md-12">
@@ -110,8 +110,8 @@ use App\Http\Controllers\User; ?>
 
                     <div class="row">
 
-                        <div class="col-md-4">
-                            <h3>
+                        <div class="col-md-12">
+                            <h3 style="font-size:18px;">
 
 
 
@@ -120,9 +120,45 @@ use App\Http\Controllers\User; ?>
                             </h3>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <small>
-                                <a style="font-weight: 700; font-size: 11px" href="{{ route('referred details') }}">
+                                <a style="font-weight: 700; font-size: 11px;" href="{{ route('referred details') }}">
+                                    View More
+                                </a>
+                            </small>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-6 builder walletInformation">
+                <div class="alert alert-success">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <small class="font-sm">
+                                Special Promo
+                            </small>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <h3 style="font-size:18px">
+
+
+
+                                {{ isset($data['specialpromo']) ? $data['specialpromo'] : 0 }}
+
+                            </h3>
+                        </div>
+
+                        <div class="col-md-12">
+                            <small>
+                                <a style="font-weight: 700; font-size: 11px" href="{{ route('special promo') }}">
                                     View More
                                 </a>
                             </small>
@@ -177,9 +213,85 @@ use App\Http\Controllers\User; ?>
                                 {{-- <p class="c-stepper__desc">Some desc text</p> --}}
                             </li>
 
+
                     </ol>
                 </div>
             </div>
+            <!-- <div class="col-md-12">
+                <div class="row">
+                    <div @if (Auth::user()->plan == 'classic') class="col-md-4" @else class="col-md-6" @endif>
+                        <div class="card" style="width: 100%;">
+
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    Current Plan: {{ strtoupper(Auth::user()->plan) }} <br><br>
+
+                                    <form action="#" method="post" id="formElemchangeplan" class="disp-0">
+                                        @csrf
+                                        <input value="{{ Auth::id() }}" name="user_id">
+                                    </form>
+
+                                    @if (Auth::user()->plan == 'basic')
+                                    <button class="btn btn-primary" onclick="changeMyPlan('changeplan')" id="cardSubmit">Upgrade
+                                        Account</button>
+                                    @else
+                                    @if (Auth::user()->country == 'Canada' || Auth::user()->country == 'United States')
+                                    <button class="btn btn-danger" onclick="changeMyPlan('changeplan')" id="cardSubmit">Downgrade
+                                        Account</button>
+
+                                    @isset($data['myplan'])
+                                    <br>
+                                    <br>
+                                    <p class="text-info">Next Renewal:
+                                        {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}
+                                    </p>
+
+                                    @php
+                                    $expire = date('Y-m-d', strtotime($data['myplan']->expire_date));
+                                    $now = time();
+                                    $your_date = strtotime($expire);
+                                    $datediff = $your_date - $now;
+                                    @endphp
+
+                                    <p class="text-danger">
+                                        {{ round($datediff / (60 * 60 * 24)) > 1 ? round($datediff / (60 * 60 * 24)) . 'days' :
+                                round($datediff / (60 * 60 * 24)) . 'day' }}
+                                        left
+                                    </p>
+                                    @endisset
+                                    @else
+                                    @isset($data['myplan'])
+                                    <p class="text-info">Next Renewal:
+                                        {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}
+                                    </p>
+
+                                    @php
+                                    $expire = date('Y-m-d', strtotime($data['myplan']->expire_date));
+                                    $now = time();
+                                    $your_date = strtotime($expire);
+                                    $datediff = $your_date - $now;
+                                    @endphp
+
+                                    <p class="text-danger">
+                                        {{ round($datediff / (60 * 60 * 24)) > 1 ? round($datediff / (60 * 60 * 24)) . 'days' :
+                                round($datediff / (60 * 60 * 24)) . 'day' }}
+                                        left
+                                    </p>
+                                    @endisset
+                                    @endif
+                                    @endif
+
+                                    <hr>
+
+                                    <a href="{{ route('pricing structure') }}">Do more with PaySprint. Check our
+                                        Pricing</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
         </div>
 
 

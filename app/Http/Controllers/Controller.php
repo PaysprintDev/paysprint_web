@@ -104,7 +104,7 @@ class Controller extends BaseController
         // Get Markup
         $markuppercent = $this->markupPercentage();
 
-        // $markValue = (1 + ($markuppercent[0]->percentage / 100));
+        $markValue = (1 + ($markuppercent[0]->percentage / 100));
         // $markdownValue = (1 - ($markuppercent[0]->percentage / 100));
 
         $currency = 'USD' . $curCurrency;
@@ -140,7 +140,7 @@ class Controller extends BaseController
 
 
 
-            $convRate = ($amount / ($currency !== 'USDUSD' ? $result->quotes->$currency : 1));
+            $convRate = ($amount / ($currency !== 'USDUSD' ? $result->quotes->$currency * $markValue : 1));
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
         }
@@ -278,9 +278,10 @@ class Controller extends BaseController
         }
     }
 
-
     public function getConversionRate($localcountry, $foreign, $route = null)
     {
+
+
         // Get Markup
         $markuppercent = $this->markupPercentage();
 
@@ -315,31 +316,48 @@ class Controller extends BaseController
 
         if ($result->success == true) {
 
-            if ($currencyA !== 'USDUSD') {
-                $convRateA = $result->quotes->$currencyA;
-            } else {
+            if($currencyA !== 'USDUSD'){
+                $convRateA = $result->quotes->$currencyA * $markValue;
+            }
+            else{
                 $convRateA = 1;
             }
 
 
-            if ($currencyB !== 'USDUSD') {
-                $convRateB = $result->quotes->$currencyB;
-            } else {
+            if($currencyB !== 'USDUSD'){
+                $convRateB = $result->quotes->$currencyB * $markValue;
+            }
+            else{
                 $convRateB = 1;
             }
 
-            $actualRate = $convRateA / $convRateB;
+
+
+            if($currencyA === $currencyB){
+                    $actualRate = $convRateA / $convRateB;
+            }
+            elseif($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD'){
+                $actualRate = ($convRateA / $convRateB) * $markValue;
+            }
+            else{
+                $actualRate = $convRateA / $convRateB;
+            }
+
+
+
 
             $convRate = $actualRate * 95 / 100;
 
             $this->calculateBufferedTransaction($actualRate, $convRate, $route);
         } else {
             $convRate = "Sorry we can not process your transaction this time, try again later!.";
+            $actualRate = "Sorry we can not process your transaction this time, try again later!.";
         }
 
 
-        return $convRate;
+        return $actualRate;
     }
+
 
     public function getPayoutMethod($foreign)
     {
@@ -442,7 +460,17 @@ class Controller extends BaseController
                 $convRateB = 1;
             }
 
-            $actualRate = $convRateA / $convRateB;
+
+            if($currencyA === $currencyB){
+                    $actualRate = $convRateA / $convRateB;
+            }
+            elseif($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD'){
+                $actualRate = ($convRateA / $convRateB) * $markValue;
+            }
+            else{
+                $actualRate = ($convRateA / $convRateB) * $markValue;
+            }
+
 
             $convRate = $actualRate * 95 / 100;
 
@@ -454,7 +482,7 @@ class Controller extends BaseController
 
 
 
-        return $convRate;
+        return $actualRate;
     }
 
 

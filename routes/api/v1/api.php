@@ -28,12 +28,24 @@ Route::prefix('/v1')->group(function () {
     Route::post('/becomepayoutagent', ['uses' => 'PayoutAgentController@beAnAgent', 'as' => 'be an agent on paysprint']);
 
     Route::get('latestmerchant',  ['uses' => 'MarketplaceController@newestMerchant'])->name('newest merchant');
+    Route::get('specialpromo',  ['uses' => 'MarketplaceController@specialPromo'])->name('special promo');
     Route::get('findproduct',  ['uses' => 'MarketplaceController@findProduct'])->name('find product');
     Route::get('getallproducts',  ['uses' => 'MarketplaceController@getProducts'])->name('get products');
     Route::get('getallnews',  ['uses' => 'MarketplaceController@getNews'])->name('get news');
+    Route::get('merchantname/{id}',  ['uses' => 'MarketplaceController@index'])->name('get merchant name');
 
     Route::get('conversionrate/{local}/{foreign}',  ['uses' => 'Controller@getConversionRate']);
     Route::get('payoutmethod/{foreign}',  ['uses' => 'Controller@getPayoutMethod']);
+    Route::post('comment',  ['uses' => 'MarketplaceController@makeComment'])->name('comment');
+    Route::post('claimmarketbusiness',  ['uses' => 'MarketplaceController@claimMarketBusiness'])->name('claim market business');
+
+    Route::get('getallunverifiedmerchants',  ['uses' => 'MarketplaceController@getUnverifiedMerchants'])->name('get unverfieid merchants');
+    Route::get('viewcomments/{id}',  ['uses' => 'MarketplaceController@viewComments'])->name('view comments');
+    Route::get('countcomments/{id}',  ['uses' => 'MarketplaceController@countComment'])->name('view comment');
+    Route::post('claimbusinesswithphone',  ['uses' => 'MarketplaceController@claimbusinessPhone'])->name('claim business phone');
+
+
+    Route::post('confirmtransaction',  ['uses' => 'MoexController@confirmThisTransactionId'])->name('confirm this transaction');
 
 
     Route::group(['middleware' => ['appkey']], function () {
@@ -57,7 +69,7 @@ Route::prefix('/v1')->group(function () {
         Route::post('currencyconversion',  ['uses' => 'CurrencyConverterApiController@mycurrencyConvert']);
 
 
-        
+
 
         Route::get('classifiedbusinessdirectory',  ['uses' => 'api\v1\UserController@classifiedBusinessDirectory']);
 
@@ -263,6 +275,9 @@ Route::prefix('/v1')->group(function () {
         Route::post('/partneraddmoneytowallet', ['uses' => 'PayoutAgentController@partnerAddMoneyToWallet', 'as' => 'partner add money to wallet']);
 
         Route::post('moneywithdrawal',  ['uses' => 'MonerisController@moneyWithdrawal'])->name('withdraw from wallet');
+
+
+        Route::post('partnerwithdrawal',  ['uses' => 'PayoutAgentController@partnerMoneyWithdrawal'])->name('withdraw from wallet');
 
         Route::post('payutilitybills',  ['uses' => 'MonerisController@payUtilityBills'])->name('pay utility bills');
 

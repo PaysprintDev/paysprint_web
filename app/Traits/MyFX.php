@@ -5,12 +5,14 @@ namespace App\Traits;
 use App\User;
 use App\MakeBid;
 use App\FxPayment;
+use App\Statement;
 use App\FxStatement;
 use App\MarketPlace;
 use App\AllCountries;
 use App\EscrowAccount;
 use App\CrossBorderBeneficiary;
 use App\PaySprintAccountDetails;
+use Carbon\Carbon;
 
 trait MyFX
 {
@@ -91,6 +93,21 @@ trait MyFX
 
     public function getPSAccountDetails(){
         $data = PaySprintAccountDetails::first();
+
+        return $data;
+    }
+
+    public function getTransactionStatementByCountry($month)
+    {
+        $data = Statement::whereMonth('created_at', $month)->groupBy('country')->orderBy('country', 'ASC')->get();
+
+        return $data;
+    }
+
+
+    public function getSpecificTransactionStatementByCountry($country, $month)
+    {
+        $data = Statement::where('country', $country)->whereMonth('created_at', $month)->orderBy('created_at', 'ASC')->get();
 
         return $data;
     }
