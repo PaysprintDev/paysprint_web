@@ -11,13 +11,13 @@ use App\Community;
 
 use App\PromoDate;
 
+use App\Transfers;
+
 use App\TrialDate;
 
 use App\CashAdvance;
 
 use App\MobileMoney;
-
-use App\VouchAccount;
 
 use App\PayoutAgent;
 
@@ -29,12 +29,14 @@ use App\SpecialPromo;
 
 use App\User as User;
 
+use App\VouchAccount;
+
 use App\ClaimedPoints;
 
 use App\DusuProviders;
 
-use App\HistoryReport;
 
+use App\HistoryReport;
 
 use App\ReferralClaim;
 
@@ -78,39 +80,39 @@ use App\Traits\ExpressPayment;
 
 use App\Traits\PaymentGateway;
 
-use App\Traits\PaysprintPoint;
 
+use App\Traits\PaysprintPoint;
 
 use App\AnonUsers as AnonUsers;
 
 use App\Bronchure as Bronchure;
-
 use App\Contactus as Contactus;
 use App\Statement as Statement;
 use App\Traits\PaystackPayment;
+
 use App\Workorder as Workorder;
 
 use App\Classes\MyCurrencyCloud;
-
 use App\CardIssuer as CardIssuer;
+
 use App\ClientInfo as ClientInfo;
-
 use App\Consultant as Consultant;
+
+
+
 use App\UserClosed as UserClosed;
-
-
-
 use App\Exports\TransactionExport;
 use Illuminate\Support\Facades\DB;
 use App\CreateEvent as CreateEvent;
+
 use App\ImportExcel as ImportExcel;
 
 use App\RentalQuote as RentalQuote;
 
 use App\ServiceType as ServiceType;
 
-use App\Traits\MailChimpNewsLetter;
 
+use App\Traits\MailChimpNewsLetter;
 
 use Illuminate\Support\Facades\Log;
 
@@ -135,7 +137,6 @@ use App\Notifications as Notifications;
 use Illuminate\Support\Facades\Storage;
 
 use App\InvoicePayment as InvoicePayment;
-
 use Illuminate\Support\Facades\Validator;
 use App\OrganizationPay as OrganizationPay;
 use App\TransactionCost as TransactionCost;
@@ -166,7 +167,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback', 'displayCountry', 'displayCountryMerchant', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts']]);
+        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback', 'displayCountry','merchantHome', 'displayCountryMerchant', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts']]);
 
         $location = $this->myLocation();
 
@@ -297,6 +298,19 @@ class HomeController extends Controller
         ];
 
         return view('main.newpage.shade-pro.merchantindex')->with(['pages' => $this->page, 'data' => $data]);
+    }
+
+    public function merchantHome()
+    {
+        $allcountry = AllCountries::where('approval', 1)->get();
+        $country = $this->myLocation()->country;
+        $this->page = 'Merchant';
+        $data = [
+            'availablecountry' => $allcountry,
+            'country' => $country
+        ];
+
+        return view('main.newpage.shade-pro.merchanthome')->with(['pages' => $this->page, 'data' => $data]);
     }
 
 
@@ -921,7 +935,6 @@ class HomeController extends Controller
 
     public function paymentOrganization(Request $req, $user_id)
     {
-
 
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
@@ -3864,6 +3877,97 @@ class HomeController extends Controller
 
 
         return view('main.payorganization')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'clientInfo' => $clientInfo, 'location' => $location, 'data' => $data]);
+    }
+
+    public function bulkPayment(Request $req)
+    {
+        
+         $bulkaccount=$req->id;
+         $singleaccount= preg_split("/[,]/",$bulkaccount);
+       
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Payment';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $ref_code = Auth::user()->ref_code;
+            } else {
+               return redirect()->route('login');
+            }
+        } else {
+            $user = User::where('email',session('email'))->first();
+
+            Auth::login($user);
+            $this->page = 'Payment';
+            $this->name = session('name');
+            $this->email = session('email');
+            $ref_code = 0;
+        }
+
+        // Get Organization & Business
+        $clientInfo = $this->clientsInformation();
+        $location = $this->myLocation();
+
+       
+        $data = array(
+            'newnotification' => $this->notification($this->email),
+            'allnotification' => $this->allnotification($this->email),
+            'getfiveNotifications' => $this->getfiveUserNotifications($ref_code),
+            'continent' => $this->timezone[0],
+            'getBank' => $this->getUserBank(),
+            'getCard' => $this->getUserCard(),
+            'bulkreceiver' => $singleaccount,
+        );
+
+        
+
+
+        return view('main.bulkpayment')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'clientInfo' => $clientInfo, 'location' => $location, 'data' => $data]);
+    }
+
+    public function createBulkTransfer(Request $req)
+    {
+
+        // dd(json_encode($req->amount));
+        $sender = Auth::id();
+       
+       
+        $bulkaccount=json_encode($req->receive);
+        $bulkpurpose=json_encode($req->purpose);
+        $bulkamount=json_encode($req->amount);
+        //    dd($bulkaccount);
+            $validation = Validator::make($req->all(), [
+                'amount' => 'required',
+                'purpose' => 'required',
+                
+            ]);
+    
+          Transfers::create([
+                'sender_id' => $sender,
+                'receiver' => $bulkaccount,
+                'purpose' => $bulkpurpose,
+                'amount' => $bulkamount,
+                
+            ]);
+
+            
+ 
+        return redirect()->route('bulk send');
+    }
+
+    public function bulkSend(Request $req)
+    {
+        $data= Transfers::where('sender_id',Auth::id())->first();
+    //    $response=[
+    //     'sender_id' => $data->sender_id,
+    //     'receiver' =>json_decode($data->receiver),
+    //     'amount'=> json_decode($data->amount),
+    //     'purpose'=>json_decode($data->amount),
+    //    ];
+
+    //    dd($response['receiver']);
+
+        return view('main.bulksend')->with($data);
     }
 
     public function notification($email)
