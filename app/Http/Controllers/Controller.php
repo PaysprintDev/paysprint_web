@@ -78,8 +78,6 @@ class Controller extends BaseController
 
         $ip_array = json_decode($ip_response);
 
-        // dd($ip_array);
-
         return  $ip_array;
     }
 
@@ -316,30 +314,26 @@ class Controller extends BaseController
 
         if ($result->success == true) {
 
-            if($currencyA !== 'USDUSD'){
+            if ($currencyA !== 'USDUSD') {
                 $convRateA = $result->quotes->$currencyA * $markValue;
-            }
-            else{
+            } else {
                 $convRateA = 1;
             }
 
 
-            if($currencyB !== 'USDUSD'){
+            if ($currencyB !== 'USDUSD') {
                 $convRateB = $result->quotes->$currencyB * $markValue;
-            }
-            else{
+            } else {
                 $convRateB = 1;
             }
 
 
 
-            if($currencyA === $currencyB){
-                    $actualRate = $convRateA / $convRateB;
-            }
-            elseif($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD'){
+            if ($currencyA === $currencyB) {
+                $actualRate = $convRateA / $convRateB;
+            } elseif ($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD') {
                 $actualRate = ($convRateA / $convRateB) * $markValue;
-            }
-            else{
+            } else {
                 $actualRate = $convRateA / $convRateB;
             }
 
@@ -461,13 +455,11 @@ class Controller extends BaseController
             }
 
 
-            if($currencyA === $currencyB){
-                    $actualRate = $convRateA / $convRateB;
-            }
-            elseif($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD'){
+            if ($currencyA === $currencyB) {
+                $actualRate = $convRateA / $convRateB;
+            } elseif ($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD') {
                 $actualRate = ($convRateA / $convRateB) * $markValue;
-            }
-            else{
+            } else {
                 $actualRate = ($convRateA / $convRateB) * $markValue;
             }
 

@@ -254,6 +254,10 @@ Route::post('/merchantreply', ['uses' => 'MerchantPageController@merchantReply',
 
 Route::get('/viewreply/{id}', ['uses' => 'MerchantPageController@viewmarketReplies', 'as' => 'view replies']);
 
+Route::get('/makereview', ['uses' => 'MerchantPageController@makeReview', 'as' => 'make review']);
+
+Route::post('/submitreview', ['uses' => 'MerchantPageController@submitReview', 'as' => 'submit review']);
+
 
 
 
