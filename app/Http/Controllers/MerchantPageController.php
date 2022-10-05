@@ -274,6 +274,36 @@ class MerchantPageController extends Controller
         return back()->with("msg", "<div class='alert alert-success'>Reply Added Successfully</div>");
     }
 
+    public function makeReview(Request $req)
+    {
+
+        return view('merchant.pages.makereview');
+    }
+
+    public function submitReview(Request $req)
+    {
+
+        $validation = Validator::make($req->all(), [
+            "fullname" => "required",
+            "email" => "required",
+            "job_title" => "required",
+            "duration_of_use" => "required",
+            "review" => "required"
+        ]);
+
+        MarketplaceReviews::create([
+            "merchant_id" => $req->merchant_id,
+            "name_of_sender" => $req->fullname,
+            "email_of_sender" => $req->email,
+            "comment" => $req->review,
+            "status" => "pending",
+            "duration_of_use" => $req->duration_of_use,
+            "job_title" => $req->job_title
+        ]);
+
+        return back()->with("msg", "<div class='alert alert-success'> Review Submitted Successfully</div>");
+    }
+
     public function invoiceStatement()
     {
 

@@ -18931,9 +18931,10 @@ class AdminController extends Controller
         //hitting dusuPay Endpoint for withdrawal
         $payment = $this->mobileMoneyWithdrawal($currency, $amount, $provider, $accountnumber, $accountname, $reference, $userdetails->id);
 
+            
 
         $status = $payment->status;
-
+        
         if ($status == 'accepted') {
             BankWithdrawal::where('id', $req->id)->update(['status' => 'PROCESSED']);
             $paysprintdetails = BankWithdrawal::where('transaction_id', $payment->data->merchant_reference)->first();
