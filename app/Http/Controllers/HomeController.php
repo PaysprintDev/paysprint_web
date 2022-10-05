@@ -4377,7 +4377,7 @@ class HomeController extends Controller
 
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
-                $this->page = 'Create a Ticket';
+                $this->page = 'Verification Code';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $data = array(
