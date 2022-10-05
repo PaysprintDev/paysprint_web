@@ -1721,10 +1721,10 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
 
 
-                    $this->sendEmail($this->email, "Incomplete Setup");
+                    // $this->sendEmail($this->email, "Incomplete Setup");
 
 
-                    echo "Sent Mail To " . $users->name . "<hr>";
+                    // echo "Sent Mail To " . $users->name . "<hr>";
                 }
             }
         } catch (\Throwable $th) {

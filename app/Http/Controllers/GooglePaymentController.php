@@ -1510,7 +1510,7 @@ class GooglePaymentController extends Controller
                                                             'withdrawal_per_week' => $withdrawal_per_week,
                                                             'withdrawal_per_month' => $withdrawal_per_month
                                                         ]);
-
+  
 
                                                         // Create or update Other party account
                                                         if (isset($newcustomer)) {
