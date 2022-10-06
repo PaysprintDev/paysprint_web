@@ -12115,7 +12115,7 @@ class AdminController extends Controller
 
         // Send SMS
 
-        $message = 'Hi'.$user->name.', We have made adjustment to your PaySprint Wallet due to  '. $reason .''. $user->currencyCode . ' ' . number_format($req->debit_amount, 2) .  '. Your wallet balance is ' . $user->currencyCode . ' ' . $totalwallet . '. Thanks for Choosing PaySprint.';
+        $message = 'Hi'.$user->name.', We have made an adjustment to your PaySprint Wallet due to  '. $reason .''. $user->currencyCode . ' ' . number_format($req->debit_amount, 2) .  '. Your wallet balance is ' . $user->currencyCode . ' ' . $totalwallet . '. Thanks for Choosing PaySprint.';
 
         $this->name = $user->name;
         // $this->email = "youngskima@gmail.com";
