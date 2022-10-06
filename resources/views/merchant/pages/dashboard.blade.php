@@ -384,7 +384,7 @@ use App\Http\Controllers\AllCountries; ?>
                         </div>
                     </div>
                     <div class="card-body text-center p-t-0">
-                        <h3 class="font-light">{{ Auth::user()->businessname }}</h3>
+                        <h3 class="font-light" style="background-color:skyblue;color:white !important; padding: 10px 10px;">{{ Auth::user()->businessname }}</h3>
                         <p>{{ Auth::user()->address . ' ' . Auth::user()->city . ' ' . Auth::user()->state }}
                         </p>
 
@@ -394,14 +394,14 @@ use App\Http\Controllers\AllCountries; ?>
                         <br>
                         <hr>
 
-                        <h4 style="font-weight: bold;">Accept Online Payments</h4>
+                        <h4 style="font-weight: bold; background-color:skyblue;color:white !important; padding: 10px 5px;">Accept Online Payments</h4>
 
                         <p>
                             <strong>API Token:</strong>
                             <code>{{ $data['clientInfo']->api_secrete_key }}</code>
                         </p>
 
-                        <a type="button" class="btn btn-light mb-3" href="{{ route('api integration') }}">API
+                        <a type="button" class="btn btn-light mb-3 form-control" href="{{ route('api integration') }}">API
                             Integration</a>
 
                         <!-- generate payment -->
@@ -757,8 +757,10 @@ use App\Http\Controllers\AllCountries; ?>
                     <div class="card-body text-center">
                         {!! session('msg') !!} {!! session('msgs') !!}
                         <div class="row">
-                            <div class="col-md-12">
-                                <h3>Marketplace</h3>
+                            <div class="col-md-12 mb-4">
+                                <h3 style="font-weight: bold; background-color:skyblue;color:white !important; padding: 10px 5px;">Marketplace</h3>
+
+                                <p>Utilize the marketplace to sell more online to customers</p>
                             </div>
                             <div class="col-md-3">
                                 <!-- 

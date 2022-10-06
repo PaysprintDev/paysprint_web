@@ -122,6 +122,8 @@ use App\Http\Controllers\User; ?>
 							<textarea style="width: 100%; height:150px" name="review" class="form-control"></textarea>
 							</p>
 
+							<p><input type="checkbox" name="like" class="form-control"> Check the box to like the product </p>
+
 							<input type="hidden" name="merchant_id" value="{{ Request::get('id') }}">
 
 							<button class="btn btn-primary form-control" type="submit">Submit Review</button>
