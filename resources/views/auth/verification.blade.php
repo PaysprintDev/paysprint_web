@@ -90,13 +90,13 @@
                 <li><a href="#"><i class="fa fa-clock-o"></i>Mon - Sat 12:00 - 20:00</a></li> --}}
 
                 <li>
-                    <a href="{{ route('login') }}">
+                    <a href="javascript:void()">
                         {{ __('Login') }}
                     </a>
                 </li>
 
                 <li>
-                    <a href="{{ route('register') }}">
+                    <a href="javascript:void()">
                         {{ __('Sign Up for FREE') }}
                     </a>
                 </li>
@@ -124,7 +124,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ route('home') }}">
+                    <a class="navbar-brand" href="javascript:void()">
                         <p style="font-weight: bold; font-size: 30px; color: #111f29 font-family: tahoma"><span
                                 style="color: #f6b60b">Pay</span>Sprint</p>
                     </a>
@@ -136,7 +136,7 @@
                 <div class="collapse navbar-collapse" id="min_navbar">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown submenu">
-                            <a href="{{ route('home') }}">Home</a>
+                            <a href="javascript:void()">Home</a>
 
                         </li>
 
@@ -152,17 +152,17 @@
 
 
                         <li class="dropdown submenu">
-                            <a href="{{ route('about') }}">About Us</a>
+                            <a href="javascript:void()">About Us</a>
                         </li>
                         <li class="dropdown submenu">
-                            <a href="{{ route('contact') }}">Contact</a>
+                            <a href="javascript:void()">Contact</a>
                         </li>
 
                         <li class="dropdown submenu">
-                            <a href="{{ route('login') }}">Login</a>
+                            <a href="javascript:void()">Login</a>
                         </li>
                         <li class="dropdown submenu">
-                            <a href="{{ route('register') }}">Sign Up for FREE</a>
+                            <a href="javascript:void()">Sign Up for FREE</a>
                         </li>
 
 
@@ -177,8 +177,8 @@
     <section class="banner_area" data-stellar-background-ratio="0.5">
         <h2>Verify OTP</h2>
         <ol class="breadcrumb">
-            <li><a href="{{ route('home') }}">Home</a></li>
-            <li><a href="{{ route('login') }}" class="active">Verify OTP</a></li>
+            <li><a href="javascript:void()">Home</a></li>
+            <li><a href="javascript:void()" class="active">Verify OTP</a></li>
         </ol>
     </section>
     <!-- End Banner area -->

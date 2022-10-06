@@ -379,6 +379,7 @@ Route::get('payment/receivemoney/{id}', ['uses' => 'HomeController@receiveMoney'
 
 
 
+
 // Cash Advance Pages
 
 Route::get('/cashadvance', ['uses' => 'HomeController@cashAdvance', 'as' => 'cash advance']);
