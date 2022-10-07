@@ -549,6 +549,7 @@ class PayoutAgentController extends Controller
 
     public function partnerMoneyWithdrawal(Request $req)
     {
+
         $monerisAction = new MonerisController();
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
@@ -587,21 +588,23 @@ class PayoutAgentController extends Controller
 
                         $withdrawalCharge = $this->getNumberOfWitdrawals($thisuser->id, $thisuser->country, $req->amount);
 
-                        $chargeAmount = $req->amount + $withdrawalCharge;
+                        $amountWithCommission = $req->amount + $req->commissiondeduct;
+
+                        $chargeAmount = $amountWithCommission + $withdrawalCharge;
 
 
                         $withdrawLimit = $this->getWithdrawalLimit($thisuser->country, $thisuser->id);
 
 
-                        if ($req->amount > 10000000000000000000000000000000000) {
+                        if ($amountWithCommission > 10000000000000000000000000000000000) {
                             $data = [];
                             $message = "Withdrawal limit per day is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try a lesser amount";
                             $status = 400;
-                        } elseif ($req->amount > 10000000000000000000000000000000000) {
+                        } elseif ($amountWithCommission > 10000000000000000000000000000000000) {
                             $data = [];
                             $message = "You have reached your limit for the week. Withdrawal limit per week is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
                             $status = 400;
-                        } elseif ($req->amount > 10000000000000000000000000000000000) {
+                        } elseif ($amountWithCommission > 10000000000000000000000000000000000) {
                             $data = [];
                             $message = "You have reached your limit for the month. Withdrawal limit per month is " . $req->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_month'], 2) . ". Please try again the next month";
                             $status = 400;
@@ -621,7 +624,7 @@ class PayoutAgentController extends Controller
                             $specialInfo = SpecialInformation::where('country', $thisuser->country)->first();
 
                             // Check amount in wallet
-                            if ($req->amount > ($thisuser->wallet_balance - $withdrawalCharge - $minBal)) {
+                            if ($amountWithCommission > ($thisuser->wallet_balance - $withdrawalCharge - $minBal)) {
                                 // Insufficient amount for withdrawal
 
                                 $minWalBal = $thisuser->wallet_balance - $withdrawalCharge - $minBal;
@@ -643,7 +646,7 @@ class PayoutAgentController extends Controller
                                 // Log::info('Oops!, '.$thisuser->name.' has '.$message);
 
                                 $monerisAction->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                            } elseif (($thisuser->wallet_balance - $withdrawalCharge - $minBal) <= $req->amount) {
+                            } elseif (($thisuser->wallet_balance - $withdrawalCharge - $minBal) <= $amountWithCommission) {
                                 // Cannot withdraw minimum balance
 
                                 $minWalBal = $thisuser->wallet_balance - $withdrawalCharge - $minBal;
@@ -697,6 +700,7 @@ class PayoutAgentController extends Controller
                                         'bankName' => isset($bankDetails) ? $bankDetails->bankName : '',
                                         'bankAddress' => isset($bankDetails) ? $bankDetails->bankName.' '.$thisuser->country : '',
                                         'bankAccount' => isset($bankDetails) ? $bankDetails->accountNumber : '',
+                                        'branchCode' => $req->branch_code != '' ? $req->branch_code : (isset($bankDetails) ? $bankDetails->branchCode : ''),
                                         'amountToPay' => $req->amount,
                                         'currencyToPay' => $req->currencyCode,
                                         'amountSent' => $req->amount,
@@ -762,10 +766,9 @@ class PayoutAgentController extends Controller
                                                             'number_of_withdrawals' => $no_of_withdraw
                                                         ]);
 
-
-                                                        $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Bank Account " . $bankDetails->bankName . " - " . $bankDetails->accountNumber . ". Withdrawal fee charge of " . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . " inclusive";
+                                                        $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Bank Account " . $bankDetails->bankName . " - " . $bankDetails->accountNumber . ". Withdrawal fee charge of " . $req->currencyCode . '' . number_format($withdrawalCharge + $req->commissiondeduct, 2) . " inclusive";
                                                         $credit = 0;
-                                                        $debit = $req->amount + $withdrawalCharge;
+                                                        $debit = $chargeAmount;
                                                         $reference_code = $transaction_id;
                                                         $balance = 0;
                                                         $trans_date = date('Y-m-d');
@@ -778,7 +781,7 @@ class PayoutAgentController extends Controller
                                                         $monerisAction->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
 
-                                                        $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Withdrawal fee charge of ' . $req->currencyCode . ' ' . number_format($withdrawalCharge, 2) . ' inclusive. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                                        $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Withdrawal fee charge of ' . $req->currencyCode . ' ' . number_format($withdrawalCharge + $req->commissiondeduct, 2) . ' inclusive. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
 
 
@@ -842,10 +845,10 @@ class PayoutAgentController extends Controller
 
                                                     $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                                    $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Cash Payment. Withdrawal fee charge of " . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . " inclusive";
+                                                    $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Cash Payment. Withdrawal fee charge of " . $req->currencyCode . '' . number_format($withdrawalCharge + $req->commissiondeduct, 2) . " inclusive";
 
                                                     $credit = 0;
-                                                    $debit = $req->amount + $withdrawalCharge;
+                                                    $debit = $chargeAmount;
                                                     // $reference_code = $response->responseData['ReceiptId'];
                                                     $reference_code = $transaction_id;
                                                     $balance = 0;
@@ -867,11 +870,11 @@ class PayoutAgentController extends Controller
                                                     $monerisAction->email = $thisuser->email;
                                                     $monerisAction->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " has been Withdrawn from your Wallet with PaySprint";
 
-                                                    $monerisAction->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' as cash payment is successful. The withdrawal will take up to 5 business days before collection. Withdrawal fee charge of ' . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . ' inclusive. </p><p>You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+                                                    $monerisAction->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' as cash payment is successful. The withdrawal will take up to 5 business days before collection. Withdrawal fee charge of ' . $req->currencyCode . '' . number_format($withdrawalCharge + $req->commissiondeduct, 2) . ' inclusive. </p><p>You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
 
 
 
-                                                    $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' as cash payment is successful. The withdrawal will take up to 5 business days before collection. Withdrawal fee charge of ' . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . ' inclusive. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
+                                                    $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' as cash payment is successful. The withdrawal will take up to 5 business days before collection. Withdrawal fee charge of ' . $req->currencyCode . '' . number_format($withdrawalCharge + $req->commissiondeduct, 2) . ' inclusive. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
 
                                                     $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -964,9 +967,9 @@ class PayoutAgentController extends Controller
                                                         ]);
 
 
-                                                        $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Bank Account " . $bankDetails->bankName . " - " . $bankDetails->accountNumber . ". Withdrawal fee charge of " . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . " inclusive";
+                                                        $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Bank Account " . $bankDetails->bankName . " - " . $bankDetails->accountNumber . ". Withdrawal fee charge of " . $req->currencyCode . '' . number_format($withdrawalCharge + $req->commissiondeduct, 2) . " inclusive";
                                                         $credit = 0;
-                                                        $debit = $req->amount + $withdrawalCharge;
+                                                        $debit = $chargeAmount;
                                                         $reference_code = $transaction_id;
                                                         $balance = 0;
                                                         $trans_date = date('Y-m-d');
@@ -979,7 +982,7 @@ class PayoutAgentController extends Controller
                                                         $monerisAction->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
 
-                                                        $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Withdrawal fee charge of ' . $req->currencyCode . ' ' . number_format($withdrawalCharge, 2) . ' inclusive. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                                        $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Withdrawal fee charge of ' . $req->currencyCode . ' ' . number_format($withdrawalCharge + $req->commissiondeduct, 2) . ' inclusive. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
 
 
@@ -1029,9 +1032,9 @@ class PayoutAgentController extends Controller
 
                                                         $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                                        $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Cash Payment. Withdrawal fee charge of " . $req->currencyCode . ' ' . number_format($withdrawalCharge, 2) . " inclusive";
+                                                        $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Cash Payment. Withdrawal fee charge of " . $req->currencyCode . ' ' . number_format($withdrawalCharge + $req->commissiondeduct, 2) . " inclusive";
                                                         $credit = 0;
-                                                        $debit = $req->amount + $withdrawalCharge;
+                                                        $debit = $chargeAmount;
                                                         // $reference_code = $response->responseData['ReceiptId'];
                                                         $reference_code = $transaction_id;
                                                         $balance = 0;
@@ -1055,9 +1058,9 @@ class PayoutAgentController extends Controller
                                                         $monerisAction->email = $thisuser->email;
                                                         $monerisAction->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " has been Withdrawn from your Wallet with PaySprint";
 
-                                                        $monerisAction->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 business days before collection. Withdrawal fee charge of ' . $req->currencyCode . ' ' . number_format($withdrawalCharge, 2) . ' inclusive. </p><p>You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+                                                        $monerisAction->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 business days before collection. Withdrawal fee charge of ' . $req->currencyCode . ' ' . number_format($withdrawalCharge + $req->commissiondeduct, 2) . ' inclusive. </p><p>You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
 
-                                                        $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 business days before collection. Withdrawal fee charge of ' . $req->currencyCode . ' ' . number_format($withdrawalCharge, 2) . ' inclusive. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
+                                                        $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 business days before collection. Withdrawal fee charge of ' . $req->currencyCode . ' ' . number_format($withdrawalCharge + $req->commissiondeduct, 2) . ' inclusive. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
 
                                                         $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 

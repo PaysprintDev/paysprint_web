@@ -55,7 +55,7 @@
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-4">{{ $pages }}</h1>
+                <h1 class="display-4">Withdraw from Partner</h1>
                 {!! session('msg') !!}
             </div>
         </div> <!-- End -->
@@ -390,7 +390,10 @@
 
                                     {{-- Start For Card and Bank Deposit  --}}
 
-                                    <div class="form-group cardbankDeposit disp-0"> <label for="card_id">
+                                    <div class="cardbankDeposit disp-0">
+                                        <div class="form-group">
+
+                                        <label for="card_id">
                                             <h6>Select Card/Bank</h6>
                                         </label>
                                         <div class="input-group">
@@ -407,6 +410,20 @@
                                             Loading cost of <strong>$5.00</strong> applied
                                         </div>
                                     </div>
+                                        <div class="form-group">
+
+                                        <label for="card_id">
+                                            <h6>Provide Bank Branch Code</h6>
+                                        </label>
+                                        <div class="input-group"> <input type="text" name="branch_code" id="branch_code" class="form-control" required placeholder="058-174218">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text text-muted"> <i class="fas fa-money-check mx-1"></i></span>
+                                                    </div>
+                                                </div>
+                                    </div>
+                                    </div>
+
+
 
                                     {{-- End For Card and Bank Deposit --}}
                                     @else
@@ -525,11 +542,11 @@
                                             <input type="text" name="amounttosend" class="form-control" id="amounttosend" value="" placeholder="0.00" readonly>
                                         </div>
                                     </div>
-                                    <div class="form-group disp-0"> <label for="netwmount">
-                                            <h6>Fee</h6>
+                                    <div class="form-group"> <label for="netwmount">
+                                            <h6>(1.5%) Fee Charge</h6>
                                         </label>
                                         <div class="input-group">
-                                            <input type="hidden" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
+                                            <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
 
                                             <input type="hidden" name="totalcharge" class="form-control" id="totalcharge" value="" placeholder="0.00" readonly>
 
@@ -903,8 +920,9 @@
 
                             var totalCharge;
 
-                            if (result.message == "success") {
 
+                            if (result.message == "success") {
+                                var commissionValue = Number(result.data * (1.5/100));
 
                                 $(".wallet-info").html(result.walletCheck);
                                 $('.withWallet').removeClass('disp-0');
@@ -926,26 +944,25 @@
                                     if ($('#card_type').val() == "Cash") {
                                         $('.commissionInfo').html(
                                             "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
-                                            parseFloat(result.data).toFixed(2) + " will be given to you as " + $(
+                                            (Number(result.data)).toFixed(2) + " will be given to you as " + $(
                                                 '#card_type').val() +
-                                            ". Fee charge inclusive</span></li></li></ul>");
+                                            ". Fee charge {{ $data['currencyCode']->currencySymbol }}"+Number(commissionValue).toFixed(2)+" inclusive</span></li></li></ul>");
                                     } else {
                                         $('.commissionInfo').html(
                                             "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
-                                            parseFloat(result.data).toFixed(2) + " will be credited to your " + $(
+                                            (Number(result.data)).toFixed(2) + " will be credited to your " + $(
                                                 '#card_type').val() +
-                                            ". Fee charge inclusive</span></li></li></ul>");
+                                            ". Fee charge of {{ $data['currencyCode']->currencySymbol }}"+Number(commissionValue).toFixed(2)+" inclusive</span></li></li></ul>");
                                     }
 
 
 
                                     $("#amounttosend").val(result.data);
-                                    $("#commissiondeduct").val(result.collection);
+                                    $("#commissiondeduct").val(commissionValue);
 
-                                    $("#totalcharge").val(result.data);
+                                    $("#totalcharge").val(Number(result.data + commissionValue));
 
-                                    totalCharge = $("#amount").val();
-
+                                    totalCharge = Number($("#amount").val()) + Number(commissionValue);
 
                                     currencyConvert(totalCharge);
 
@@ -982,6 +999,7 @@
 
 
             function currencyConvert(amount) {
+
 
                 $("#conversionamount").val("");
 

@@ -155,27 +155,26 @@ trait Moex
     public function addTransactionToMoex($data)
     {
 
+        // $data['receiverCountry'] = env('APP_ENV') === 'local' ? 'PHL' : $data['receiverCountry'];
+        // $data['originCountry'] = env('APP_ENV') === 'local' ? 'PHL' : $data['originCountry'];
+        // $data['currencyToPay'] = env('APP_ENV') === 'local' ? 'PHP' : $data['currencyToPay'];
+        // $data['currencySent'] = env('APP_ENV') === 'local' ? 'PHP' : $data['currencySent'];
 
-
-        $data['receiverCountry'] = env('APP_ENV') === 'local' ? 'ESP' : $data['receiverCountry'];
-$data['originCountry'] = env('APP_ENV') === 'local' ? 'ESP' : $data['originCountry'];
-        $data['currencyToPay'] = env('APP_ENV') === 'local' ? 'EUR' : $data['currencyToPay'];
-        $data['currencySent'] = env('APP_ENV') === 'local' ? 'EUR' : $data['currencySent'];
-
-        // dd($data);
 
         $getBranchId = $this->availableBranchList($data['receiverCountry']);
 
-        if ($getBranchId['branchId'] === '-12') {
+
+        if ($getBranchId['description'] !== "") {
 
             $responseData = [
-                'error' => "Sorry payout is not available to this country at the moment."
+                'error' => $getBranchId['description']
             ];
 
             return $responseData;
         } else {
             $data['paymentBranchId'] = $getBranchId['branchId'];
         }
+
 
 
         $doc = new \DOMDocument('1.0', 'utf-8');
@@ -230,7 +229,7 @@ $data['originCountry'] = env('APP_ENV') === 'local' ? 'ESP' : $data['originCount
                     <PaymentBranchName xsi:type="xsd:string"></PaymentBranchName>
                     <PaymentBranchAddress xsi:type="xsd:string"></PaymentBranchAddress>
                     <PaymentBranchPhone xsi:type="xsd:string"></PaymentBranchPhone>
-                    <PaymentBranchAuxId xsi:type="xsd:string"></PaymentBranchAuxId>
+                    <PaymentBranchAuxId xsi:type="xsd:string">'.$data['branchCode'].'</PaymentBranchAuxId>
                     <OriginCountry xsi:type="xsd:string">' . $data['originCountry'] . '</OriginCountry>
                     <Reference xsi:type="xsd:string">'.$data['reference'].'</Reference>
                     <AuxiliaryInfo xsi:type="xsd:string">' . json_encode($data['auxiliaryInfo']) . '</AuxiliaryInfo>
@@ -380,12 +379,15 @@ $data['originCountry'] = env('APP_ENV') === 'local' ? 'ESP' : $data['originCount
         $doc->loadXML($result);
 
         $Id = $doc->getElementsByTagName("Id");
+        $Description = $doc->getElementsByTagName("Description");
 
         if ($Id->length > 0) {
             $Id = $Id->item(0)->nodeValue;
+            $description = $Description->item(0)->nodeValue;
 
             $responseData = [
-                'branchId' => $Id
+                'branchId' => $Id,
+                'description' => $description
             ];
         }
 
