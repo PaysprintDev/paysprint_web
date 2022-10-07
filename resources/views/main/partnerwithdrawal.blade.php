@@ -310,6 +310,27 @@
                                         </div>
 
                                     </div>
+
+                                    <div class="form-group">
+                                        <label for="gateway">
+                                            <h6>Select Partner</h6>
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-append"> <span class="input-group-text text-muted">
+                                                    <img src="https://img.icons8.com/cotton/20/000000/money--v4.png" />
+                                                </span> </div>
+                                            <select name="gateway" id="gateway" class="form-control" required>
+                                                <option value="PaySprint">Select option</option>
+
+                                                @foreach ($data['partner'] as $partners)
+                                                <option value="{{ $partners }}">{{ $partners }}</option>
+                                                @endforeach
+
+                                            </select>
+
+                                        </div>
+                                    </div>
+
                                     @if (count($data['getCard']) > 0 || count($data['getBank']) > 0)
                                     <div class="form-group"> <label for="card_id">
                                             {{-- <h6>Select Card Type/ Bank Account</h6> --}}

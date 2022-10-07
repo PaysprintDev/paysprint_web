@@ -579,7 +579,7 @@ class PayoutAgentController extends Controller
 
                 if ($validator->passes()) {
 
-                    $transaction_id = "wallet-" . date('dmY') . time();
+                    $transaction_id = "ps-" . date('dmY') . time();
 
                     $checkIdv = $this->checkUsersPassAccount($thisuser->id);
 
@@ -677,7 +677,7 @@ class PayoutAgentController extends Controller
 
 
 
-                                    $dob = $thisuser->yearOfBirth.''.($thisuser->monthOfBirth <= 9 ? "0".$thisuser->monthOfBirth : $thisuser->monthOfBirth).''.$thisuser->dayOfBirth;
+                                    $dob = $thisuser->yearOfBirth.''.($thisuser->monthOfBirth <= 9 ? "0".$thisuser->monthOfBirth : $thisuser->monthOfBirth).''.($thisuser->dayOfBirth <= 9 ? "0".$thisuser->dayOfBirth : $thisuser->dayOfBirth);
 
                                     // Do MOEX MEAddTransaction....
                                     $moexProperties = array(
@@ -689,6 +689,7 @@ class PayoutAgentController extends Controller
                                         'senderIdDocumentNumber' => config('constants.moex.sender_licence'),
                                         'senderIdDocumentType' => 'DRL',
                                         'receiver' => $thisuser->name,
+                                        'phoneNumber' => $thisuser->code != null ? $thisuser->code.'-'.$thisuser->telephone : $thisuser->telephone,
                                         'receiverName' => explode(' ', $thisuser->name)[0],
                                         'receiverLastName' => explode(' ', $thisuser->name)[1],
                                         'receiverCountry' => $getCountry->cca3,

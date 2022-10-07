@@ -157,11 +157,12 @@ trait Moex
 
 
 
-        // $data['receiverCountry'] = env('APP_ENV') === 'local' ? 'ESP' : $data['receiverCountry'];
-        // $data['senderCountry'] = env('APP_ENV') === 'local' ? 'ESP' : $data['senderCountry'];
-        // $data['originCountry'] = env('APP_ENV') === 'local' ? 'ESP' : $data['originCountry'];
-        // $data['currencyToPay'] = env('APP_ENV') === 'local' ? 'EUR' : $data['currencyToPay'];
-        // $data['currencySent'] = env('APP_ENV') === 'local' ? 'EUR' : $data['currencySent'];
+        $data['receiverCountry'] = env('APP_ENV') === 'local' ? 'ESP' : $data['receiverCountry'];
+$data['originCountry'] = env('APP_ENV') === 'local' ? 'ESP' : $data['originCountry'];
+        $data['currencyToPay'] = env('APP_ENV') === 'local' ? 'EUR' : $data['currencyToPay'];
+        $data['currencySent'] = env('APP_ENV') === 'local' ? 'EUR' : $data['currencySent'];
+
+        // dd($data);
 
         $getBranchId = $this->availableBranchList($data['receiverCountry']);
 
@@ -211,7 +212,7 @@ trait Moex
                     <ReceiverAddress xsi:type="xsd:string"></ReceiverAddress>
                     <ReceiverCity xsi:type="xsd:string"></ReceiverCity>
                     <ReceiverCountry xsi:type="xsd:string">' . $data['receiverCountry'] . '</ReceiverCountry>
-                    <ReceiverPhone xsi:type="xsd:string"></ReceiverPhone>
+                    <ReceiverPhone xsi:type="xsd:string">'.$data['phoneNumber'].'</ReceiverPhone>
                     <ReceiverPhone2 xsi:type="xsd:string"></ReceiverPhone2>
                     <ReceiverIdDocumentNumber xsi:type="xsd:string"></ReceiverIdDocumentNumber>
                     <ReceiverIdDocumentType xsi:type="xsd:string"></ReceiverIdDocumentType>
