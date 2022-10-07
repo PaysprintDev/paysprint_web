@@ -288,7 +288,8 @@ class MerchantPageController extends Controller
             "email" => "required",
             "job_title" => "required",
             "duration_of_use" => "required",
-            "review" => "required"
+            "review" => "required",
+            "product_service" => "required"
         ]);
 
         MarketplaceReviews::create([
@@ -298,10 +299,13 @@ class MerchantPageController extends Controller
             "comment" => $req->review,
             "status" => "pending",
             "duration_of_use" => $req->duration_of_use,
-            "job_title" => $req->job_title
+            "job_title" => $req->job_title,
+            "no_likes" => $req->like,
+            "product_service" => $req->product_service
         ]);
 
         return back()->with("msg", "<div class='alert alert-success'> Review Submitted Successfully</div>");
+
     }
 
     public function invoiceStatement()

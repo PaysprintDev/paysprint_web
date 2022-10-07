@@ -398,9 +398,9 @@ class MarketplaceController extends Controller
 
                 $merchant = User::where('id', $item->merchantId)->first();
 
-                $like = MarketplaceReviews::where('merchant_id', $item->merchant_id)->sum('no_likes');
+                $like = MarketplaceReviews::where('product_id', $item->id)->sum('no_likes');
 
-                $comments = MarketplaceReviews::where('merchant_id', $item->merchant_id)->get();
+                $comments = MarketplaceReviews::where('product_id', $item->id)->get();
                 $totalcommentscount = count($comments);
 
 
@@ -567,6 +567,7 @@ class MarketplaceController extends Controller
             'comment' => 'required',
             'email' => 'required',
             'name_sender' => 'required',
+            'product_id' => 'required',
             'merchant_id' => 'required',
             'like' => 'required',
         ]);
@@ -574,6 +575,7 @@ class MarketplaceController extends Controller
         try {
 
             $data = MarketplaceReviews::create([
+                'product_id' => $req->product_id,
                 'merchant_id' => $req->merchant_id,
                 'name_of_sender' => $req->name_sender,
                 'email_of_sender' => $req->email,
@@ -609,13 +611,18 @@ class MarketplaceController extends Controller
             $result = [];
 
 
-            $data = MarketplaceReviews::where('merchant_id', $id)->get();
+            $data = MarketplaceReviews::where('product_id', $id)->get();
 
 
             for ($i = 0; $i < count($data); $i++) {
                 $item = $data[$i];
-                $merchant = MerchantReply::where('comment_id', $item->id)->first();
-                $result[] = ['data' => $item, 'reply' => $merchant];
+                $merchant= MerchantReply::where('comment_id',$item->id)->where('product_id',$id)->first();
+                if(isset($merchant)){
+                    $merchantreply=$merchant;
+                }else{
+                    $merchantreply = (object)[];
+                }
+                $result[] = ['data' => $item, 'reply' => $merchantreply];
             }
 
             $response = [

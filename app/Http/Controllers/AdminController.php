@@ -127,6 +127,8 @@ use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Support\Facades\Mail;
 
+use Illuminate\Support\Facades\Validator;
+
 use Maatwebsite\Excel\Facades\Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
 use App\AllCountries as AllCountries;
@@ -12007,6 +12009,170 @@ class AdminController extends Controller
         }
     }
 
+    public function walletDebit(Request $req)
+    {
+         if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing" || session('role') == "Customer Success") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+
+            if($req->customer_details){
+
+
+                $details=User::where('ref_code', 'like', '%'.$req->customer_details.'%')->orWhere('name','like', '%'.$req->customer_details.'%')->first();
+
+            }
+
+            else{
+                $details = null;
+            }
+
+            $data = array(
+                'allthecountries' => $this->getAllCountries(),
+                'pointsclaim' => $this->getClaimedPoints(),
+                'details' => $details
+            );
+
+
+
+            return view('admin.walletdebit')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+    public function submitWalletDebit(Request $req)
+    {
+        
+        
+        $validation = $req->validate([
+            'user_id' => 'required',
+            'customer_name' => 'required',
+            'account_number' => 'required',
+            'email' => 'required',
+            'debit_amount' => 'required',
+            'debit_reason' => 'required'
+        ]);
+
+        $user = $this->getUserBalance($req->user_id);
+       
+        $reason = $req->debit_reason;
+        $walletbalance = $user->wallet_balance;
+
+
+        $totalwallet = $walletbalance - $req->debit_amount;
+
+       
+
+        User::where('id', $req->user_id)->update([
+            'wallet_balance' => $totalwallet
+        ]);
+
+        
+
+        // Send Mail...
+
+
+
+        // Send SMS
+
+        $message = 'Hi'.$user->name.', We have made an adjustment to your PaySprint Wallet due to  '. $reason .''. $user->currencyCode . ' ' . number_format($req->debit_amount, 2) .  '. Your wallet balance is ' . $user->currencyCode . ' ' . $totalwallet . '. Thanks for Choosing PaySprint.';
+
+        $this->name = $user->name;
+        // $this->email = "youngskima@gmail.com";
+        $this->to = $user->email;
+        $this->subject = "PaySprint Wallet Debit for " . $reason;
+
+        $this->message = $message;
+
+
+        $this->sendEmail($this->to, "Wallet Debit");
+        $this->createNotification($user->ref_code, $message);
+        $activity = 'Wallet debit of ' . $user->currencyCode . '' . $req->debit_amount . ' from  wallet for ' . $reason;
+        $credit = 0;
+        $debit = $req->debit_amount;
+        $reference_number = "wallet-" . date('dmY') . time();
+        $balance = 0;
+        $trans_date = date('Y-m-d');
+        $status = "Delivered";
+        $action = "Wallet debit";
+        $regards = $user->ref_code;
+        $statement_route = "wallet";
+
+        // Senders statement
+        $this->insStatement($user->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $user->country, 0);
+
+
+
+        $usersPhone = User::where('email', $user->email)->where('telephone', 'LIKE', '%+%')->first();
+      
+
+        if (isset($usersPhone)) {
+
+            $recipients = $user->telephone;
+        } else {
+            $recipients = "+" . $user->code . $user->telephone;
+        }
+
+
+
+        if ($user->country == "Nigeria") {
+
+            $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+            $this->sendSms($message, $correctPhone);
+        } else {
+            $this->sendMessage($message, $recipients);
+        }
+
+
+
+        return redirect()->route('wallet debit')->with("msg", "<div class='alert alert-success'>Wallet Debited Successfully</div>");
+
+
+         
+
+
+    }
 
     public function cashAdvanceList(Request $req)
     {

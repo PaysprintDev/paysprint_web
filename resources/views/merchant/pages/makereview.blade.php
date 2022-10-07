@@ -10,10 +10,13 @@ use App\Http\Controllers\User; ?>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+		integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
 	<!-- Favicon -->
-	<link rel="icon" href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg" type="image/x-icon" />
+	<link rel="icon"
+		href="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_2_w4hzub_ioffkg.jpg"
+		type="image/x-icon" />
 
 	<link rel="stylesheet" type="text/css" href="{{ asset('pace/themes/orange/pace-theme-flash.css') }}" />
 
@@ -81,10 +84,12 @@ use App\Http\Controllers\User; ?>
 							<!-- Credit card form tabs -->
 							<ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
 								@if (Auth::user()->accountType == 'Merchant')
-								<li class="nav-item"> <a data-toggle="pill" href="{{ route('Admin') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a>
+								<li class="nav-item"> <a data-toggle="pill" href="{{ route('Admin') }}"
+										class="nav-link active "> <i class="fas fa-home"></i> Go Back </a>
 								</li>
 								@else
-								<li class="nav-item"> <a data-toggle="pill" href="{{ route('home') }}" class="nav-link active "> <i class="fas fa-home"></i> Go Back </a>
+								<li class="nav-item"> <a data-toggle="pill" href="{{ route('home') }}"
+										class="nav-link active "> <i class="fas fa-home"></i> Go Back </a>
 								</li>
 								@endif
 
@@ -96,7 +101,8 @@ use App\Http\Controllers\User; ?>
 							@csrf
 							<p class="form-group">
 								<label><b>Full Name</b></label>
-								<input type="text" name="fullname" placeholder="Full Name" class="form-control" required>
+								<input type="text" name="fullname" placeholder="Full Name" class="form-control"
+									required>
 							</p>
 
 							<p class="form-group">
@@ -117,10 +123,19 @@ use App\Http\Controllers\User; ?>
 									<option value="2+_years">2+ years</option>
 								</select>
 							</p>
+							<p class="form-grou mb-2">
+								<label><b>Product/Service</b></label>
+								<input type="text" name="product_service" class="form-control">
+							</p>
 							<p class="form-group">
 							<p><b>Kindly write your Review about our product/services</b></p>
 							<textarea style="width: 100%; height:150px" name="review" class="form-control"></textarea>
 							</p>
+
+							<p class="mb-3"><input type="checkbox" name="like"><span
+									style="font-size:18px; margin-left:10px">Check the
+									box to
+									like the product</span></p>
 
 							<input type="hidden" name="merchant_id" value="{{ Request::get('id') }}">
 
@@ -144,7 +159,8 @@ use App\Http\Controllers\User; ?>
 	@include('include.message')
 
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"
+		integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous">
 	</script>
 	<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 

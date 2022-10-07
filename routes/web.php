@@ -1023,6 +1023,8 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('activity-report', ['uses' => 'AdminController@activityReport', 'as' => 'activity report']);
 	Route::get('paysprintpoint', ['uses' => 'AdminController@paysprintPoint', 'as' => 'paysprint point']);
 	Route::get('claimreward', ['uses' => 'AdminController@claimReward', 'as' => 'claim reward']);
+	Route::get('walletdebit', ['uses' => 'AdminController@walletDebit', 'as' => 'wallet debit']);
+	Route::post('submitwalletdebit', ['uses' => 'AdminController@submitWalletDebit', 'as' => 'submit wallet debit']);
 	Route::get('cashadvancelist', ['uses' => 'AdminController@cashAdvanceList', 'as' => 'cash advance list']);
 	Route::get('crossborderlist', ['uses' => 'AdminController@crossBorderList', 'as' => 'cross border list']);
 	Route::get('viewbeneficiarydetail/{id}', ['uses' => 'AdminController@crossBorderBeneficiaryDetail', 'as' => 'view beneficiary detail']);
