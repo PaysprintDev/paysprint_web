@@ -35,5 +35,9 @@ return [
         'version' => env('MOEX_VERSION'),
         'sender_licence' => env('MOEX_SENDER_DRL'),
     ],
+    'onesignal' => [
+        'appId' => env('ONESIGNAL_APP_ID'),
+        'safari_web_id' => env('ONESIGNAL_SAFARI_ID')
+    ]
 
 ];

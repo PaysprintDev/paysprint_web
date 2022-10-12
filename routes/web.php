@@ -217,7 +217,7 @@ Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 
 Route::get('/run-queue', function () {
 
-	Artisan::call('queue:work');
+	Artisan::call('queue:work --tries=3 --timeout=60');
 	return "Queue work done!";
 });
 

@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\AllCountries;
 
+use App\ConversionCountry;
 use function GuzzleHttp\json_decode;
 
 trait Moex
@@ -392,6 +393,16 @@ trait Moex
         }
 
         return $responseData;
+    }
+
+
+    public function generateDailyExchangeRate()
+    {
+
+        $getRate = ConversionCountry::select('country as currency', 'rate')->orderBy('country', 'ASC')->get();
+
+        return json_encode($getRate);
+
     }
 
 

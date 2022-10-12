@@ -33,6 +33,7 @@ class sendEmail extends Mailable implements ShouldQueue
     public function build()
     {
 
+
         try {
             if ($this->mail->purpose == "Payment Received") {
                 return $this->subject($this->mail->subject)->view('mails.clientreceive')
@@ -77,6 +78,19 @@ class sendEmail extends Mailable implements ShouldQueue
                         ->with('maildata', $this->mail)->delay(Carbon::now()->addMinutes(5));
                 }
             }
+            elseif ($this->mail->purpose == "Daily Transaction Report") {
+                if ($this->mail->file !== null) {
+                    return $this->subject($this->mail->subject)
+                        ->attach(asset($this->mail->file))
+                        ->view('mails.messages')
+                        ->with('maildata', $this->mail)->delay(Carbon::now()->addMinutes(5));
+                }
+                else {
+                    return $this->subject($this->mail->purpose)
+                        ->view('mails.messages')
+                        ->with('maildata', $this->mail)->delay(Carbon::now()->addMinutes(5));
+                }
+            }
             elseif($this->mail->purpose){
                 return $this->subject($this->mailData->subject)
                         ->view('mails.securitycheck')
@@ -91,3 +105,4 @@ class sendEmail extends Mailable implements ShouldQueue
         }
     }
 }
+
