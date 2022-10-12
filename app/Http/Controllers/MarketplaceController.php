@@ -187,6 +187,7 @@ class MarketplaceController extends Controller
             // $data = ClientInfo::orderBy('industry', 'ASC')->groupBy('industry')->get();
 
             $clients = ClientInfo::groupBy('industry')->select('industry', DB::raw('count(*) as total'))->get();
+
             $unverified = UnverifiedMerchant::groupBy('industry')->select('industry', DB::raw('count(*) as total'))->get();
             $data = array_merge($clients->toArray(), $unverified->toArray());
             $status = 200;

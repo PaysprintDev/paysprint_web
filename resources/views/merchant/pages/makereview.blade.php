@@ -67,7 +67,11 @@ use App\Http\Controllers\User; ?>
 		<!-- For demo purpose -->
 		<div class="row mb-4">
 			<div class="col-lg-10 mx-auto text-center">
-				<h1 class="display-4">Marketplace Reviews</h1>
+				@php
+				$name= \App\User::where('id', Request::get('id'))->first();
+
+				@endphp
+				<h1 class="display-4">Marketplace Reviews for {{$name->businessname}}</h1>
 			</div>
 		</div> <!-- End -->
 		<div class="row">
@@ -133,7 +137,9 @@ use App\Http\Controllers\User; ?>
 							</p>
 
 							<p class="mb-3"><input type="checkbox" name="like"><span
-									style="font-size:18px; margin-left:10px">Check the
+									style="font-size:18px; margin-left:10px"> <img
+										src="{{asset('images/love_icon.png')}}" style="width: 40px; height:20px;">Check
+									the
 									box to
 									like the product</span></p>
 

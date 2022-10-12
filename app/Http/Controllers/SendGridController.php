@@ -259,12 +259,10 @@ class SendGridController extends Controller
         try {
 
 
-            $thisuser = User::inRandomOrder()->take(2)->get();
+            $thisuser = User::inRandomOrder()->take(200)->get();
 
 
             if (count($thisuser) > 0) {
-
-
                 $setPointAquired = 0;
                 $setCurrentBalance = 0;
 
