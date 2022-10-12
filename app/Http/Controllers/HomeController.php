@@ -1455,7 +1455,8 @@ class HomeController extends Controller
                 'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
                 'partner' => $this->getPartners(),
                 'providers' => MobileMoney::where('user_id', Auth::id())->get(),
-                'subscription' => $this->getConsumerCost(Auth::user()->country)
+                'subscription' => $this->getConsumerCost(Auth::user()->country),
+                'partner' => $this->getPartners()
             );
         } else {
             return redirect()->route('dashboard');
