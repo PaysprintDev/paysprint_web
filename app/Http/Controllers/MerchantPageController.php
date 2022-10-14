@@ -11,6 +11,7 @@ use App\MerchantCashback;
 
 //Session
 use App\ClientInfo;
+use App\MailchimpMails;
 
 use App\PayoutAgent;
 use App\ServiceType;
@@ -216,6 +217,9 @@ class MerchantPageController extends Controller
         $data = User::where('id', $id)->first();
         $mailer = new SendGridController;
         $mailer->requestReview($req->customer_email, $id, $data->businessname);
+            MailchimpMails::create([
+                'emails' => $req->customer_email
+            ]);
 
         return back()->with('msgs', "<div class='alert alert-success'>Review Request Sent Successfully</div>");
     }

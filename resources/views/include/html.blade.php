@@ -18,6 +18,8 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+    <!-- swiper js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
 
     <!-- Favicon -->
     <link rel="icon"
@@ -209,6 +211,11 @@
             padding-top: 102px;
         }
 
+        .swiper {
+            width: 100%;
+            height: 300px;
+        }
+
         @keyframes fa-blink {
             0% {
                 opacity: 1;
@@ -263,6 +270,40 @@
         s.src = "https://salesiq.zoho.com/widget";
         t = d.getElementsByTagName("script")[0];
         t.parentNode.insertBefore(s, t);
+    </script>
+
+    <script type="module">
+        import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.esm.browser.min.js'
+    
+      const swiper = new Swiper('.swiper', {
+    // Optional parameters
+    direction: 'horizontal',
+    loop: true,
+    
+    // If we need pagination
+    pagination: {
+    el: '.swiper-pagination',
+    },
+
+    //autoplay
+    autoplay: {
+    delay: 5000,
+  },
+    
+    // Navigation arrows
+    navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+    },
+    
+    // And if we need scrollbar
+    scrollbar: {
+    el: '.swiper-scrollbar',
+    },
+    });
+
+
+
     </script>
 
 
