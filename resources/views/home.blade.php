@@ -577,9 +577,8 @@ use App\Http\Controllers\User; ?>
                         <li class="list-group-item">
                             Trade FX with PaySprint <br><br>
 
-                            @if ($data['imtAccess']->imt == 'false' || $data['imtAccess']->outbound == 'false')
-                            <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit"
-                                disabled>PaySprint
+                            @if ($data['imtAccess']->imt == 'false' && $data['imtAccess']->outbound == 'false')
+                            <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit" disabled>PaySprint
                                 FX</a>
 
                             <hr>
@@ -611,9 +610,14 @@ use App\Http\Controllers\User; ?>
                         <li class="list-group-item">
                             Trade FX with PaySprint <br><br>
 
+<<<<<<< HEAD
                             @if ($data['imtAccess']->imt == 'false' || $data['imtAccess']->outbound == 'false')
                             <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit"
                                 disabled>PaySprint
+=======
+                            @if ($data['imtAccess']->imt == 'false' && $data['imtAccess']->outbound == 'false')
+                            <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit" disabled>PaySprint
+>>>>>>> 74e9ece0917aff55749e645316686c66f5a6afb1
                                 FX</a>
 
                             <hr>

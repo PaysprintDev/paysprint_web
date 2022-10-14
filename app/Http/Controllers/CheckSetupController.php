@@ -41,6 +41,7 @@ class CheckSetupController extends Controller
     public $name;
     public $email;
     public $subject;
+    public $file;
     public $message;
     public $flutterwave;
 
@@ -2686,6 +2687,7 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
     public function sendEmail($objDemoa, $purpose)
     {
+
         $objDemo = new \stdClass();
         $objDemo->purpose = $purpose;
 
@@ -2693,6 +2695,12 @@ in the your business category.</p> <p>This means your competitors are receiving 
             $objDemo->name = $this->name;
             $objDemo->email = $this->email;
             $objDemo->subject = $this->subject;
+            $objDemo->message = $this->message;
+        } else if ($purpose == 'Daily Transaction Report') {
+            $objDemo->name = $this->name;
+            $objDemo->email = $this->email;
+            $objDemo->subject = $this->subject;
+            $objDemo->file = $this->file;
             $objDemo->message = $this->message;
         }
 
