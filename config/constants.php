@@ -21,6 +21,15 @@ return [
         'merchantusername' => "d-81278b52677249ffbe56aa18dbdfc8ad",
         'requestreview' => "d-82b84623f45a425abf3f4c8052d02a76",
     ],
+    'marketplace' => [
+        'baseurl' => 'https://api.sendgrid.com/v3',
+        'api_key' => env('sendgridmarketplace_api_key'),
+        'from' => 'businessdev@paysprint.ca',
+        'from_name' => 'PaySprint',
+        'claimsbusiness' => "d-edb129442335450e8ea09742c826f8e2",
+       
+    ],
+
     'shuftipro' => [
         'baseurl' => 'https://api.shuftipro.com',
         'client_id' => env('SHUFTI_PRO_CLIENT_ID'),

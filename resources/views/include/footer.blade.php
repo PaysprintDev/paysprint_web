@@ -8,6 +8,8 @@
 <!-- Bootstrap JS -->
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 
+
+
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 <!-- Animate JS -->
@@ -31,8 +33,12 @@
 
 <script src="{{ asset('ext/plugins/countrycode/js/jquery.ccpicker.js') }}"></script>
 <!-- Sharethis script -->
-{{-- <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=62bad1f7ffa4ba00198f3c70&product=inline-share-buttons" async="async"></script> --}}
-<script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=62837dc55d7558001495d1e7&product=sop' async='async'></script>
+{{-- <script type="text/javascript"
+    src="https://platform-api.sharethis.com/js/sharethis.js#property=62bad1f7ffa4ba00198f3c70&product=inline-share-buttons"
+    async="async"></script> --}}
+<script type='text/javascript'
+    src='https://platform-api.sharethis.com/js/sharethis.js#property=62837dc55d7558001495d1e7&product=sop'
+    async='async'></script>
 
 
 <script language="javascript">
@@ -60,7 +66,8 @@ $plan=Auth::user()->plan;
 $amount=100;
 
 @endphp
-@if (Auth::user()->subscription_trigger === NULL && $currentbalance > $amount && $plan === 'basic' || $currentdate > $subdate )
+@if (Auth::user()->subscription_trigger === NULL && $currentbalance > $amount && $plan === 'basic' || $currentdate >
+$subdate )
 <script>
     $(document).ready(function() {
         $('#triggerbtn').click();

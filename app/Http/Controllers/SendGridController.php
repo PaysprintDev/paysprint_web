@@ -592,7 +592,7 @@ class SendGridController extends Controller
         try {
 
 
-            $thisuser = UnverifiedMerchant::inRandomOrder()->take(1)->get();
+            $thisuser = UnverifiedMerchant::inRandomOrder()->take(100)->get();
 
             // dd($thisuser);
 
@@ -609,12 +609,13 @@ class SendGridController extends Controller
                         "url" => route('home') . '/claimmerchantbusiness?id=' . $user->id,
                     ];
 
-                    $template_id = config('constants.sendgrid.claimbusiness');
+                    $template_id = config('constants.marketplace.claimsbusiness');
 
 
 
-                    $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
-                    // dd($response);
+                    $response = $this->marketplaceDynamicMail($receiver, $data, $template_id);
+
+                  
                     echo 'done';
                 }
             }
@@ -622,6 +623,7 @@ class SendGridController extends Controller
             throw $th;
         }
     }
+
 
     //marketplace claim your business from marketplace website
     public function marketplaceClaim($email)

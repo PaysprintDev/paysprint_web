@@ -7,6 +7,8 @@ use Session;
 use App\Answer;
 use App\Points;
 
+use App\StoreProducts;
+
 use App\Community;
 
 use App\PromoDate;
@@ -216,9 +218,10 @@ class HomeController extends Controller
                     'userdetails' => $this->checkTrial(Auth::id()),
                     'pending' => User::where('id', Auth::id())->where('account_check', 2)->first(),
                     'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first(),
-                    'specialpromo' => $this->specialpromoCount()
+                    'specialpromo' => $this->specialpromoCount(),
+                    'products' => StoreProducts::get(),
                 );
-
+                    // dd($data['products']);
                 $view = 'home';
             } else {
 

@@ -569,6 +569,7 @@ class StoreController extends Controller
                 // 'escrowfund' => $this->getEscrowFunding(),
             );
 
+            // dd($data['products']);
 
 
 
@@ -582,10 +583,8 @@ class StoreController extends Controller
     //update estore products
     public function updateEstoreProducts(Request $req, $id)
     {
+        
         $validation = Validator::make($req->all(), [
-            'business_name' => 'required',
-            'product_name' => 'required',
-            'product_code' => 'required',
             'product_image' => 'required',
             'product_description' => 'required'
         ]);
@@ -602,14 +601,16 @@ class StoreController extends Controller
 
         if ($req->hasFile('product_image')) {
             $businessLogo = $this->uploadImageFile($req->file('product_image'), $routing, 100, 100);
-            dd($businessLogo);
         } else {
             $businessLogo = $storeId->image;
         }
 
         StoreProducts::where('id', $req->id)->update([
-            'image' => $businessLogo
+            'image' => $businessLogo,
+            'description' => $req->product_description
         ]);
+
+        return back()->with("msg","<div class='alert alert-success'> Product Successfully Updated</div>");
     }
 
 
