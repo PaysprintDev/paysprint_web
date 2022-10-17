@@ -290,6 +290,8 @@ class HomeController extends Controller
         return view('main.estores')->with(['pages' => 'e-Store', 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
+   
+
     public function merchantIndex()
     {
         $allcountry = AllCountries::where('approval', 1)->get();

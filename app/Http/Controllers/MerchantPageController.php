@@ -7,6 +7,7 @@ use Session;
 use App\Points;
 
 use App\Statement;
+use App\StoreViews;
 use App\MerchantCashback;
 
 //Session
@@ -426,7 +427,10 @@ class MerchantPageController extends Controller
 
 
             if (isset($merchantStore)) {
-
+                    StoreViews::create([
+                        'merchant_id' => $getMerchantId->id,
+                        'likes' => 1,
+                    ]);
 
 
                 $data = [
@@ -1016,7 +1020,8 @@ class MerchantPageController extends Controller
             'storepickup' => $this->getStorePickupCount(Auth::user()->id),
             'deliverypickup' => $this->getDeliveryPickupCount(Auth::user()->id),
             'activeCountry' => $this->getActiveCountries(),
-            'myserviceStore' => $this->getServiceStore(Auth::user()->id)
+            'myserviceStore' => $this->getServiceStore(Auth::user()->id),
+            'views' => StoreViews::where('merchant_id',Auth::user()->id)->sum('likes'),
         ];
 
         ActivationEstore::updateOrCreate([
