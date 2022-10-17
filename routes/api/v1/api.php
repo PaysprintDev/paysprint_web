@@ -117,6 +117,8 @@ Route::prefix('/v1')->group(function () {
 
         Route::post('profile',  ['uses' => 'api\v1\UserController@updateProfile'])->name('update profile');
 
+        Route::post('update-player-id',  ['uses' => 'api\v1\UserController@updatePlayerId'])->name('update player id');
+
         // Points and Reward
         Route::get('/acquiredpoints', ['uses' => 'api\v1\UserController@acquiredPoints', 'as' => 'acquired points']);
 

@@ -54,6 +54,7 @@ class ShopController extends Controller
 
     public function index($shop, $id)
     {
+        $homeController = new HomeController();
 
         $timezone = explode("/", $this->location->timezone);
 
@@ -76,11 +77,15 @@ class ShopController extends Controller
                 'name' => $thisuser->businessname,
                 'refCode' => $thisuser->ref_code,
                 'mycurrencyCode' => $this->getCountryCode($getCurrencyCode->name),
+                'paymentgateway' => $homeController->getPaymentGateway($this->location->country),
+                'paymentorg' => $homeController->getthisOrganization($thisuser->ref_code),
+                'merchantApiKey' => $getMerchant->api_secrete_key,
+                'merchantMainApiKey' => $thisuser->api_token,
             );
 
             // dd($data);
 
-            return view('main.shop.index')->with(['data' => $data]);
+            return view('main.shop.index2')->with(['data' => $data]);
         } else {
             return view('errors.paymentunavailable')->with(['pages' => $getMerchant->business_name]);
         }

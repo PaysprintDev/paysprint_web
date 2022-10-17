@@ -82,7 +82,7 @@ class sendEmail extends Mailable implements ShouldQueue
                 if ($this->mail->file !== null) {
                     return $this->subject($this->mail->subject)
                         ->attach(asset($this->mail->file))
-                        ->view('mails.messages')
+                        ->view('mails.epay')
                         ->with('maildata', $this->mail)->delay(Carbon::now()->addMinutes(5));
                 }
                 else {

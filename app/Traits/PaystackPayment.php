@@ -36,7 +36,7 @@ trait PaystackPayment{
         $this->baseUrl = 'https://api.paystack.co/transaction/verify/'.$transaction;
 
         $data = $this->doCurlGet();
-        
+
 
         return $data;
 
@@ -59,7 +59,7 @@ trait PaystackPayment{
         $username = explode(" ", $name);
 
         if(is_array($username)){
-            
+
             if(isset($username[0])){
 
                 $userlastname = $username[0];
@@ -139,7 +139,7 @@ trait PaystackPayment{
 
             if($thisuser->bvn_verification == 1){
                 $data = "charge";
-            }   
+            }
             else{
                 $data = "no charge";
             }
@@ -148,13 +148,13 @@ trait PaystackPayment{
             $data = "no charge";
         }
 
-        
+
 
         return $data;
     }
 
 
-    
+
 
     // Get List of Banks
     public function listOfBanks(){
@@ -219,12 +219,12 @@ trait PaystackPayment{
     }
 
     public function doCurlPost(){
-        
-        
+
+
         $fields_string = http_build_query($this->curlPost);
         //open connection
         $ch = curl_init();
-        
+
         //set the url, number of POST vars, POST data
         curl_setopt($ch,CURLOPT_URL, $this->baseUrl);
         curl_setopt($ch,CURLOPT_POST, true);
@@ -233,10 +233,10 @@ trait PaystackPayment{
             "Authorization: Bearer ".env('PAYSTACK_SECRET_KEY'),
             "Cache-Control: no-cache",
         ));
-        
+
         //So that curl_exec returns the contents of the cURL; rather than echoing it
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER, true); 
-        
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
+
         //execute post
         $result = curl_exec($ch);
 

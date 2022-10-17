@@ -8,3 +8,9 @@ Route::prefix('moex-cron')->group(function () {
 });
 
 
+
+Route::prefix('moex/api')->group(function () {
+	Route::get('/daily-exchange', [MoexController::class, 'callDailyExchange'])->name('call daily exchange');
+});
+
+
