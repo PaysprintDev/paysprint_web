@@ -244,6 +244,7 @@ class SendGridController extends Controller
                     $response = $this->sendGridDynamicMail($receiver, $data, $template_id);
                     // dd($response);
                     // echo $response;
+                    echo 'done';
                 }
             }
         } catch (\Throwable $th) {
@@ -259,7 +260,7 @@ class SendGridController extends Controller
         try {
 
 
-            $thisuser = User::inRandomOrder()->take(2)->get();
+            $thisuser = User::inRandomOrder()->take(200)->get();
 
 
             if (count($thisuser) > 0) {
@@ -269,16 +270,18 @@ class SendGridController extends Controller
                 $setCurrentBalance = 0;
 
                 foreach ($thisuser as $user) {
+
                     $username = explode(" ", $user->name);
                     $currency = $user->currencyCode;
                     $usertype = $user->accountType;
                     $usercountry = $user->country;
                     $consumer = TransactionCost::where('country', $usercountry)->where('structure', 'Consumer Monthly Subscription')->first();
                     $merchant = TransactionCost::where('country', $usercountry)->where('structure', 'Merchant Monthly Subscription')->first();
-                    $country = $consumer->country;
-                    $merchantcountry = $merchant->country;
-                    $consumerfee = $consumer->fixed;
-                    $merchantfee = $merchant->fixed;
+                    $country = $user->country;
+                  
+                    $merchantcountry = $user->country;
+                    $consumerfee = isset($consumer->fixed) ? $consumer->fixed : 0.00;
+                    $merchantfee = isset($merchant->fixed) ? $merchant->fixed : 0.00;
                     $rewardpoint = ClaimedPoints::where('user_id', $user->id)->where('status', 'completed')->sum('amount');
 
 
@@ -294,7 +297,7 @@ class SendGridController extends Controller
 
 
                     $receiver = $user->email;
-                    // $receiver = "olasunkanmimunirat@gmail.com";
+                  
 
 
 

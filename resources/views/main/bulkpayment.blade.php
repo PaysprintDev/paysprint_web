@@ -483,9 +483,22 @@
 
 
 
-                                        <div class="row">
+                                        <div class="row ">
                                            
                                             <div class="col-md-12 withWallet">
+                                                <div class="form-check form-switch mb-4">
+                                                    <input class="form-check-input" type="checkbox" value="1" name="benef" id="flexSwitchCheckChecked" >
+                                                    <label class="form-check-label" for="flexSwitchCheckChecked">Save a beneficiary</label>
+                                                </div>
+
+                                                <div class="form-group"> <label for="transaction_pin">
+                                                    <h6>Transaction Pin</h6>
+                                                </label>
+                                                <div class="input-group">
+                                                    <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-lock"></i> </span> </div> <input type="password" name="transaction_pin" id="transaction_pin" class="form-control" maxlength="4" required>
+        
+                                                </div>
+                                            </div>
                                                 
                                                 <button type="submit" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn">
                                                     Send Money </button>
@@ -523,6 +536,8 @@
 
         <script src="{{ asset('pace/pace.min.js') }}"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+       
 
         {{-- <script>
             $(function() {

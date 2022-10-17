@@ -55,7 +55,7 @@
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-4">Confirm Reveiver</h1>
+                <h1 class="display-4">Confirm Receiver</h1>
             </div>
         </div> <!-- End -->
         <div class="row">
@@ -89,30 +89,38 @@
     
                                         <tr>
     
-                                            <th>#</th>
+                                            <th>S/N</th>
                                             <th>Name</th>
                                             <th>Purpose</th>
                                             <th>Amount to Send</th>
+                                            <th colspan="2">Action</th>
                                             
-                                            <th>Action</th>
-                                            <th></th>
     
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if (count(['response']) > 0)
+                                        {{-- @if (count($data) > 0) --}}
                                         @php
-                                        $i = 1;
+                                        // $i = 0;
+                                        // dd($data);
+                                        //  exit;
+                                       
                                         @endphp
+                                        @for ( $i = 1; $i <= count($data['record']['receiver']); $i++)
+                                          
                                         
+
+
+                                        {{-- @for ($j = 1; $j < count($data['record']); $j++) --}}
+
                                         <tr>
-                                            <td>{{$i++}}</td>
-                                            @foreach (json_decode($data) as $detail )
-                                            <td>{{$detail->receiver}}</td>
-                                            @endforeach
-                                            <td></td>
-                                            
-                                            <td></td>
+                                            <td>{{$i}}</td>
+                                           
+                                            <td> {{$data['record']['receiver'][$i]}}</td>
+                                            <td> {{$data['record']['purpose'][$i]}}</td>
+                                            <td> {{$data['record']['amount'][$i]}}</td>
+                                           
+                                          
                                             <td>
                                                 <a href="" class="btn btn-primary">Edit</a>
                                             </td>
@@ -124,10 +132,18 @@
                                                     value="">
                                             
                                             </td>
-                                        </tr>   
+                                        </tr> 
+                                            
+                                        {{-- @endfor --}}
+
+
+                                        
+
+                                        
+                                        @endfor
                                        
                                       
-                                        @endif
+                                        {{-- @endif --}}
                                        
                                               
                                            

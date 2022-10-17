@@ -37,10 +37,7 @@
                                                 aria-expanded="false">ABOUT US</a>
                                         </li>
 
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ route('contact') }}" role="button"
-                                                aria-expanded="false">CONTACT</a>
-                                        </li>
+                                       
 
                                         <li class="nav-item">
                                             <a class="nav-link" href="{{ route('pricing structure merchant') }}"
@@ -52,6 +49,10 @@
                                             <a class="nav-link" href="{{ route('display country') }}" role="button"
                                                 aria-expanded="false">SEARCH COUNTRY</a>
                                         </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="https://www.paysprintmarketplace.com" role="button"
+                                                aria-expanded="false">MARKETPLACE</a>
+                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" href="{{ route('AdminLogin') }}" role="button"
                                                 aria-expanded="false">LOGIN</a>
@@ -212,10 +213,7 @@
                            aria-expanded="false">ABOUT US</a>
                    </li>
 
-                   <li class="nav-item">
-                       <a class="nav-link" href="{{ route('contact') }}" role="button"
-                           aria-expanded="false">CONTACT</a>
-                   </li>
+                  
 
                    <li class="nav-item">
                        <a class="nav-link" href="{{ route('pricing structure') }}" role="button"
@@ -227,6 +225,11 @@
                        <a class="nav-link" href="{{ route('display country merchant') }}" role="button"
                            aria-expanded="false">SEARCH COUNTRY</a>
                    </li>
+
+                   <li class="nav-item">
+                    <a class="nav-link" href="https://www.paysprintmarketplace.com" role="button"
+                        aria-expanded="false">MARKETPLACE</a>
+                 </li>
 
                    <li class="nav-item">
                        <a class="nav-link" href="{{ route('login') }}" role="button"

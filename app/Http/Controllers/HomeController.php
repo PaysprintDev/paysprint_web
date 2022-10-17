@@ -3890,6 +3890,7 @@ class HomeController extends Controller
 
     public function bulkPayment(Request $req)
     {
+     
         
          $bulkaccount=$req->id;
          $singleaccount= preg_split("/[,]/",$bulkaccount);
@@ -3928,6 +3929,7 @@ class HomeController extends Controller
             'bulkreceiver' => $singleaccount,
         );
 
+        // dd($data['bulkreceiver']);
         
 
 
@@ -3936,32 +3938,36 @@ class HomeController extends Controller
 
     public function createBulkTransfer(Request $req)
     {
+        // dd($req->transaction_pin);
+       
+       
+        $id= Auth::id();
+       $data=User::where('id',$id)->first();
+        // dd($data);
 
-        // dd(json_encode($req->amount));
-        $sender = Auth::id();
+       
+            if(Hash::check($req->transaction_pin, $data->transaction_pin)){
+                $balance=$data->wallet_balance;
+            }else{
+                dd('incorrectpin');
+            }
+     
+
+        $req['record'] = ['receiver' => $req->receive, 'purpose' => $req->service, 'amount' => $req->amount];
        
        
         $bulkaccount=json_encode($req->receive);
-        $bulkpurpose=json_encode($req->purpose);
+        $bulkpurpose=json_encode($req->service);
         $bulkamount=json_encode($req->amount);
         //    dd($bulkaccount);
-            $validation = Validator::make($req->all(), [
-                'amount' => 'required',
-                'purpose' => 'required',
-                
-            ]);
-    
-          Transfers::create([
-                'sender_id' => $sender,
-                'receiver' => $bulkaccount,
-                'purpose' => $bulkpurpose,
-                'amount' => $bulkamount,
-                
-            ]);
+      
+        $data=[
+            'record' => $req->record
+        ];
 
-            
- 
-        return redirect()->route('bulk send');
+        // dd($data);
+
+        return view('main.bulksend')->with(['data' => $data]);
     }
 
     public function bulkSend(Request $req)
