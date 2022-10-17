@@ -399,7 +399,8 @@ trait Moex
     public function generateDailyExchangeRate()
     {
 
-        $getRate = ConversionCountry::select('country as currency', 'rate')->orderBy('country', 'ASC')->get();
+        $getRate = ConversionCountry::select('country as currency', 'rate')->where('country', 'Canadian Dollar')->get();
+
 
         return json_encode($getRate);
 

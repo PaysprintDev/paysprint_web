@@ -3,18 +3,21 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Points;
+use App\AddBank;
 use App\Building;
 use Carbon\Carbon;
 use App\UpgradePlan;
+
 use App\User as User;
 
+use App\VouchAccount;
+
 use App\ClaimedPoints;
-
 use App\HistoryReport;
-
 use App\Admin as Admin;
 use App\Mail\sendEmail;
 use App\Traits\Trulioo;
+use App\FlutterwaveModel;
 use App\Traits\Xwireless;
 use App\BVNVerificationList;
 use Illuminate\Http\Request;
@@ -23,12 +26,11 @@ use App\Traits\PaymentGateway;
 use App\Traits\PaysprintPoint;
 use App\AnonUsers as AnonUsers;
 use App\Statement as Statement;
+
 use App\Traits\PaystackPayment;
 use App\ClientInfo as ClientInfo;
 use App\MonthlyFee as MonthlyFee;
-
 use App\LinkAccount as LinkAccount;
-use App\VouchAccount;
 use App\ListOfBanks as ListOfBanks;
 use App\ServiceType as ServiceType;
 use App\Traits\MailChimpNewsLetter;
@@ -410,6 +412,20 @@ class UserController extends Controller
                             User::where('email', $request->email)->update(['api_token' => $token, 'currencyCode' => $currencyCode, 'currencySymbol' => $currencySymbol, 'lastLogin' => date('d-m-Y h:i A'), 'pass_date' => $pass_date, 'loginCount' => $loginCount]);
 
                             $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol', 'accountLevel', 'cardRequest', 'flagged', 'loginCount', 'pass_checker', 'pass_date', 'lastLogin', 'bvn_number', 'bvn_account_number', 'bvn_bank', 'bvn_account_name', 'bvn_verification', 'nin_front as ninFront', 'drivers_license_front as driversLicenseFront', 'international_passport_front as internationalPassportFront', 'nin_back as ninBack', 'drivers_license_back as driversLicenseBack', 'international_passport_back as internationalPassportBack', 'idvdoc')->where('email', $request->email)->first();
+
+                            // Get Virtual Account Number...
+
+                            $virtualAccount = FlutterwaveModel::where('userId', $userInfo->refCode)->first();
+
+                            if(isset($virtualAccount)){
+                                $userInfo['virtualAccountNumber'] = $virtualAccount->account_number;
+                                $userInfo['virtualAccountBank'] = $virtualAccount->bank_name;
+                            }
+                            else{
+                                $userInfo['virtualAccountNumber'] = "";
+                                $userInfo['virtualAccountBank'] = "";
+                            }
+
 
                             $data = $userInfo;
                             $status = 200;
@@ -1387,29 +1403,31 @@ class UserController extends Controller
         try {
 
 
+
             $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+            $resolveAccount = $this->verifyAccountNumber($req->account_number, $req->bank_code);
+
+            if($resolveAccount->status === true){
 
 
             $response = $this->verifyBVN($req->bvn, $req->account_number, $req->bank_code, $req->account_name, $req->bearerToken());
-
-            Log::info(json_encode($response));
-
-            // dd($response);
 
 
             $bank = ListOfBanks::where('code', $req->bank_code)->first();
 
 
-
-            BVNVerificationList::insert(['user_id' => $thisuser->id, 'bvn_number' => $req->bvn, 'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name, 'status' => $response->transactionStatus, 'description' => $response->description]);
+            BVNVerificationList::insert(['user_id' => $thisuser->id, 'bvn_number' => $req->bvn, 'bvn_account_number' => $req->account_number, 'bvn_account_name' => $resolveAccount->data->account_name, 'bvn_bank' => $bank->name, 'status' => $response->transactionStatus, 'description' => $response->description]);
 
             if ($response->responseCode == "00" && $response->verificationStatus == "VERIFIED" || $response->responseCode == "00" && $response->transactionStatus == "SUCCESSFUL") {
 
                 if ($thisuser->approval == 2 && $thisuser->accountLevel == 3) {
-                    User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 3, 'approval' => 2,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
+                    User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 3, 'approval' => 2,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $resolveAccount->data->account_name, 'bvn_bank' => $bank->name]);
                 } else {
-                    User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 2, 'approval' => 1,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $req->account_name, 'bvn_bank' => $bank->name]);
+                    User::where('api_token', $req->bearerToken())->update(['bvn_number' => $req->bvn, 'bvn_verification' => 1, 'accountLevel' => 2, 'approval' => 1,  'bvn_account_number' => $req->account_number, 'bvn_account_name' => $resolveAccount->data->account_name, 'bvn_bank' => $bank->name]);
                 }
+
+                AddBank::insert(['user_id' => $thisuser->id, 'bankName' => $bank->name, 'accountNumber' => $req->account_number, 'accountName' => $resolveAccount->data->account_name, 'transitNumber' => '', 'branchCode' => '', 'country' => $thisuser->country]);
 
 
                 $this->updatePoints($thisuser->id, 'Quick Set Up');
@@ -1425,6 +1443,15 @@ class UserController extends Controller
                 $message = $response->description;
                 $status = 400;
             }
+
+            }
+            else{
+                $data = [];
+                $message = $resolveAccount->message;
+                $status = 400;
+            }
+
+
 
             $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
@@ -2047,6 +2074,29 @@ class UserController extends Controller
     }
 
 
+    public function updatePlayerId(Request $request)
+    {
+        try{
+
+            User::where('api_token', $request->bearerToken())->update(['playerId' => $request->playerId]);
+
+            $data = true;
+            $status = 200;
+            $message = "Successfully subscribed";
+
+
+        }catch (\Throwable $th) {
+            $data = [];
+            $status = 400;
+            $message = $th->getMessage();
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
 
     public function uploadDocument($id, $file, $pathWay, $rowName)
     {
@@ -2073,6 +2123,9 @@ class UserController extends Controller
 
         $this->updatePoints($id, 'Quick Set Up');
     }
+
+
+
 
 
     public function logout(Request $request, $id)

@@ -2538,11 +2538,11 @@ class MoexController extends Controller
             $jsonans = json_decode($jsondata, true);
 
 
-            // CSV file name => date('d-m-Y') . '_report.xlsx';
-            $csv = date('d-m-Y') . '_report.csv';
+            // CSV file name => date('d-m-Y') . '_report.xls';
+            $csv = date('d-m-Y') . '_report.xls';
 
             // File pointer in writable mode
-            $file_pointer = fopen($csv, 'w+');
+            $file_pointer = fopen($csv, 'w');
 
             // Traverse through the associative
             // array using for each loop
@@ -2558,9 +2558,9 @@ class MoexController extends Controller
 
             $setupController->name = "Money Exchange";
             // $setupController->email = "tasas@moneyexchange.es";
-            $setupController->email = env('APP_ENV') === 'local' ? "adenugaadebambo41@gmail.com" : "adenugaadebambo41@gmail.com";
+            $setupController->email = env('APP_ENV') === 'local' ? "adenugaadebambo41@gmail.com" : "tasas@moneyexchange.es";
             $setupController->subject = "Daily Exchange Rate - " . date('d-m-Y');
-            $setupController->message = "<p>Attached is the daily exchange rate from PaySprint today: ".date('d-m-Y').".</p><br><p>Best regards</p>";
+            $setupController->message = "<p>Attached is the daily exchange rate from PaySprint today: ".date('d-m-Y').".</p><p>Best regards</p>";
             $setupController->file = $csv;
             $setupController->sendEmail($setupController->email, "Daily Transaction Report");
 
@@ -2569,4 +2569,30 @@ class MoexController extends Controller
             throw $th->getMessage();
         }
     }
+
+    // API Call
+    public function callDailyExchange()
+    {
+        try {
+            $jsondata = $this->generateDailyExchangeRate();
+
+            $data = json_decode($jsondata, true);
+
+            $status = 200;
+
+            $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
+
+        } catch (\Throwable $th) {
+            $status = 400;
+            $resData = ['data' => [], 'message' => $th->getMessage(), 'status' => $status];
+        }
+
+        return $this->returnJSON($resData, $status);
+    }
+
+    public function paymentConfirmation ()
+    {
+    }
+
+
 }
