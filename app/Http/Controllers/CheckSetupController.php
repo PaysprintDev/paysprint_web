@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use App\Traits\AccountNotify;
 use App\Traits\ExpressPayment;
 use App\Traits\PaymentGateway;
+use App\Traits\OneSignal;
 use App\Statement as Statement;
 use App\FlutterwavePaymentRecord;
 use App\ImportExcel as ImportExcel;
@@ -46,7 +47,7 @@ class CheckSetupController extends Controller
     public $flutterwave;
 
 
-    use ExpressPayment, AccountNotify, Xwireless, PaymentGateway, MailChimpNewsLetter, Trulioo, Flutterwave;
+    use ExpressPayment, AccountNotify, Xwireless, PaymentGateway, MailChimpNewsLetter, Trulioo, Flutterwave, OneSignal;
     // Check user quick wallet setup
 
     public function __construct()
@@ -378,7 +379,7 @@ your PaySprint Account.You need to provide the outstanding information and compl
 
                 $sendMsg = 'We wish you great moments as we approach the new year. Happy new month ' . ucfirst($firstname[0]) . '. From all of us at PaySprint';
 
-                $this->createNotification($value->ref_code, $sendMsg);
+                $this->createNotification($value->ref_code, $sendMsg, $value->playerId, $sendMsg, "Happy New Month");
             }
 
             echo "Done";
@@ -649,7 +650,7 @@ your PaySprint Account.You need to provide the outstanding information and compl
                 // Senders statement
                 $this->maintinsStatement($value->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route);
 
-                $this->createNotification($value->ref_code, "Hello " . strtoupper($value->name) . ", " . $sendMsg);
+                $this->createNotification($value->ref_code, "Hello " . strtoupper($value->name) . ", " . $sendMsg, $value->playerId, $sendMsg, $activity);
 
                 $this->name = $value->name;
                 $this->email = $value->email;
@@ -1098,7 +1099,7 @@ your PaySprint Account.You need to provide the outstanding information and compl
 
             $sendMerchantMsg = 'Refund reversal of ' . $exbcMerchant->currencyCode . ' ' . number_format(30, 2) . ' for BUSINESS PROMOTION successfully processed to your wallet with PaySprint. You now have ' . $exbcMerchant->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
-            $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg);
+            $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg, $exbcMerchant->playerId, $sendMerchantMsg, "Refund reversal");
 
             $getGateway = AllCountries::where('name', $exbcMerchant->country)->first();
 
@@ -1181,7 +1182,7 @@ your PaySprint Account.You need to provide the outstanding information and compl
 
             $sendMerchantMsg = 'Wallet reversal of ' . $exbcMerchant->currencyCode . ' ' . number_format(14.67, 2) . ' (Gross Amount of ' . $exbcMerchant->currencyCode . ' ' . number_format(14.67, 2) . ' less transaction fee ' . $exbcMerchant->currencyCode . ' ' . number_format(0.00, 2) . ') has been deducted from your wallet. Reason: ADDED MONEY PROCESSING ERROR. You now have ' . $exbcMerchant->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your PaySprint Wallet.';
 
-            $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg);
+            $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg, $exbcMerchant->playerId, $sendMerchantMsg, "Wallet debit");
 
             $getGateway = AllCountries::where('name', $exbcMerchant->country)->first();
 
@@ -1476,7 +1477,7 @@ your PaySprint Account.You need to provide the outstanding information and compl
 
                     $sendMsg = 'Your PaySprint Account is Ready for Approval. Kindly complete the outstanding task now. ' . $approval . '' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '. Try uploading on www.paysprint.ca if you have difficulty in uploading on the mobile app. Compliance Team';
 
-                    $this->createNotification($value->ref_code, $sendMsg);
+                    $this->createNotification($value->ref_code, $sendMsg, $value->playerId, $sendMsg, "Your Paysprint account is ready for approval");
                 }
             }
 
@@ -2636,7 +2637,7 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
                         $message = 'You have successfully added ' . $record->currency . ' ' . number_format($record->amount_settled, 2) . ' to your wallet';
 
-                        $moneris->createNotification($thisuser->ref_code, $sendMsg);
+                        $moneris->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $message,"Wallet credit");
 
                         $moneris->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, 1);
 
@@ -2663,6 +2664,18 @@ in the your business category.</p> <p>This means your competitors are receiving 
         } catch (\Throwable $th) {
             echo $th->getMessage();
         }
+    }
+
+
+    public function testOneSignal()
+    {
+        $playerId = "2b0d312a-04ee-430f-91b8-d3a0d3bca40d";
+        $content = "How far Chief.. Lool";
+        $heading = "PaySprint - Notification";
+
+        $data = $this->notifyOneUser($playerId, $content, $heading);
+
+        dd($data);
     }
 
 

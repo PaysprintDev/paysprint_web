@@ -53,6 +53,9 @@ Route::get('claimmerchantbusiness', ['uses' => 'AdminController@claimingBusiness
 Route::get('renewsub', 'MaintenanceFeeCharge@renewSubscription');
 Route::get('refreshbid', 'CurrencyFxController@refreshBids');
 
+Route::get('testonesignal', 'CheckSetupController@testOneSignal');
+
+
 Route::get('quicksetup', 'CheckSetupController@updateQuickSetup');
 Route::get('autodepositoff', 'CheckSetupController@autoDepositOff');
 Route::get('accountactivity', 'CheckSetupController@checkAccountAcvtivity');

@@ -936,7 +936,7 @@ class CurrencyFxController extends Controller
 
                         $this->createNotification(
                             $thisuser->ref_code,
-                            "Hello " . strtoupper($thisuser->name) . $message . "."
+                            "Hello " . strtoupper($thisuser->name) . $message . ".", $thisuser->playerId, $message, "New FX Wallet created"
                         );
 
                         $this->slack("New FX Account of " . $allcountry->currencyCode . " created by :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
