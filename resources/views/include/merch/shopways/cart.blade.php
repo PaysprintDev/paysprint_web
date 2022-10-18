@@ -69,8 +69,8 @@
                </li>
                <li class="mini-cart-btns">
                    <div class="cart-btns">
-                       <a href="{{ route('customer shoping cart', 'store=' . $data['user']->businessname) }}"
-                           class="btn btn-style1">View cart</a>
+                       {{-- <a href="{{ route('customer shoping cart', 'store=' . $data['user']->businessname) }}"
+                           class="btn btn-style1">View cart</a> --}}
                        <a href="{{ route('checkout item', 'store=' . $data['user']->businessname) }}"
                            class="btn btn-style1">Checkout</a>
                    </div>

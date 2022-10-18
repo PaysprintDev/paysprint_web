@@ -63,6 +63,13 @@
                                                     <div class="mainwrap">
                                                         <ul class="main-menu">
                                                             <li class="menu-link parent">
+                                                                <a href="{{ route('home') }}"
+                                                                    class="link-title">
+                                                                    <span class="sp-link-title">PaySprint Home</span>
+                                                                </a>
+
+                                                            </li>
+                                                            <li class="menu-link parent">
                                                                 <a href="{{ route('merchant shop now', $data['user']->businessname) }}"
                                                                     class="link-title">
                                                                     <span class="sp-link-title">Home</span>
