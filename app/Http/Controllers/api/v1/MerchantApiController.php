@@ -129,7 +129,6 @@ class MerchantApiController extends Controller
             $mode = strtoupper($req->mode);
 
 
-
             if ($mode == strtoupper("live")) {
                 $merchantInfo = ClientInfo::where('api_secrete_key', $req->bearerToken())->first();
 
@@ -338,7 +337,7 @@ class MerchantApiController extends Controller
                                                         " . $thismerchant->currencySymbol . " " . number_format($cartItemDetails->price, 2) . "
                                                     </td>
                                                     <td>
-                                                        " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
+                                                        " . date('d-m-Y', strtotime($myOrderDetails[$i]->updated_at. ' + '.$cartItemDetails->deliveryDate)) . "
                                                     </td>
 
                                                     </tr>";
@@ -578,7 +577,7 @@ class MerchantApiController extends Controller
                                                         " . $thismerchant->currencySymbol . " " . number_format($cartItemDetails->price, 2) . "
                                                     </td>
                                                     <td>
-                                                        " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
+                                                        " . date('d-m-Y', strtotime($myOrderDetails[$i]->updated_at. ' + '.$cartItemDetails->deliveryDate)) . "
                                                     </td>
 
                                                     </tr>";
@@ -1236,7 +1235,7 @@ class MerchantApiController extends Controller
                                                         " . $thismerchant->currencySymbol . " " . number_format($cartItemDetails->price, 2) . "
                                                     </td>
                                                     <td>
-                                                        " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
+                                                        " . date('d-m-Y', strtotime($myOrderDetails[$i]->updated_at. ' + '.$cartItemDetails->deliveryDate)) . "
                                                     </td>
 
                                                     </tr>";
@@ -1477,7 +1476,7 @@ class MerchantApiController extends Controller
                                                         " . $thismerchant->currencySymbol . " " . number_format($cartItemDetails->price, 2) . "
                                                     </td>
                                                     <td>
-                                                        " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
+                                                        " . date('d-m-Y', strtotime($myOrderDetails[$i]->updated_at. ' + '.$cartItemDetails->deliveryDate)) . "
                                                     </td>
 
                                                     </tr>";
@@ -2087,7 +2086,7 @@ class MerchantApiController extends Controller
                                                         " . $thismerchant->currencySymbol . " " . number_format($cartItemDetails->price, 2) . "
                                                     </td>
                                                     <td>
-                                                        " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
+                                                        " . date('d-m-Y', strtotime($myOrderDetails[$i]->updated_at. ' + '.$cartItemDetails->deliveryDate)) . "
                                                     </td>
 
                                                     </tr>";
@@ -2302,7 +2301,7 @@ class MerchantApiController extends Controller
                                                         " . $thismerchant->currencySymbol . " " . number_format($cartItemDetails->price, 2) . "
                                                     </td>
                                                     <td>
-                                                        " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
+                                                        " . date('d-m-Y', strtotime($myOrderDetails[$i]->updated_at. ' + '.$cartItemDetails->deliveryDate)) . "
                                                     </td>
 
                                                     </tr>";
@@ -2554,7 +2553,7 @@ class MerchantApiController extends Controller
                                                         " . $thismerchant->currencySymbol . " " . number_format($cartItemDetails->price, 2) . "
                                                     </td>
                                                     <td>
-                                                        " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
+                                                        " . date('d-m-Y', strtotime($myOrderDetails[$i]->updated_at. ' + '.$cartItemDetails->deliveryDate)) . "
                                                     </td>
 
                                                     </tr>";
@@ -2769,7 +2768,7 @@ class MerchantApiController extends Controller
                                                         " . $thismerchant->currencySymbol . " " . number_format($cartItemDetails->price, 2) . "
                                                     </td>
                                                     <td>
-                                                        " . date('d-m-Y', strtotime($cartItemDetails->deliveryDate, 2)) . "
+                                                        " . date('d-m-Y', strtotime($myOrderDetails[$i]->updated_at. ' + '.$cartItemDetails->deliveryDate)) . "
                                                     </td>
 
                                                     </tr>";
