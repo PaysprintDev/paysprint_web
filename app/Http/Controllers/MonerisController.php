@@ -338,7 +338,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
 
-                        $this->createNotification($thisuser->ref_code, "Payment successfully made for " . $req->service . " to " . $client->business_name);
+                        $this->createNotification($thisuser->ref_code, "Payment successfully made for " . $req->service . " to " . $client->business_name, $thisuser->playerId, "Payment successfully made for " . $req->service . " to " . $client->business_name, "Wallet Transaction");
 
                         $monerisactivity = "Payment successfully made for " . $req->service . " to " . $client->business_name . " by " . $thisuser->name;
                         $this->keepRecord($mpgResponse->responseData['ReceiptId'], $mpgResponse->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0);
@@ -1154,8 +1154,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 $status = 200;
                                                                 $message = 'You have successfully paid invoice of ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2);
 
-                                                                $this->createNotification($thisuser->ref_code, $sendMsg);
-                                                                $this->createNotification($thismerchant->ref_code, $recMesg);
+                                                                $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
+                                                                $this->createNotification($thismerchant->ref_code, $recMesg, $thismerchant->playerId, $recMesg, "Wallet Transaction");
                                                             } else {
 
                                                                 $response = 'Something went wrong';
@@ -1388,8 +1388,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 $status = 200;
                                                                 $message = 'You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2);
 
-                                                                $this->createNotification($thisuser->ref_code, $sendMsg);
-                                                                $this->createNotification($thismerchant->ref_code, $recMesg);
+                                                                $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
+                                                                $this->createNotification($thismerchant->ref_code, $recMesg, $thismerchant->playerId, $recMesg, "Wallet Transaction");
                                                             } else {
 
                                                                 $response = 'Something went wrong';
@@ -1795,8 +1795,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 $status = 200;
                                                                 $message = 'You have successfully paid invoice of ' . $thismerchant->currencyCode . ' ' . number_format($paidinvoiceamount, 2);
 
-                                                                $this->createNotification($thisuser->ref_code, $sendMsg);
-                                                                $this->createNotification($thismerchant->ref_code, $recMesg);
+                                                                $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
+                                                                $this->createNotification($thismerchant->ref_code, $recMesg, $thismerchant->playerId, $recMesg, "Wallet Transaction");
                                                             } else {
 
                                                                 $response = 'Something went wrong';
@@ -2027,8 +2027,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 $status = 200;
                                                                 $message = 'You have successfully paid invoice of ' . $req->currencyCode . ' ' . number_format($req->amount, 2);
 
-                                                                $this->createNotification($thisuser->ref_code, $sendMsg);
-                                                                $this->createNotification($thismerchant->ref_code, $recMesg);
+                                                                $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
+                                                                $this->createNotification($thismerchant->ref_code, $recMesg, $thismerchant->playerId, $recMesg, "Wallet Transaction");
                                                             } else {
 
                                                                 $response = 'Something went wrong';
@@ -2657,7 +2657,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                 $status = 200;
                                                 $message = 'You have successfully paid invoice of ' . $wallet->currencyCode . ' ' . number_format($req->amount, 2) . " | The Direct deposit into receivers Bank account would be done within the next 72 hours. Thanks";
 
-                                                $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
                                             } else {
 
                                                 $response = 'Something went wrong';
@@ -2824,7 +2824,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     $status = 200;
                                                     $message = 'You have successfully paid invoice of ' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " | The Direct deposit into receivers Bank account would be done within the next 72 hours. Thanks";
 
-                                                    $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                    $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
                                                 } else {
 
                                                     $response = 'Something went wrong';
@@ -3353,7 +3353,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     $message = 'You have successfully sent ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thisuser->businessname;
                     $action = 'success';
 
-                    $this->createNotification($thisuser->ref_code, $sendMsg);
+                    $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                     $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, 1);
 
@@ -3493,7 +3493,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     $status = 200;
                     $message = 'You have successfully sent ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thisuser->businessname;
 
-                    $this->createNotification($thisuser->ref_code, $sendMsg);
+                    $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                     $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1));
 
@@ -3600,7 +3600,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $status = 200;
                         $message = 'You have successfully sent ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thisuser->businessname;
 
-                        $this->createNotification($thisuser->ref_code, $sendMsg);
+                        $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                         $this->updatePoints($thisuser->id, 'Add money');
 
@@ -3685,7 +3685,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $this->insStatement($merchantInfo->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $merchantInfo->country, 0);
 
 
-                $this->createNotification($merchantInfo->ref_code, $activity);
+                $this->createNotification($merchantInfo->ref_code, $activity, $merchantInfo->playerId, $activity, "Wallet Transaction");
 
 
                 $resData = "Invoice marked as paid";
@@ -3738,7 +3738,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $this->insStatement($merchantInfo->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $merchantInfo->country, 0);
 
 
-                $this->createNotification($merchantInfo->ref_code, $activity);
+                $this->createNotification($merchantInfo->ref_code, $activity, $merchantInfo->playerId, $activity, "Wallet Transaction");
 
 
                 $resData = "Invoice marked as paid";
@@ -3954,7 +3954,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $status = 200;
                         $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet';
 
-                        $this->createNotification($thisuser->ref_code, $sendMsg);
+                        $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                         $this->updatePoints($thisuser->id, 'Add money');
 
@@ -4718,7 +4718,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $status = 200;
                             $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . ' to your wallet';
 
-                            $this->createNotification($thisuser->ref_code, $sendMsg);
+                            $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                             $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1));
 
@@ -5076,7 +5076,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                         $status = 200;
                                         $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . ' to your wallet';
 
-                                        $this->createNotification($thisuser->ref_code, $sendMsg);
+                                        $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                         $this->updatePoints($thisuser->id, 'Add money');
 
@@ -5203,7 +5203,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                         $status = 200;
                                         $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . ' to your wallet';
 
-                                        $this->createNotification($thisuser->ref_code, $sendMsg);
+                                        $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                         $this->updatePoints($thisuser->id, 'Add money');
 
@@ -5339,7 +5339,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $status = 200;
                                     $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($repayAmount, 2) . ' to your wallet';
 
-                                    $this->createNotification($thisuser->ref_code, $sendMsg);
+                                    $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                     $this->updatePoints($thisuser->id, 'Add money');
 
@@ -5906,7 +5906,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     }
 
 
-                                                    $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                    $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                     // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
                                                     $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
@@ -6031,7 +6031,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         // Senders statement
                                                         $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
-                                                        $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
+                                                        $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message, $thisuser->playerId, $message, "Wallet Transaction");
 
                                                         // Log::info("Hello ".strtoupper($thisuser->name).", ".$message);
 
@@ -6070,7 +6070,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                             // Senders statement
                                                             $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country, 0);
 
-                                                            $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message);
+                                                            $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message, $thisuser->playerId, $message, "Wallet Transaction");
 
                                                             $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
@@ -6153,7 +6153,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                             $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
                                                         }
 
-                                                        $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                        $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                         // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
                                                         $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
@@ -6505,7 +6505,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
                                                             }
 
-                                                            $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                            $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                             $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
@@ -6611,7 +6611,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                     $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
                                                                 }
 
-                                                                $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                                $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                                 $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
@@ -6730,7 +6730,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                             // Senders statement
                                                             $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
-                                                            $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
+                                                            $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message, $thisuser->playerId, $message, "Wallet Transaction");
 
                                                             // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
                                                             $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
@@ -6764,7 +6764,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 // Senders statement
                                                                 $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country, 0);
 
-                                                                $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message);
+                                                                $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message, $exbcMerchant->playerId, $message, "Wallet Transaction");
 
                                                                 $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
@@ -6846,7 +6846,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                     $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
                                                                 }
 
-                                                                $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                                $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
 
                                                                 $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount to withdraw: " . $req->currencyCode . ' ' . number_format($req->amount, 2) . "</p><p>Bank Name: ".$bankDetails->bankName."</p><p>Bank Account Number: ".$bankDetails->accountNumber."</p><p>Status: Successful</p>";
@@ -6942,7 +6942,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                             }
 
 
-                                                            $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                            $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                             // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
                                                             $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
@@ -7060,7 +7060,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 // Senders statement
                                                                 $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
-                                                                $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
+                                                                $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message, $thisuser->playerId, $message, "Wallet Transaction");
 
                                                                 // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
                                                                 $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
@@ -7094,7 +7094,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                     // Senders statement
                                                                     $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country, 0);
 
-                                                                    $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message);
+                                                                    $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message, $exbcMerchant->playerId, $message, "Wallet Transaction");
 
                                                                     $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
@@ -7182,7 +7182,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                     $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
                                                                 }
 
-                                                                $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                                $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                                 // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
                                                                 $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
@@ -7265,7 +7265,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 }
 
 
-                                                                $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                                $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                                 if ($thisuser->country == "Nigeria") {
 
@@ -7415,7 +7415,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
             }
 
 
-            $this->createNotification($thisuser->ref_code, $sendMsg);
+            $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
             if ($thisuser->country == "Nigeria") {
 
@@ -7749,7 +7749,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                             }
 
 
-                                            $this->createNotification($thisuser->ref_code, $sendMsg);
+                                            $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                             $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amounttosend, $req->commissiondeduct, $req->amounttosend);
 
@@ -7880,7 +7880,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                 }
 
 
-                                                $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                 if ($thisuser->country == "Nigeria") {
 
@@ -8056,7 +8056,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $this->sendMessage($sendMsg, $sendPhone);
             }
 
-            $this->createNotification($ref_code, $sendMsg);
+            $this->createNotification($ref_code, $sendMsg, $myWallet->playerId, $sendMsg, "Wallet Transaction");
 
             // Wallet Statement
 
@@ -9049,7 +9049,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.';
                 $action = 'success';
 
-                $this->createNotification($thisuser->ref_code, $sendMsg);
+                $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                 $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1));
 
@@ -9277,7 +9277,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.';
                 $action = 'success';
 
-                $this->createNotification($thisuser->ref_code, $sendMsg);
+                $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                 $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1));
 
@@ -9522,7 +9522,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 $message = 'You have successfully transferred ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to ' . $thisuser->businessname . '.';
                 $action = 'success';
 
-                $this->createNotification($thisuser->ref_code, $sendMsg);
+                $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                 $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, 1);
 

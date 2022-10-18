@@ -824,9 +824,9 @@ class MerchantApiController extends Controller
 
                                                     $this->slack("Sent money from " . $thisuser->name . " to " . $thismerchant->businessname . " using 3rd party gateway LIVE MODE", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-                                                    $this->createNotification($thismerchant->ref_code, $recMsg);
+                                                    $this->createNotification($thismerchant->ref_code, $recMsg, $thismerchant->playerId, $recMsg, "Wallet Transaction");
 
-                                                    $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                    $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
                                                 } catch (\Exception $th) {
                                                     $status = 400;
 
@@ -985,9 +985,9 @@ class MerchantApiController extends Controller
 
                                                     $this->slack("Sent money from " . $thisuser->name . " to " . $thismerchant->businessname . " using 3rd party gateway LIVE MODE", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-                                                    $this->createNotification($thismerchant->ref_code, $recMsg);
+                                                    $this->createNotification($thismerchant->ref_code, $recMsg, $thismerchant->playerId, $recMsg, "Wallet Transaction");
 
-                                                    $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                    $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
                                                 } catch (\Exception $th) {
                                                     $status = 400;
 
@@ -3065,7 +3065,7 @@ class MerchantApiController extends Controller
 
                             $this->slack("Sent money from " . $req->firstname . " " . $req->lastname . " to " . $thismerchant->businessname . " using 3rd party gateway LIVE MODE", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
-                            $this->createNotification($thismerchant->ref_code, $recMsg);
+                            $this->createNotification($thismerchant->ref_code, $recMsg, $thismerchant->playerId, $recMsg, "Wallet Transaction");
 
                             $monerisactivity = $recMsg;
                             $this->keepRecord($paymentToken, $response->responseData['Message'], $monerisactivity, "Moneris", $req->country);
