@@ -497,7 +497,8 @@ class MarketplaceController extends Controller
     public function getUnverifiedMerchants(Request $request)
     {
         try {
-            $data = UnverifiedMerchant::orderBy('name')->get();
+            // $data = UnverifiedMerchant::orderBy('name')->get();
+            $data=UnverifiedMerchant::paginate($request->all())->groupBy('name');
 
             $response = [
                 'data' => $data,
