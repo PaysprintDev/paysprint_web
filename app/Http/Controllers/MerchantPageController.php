@@ -43,6 +43,7 @@ use App\Traits\SpecialInfo;
 use Illuminate\Http\Request;
 use App\Traits\PointsHistory;
 use App\Traits\PaysprintPoint;
+use App\Traits\MailChimpNewsLetter;
 use App\Traits\ServiceStoreShop;
 use App\ImportExcel as ImportExcel;
 use Illuminate\Support\Facades\Auth;
@@ -53,7 +54,7 @@ use illuminate\Support\Facades\Validator;
 class MerchantPageController extends Controller
 {
 
-    use PaysprintPoint, PointsHistory, SpecialInfo, MyEstore, ServiceStoreShop;
+    use PaysprintPoint, PointsHistory, SpecialInfo, MyEstore, ServiceStoreShop, MailChimpNewsLetter;
 
     public function __construct()
     {
@@ -218,9 +219,13 @@ class MerchantPageController extends Controller
         $data = User::where('id', $id)->first();
         $mailer = new SendGridController;
         $mailer->requestReview($req->customer_email, $id, $data->businessname);
+
             MailchimpMails::create([
                 'emails' => $req->customer_email
             ]);
+
+            $this->mailListCategorize('',$req->customer_email,'','','','','');
+
 
         return back()->with('msgs', "<div class='alert alert-success'>Review Request Sent Successfully</div>");
     }
