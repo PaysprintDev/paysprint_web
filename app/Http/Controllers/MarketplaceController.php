@@ -178,7 +178,7 @@ use Illuminate\Http\Response;
 
 class MarketplaceController extends Controller
 {
-    use SendgridMail;
+    use SendgridMail,MailChimpNewsLetter;
     //
     public function getmarketCategory(Request $req)
     {
@@ -588,6 +588,8 @@ class MarketplaceController extends Controller
              MailchimpMails::create([
                 'emails' => $req->email
             ]);
+
+             $this->mailListCategorize('',$req->customer_email,'','','','','');
 
             $response = [
                 'status' => 'success',
