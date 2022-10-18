@@ -92,7 +92,7 @@
                                         <td>
                                             <p>
                                                 <span
-                                                    class="{{ $value->deliveryStatus == 'off' ? 'badge bg-danger' : 'badge bg-success' }}">{{ $value->deliveryStatus == 'off' ? 'Not Delivered' : 'Delivered' }}</span>
+                                                    class="{{ $value->deliveryStatus == 'off' ? 'badge bg-danger' : ($value->deliveryStatus == 'in-progress' ? 'badge bg-warning' : 'badge bg-success') }}">{{ $value->deliveryStatus == 'off' ? 'Not Delivered' : ucfirst($value->deliveryStatus) }}</span>
                                             </p>
                                         </td>
                                     </tr>

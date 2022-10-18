@@ -74,7 +74,7 @@
         <div class="row mt-2 mb-3">
             <div class="col-md-12 card-body">
                 <p><span
-                        class="{{ $data['orders']->deliveryStatus == 'off' ? 'badge bg-danger' : 'badge bg-success' }}">{{ $data['orders']->deliveryStatus == 'off' ? 'Not Delivered' : 'Delivered' }}</span>
+                        class="{{ $data['orders']->deliveryStatus == 'off' ? 'badge bg-danger' : ($data['orders']->deliveryStatus == 'in-progress' ? 'badge bg-warning' : 'badge bg-success') }}">{{ $data['orders']->deliveryStatus == 'off' ? 'Not Delivered' : ucfirst($data['orders']->deliveryStatus) }}</span>
                 </p>
                 <p>{{ $data['orders']->deliveryDate }}</p>
             </div>
