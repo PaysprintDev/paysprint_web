@@ -41,7 +41,7 @@ trait Xwireless{
                 "ClientId" => env('X_WIRELESS_CLIENT_ID')
             ]);
 
-            if(env('APP_ENV') != "local"){
+            if(env('APP_ENV') == "local"){
                 $data = $this->thisPostCurl();
 
                 return $data;
