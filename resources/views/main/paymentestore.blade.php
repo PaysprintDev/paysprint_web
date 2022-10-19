@@ -1250,10 +1250,11 @@
         // Axios to process the payment...
 
         async function payForOrder() {
-            try {
-
 
                 $('.sendmoneyBtn').text('Processing...');
+
+            try {
+
 
                 var data = new FormData(forCustomers);
                 var headers = {
@@ -1269,14 +1270,13 @@
                 }
 
 
-
-                $('.sendmoneyBtn').text('Make Payment');
-
-
                 const response = await axios(config);
 
 
                 swal("Great", response.data.message, "success");
+
+                $('.sendmoneyBtn').text('Make Payment');
+
 
                 setTimeout(function() {
                     location.href =

@@ -604,7 +604,7 @@ class DusupayController extends Controller
                                                 }
 
 
-                                                $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                 // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
                                                 $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
@@ -729,7 +729,7 @@ class DusupayController extends Controller
                                                     // Senders statement
                                                     $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
-                                                    $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
+                                                    $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message, $thisuser->playerId, $message, "Wallet Debit");
 
                                                     // Log::info("Hello ".strtoupper($thisuser->name).", ".$message);
 
@@ -768,7 +768,7 @@ class DusupayController extends Controller
                                                         // Senders statement
                                                         $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country, 0);
 
-                                                        $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message);
+                                                        $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message, $exbcMerchant->playerId, $message, "Wallet Transaction");
 
                                                         $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
@@ -851,7 +851,7 @@ class DusupayController extends Controller
                                                         $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
                                                     }
 
-                                                    $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                    $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                     // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
                                                     $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
@@ -1246,7 +1246,7 @@ class DusupayController extends Controller
                                                         // Senders statement
                                                         $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
-                                                        $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
+                                                        $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message, $thisuser->playerId, $message, "Wallet Debit");
 
                                                         // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
                                                         $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
@@ -1280,7 +1280,7 @@ class DusupayController extends Controller
                                                             // Senders statement
                                                             $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country, 0);
 
-                                                            $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message);
+                                                            $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message, $exbcMerchant->playerId, $message, "Wallet Transaction");
 
                                                             $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
@@ -1368,7 +1368,7 @@ class DusupayController extends Controller
                                                                 $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
                                                             }
 
-                                                            $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                            $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                             // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
                                                             $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
@@ -1476,7 +1476,7 @@ class DusupayController extends Controller
                                                         }
 
 
-                                                        $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                        $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                         // $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
                                                         $this->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
@@ -1610,7 +1610,7 @@ class DusupayController extends Controller
                                                             // Senders statement
                                                             $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
-                                                            $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
+                                                            $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message, $thisuser->playerId, $message, "Wallet Debit");
 
                                                             // Log::info("Hello ".strtoupper($thisuser->name).", ".$message);
 
@@ -1648,7 +1648,7 @@ class DusupayController extends Controller
                                                                 // Senders statement
                                                                 $this->insStatement($exbcMerchant->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $exbcMerchant->country, 0);
 
-                                                                $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message);
+                                                                $this->createNotification($exbcMerchant->ref_code, "Hello " . strtoupper($exbcMerchant->name) . ", " . $this->name . " has " . $message, $exbcMerchant->playerId, $message, "Wallet Transaction");
 
                                                                 $sendMsg = 'Hello ' . strtoupper($exbcMerchant->name) . ', ' . $thisuser->name . ' has ' . $activity . '. You have ' . $req->currencyCode . ' ' . number_format($merchantwalletBal, 2) . ' balance in your account';
 
@@ -1736,7 +1736,7 @@ class DusupayController extends Controller
                                                                 $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
                                                             }
 
-                                                            $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                            $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                             // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
                                                             $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
@@ -1829,7 +1829,7 @@ class DusupayController extends Controller
                                                             }
 
 
-                                                            $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                            $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                             if ($thisuser->country == "Nigeria") {
 

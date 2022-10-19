@@ -344,7 +344,7 @@ class MoneyTransferController extends Controller
                                     $message = 'You have successfully made request for refund. Kindly note that refund takes up to 5 days for review.';
                                 }
 
-                                $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
+                                $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message, $thisuser->playerId, $message, "Wallet Transaction");
 
                                 Log::info("Request for refund by " . $thisuser->name);
                             } else {
@@ -415,7 +415,7 @@ class MoneyTransferController extends Controller
             $this->sendMessage($sendMsg, $sendPhone);
         }
 
-        $this->createNotification($ref_code, $sendMsg);
+        $this->createNotification($ref_code, $sendMsg, $myWallet->playerId, $sendMsg, "Wallet Transaction");
 
         // Wallet Statement
 
@@ -485,7 +485,7 @@ class MoneyTransferController extends Controller
 
 
 
-            $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg);
+            $this->createNotification($exbcMerchant->ref_code, $sendMerchantMsg, $exbcMerchant->playerId, $sendMerchantMsg, "Wallet Transaction");
         } else {
             // Do nothing
         }
@@ -1034,9 +1034,9 @@ class MoneyTransferController extends Controller
 
                                                         Log::info("Sent money from " . $sender->name . " to " . $receiver->name);
 
-                                                        $this->createNotification($receiver->ref_code, $recMsg);
+                                                        $this->createNotification($receiver->ref_code, $recMsg, $receiver->playerId, $recMsg, "Wallet Transaction");
 
-                                                        $this->createNotification($sender->ref_code, $sendMsg);
+                                                        $this->createNotification($sender->ref_code, $sendMsg, $sender->playerId, $sendMsg, "Wallet Transaction");
 
                                                         $this->updatePoints($sender->id, 'Send money');
                                                     } catch (\Throwable $th) {
@@ -1238,9 +1238,9 @@ class MoneyTransferController extends Controller
 
                                                         Log::info("Sent money from " . $sender->name . " to " . $receiver->name);
 
-                                                        $this->createNotification($receiver->ref_code, $recMsg);
+                                                        $this->createNotification($receiver->ref_code, $recMsg, $receiver->playerId, $recMsg, "Wallet Transaction");
 
-                                                        $this->createNotification($sender->ref_code, $sendMsg);
+                                                        $this->createNotification($sender->ref_code, $sendMsg, $sender->playerId, $sendMsg, "Wallet Transaction");
 
                                                         $this->updatePoints($sender->id, 'Send money');
                                                     } catch (\Throwable $th) {
@@ -1344,7 +1344,7 @@ class MoneyTransferController extends Controller
                 }
 
 
-                $this->createNotification($thisuser->ref_code, $recMsg);
+                $this->createNotification($thisuser->ref_code, $recMsg, $thisuser->playerId, $recMsg, "Wallet Transaction");
 
                 $data = $query;
                 $message = $thisuser->currencyCode . $credit . " added to wallet";
@@ -1539,7 +1539,7 @@ class MoneyTransferController extends Controller
 
                     Log::info("Currency exchange transaction of " . $getWallet->currencyCode . " " . number_format($req->sellAmount, 2) . " by " . $thisuser->name);
 
-                    $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $sendMsg);
+                    $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                     // Return Success
                     $myBid = AppMarketPlace::where('user_id', $thisuser->id)->get();

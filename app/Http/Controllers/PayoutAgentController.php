@@ -370,7 +370,7 @@ class PayoutAgentController extends Controller
                 $status = 200;
                 $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your wallet' . '. ' . $req->description;
 
-                $monerisAction->createNotification($thisuser->ref_code, $sendMsg);
+                $monerisAction->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                 $monerisAction->keepRecord($referenced_code, $message, "Success", 'Partner', $thisuser->country, 1, $req->gateway);
 
@@ -518,7 +518,7 @@ class PayoutAgentController extends Controller
                 $status = 200;
                 $message = 'You have successfully added ' . $currencycode . ' ' . number_format($req->amount, 2) . ' to your wallet' . '. ' . $req->description;
 
-                $monerisAction->createNotification($thisuser->ref_code, $sendMsg);
+                $monerisAction->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                 $monerisAction->keepRecord($referenced_code, $message, "Success", 'Partner', $thisuser->country, 1, $req->gateway != null ? $req->gateway : 'Moex');
 
@@ -794,7 +794,7 @@ class PayoutAgentController extends Controller
                                                             $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
                                                         }
 
-                                                        $monerisAction->createNotification($thisuser->ref_code, $sendMsg);
+                                                        $monerisAction->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
 
                                                         $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount to withdraw: " . $req->currencyCode . ' ' . number_format($req->amount, 2) . "</p><p>Bank Name: " . $bankDetails->bankName . "</p><p>Bank Account Number: " . $bankDetails->accountNumber . "</p><p>Status: Successful</p>";
@@ -886,7 +886,7 @@ class PayoutAgentController extends Controller
                                                     }
 
 
-                                                    $monerisAction->createNotification($thisuser->ref_code, $sendMsg);
+                                                    $monerisAction->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                     $monerisAction->getfeeTransaction($reference_code, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
@@ -995,7 +995,7 @@ class PayoutAgentController extends Controller
                                                             $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
                                                         }
 
-                                                        $monerisAction->createNotification($thisuser->ref_code, $sendMsg);
+                                                        $monerisAction->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                         $monerisAction->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
@@ -1072,7 +1072,7 @@ class PayoutAgentController extends Controller
                                                         }
 
 
-                                                        $monerisAction->createNotification($thisuser->ref_code, $sendMsg);
+                                                        $monerisAction->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                         if ($thisuser->country == "Nigeria") {
 
