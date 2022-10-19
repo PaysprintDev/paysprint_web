@@ -351,10 +351,20 @@ Route::get('referrallink', ['uses' => 'HomeController@referralLink', 'as' => 're
 
 
 Route::get('verification', ['uses' => 'HomeController@verifyAuthentication', 'as' => 'verification page']);
+
+Route::get('verificationpage', ['uses' => 'HomeController@checkVerification', 'as' => 'check verification page']);
+
 Route::post('verifyotp', ['uses' => 'HomeController@verifyOtp', 'as' => 'verifyotp']);
 Route::get('regenerateotp', ['uses' => 'HomeController@regenerateOtp', 'as' => 'regenerate otp']);
 
 
+//updating verification details 
+Route::post('verifyphoto', ['uses' => 'HomeController@verifyPhoto', 'as' => 'verify photo']);
+Route::post('verifyidentitycard', ['uses' => 'HomeController@verifyIdentityCard', 'as' => 'verify identity card']);
+Route::post('verifypassport', ['uses' => 'HomeController@verifyPassport', 'as' => 'verify passport']);
+Route::post('verifybill', ['uses' => 'HomeController@verifyBill', 'as' => 'verify bill']);
+Route::post('verifylicense', ['uses' => 'HomeController@verifyLicense', 'as' => 'verify license']);
+Route::post('verifybvn', ['uses' => 'HomeController@verifyBvn', 'as' => 'verify bvn']);
 
 // Terms or USE
 Route::get('terms-of-service', ['uses' => 'HomeController@termsOfUse', 'as' => 'terms of use']);

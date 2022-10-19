@@ -54,6 +54,8 @@ use App\Traits\IDVCheck;
 
 use App\Traits\MyEstore;
 
+use App\Traits\AccountCheck;
+
 use App\ReferralGenerate;
 
 use App\Traits\Xwireless;
@@ -160,7 +162,7 @@ class HomeController extends Controller
     public $country;
     public $timezone;
 
-    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter, PaysprintPoint, PointsHistory, GenerateOtp, IDVCheck, MyEstore;
+    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter, PaysprintPoint, PointsHistory, GenerateOtp, IDVCheck, MyEstore, AccountCheck;
     /**
      * Create a new controller instance.
      *
@@ -4402,6 +4404,135 @@ class HomeController extends Controller
         return view('auth.verification')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email]);
     }
 
+    public function verifyPhoto(Request $req)
+    {
+        $id=Auth::id();
+
+        $validation=Validator::make($req->all(),[
+            'avatar' => 'required'
+        ]);
+    
+          $user=User::where('id',$id)->first();
+
+        if($req->hasfile('avatar')){
+            $this->uploadDocument($user->id, $req->file('avatar'), 'profilepic/avatar', 'avatar');
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully updated your profile picture.");
+        }
+
+        return back()->with("msg", "<div class='alert alert-success'> Profile Photo Uploaded Successfully</div>");
+    }
+
+     public function verifyIdentityCard(Request $req)
+    {
+        $id=Auth::id();
+
+        $validation=Validator::make($req->all(),[
+            'nin_front' => 'required'
+        ]);
+
+          $user=User::where('id',$id)->first();
+
+        if($req->hasfile('nin_front')){
+           $this->uploadDocument($user->id, $req->file('nin_front'), 'document/nin_front', 'nin_front');
+
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded the front page of your national identity card.");
+        }
+
+        return back()->with("msg", "<div class='alert alert-success'> Identity Card Uploaded Successfully</div>");
+    }
+
+    public function verifyPassport(Request $req)
+    {
+        $id=Auth::id();
+        $user=User::where('id',$id)->first();
+
+        $validation=Validator::make($req->all(),[
+            'international_passport_front' => 'required'
+        ]);
+
+        if($req->hasfile('international_passport_front')){
+            $this->uploadDocument($id, $req->file('international_passport_front'), 'document/international_passport_front', 'international_passport_front');
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded your international passport.");
+        }
+
+        return back()->with("msg", "<div class='alert alert-success'> International Passport Uploaded Successfully</div>");
+    }
+
+    public function verifyLicense(Request $req)
+    {
+        $id=Auth::id();
+
+          $user=User::where('id',$id)->first();
+
+        $validation=Validator::make($req->all(),[
+            'drivers_license_front' => 'required'
+        ]);
+
+        if($req->hasfile('drivers_license_front')){
+            $this->uploadDocument($user->id, $req->file('drivers_license_front'), 'document/drivers_license_front', 'drivers_license_front');
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded the front page of your drivers license.");
+        }
+
+        return back()->with("msg", "<div class='alert alert-success'> Driving License Uploaded Successfully</div>");
+    }
+
+    public function verifyBill(Request $req)
+    {
+        $id=Auth::id();
+
+       $user=User::where('id',$id)->first();
+
+        $validation=Validator::make($req->all(),[
+            'idvdoc' => 'required'
+        ]);
+
+        if($req->hasfile('idvdoc')){
+            $this->uploadDocument($user->id, $req->file('idvdoc'), 'document/idvdoc', 'idvdoc');
+           $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded your document.");
+        }
+
+        return back()->with("msg", "<div class='alert alert-success'> Utility Bill Uploaded Successfully</div>");
+    }
+
+    public function verifyBvn(Request $req)
+    {
+        $id=Auth::id();
+
+
+        $validation=Validator::make($Req->all(),[
+            'bvn_number' => 'required'
+        ]);
+
+          $user=User::where('id',$id)->first();
+
+      
+           User::where('id',$id)->update([
+            'bvn_number' => $req->bvn_number
+           ]);
+
+            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully updated your bvn_number.");
+      
+
+        return back()->with("msg", "<div class='alert alert-success'>Bvn Updated Successfully</div>");
+    }
+
+    public function checkVerification(Request $req)
+    {
+        $data=[
+          'avatar' =>   $avatar = $this->checkingProfilePicture(Auth::id()),
+       'identitycard' =>  $identitycard = $this->checkingIdentityCard(Auth::id()),
+        'passport' => $passport= $this->checkingInternationalPassport(Auth::id()),
+       'license' => $license = $this->checkingDrivingLicense(Auth::id()),
+        'bill' => $bill= $this->checkingUtilityBill(Auth::id()),
+        'bvn' => $bvn= $this->checkingBvn(Auth::id()),
+
+        ];
+
+        // dd($data);
+
+        return view('main.verification')->with(['data' => $data]);
+    }
+
     public function verifyOtp(Request $req)
     {
         // Check OTP exists and verify USER...
@@ -4414,6 +4545,22 @@ class HomeController extends Controller
         }
 
         VerificationCode::where('user_id', Auth::id())->where('code', $req->code)->delete();
+
+        $avatar = $this->checkingProfilePicture(Auth::id());
+        $identitycard = $this->checkingIdentityCard(Auth::id());
+        $passport= $this->checkingInternationalPassport(Auth::id());
+        $license = $this->checkingDrivingLicense(Auth::id());
+        $bill= $this->checkingUtilityBill(Auth::id());
+        $bvn= $this->checkingBvn(Auth::id());
+
+        if($avatar == null || ($identitycard == null && $passport == null && $license === null ) || $bill === null){
+            return redirect()->route('check verification page');
+        }
+
+        if(Auth::user()->country == 'Nigeria' && $bvn === null){
+            return redirect()->route('check verification page');
+        }
+
         return redirect()->route('home');
     }
 
@@ -6721,5 +6868,32 @@ class HomeController extends Controller
 
         Mail::to($objDemoa)
             ->send(new sendEmail($objDemo));
+    }
+
+
+      public function uploadDocument($id, $file, $pathWay, $rowName)
+    {
+
+
+
+        //Get filename with extension
+        $filenameWithExt = $file->getClientOriginalName();
+        // Get just filename
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        // Get just extension
+        $extension = $file->getClientOriginalExtension();
+        // Filename to store
+        $fileNameToStore = rand() . '_' . time() . '.' . $extension;
+
+
+        $path = $file->move(public_path('../../' . $pathWay . '/'), $fileNameToStore);
+
+
+        $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/" . $pathWay . "/" . $fileNameToStore;
+
+
+        User::where('id', $id)->update(['' . $rowName . '' => $docPath, 'lastUpdated' => date('Y-m-d H:i:s')]);
+
+        $this->updatePoints($id, 'Quick Set Up');
     }
 }

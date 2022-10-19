@@ -114,8 +114,6 @@ class MerchantApiController extends Controller
     public function receiveMoneyFromPaysprintCustomer(Request $req)
     {
 
-
-
         $validator = Validator::make($req->all(), [
             'accountNumber' => 'required',
             'amount' => 'required',
