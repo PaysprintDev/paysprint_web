@@ -2669,7 +2669,8 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
     public function testOneSignal()
     {
-        $playerId = "2b0d312a-04ee-430f-91b8-d3a0d3bca40d";
+        // $playerId = "2b0d312a-04ee-430f-91b8-d3a0d3bca40d";
+        $playerId = "5c28b47a-4455-409e-8d62-cc31605065be";
         $content = "How far Chief.. Lool";
         $heading = "PaySprint - Notification";
 
