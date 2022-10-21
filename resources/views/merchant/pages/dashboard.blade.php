@@ -1,6 +1,7 @@
 @extends('layouts.merch.merchant-dashboard')
 
-
+<?php use \SimpleSoftwareIO\QrCode\Facades\QrCode; ?>
+<?php use Intervention\Image\Facades\Image; ?>
 @section('content')
 
 
@@ -115,6 +116,9 @@ use App\Http\Controllers\AllCountries; ?>
                                     data-url="{{ route('home') . '/merchant/' . $url }}">
 
                                 </div><!-- ShareThis END -->
+
+
+
                                 @else
                                 <!-- ShareThis BEGIN -->
                                 <p class="alert alert-danger text-white" style="cursor: pointer"
@@ -335,9 +339,7 @@ use App\Http\Controllers\AllCountries; ?>
                                 <p>Paid Invoice</p>
                                 <a class="btn-arrow arrow-secondary" href="javascript:void(0)">
                                     &nbsp;
-                                    {{-- <i class="toprightarrow-secondary fa fa-arrow-up me-2"></i>{{
-                                    count($data['invoiceList']) != 0 ? round($data['paidInvoiceCount'] /
-                                    count($data['invoiceList']), 2) : 0 }}% --}}
+
                                 </a>
 
 
@@ -359,6 +361,41 @@ use App\Http\Controllers\AllCountries; ?>
                                 </div>
                             </div>
                         </div>
+
+                        @if (Auth::user()->payment_link_access == 1 && $datediff > 0)
+                        <div class="card income-card card-secondary">
+                            <div class="card-body text-center">
+                                <div class="round-box">
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 512 512"
+                                        style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                                        <g>
+                                            <g>
+                                                <path
+                                                    d="M256,0C114.848,0,0,114.848,0,256s114.848,256,256,256s256-114.848,256-256S397.152,0,256,0z M256,480                                                      C132.48,480,32,379.52,32,256S132.48,32,256,32s224,100.48,224,224S379.52,480,256,480z">
+                                                </path>
+                                            </g>
+                                        </g>
+                                        <g>
+                                            <g>
+                                                <path
+                                                    d="M340.688,292.688L272,361.376V96h-32v265.376l-68.688-68.688l-22.624,22.624l96,96c3.12,3.12,7.216,4.688,11.312,4.688                                                      s8.192-1.568,11.312-4.688l96-96L340.688,292.688z">
+                                                </path>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </div>
+
+                                <center>
+                                    {!! QrCode::size(150)->generate(Auth::user()->businessname.' payment link '.route('home') . '/merchant/' . $url); !!}
+                                </center>
+                                <br>
+                                <a href="{{ asset('images/'.Auth::user()->businessname.'.svg') }}" download="" style="color: navy; font-weight: 700; text-align: left;">Download and share QRCode</a>
+
+
+                            </div>
+                        </div>
+                        @endif
                     </div>
 
 
@@ -864,7 +901,7 @@ use App\Http\Controllers\AllCountries; ?>
                                         <p>Utilize the marketplace to sell more online to customers</p>
                                     </div>
                                     <div class="col-md-3">
-                                        <!-- 
+                                        <!--
                                 <p style="font-weight:bold; font-size:20px;"></p> -->
                                         <a type="button" class="btn btn-success"
                                             href="{{route('view reviews')}}">{{$data['reviews']}} <br>Manage Reviews</a>

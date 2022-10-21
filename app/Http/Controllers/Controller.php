@@ -669,6 +669,7 @@ class Controller extends BaseController
 
             Notifications::insert(['ref_code' => $ref_code, 'activity' => $activity, 'notify' => 0, 'platform' => $platform, 'country' => $thisuser->country, 'period' => date('Y-m-d')]);
 
+
             if($playerId !== null) {
                 $this->notifyOneUser($playerId, $content, $heading);
             }
