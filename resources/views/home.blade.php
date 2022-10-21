@@ -192,6 +192,8 @@ use App\Http\Controllers\User; ?>
                             <h3 class="c-stepper__title">Account Verification-Completed</h3>
                             {{-- <p class="c-stepper__desc">Some desc text</p> --}}
                         </li>
+                        
+
 
                         @isset($data['userdetails'])
 
