@@ -481,6 +481,21 @@ use App\Http\Controllers\User; ?>
 									</tbody>
 								</table>
 							</div>
+							<div class="col-md-12">
+								@if(Auth::user()->country == 'Nigeria')
+								@if($data['avatar'] != NULL && ($data['identitycard'] != NULL || $data['passport'] !=
+								NULL ||
+								$data['license'] != NULL) && $data['bill'] != NULL && $data['bvn'] != NULL)
+								<a href="{{route('home')}}" class="btn btn-primary form-control mt-2 mb-3">Continue</a>
+								@endif
+								@else
+								@if($data['avatar'] != NULL && ($data['identitycard'] != NULL || $data['passport'] !=
+								NULL ||
+								$data['license'] != NULL) && $data['bill'] != NULL)
+								<a href="{{route('home')}}" class="btn btn-primary form-control mt-2 mb-3">Continue</a>
+								@endif
+								@endif
+							</div>
 						</div>
 
 

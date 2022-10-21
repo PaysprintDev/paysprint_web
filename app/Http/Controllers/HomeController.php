@@ -354,7 +354,22 @@ class HomeController extends Controller
                     'specialpromo' => $this->specialpromoCount()
                 );
 
-                $view = 'home';
+                $avatar= $this->checkingProfilePicture(Auth::id());
+                $identitycard= $this->checkingIdentityCard(Auth::id());
+                $passport=$this->checkingInternationalPassport(Auth::id());
+                $license=$this->checkingDrivingLicense(Auth::id());
+                $bill=$this->checkingUtilityBill(Auth::id());
+                $bvn=$this->checkingBvn(Auth::id());
+
+                if($avatar != Null && ($identitycard != Null || $passport != null || $license != null) && $bill != null){
+                     $view = 'home';
+                }else if(Auth::user()->country == 'Nigeria' && $avatar != Null && ($identitycard != Null || $passport != null || $license != null) && $bill != null && $bvn != null){
+                    $view = 'home';
+                }else{
+                    $view='main.verification';
+                }
+
+               
             } else {
                 // return redirect()->route('Admin');
                 return redirect()->route('dashboard');
