@@ -222,15 +222,19 @@ class MerchantPageController extends Controller
         $mailer = new SendGridController;
         $mailer->requestReview($req->customer_email, $id, $data->businessname);
 
-            MailchimpMails::create([
+             $email=MailchimpMails::where('email',$req->customer_email)->first();
+
+                if($email == null){
+                 MailchimpMails::create([
                 'emails' => $req->customer_email
-            ]);
+                ]);
 
-            $this->mailListCategorize('',$req->customer_email,'','','','','');
-
+                $this->mailListCategorize('',$req->customer_email,'','','','','');
+                }    
 
         return back()->with('msgs', "<div class='alert alert-success'>Review Request Sent Successfully</div>");
     }
+
 
     public function endcashback(Request $req)
     {
@@ -239,6 +243,7 @@ class MerchantPageController extends Controller
 
         return back()->with('msg', "<div class='alert alert-success'>Cashback Ended Successfully</div>");
     }
+
 
     public function viewReviews(Request $Req)
     {
@@ -253,16 +258,16 @@ class MerchantPageController extends Controller
         return view('merchant.pages.marketplacereviews')->with(['data' => $data]);
     }
 
+
     public function viewmarketReplies(Request $req, $id)
     {
 
         $data = [
             'comments' => MerchantReply::where('comment_id', $id)->get(),
         ];
-
-
         return view('merchant.pages.viewreply')->with(['data' => $data]);
     }
+
 
     public function merchantReply(Request $req)
     {
@@ -315,6 +320,16 @@ class MerchantPageController extends Controller
             "no_likes" => $req->like,
             "product_service" => $req->product_service
         ]);
+
+          $email=MailchimpMails::where('email',$req->email)->first();
+
+                if($email == null){
+                 MailchimpMails::create([
+                'email' => $req->email
+                ]);
+
+                $this->mailListCategorize('',$req->email,'','','','','');
+                }
 
         return back()->with("msg", "<div class='alert alert-success'> Review Submitted Successfully</div>");
 
