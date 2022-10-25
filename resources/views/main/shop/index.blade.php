@@ -28,7 +28,7 @@
 
     @if ($data['currencyCode']->gateway == 'PayPal')
         <script
-                src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ $data['currencyCode']->currencyCode }}">
+            src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}&currency={{ $data['currencyCode']->currencyCode }}">
         </script>
     @endif
 
@@ -62,7 +62,6 @@
         .disp-0 {
             display: none !important;
         }
-
     </style>
 
 </head>
@@ -208,8 +207,8 @@
                                     @else
                                         <div class="form-group disp-0">
                                             <div class="input-group">
-                                                <p style="color: red; font-weight: bold;"><input type="checkbox" checked
-                                                        name="convertRate" id="convertRate"> Accept
+                                                <p style="color: red; font-weight: bold;"><input type="checkbox"
+                                                        checked name="convertRate" id="convertRate"> Accept
                                                     conversion rate</p>
 
                                             </div>
@@ -221,8 +220,8 @@
                                     @if ($countryBase == $data['currencyCode']->name)
                                         <div class="form-group disp-0">
                                             <div class="input-group">
-                                                <p style="color: red; font-weight: bold;"><input type="checkbox" checked
-                                                        name="convertRate" id="convertRate"> Accept
+                                                <p style="color: red; font-weight: bold;"><input type="checkbox"
+                                                        checked name="convertRate" id="convertRate"> Accept
                                                     conversion rate</p>
 
                                             </div>
@@ -261,19 +260,21 @@
 
 
                                     <div class="form-group"> <label for="netwmount">
-                                        Fee
-                                    </label>
-                                        <input type="text" name="commissiondeduct" class="form-control" id="commissiondeduct" value="" placeholder="0.00" readonly>
+                                            Fee
+                                        </label>
+                                        <input type="text" name="commissiondeduct" class="form-control"
+                                            id="commissiondeduct" value="" placeholder="0.00" readonly>
 
-                                        <input type="hidden" name="totalcharge" class="form-control" id="totalcharge" value="" placeholder="0.00" readonly>
+                                        <input type="hidden" name="totalcharge" class="form-control"
+                                            id="totalcharge" value="" placeholder="0.00" readonly>
 
-                                </div>
+                                    </div>
 
 
 
                                     <div class="form-group">
-                                    <div class="commissionInfo"></div>
-                                </div>
+                                        <div class="commissionInfo"></div>
+                                    </div>
 
                                     <hr>
 
@@ -325,7 +326,8 @@
                                                             <h6>Year</h6>
                                                         </span></label>
                                                     <div class="input-group">
-                                                        <select name='expirydate' id="payyear" class='form-control'>
+                                                        <select name='expirydate' id="payyear"
+                                                            class='form-control'>
                                                             @for ($i = 21; $i <= 50; $i++)
                                                                 <option value='{{ $i }}'>
                                                                     {{ $i }}</option>
@@ -435,7 +437,7 @@
 
         {{-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> --}}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
+            integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
         </script>
 
         <script src="{{ asset('pace/pace.min.js') }}"></script>
@@ -834,7 +836,7 @@
 
                     if (`{{ env('APP_ENV') }}` != "local") {
                         callbackUrl =
-                            `{{ env('APP_URL') }}/expresspay/resp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&ref_code=${ref_code}`;
+                            `{{ env('APP_URL') }}/expresspay/business?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&ref_code=${ref_code}`;
                     } else {
                         callbackUrl =
                             `http://localhost:9090/expresspay/business?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&ref_code=${ref_code}`;
@@ -1021,7 +1023,9 @@
 
                                 $('.commissionInfo').html(
                                     "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
-                                    (result.data).toFixed(2) + " will be deducted from your Credit/Debit card. </span></li></li></ul>");
+                                    (result.data).toFixed(2) +
+                                    " will be deducted from your Credit/Debit card. </span></li></li></ul>"
+                                    );
 
                             }
 

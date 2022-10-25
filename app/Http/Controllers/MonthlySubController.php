@@ -24,9 +24,9 @@ class MonthlySubController extends Controller
 
             $getMontlyFee = MonthlyFee::where('runState', '0')->get();
 
-            $thisuser = User::where('email', 'merchant@paysprint.ca')->first();
-            // $thisuser = User::where('email', 'adenugaadebambo41@gmail.com')->first();
+            $receiverMail = env('APP_ENV') === 'local' ? 'adenugaadebambo41@gmail.com' : 'merchant@paysprint.ca';
 
+            $thisuser = User::where('email', $receiverMail)->first();
             if (count($getMontlyFee) > 0) {
 
 
@@ -160,7 +160,9 @@ class MonthlySubController extends Controller
             $currencyFX = new CurrencyFxController();
             $maintenanceFee = new MaintenanceFeeCharge();
 
-            $thisuser = User::where('email', 'merchant@paysprint.ca')->first();
+            $receiverMail = env('APP_ENV') === 'local' ? 'adenugaadebambo41@gmail.com' : 'merchant@paysprint.ca';
+
+            $thisuser = User::where('email', $receiverMail)->first();
 
 
             $allcountry = AllCountries::where('name', $country)->first();
@@ -277,7 +279,9 @@ class MonthlySubController extends Controller
             $currencyFX = new CurrencyFxController();
             $maintenanceFee = new MaintenanceFeeCharge();
 
-            $thisuser = User::where('email', 'merchant@paysprint.ca')->first();
+            $receiverMail = env('APP_ENV') === 'local' ? 'adenugaadebambo41@gmail.com' : 'merchant@paysprint.ca';
+
+            $thisuser = User::where('email', $receiverMail)->first();
 
             $allcountry = AllCountries::where('name', $country)->first();
 
@@ -382,7 +386,9 @@ class MonthlySubController extends Controller
     {
         try {
 
-            $getStatement = Statement::where('user_id', 'merchant@paysprint.ca')->where('reference_code', 'LIKE', '%es-wallet-%')->inRandomOrder()->get();
+            $receiverMail = env('APP_ENV') === 'local' ? 'adenugaadebambo41@gmail.com' : 'merchant@paysprint.ca';
+
+            $getStatement = Statement::where('user_id', $receiverMail)->where('reference_code', 'LIKE', '%es-wallet-%')->inRandomOrder()->get();
 
 
             foreach ($getStatement as $value) {

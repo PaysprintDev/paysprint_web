@@ -358,7 +358,7 @@ Route::post('verifyotp', ['uses' => 'HomeController@verifyOtp', 'as' => 'verifyo
 Route::get('regenerateotp', ['uses' => 'HomeController@regenerateOtp', 'as' => 'regenerate otp']);
 
 
-//updating verification details 
+//updating verification details
 Route::post('verifyphoto', ['uses' => 'HomeController@verifyPhoto', 'as' => 'verify photo']);
 Route::post('verifyidentitycard', ['uses' => 'HomeController@verifyIdentityCard', 'as' => 'verify identity card']);
 Route::post('verifypassport', ['uses' => 'HomeController@verifyPassport', 'as' => 'verify passport']);
@@ -1435,6 +1435,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 
 	// Get Commision and payment
 	Route::post('getCommission', ['uses' => 'HomeController@ajaxgetCommission', 'as' => 'AjaxgetCommission']);
+	Route::post('getlinkCommission', ['uses' => 'HomeController@ajaxgetlinkCommission', 'as' => 'AjaxgetlinkCommission']);
 	Route::post('getwalletBalance', ['uses' => 'HomeController@ajaxgetwalletBalance', 'as' => 'AjaxgetwalletBalance']);
 
 	Route::post('charges', ['uses' => 'ApplePayController@ajaxcharges', 'as' => 'charges']);
