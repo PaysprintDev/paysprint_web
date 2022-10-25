@@ -42,7 +42,7 @@
                                         class="fas fa-chevron-left"></i> Go back</button>
                             </div>
                         </div>
-
+                        {!! session('msg') !!}
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body table table-responsive">
@@ -124,10 +124,11 @@
                                             onchange="checkMyBox('selfiecheck','{{ $datainfo->id }}')" {{
                                             $datainfo->selfie_check == 1 ? 'checked' : '' }}>
 
-                                        <form action="" method="post">
-                                            <input type="hidden" value="{{$datainfo->id}}">
+                                        <form action="{{route('delete avatar')}}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="user_id" value="{{$datainfo->id}}">
                                             <input type="hidden" name="avatar" value="{{$datainfo->avatar}}">
-                                            <button class="btn btn-danger" type="button">Remove</button>
+                                            <button class="btn btn-danger" type="submit">Remove</button>
                                         </form>
 
                                         <hr>
@@ -147,13 +148,14 @@
                                             onchange="checkMyBox('nincheck', '{{ $datainfo->id }}')" {{
                                             $datainfo->gov_check == 1 ? 'checked' : '' }}>
 
-                                        <form action="" method="post">
-                                            <input type="hidden" value="{{$datainfo->id}}">
+                                        <form action="{{route('delete govt id')}}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="user_id" value="{{$datainfo->id}}">
                                             <input type="hidden" name="govt_issued_id_front"
                                                 value="{{$datainfo->nin_front}}">
                                             <input type="hidden" name="govt_issued_id_back"
                                                 value="{{$datainfo->nin_back}}">
-                                            <button class="btn btn-danger" type="button">Remove</button>
+                                            <button class="btn btn-danger" type="submit">Remove</button>
                                         </form>
                                         <hr>
                                         @endif
@@ -172,9 +174,17 @@
 
                                         <input type="checkbox" name="licencecheck" id="licencecheck{{ $datainfo->id }}"
                                             onchange="checkMyBox('licencecheck', '{{ $datainfo->id }}')" {{
-                                            $datainfo->gov_check == 1 ? 'checked' : '' }}>
+                                            $datainfo->gov_check == 1 ? 'checked' : '' }} >
 
-
+                                        <form action="{{route('delete license')}}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="user_id" value="{{$datainfo->id}}">
+                                            <input type="hidden" name="drivers_license_front"
+                                                value="{{$datainfo->drivers_license_front}}">
+                                            <input type="hidden" name="drivers_license_back"
+                                                value="{{$datainfo->drivers_license_back}}">
+                                            <button class="btn btn-danger" type="submit">Remove</button>
+                                        </form>
                                         <hr>
                                         @endif
 
@@ -197,8 +207,15 @@
                                             onchange="checkMyBox('passportcheck', '{{ $datainfo->id }}')" {{
                                             $datainfo->gov_check == 1 ? 'checked' : '' }}>
 
-
-
+                                        <form action="{{route('delete license')}}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="user_id" value="{{$datainfo->id}}">
+                                            <input type="hidden" name="drivers_license_front"
+                                                value="{{$datainfo->drivers_license_front}}">
+                                            <input type="hidden" name="drivers_license_back"
+                                                value="{{$datainfo->drivers_license_back}}">
+                                            <button class="btn btn-danger" type="submit">Remove</button>
+                                        </form>
                                         <hr>
                                         @endif
 
@@ -217,6 +234,13 @@
                                             onchange="checkMyBox('incorpdoccheck', '{{ $datainfo->id }}')" {{
                                             $datainfo->doc_check == 1 ? 'checked' : '' }}>
 
+                                        <form action="{{route('delete incop document')}}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="user_id" value="{{$datainfo->id}}">
+                                            <input type="hidden" name="drivers_license_front"
+                                                value="{{$datainfo->incorporation_doc_front}}">
+                                            <button class="btn btn-danger" type="submit">Remove</button>
+                                        </form>
                                         <hr>
                                         @endif
 

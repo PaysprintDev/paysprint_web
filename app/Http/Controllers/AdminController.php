@@ -4038,6 +4038,63 @@ class AdminController extends Controller
         }
     }
 
+    public function deleteAvatar(Request $req)
+    {
+       User::where('id',$req->user_id)->update([
+        'avatar' => ''
+       ]);
+
+       return back()->with("msg","<div class='alert alert-success'>Avatar Removed Successfully</div>");
+    }
+
+    public function deleteGovtid(Request $req)
+    {
+    
+       User::where('id',$req->user_id)->update([
+        'nin_front' => '',
+        'nin_back' => ''
+       ]);
+
+       return back()->with("msg","<div class='alert alert-success'>Government Issued ID Removed Successfully</div>");
+       
+    }
+
+    public function deleteLicense(Request $req)
+    {
+
+       User::where('id',$req->user_id)->update([
+        'drivers_license_front' => '',
+        'drivers_license_back' => ''
+       ]);
+
+       return back()->with("msg","<div class='alert alert-success'>Drivers License ID Removed Successfully</div>");
+    }
+
+     public function deletePassport(Request $req)
+    {
+
+       User::where('id',$req->user_id)->update([
+        'international_passport_front' => '',
+        'international_passport_back' => ''
+       ]);
+
+       return back()->with("msg","<div class='alert alert-success'>International Passport Removed Successfully</div>");
+
+    }
+
+      public function deleteIncopDocument(Request $req)
+    {
+
+       User::where('id',$req->user_id)->update([
+        'incorporation_doc_front' => '',
+        'incorporation_doc_back' => '',
+        
+       ]);
+
+       return back()->with("msg","<div class='alert alert-success'>Document Removed Successfully</div>");
+
+    }
+
 
     public function allMatchedUsers(Request $req)
     {

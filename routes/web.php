@@ -683,6 +683,12 @@ Route::get('Admin/businesspromotion', ['uses' => 'AdminController@businessPromot
 
 Route::get('Admin/emailcampaign', ['uses' => 'AdminController@runEmailCampaign', 'as' => 'run mail campaign']);
 
+//Admin deleting documents
+Route::post('delete avatar', ['uses' => 'AdminController@deleteAvatar', 'as' => 'delete avatar']);
+Route::post('delete govtid', ['uses' => 'AdminController@deleteGovtid', 'as' => 'delete govt id']);
+Route::post('delete license', ['uses' => 'AdminController@deleteLicense', 'as' => 'delete license']);
+Route::post('delete passport', ['uses' => 'AdminController@deletePassport', 'as' => 'delete passport']);
+Route::post('delete document', ['uses' => 'AdminController@deleteIncopDocument', 'as' => 'delete incop document']);
 
 
 
