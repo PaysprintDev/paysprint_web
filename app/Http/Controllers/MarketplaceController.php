@@ -10,6 +10,7 @@ use App\PromoDate;
 use App\TrialDate;
 use App\watchlist;
 use App\merchantTrial;
+use App\MailchimpMails;
 use App\MarketplaceReviews;
 
 use Carbon\Carbon;
@@ -586,11 +587,20 @@ class MarketplaceController extends Controller
                 'no_likes' => $req->like,
             ]);
 
-             MailchimpMails::create([
-                'emails' => $req->email
-            ]);
+            $email=MailchimpMails::where('email',$req->email)->first();
 
-             $this->mailListCategorize('',$req->customer_email,'','','','','');
+                if($email == null){
+                 MailchimpMails::create([
+                'email' => $req->email
+                ]);
+
+                $this->mailListCategorize('',$req->email,'','','','','');
+                }
+                
+
+            
+
+             
 
             $response = [
                 'status' => 'success',
