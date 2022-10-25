@@ -24,6 +24,8 @@ trait MailChimpNewsLetter
 {
     public function mailListCategorize($name, $email, $address, $phone, $tags, $country, $list)
     {
+
+
         $username = explode(" ", $name);
 
         if (isset($username[1])) {

@@ -170,7 +170,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback', 'displayCountry', 'displayCountryMerchant', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts']]);
+        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'ajaxgetlinkCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback', 'displayCountry', 'displayCountryMerchant', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts']]);
 
         $location = $this->myLocation();
 
@@ -292,7 +292,7 @@ class HomeController extends Controller
         return view('main.estores')->with(['pages' => 'e-Store', 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
 
-   
+
 
     public function merchantIndex()
     {
@@ -369,7 +369,7 @@ class HomeController extends Controller
                     $view='main.verification';
                 }
 
-               
+
             } else {
                 // return redirect()->route('Admin');
                 return redirect()->route('dashboard');
@@ -4426,7 +4426,7 @@ class HomeController extends Controller
         $validation=Validator::make($req->all(),[
             'avatar' => 'required'
         ]);
-    
+
           $user=User::where('id',$id)->first();
 
         if($req->hasfile('avatar')){
@@ -4520,13 +4520,13 @@ class HomeController extends Controller
 
           $user=User::where('id',$id)->first();
 
-      
+
            User::where('id',$id)->update([
             'bvn_number' => $req->bvn_number
            ]);
 
             $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully updated your bvn_number.");
-      
+
 
         return back()->with("msg", "<div class='alert alert-success'>Bvn Updated Successfully</div>");
     }
@@ -6358,6 +6358,363 @@ class HomeController extends Controller
             $walletCheck = 'Wallet Balance: <strong>' . $req->localcurrency . number_format($wallet, 4) . '</strong>. <br> Available Wallet Balance: <strong>' . $req->localcurrency . number_format($availableWalletBalance, 4) . '</strong>. <br> Insufficient balance. <a href="' . $route . '">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
         }
         // }
+
+
+
+        $resData = ['data' => $amountReceive, 'message' => 'success', 'state' => $state, 'collection' => $collection, 'walletCheck' => $walletCheck, ''];
+
+
+
+        return $this->returnJSON($resData, 200);
+    }
+
+
+    public function ajaxgetlinkCommission(Request $req)
+    {
+
+        if($req->refCode != ""){
+
+                    $thisuser = User::where('ref_code', $req->refCode)->first();
+
+        if ($req->pay_method != "Wallet") {
+
+
+            if ($req->foreigncurrency != $req->localcurrency) {
+
+                // dd($req->localcurrency);
+
+                $dataInfo = $this->convertCurrencyRate($req->foreigncurrency, $req->localcurrency, $req->amount);
+            } else {
+                $dataInfo = $req->amount;
+            }
+
+
+
+            // dd($dataInfo);
+
+            if ($req->structure == "Withdrawal") {
+                $data = TransactionCost::where('structure', $req->structure)->where('method', "Bank Account")->where('country', $thisuser->country)->first();
+            } else {
+                $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->where('country', $thisuser->country)->first();
+            }
+
+
+
+
+
+
+            /*
+
+                Calculation
+
+                x = Variable * Amount;
+                y = Fixed + x;
+            */
+
+
+
+            if (isset($data) == true) {
+
+                if ($req->pay_method == "Cash") {
+
+                    // Get the selected payout agent...
+                    $getAgent = PayoutAgent::where('id', $req->payoutAgent)->first();
+
+                    if ($getAgent) {
+                        $collection = (($getAgent->fee / 100) * $req->amount) * (20 / 100);
+                    } else {
+                        $collection = ((1.50 / 100) * $req->amount) * (20 / 100);
+                    }
+                } else {
+                    if ($thisuser->country == "Nigeria" && $req->amount <= 2500) {
+
+                        $x = ($data->variable / 100) * $req->amount;
+
+                        $y = 0 + $x;
+
+                        $collection = $y;
+                    } else {
+
+                        if ($thisuser->country == "Canada") {
+
+                            $x = ($data->variable / 100) * $req->amount;
+
+                            $y = $data->fixed + $x;
+
+                            $collection = $y;
+                        } else {
+
+                            if ($req->structure == "Withdrawal") {
+                                $data = TransactionCost::where('structure', $req->structure)->where('method', "Bank Account")->where('country', $thisuser->country)->first();
+                            } else {
+                                $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->where('country', $thisuser->country)->first();
+                            }
+
+
+
+                            if (isset($data)) {
+                                $x = ($data->variable / 100) * $req->amount;
+
+                                $y = $data->fixed + $x;
+
+                                $collection = $y;
+                            } else {
+                                $x = (3.00 / 100) * $req->amount;
+
+                                $y = 0.33 + $x;
+
+                                $collection = $y;
+                            }
+                        }
+                    }
+                }
+            } else {
+
+                if ($req->structure == "Withdrawal") {
+                    $data = TransactionCost::where('structure', $req->structure)->where('method', "Bank Account")->first();
+                } else {
+                    $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->first();
+                }
+
+
+
+                if (isset($data)) {
+                    $x = ($data->variable / 100) * $req->amount;
+
+                    $y = $data->fixed + $x;
+
+                    $collection = $y;
+                } else {
+
+                    $x = (3.00 / 100) * $req->amount;
+
+                    $y = 0.33 + $x;
+
+                    $collection = $y;
+                }
+            }
+
+
+
+            if ($req->check == "true") {
+
+                // $amountReceive = $req->amount - $collection;
+                $amountReceive = $req->amount;
+
+                $state = "commission available";
+            } else {
+                $amountReceive = $req->amount;
+                $state = "commission unavailable";
+            }
+        } else {
+            $amountRate = $this->convertCurrencyRate($req->localcurrency, $req->foreigncurrency, $req->amount);
+
+            $amountReceive = $req->type === 'international' ? $amountRate : $req->amount;
+            $state = "commission free";
+            $collection = 0;
+        }
+
+        if ($thisuser->accountType == "Individual") {
+            $subminType = "Consumer Monthly Subscription";
+        } else {
+            $subminType = "Merchant Monthly Subscription";
+        }
+
+        // Change to Classic plan...
+        // $minimumBal = TransactionCost::where('structure', $subminType)->where('country', $thisuser->country)->first();
+
+
+        // if (isset($minimumBal)) {
+        //     $available = $minimumBal->fixed;
+        // } else {
+        //     $available = 5;
+        // }
+        $available = 0;
+        // Check if Wallet is chosen
+        $walletCheck = "";
+
+        // if($req->pay_method == "Wallet"){
+        $wallet = $thisuser->wallet_balance;
+
+        if ($thisuser->withdrawal_per_overdraft !== NULL) {
+            $availableWalletBalance = $thisuser->withdrawal_per_overdraft > 0 ? $thisuser->withdrawal_per_overdraft - $available : $wallet - $available;
+        } else {
+            $availableWalletBalance = $wallet - $available;
+        }
+
+
+        if ($availableWalletBalance <= $amountReceive) {
+
+            if ($thisuser->accountType == "Individual") {
+                $route = route('Add Money');
+            } else {
+                $route = route('merchant add money');
+            }
+
+            $walletCheck = 'Wallet Balance: <strong>' . $req->localcurrency . number_format($wallet, 4) . '</strong>. <br> Available Wallet Balance: <strong>' . $req->localcurrency . number_format($availableWalletBalance, 4) . '</strong>. <br> Insufficient balance. <a href="' . $route . '">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
+        }
+        // }
+
+
+        }
+        else{
+        if ($req->pay_method != "Wallet") {
+
+
+            if ($req->foreigncurrency != $req->localcurrency) {
+
+                // dd($req->localcurrency);
+
+                $dataInfo = $this->convertCurrencyRate($req->foreigncurrency, $req->localcurrency, $req->amount);
+            } else {
+                $dataInfo = $req->amount;
+            }
+
+
+
+            // dd($dataInfo);
+
+            if ($req->structure == "Withdrawal") {
+                $data = TransactionCost::where('structure', $req->structure)->where('method', "Bank Account")->where('country', $req->country)->first();
+            } else {
+                $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->where('country', $req->country)->first();
+            }
+
+
+
+
+            /*
+
+                Calculation
+
+                x = Variable * Amount;
+                y = Fixed + x;
+            */
+
+
+
+            if (isset($data) == true) {
+
+                if ($req->pay_method == "Cash") {
+
+                    // Get the selected payout agent...
+                    $getAgent = PayoutAgent::where('id', $req->payoutAgent)->first();
+
+                    if ($getAgent) {
+                        $collection = (($getAgent->fee / 100) * $req->amount) * (20 / 100);
+                    } else {
+                        $collection = ((1.50 / 100) * $req->amount) * (20 / 100);
+                    }
+                } else {
+                    if ($req->country == "Nigeria" && $req->amount <= 2500) {
+
+                        $x = ($data->variable / 100) * $req->amount;
+
+                        $y = 0 + $x;
+
+                        $collection = $y;
+
+                
+
+                    } else {
+
+                        if ($req->country == "Canada") {
+
+                            $x = ($data->variable / 100) * $req->amount;
+
+                            $y = $data->fixed + $x;
+
+                            $collection = $y;
+                        } else {
+
+                            if ($req->structure == "Withdrawal") {
+                                $data = TransactionCost::where('structure', $req->structure)->where('method', "Bank Account")->where('country', $req->country)->first();
+                            } else {
+                                $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->where('country', $req->country)->first();
+                            }
+
+
+
+                            if (isset($data)) {
+                                $x = ($data->variable / 100) * $req->amount;
+
+                                $y = $data->fixed + $x;
+
+                                $collection = $y;
+                            } else {
+                                $x = (3.00 / 100) * $req->amount;
+
+                                $y = 0.33 + $x;
+
+                                $collection = $y;
+                            }
+                        }
+                    }
+                }
+
+            } else {
+
+                if ($req->structure == "Withdrawal") {
+                    $data = TransactionCost::where('structure', $req->structure)->where('method', "Bank Account")->first();
+                } else {
+                    $data = TransactionCost::where('structure', $req->structure)->where('method', "Debit Card")->first();
+                }
+
+
+
+                if (isset($data)) {
+                    $x = ($data->variable / 100) * $req->amount;
+
+                    $y = $data->fixed + $x;
+
+                    $collection = $y;
+                } else {
+
+                    $x = (3.00 / 100) * $req->amount;
+
+                    $y = 0.33 + $x;
+
+                    $collection = $y;
+                }
+            }
+
+
+
+            if ($req->check == "true") {
+
+                // $amountReceive = $req->amount - $collection;
+                $amountReceive = $req->amount;
+
+                $state = "commission available";
+            } else {
+                $amountReceive = $req->amount;
+                $state = "commission unavailable";
+            }
+        } else {
+            $amountRate = $this->convertCurrencyRate($req->localcurrency, $req->foreigncurrency, $req->amount);
+
+            $amountReceive = $req->type === 'international' ? $amountRate : $req->amount;
+            $state = "commission free";
+            $collection = 0;
+        }
+
+
+        // Change to Classic plan...
+        // $minimumBal = TransactionCost::where('structure', $subminType)->where('country', $thisuser->country)->first();
+
+
+        // if (isset($minimumBal)) {
+        //     $available = $minimumBal->fixed;
+        // } else {
+        //     $available = 5;
+        // }
+        $available = 0;
+        // Check if Wallet is chosen
+        $walletCheck = "";
+
+
+        }
+
 
 
 

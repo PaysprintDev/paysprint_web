@@ -1,3 +1,4 @@
+<?php use App\Http\Controllers\User; ?>
 <!doctype html>
 <html lang="en">
 
@@ -102,7 +103,13 @@
                         <!-- Credit card form content -->
                         <div class="tab-content">
 
-
+                            @if ($merchant = \App\User::where('ref_code', Request::segment(3))->first())
+                                @php
+                                    $currencySymb = $merchant->currencySymbol;
+                                    $currencycod = $merchant->currencyCode;
+                                    $countryBase = $merchant->country;
+                                @endphp
+                            @endif
 
 
 
@@ -180,6 +187,14 @@
                                                     <form action="#" method="post" id="forCustomers">
                                                         @csrf
 
+                                                        <input type="hidden" name="invoice_no" id="payinvoiceRef"
+                                                            value="{{ 'Shop_' . uniqid() }}">
+                                                        <input type="hidden" name="paymentToken" id="paymentToken" value="">
+                                                        <input type="hidden" name="currencyCode" id="currencyCode" value="{{ $data['currencyCode']->currencyCode }}">
+                                                        <input type="hidden" name="payType" id="payType" value="ps_user">
+                                                        <input type="hidden" name="merchant_id" id="payuser_id"
+                                        value="{{ Request::segment(3) }}">
+
                                                         <div class="form-group"> <label for="enter_account_number">
                                                                 <h6><span style="color: red;">*</span> Please enter your
                                                                     PaySprint Account Number</h6>
@@ -232,9 +247,8 @@
                                                                         {{ $data['currencyCode']->currencySymbol }}</span>
                                                                 </div>
                                                                 <input type="text" name="amount"
-                                                                    class="form-control" id="amount"
-                                                                    value="{{ sprintf('%.2f', 100) }}"
-                                                                    placeholder="0.00" readonly>
+                                                                    class="form-control" id="amounttosend"
+                                                                    placeholder="{{ sprintf('%.2f', 0) }}">
                                                             </div>
                                                         </div>
 
@@ -253,8 +267,8 @@
 
                                                                 <input type="text" name="conversionamount"
                                                                     class="form-control conversionamount"
-                                                                    id="conversionamount" value=""
-                                                                    placeholder="0.00" readonly>
+                                                                    id="conversionamount"
+                                                                    placeholder="{{ sprintf('%.2f', 0) }}">
                                                             </div>
                                                         </div>
 
@@ -287,9 +301,7 @@
                                                                             src="https://img.icons8.com/nolan/25/shopping-cart-promotion.png" /></span>
                                                                 </div>
                                                                 <input type="text" name="purpose"
-                                                                    class="form-control" id="purpose"
-                                                                    value="Purchase of 1 items from {{ $data['paymentorg']->businessname }}"
-                                                                    readonly>
+                                                                    class="form-control" id="purpose">
                                                             </div>
                                                         </div>
 
@@ -324,7 +336,7 @@
 
                                                         <div class="form-group mt-4 withWallet">
 
-                                                            <button type="button" onclick="payForOrder()"
+                                                            <button type="button" onclick="payLinkInShop('pay_as_customer')"
                                                                 class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn">
                                                                 Make Payment </button>
                                                         </div>
@@ -344,376 +356,323 @@
 
 
                                         {{-- Check if validated account --}}
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div class="mt-3">
-                                                        <form action="#" method="post" id="forVisitors">
-                                                            @csrf
-
-                                                            <div class="form-group"> <label for="firstname">
-                                                                    <h6><span style="color: red;">*</span> Please enter
-                                                                        your
-                                                                        First Name</h6>
-                                                                </label>
-                                                                <div class="input-group">
-
-                                                                    <div class="input-group-append"> <span
-                                                                            class="input-group-text text-muted">
-                                                                            <img
-                                                                                src="https://img.icons8.com/stickers/25/000000/user.png" /></span>
-                                                                    </div> <input type="text" name="firstname"
-                                                                        id="firstname" class="form-control"
-                                                                        placeholder="First Name:" required>
-
-                                                                    <input type="hidden" name="route"
-                                                                        value="estore">
-                                                                    <input type="hidden" name="accountNumber"
-                                                                        value="{{ $data['refCode'] }}">
-                                                                    <input type="hidden" name="mode"
-                                                                        value="{{ env('APP_ENV') == 'local' ? 'test' : 'live' }}">
-                                                                    <input type="hidden" name="paymentToken"
-                                                                        class="form-control" id="paymentToken"
-                                                                        value="" readonly>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="form-group"> <label for="lastname">
-                                                                    <h6><span style="color: red;">*</span> Please enter
-                                                                        your
-                                                                        Last Name</h6>
-                                                                </label>
-                                                                <div class="input-group">
-
-                                                                    <div class="input-group-append"> <span
-                                                                            class="input-group-text text-muted">
-                                                                            <img
-                                                                                src="https://img.icons8.com/stickers/25/000000/user.png" /></span>
-                                                                    </div> <input type="text" name="lastname"
-                                                                        id="lastname" class="form-control"
-                                                                        placeholder="Last Name:" required>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group"> <label for="email">
-                                                                    <h6><span style="color: red;">*</span> Email
-                                                                        Address
-                                                                    </h6>
-                                                                </label>
-                                                                <div class="input-group">
-
-                                                                    <div class="input-group-append"> <span
-                                                                            class="input-group-text text-muted">
-                                                                            <img
-                                                                                src="https://img.icons8.com/color/25/000000/email-sign.png" /></span>
-                                                                    </div> <input type="email" name="email"
-                                                                        id="email" class="form-control"
-                                                                        placeholder="Email Address:" required>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group"> <label for="phone">
-                                                                    <h6><span style="color: red;">*</span> Phone Number
-                                                                    </h6>
-                                                                </label>
-                                                                <div class="input-group">
-
-                                                                    <div class="input-group-append"> <span
-                                                                            class="input-group-text text-muted">
-                                                                            <img
-                                                                                src="https://img.icons8.com/external-icongeek26-flat-icongeek26/25/000000/external-phone-essentials-icongeek26-flat-icongeek26.png" /></span>
-                                                                    </div> <input type="text" name="phone"
-                                                                        id="phone" class="form-control"
-                                                                        placeholder="Phone Number:" required>
-                                                                </div>
-                                                            </div>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="mt-3">
+                                                    <form role="form" action="#" method="POST" id="forVisitors" novalidate>
+                                    @csrf
+                                    <input type="hidden" name="invoice_no" id="payinvoiceRef"
+                                        value="{{ 'Shop_' . uniqid() }}">
+                                    <input type="hidden" name="paymentToken" id="paymentToken" value="">
 
 
-                                                            <div
-                                                                class="form-group @if ($data['currencyCode']->currencyCode != $data['paymentorg']->currencyCode) disp-0 @endif ">
-                                                                <label for="amount">
-                                                                    <h6><span style="color: red;">*</span>Amount</h6>
-                                                                </label>
-                                                                <div class="input-group">
+                                    <input type="hidden" name="merchant_id" id="payuser_id"
+                                        value="{{ Request::segment(3) }}">
 
-                                                                    <div class="input-group-append"> <span
-                                                                            class="input-group-text text-muted">
-                                                                            {{ $data['currencyCode']->currencySymbol }}</span>
-                                                                    </div>
-                                                                    <input type="text" name="amount"
-                                                                        class="form-control" id="amounttosend"
-                                                                        value="{{ sprintf('%.2f', 100) }}"
-                                                                        placeholder="0.00" readonly>
-
-                                                                    <input type="hidden" name="conversionamount"
-                                                                        class="form-control" id="conversionamount"
-                                                                        value="" placeholder="0.00" readonly>
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div
-                                                                class="form-group @if ($data['currencyCode']->currencyCode == $data['paymentorg']->currencyCode) disp-0 @endif">
-                                                                <label for="amount">
-                                                                    <h6><span style="color: red;">*</span>Amount</h6>
-                                                                </label>
-                                                                <div class="input-group">
-
-                                                                    <div class="input-group-append"> <span
-                                                                            class="input-group-text text-muted">
-                                                                            {{ $data['currencyCode']->currencySymbol }}</span>
-                                                                    </div>
-
-                                                                    <input type="text" name="conversionamount"
-                                                                        class="form-control conversionamount"
-                                                                        id="conversionamount" value=""
-                                                                        placeholder="0.00" readonly>
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div class="form-group disp-0"> <label
-                                                                    for="commissiondeduct">
-                                                                    <h6>Fee Charge</h6>
-                                                                </label>
-                                                                <div class="input-group">
-                                                                    <input type="text" name="commissiondeduct"
-                                                                        class="form-control commissiondeduct"
-                                                                        id="commissiondeduct" value=""
-                                                                        placeholder="0.00" readonly>
-
-                                                                    <input type="hidden" name="totalcharge"
-                                                                        class="form-control" id="totalcharge"
-                                                                        value="" placeholder="0.00" readonly>
-
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div class="form-group"> <label for="country">
-                                                                    <h6><span style="color: red;">*</span> Country</h6>
-                                                                </label>
-                                                                <div class="input-group">
-
-                                                                    <div class="input-group-append"> <span
-                                                                            class="input-group-text text-muted">
-                                                                            <img
-                                                                                src="https://img.icons8.com/external-flat-icons-inmotus-design/25/000000/external-country-globe-geography-flat-icons-inmotus-design.png" /></span>
-                                                                    </div>
-                                                                    <select name="country" id="country"
-                                                                        class="form-control" required>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="form-group"> <label for="state">
-                                                                    <h6><span style="color: red;">*</span>
-                                                                        State/Province
-                                                                    </h6>
-                                                                </label>
-                                                                <div class="input-group">
-
-                                                                    <div class="input-group-append"> <span
-                                                                            class="input-group-text text-muted">
-                                                                            <img
-                                                                                src="https://img.icons8.com/external-flat-icons-inmotus-design/25/000000/external-country-globe-geography-flat-icons-inmotus-design.png" /></span>
-                                                                    </div>
-                                                                    <select name="state" id="state"
-                                                                        class="form-control" required>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div class="form-group"> <label for="purpose">
-                                                                    <h6><span style="color: red;">*</span> Purpose of
-                                                                        Payment</h6>
-                                                                </label>
-                                                                <div class="input-group">
-
-                                                                    <div class="input-group-append"> <span
-                                                                            class="input-group-text text-muted">
-                                                                            <img
-                                                                                src="https://img.icons8.com/nolan/25/shopping-cart-promotion.png" /></span>
-                                                                    </div>
-                                                                    <input type="text" name="purpose"
-                                                                        class="form-control" id="purpose"
-                                                                        value="Purchase of 1 items from {{ $data['paymentorg']->businessname }}"
-                                                                        readonly>
-                                                                </div>
-                                                            </div>
+                                        <input type="hidden" name="cardType" id="cardType"
+                                                            value="">
 
 
 
-                                                            {{-- Condition Payment Gateway --}}
+                                    <div class="form-group"> <label for="currency">
+                                            <h6>Full Name</h6>
+                                        </label>
 
-                                                            @if ($data['paymentgateway']->gateway == 'Moneris')
-                                                                <div class="row">
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group"> <label
-                                                                                for="cardType">
-                                                                                <h6><span style="color: red;">*</span>
-                                                                                    Select
-                                                                                    Card Type
-                                                                                </h6>
-                                                                            </label>
-                                                                            <div class="input-group">
-
-                                                                                <div class="input-group-append"> <span
-                                                                                        class="input-group-text text-muted">
-                                                                                        <img
-                                                                                            src="https://img.icons8.com/office/25/000000/mastercard-credit-card.png" /></span>
-                                                                                </div>
-                                                                                <select name="cardType" id="cardType"
-                                                                                    class="form-control" required>
-                                                                                    <option value="">Select Card
-                                                                                        Type
-                                                                                    </option>
-                                                                                    <option value="Credit Card">Credit
-                                                                                        Card
-                                                                                    </option>
-                                                                                    <option value="Debit Card">Debit
-                                                                                        Card
-                                                                                    </option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group"> <label
-                                                                                for="cardNumber">
-                                                                                <h6><span style="color: red;">*</span>
-                                                                                    Card
-                                                                                    Number
-                                                                                </h6>
-                                                                            </label>
-                                                                            <div class="input-group">
-
-                                                                                <div class="input-group-append"> <span
-                                                                                        class="input-group-text text-muted">
-                                                                                        <img
-                                                                                            src="https://img.icons8.com/external-prettycons-flat-prettycons/25/000000/external-payment-method-shopping-prettycons-flat-prettycons.png" /></span>
-                                                                                </div>
-                                                                                <input type="number"
-                                                                                    name="cardNumber"
-                                                                                    class="form-control"
-                                                                                    id="cardNumber" value=""
-                                                                                    placeholder="5411331234212345">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                        <div class="input-group"> <span class="input-group-text text-muted"> <img
+                                                    src="https://img.icons8.com/small/24/000000/user.png" /></span>
+                                            <input type="text" name="fullname" id="fullname" class="form-control"
+                                                value="">
+                                            <div class="input-group-append"> </div>
+                                        </div>
+                                    </div>
 
 
-                                                                <div class="row">
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group"> <label
-                                                                                for="cardMonth">
-                                                                                <h6><span style="color: red;">*</span>
-                                                                                    Month
-                                                                                </h6>
-                                                                            </label>
-                                                                            <div class="input-group">
+                                    <div class="form-group"> <label for="currency">
+                                            <h6>Email Address</h6>
+                                        </label>
 
-                                                                                <div class="input-group-append"> <span
-                                                                                        class="input-group-text text-muted">
-                                                                                        <img
-                                                                                            src="https://img.icons8.com/external-flaticons-flat-flat-icons/25/000000/external-month-morning-flaticons-flat-flat-icons-2.png" /></span>
-                                                                                </div>
-                                                                                <input type="number" name="cardMonth"
-                                                                                    class="form-control"
-                                                                                    id="cardMonth" value=""
-                                                                                    placeholder="Expiry Month:"
-                                                                                    min="01" step="01">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group"> <label
-                                                                                for="cardYear">
-                                                                                <h6><span style="color: red;">*</span>
-                                                                                    Card
-                                                                                    Year
-                                                                                </h6>
-                                                                            </label>
-                                                                            <div class="input-group">
+                                        <div class="input-group"> <span class="input-group-text text-muted"><img
+                                                    src="https://img.icons8.com/fluency/24/000000/email.png" /></span>
+                                            <input type="email" name="email_address" id="email_address"
+                                                class="form-control" value="">
+                                            <div class="input-group-append"> </div>
+                                        </div>
+                                    </div>
 
-                                                                                <div class="input-group-append"> <span
-                                                                                        class="input-group-text text-muted">
-                                                                                        <img
-                                                                                            src="https://img.icons8.com/external-flaticons-flat-flat-icons/25/000000/external-year-morning-flaticons-flat-flat-icons.png" /></span>
-                                                                                </div>
-                                                                                <input type="number" name="cardYear"
-                                                                                    class="form-control"
-                                                                                    id="cardYear" value=""
-                                                                                    placeholder="Expiry Year:"
-                                                                                    min="01" step="01">
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            @endif
 
-                                                            @if ($data['paymentgateway']->gateway == 'Stripe')
-                                                                <div class="form-group"> <label for="card-elemet">
-                                                                        <h6>Card Detail</h6>
-                                                                    </label>
-                                                                    <div id="card-element"></div>
-                                                                </div>
-                                                            @endif
+                                    <div class="form-group"> <label for="currency">
+                                            <h6>Purpose of Payment</h6>
+                                        </label>
+
+                                        <div class="input-group"> <span class="input-group-text text-muted"><img
+                                                    src="https://img.icons8.com/external-bearicons-flat-bearicons/24/000000/external-Target-business-and-marketing-bearicons-flat-bearicons.png" /></span>
+                                            <input type="text" name="purpose" id="purpose" class="form-control"
+                                                value="">
+                                            <div class="input-group-append"> </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group disp-0"> <label for="currency">
+                                            <h6>Currency</h6>
+                                        </label>
+                                        <div class="input-group">
+                                            <select name="currency" id="currency" class="form-control">
+                                                <option value="{{ $data['currencyCode']->currencySymbol }}">
+                                                    {{ $data['currencyCode']->currencySymbol }}</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
 
 
 
 
-                                                            <div class="form-group">
-                                                                <div class="commissionInfo"></div>
-                                                            </div>
+                                    @if ($countryBase != $data['currencyCode']->name)
+                                        <div class="form-group converter"> <label for="netwmount">
+                                                <h6>Currency Conversion <br><small class="text-info"><b>Exchange
+                                                            rate </b> <br> <span id="rateToday"></span> </small></h6>
 
 
-                                                            <div class="form-group disp-0">
-                                                                <div class="input-group">
-                                                                    <p style="color: red; font-weight: bold;"><input
-                                                                            type="checkbox" name="commission"
-                                                                            id="commission" checked="checked"> Include
-                                                                        fee
-                                                                    </p>
+                                                <table class="table table-bordered table-striped" width="100%">
+                                                    <tbody>
+                                                        <tr style="font-weight: bold;">
+                                                            <td>{{ $data['currencyCode']->currencyCode }}</td>
+                                                            <td>{{ $currencycod }}</td>
+                                                        </tr>
+                                                        <tr style="font-weight: bold;">
+                                                            <td class="text-success" id="typedAmount"></td>
+                                                            <td class="text-primary" id="convertedAmount"></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
 
-                                                                </div>
-                                                            </div>
-
-
-                                                            @if ($data['paymentgateway']->gateway == 'PayStack' || $data['paymentgateway']->gateway == 'Express Payment Solution')
-                                                                <div class="form-group mt-4">
-
-                                                                    <button type="button" onclick="estoreWithEPS()"
-                                                                        class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn">
-                                                                        Make Payment </button>
-                                                                </div>
-                                                            @elseif($data['paymentgateway']->gateway == 'Stripe')
-                                                                <div class="form-group mt-4">
-
-                                                                    <button type="submit"
-                                                                        class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn">
-                                                                        Make Payment </button>
-                                                                </div>
-                                                            @elseif($data['paymentgateway']->gateway == 'PayPal')
-                                                                {{-- PayPal --}}
-                                                                <div class="card-footer" id="paypal-button-container">
-                                                                </div>
-                                                            @else
-                                                                <div class="form-group mt-4">
-
-                                                                    <button type="button"
-                                                                        onclick="handShake('estore_payment')"
-                                                                        class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn">
-                                                                        Make Payment </button>
-                                                                </div>
-                                                            @endif
+                                            </label>
 
 
 
+                                        </div>
 
-                                                        </form>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <p style="color: red; font-weight: bold;"><input type="checkbox"
+                                                        name="convertRate" id="convertRate"
+                                                        onchange="checkBoxConfirm()"> Accept conversion rate</p>
+
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="form-group disp-0">
+                                            <div class="input-group">
+                                                <p style="color: red; font-weight: bold;"><input type="checkbox"
+                                                        checked name="convertRate" id="convertRate"> Accept
+                                                    conversion rate</p>
+
+                                            </div>
+                                        </div>
+                                    @endif
+
+
+
+                                    @if ($countryBase == $data['currencyCode']->name)
+                                        <div class="form-group disp-0">
+                                            <div class="input-group">
+                                                <p style="color: red; font-weight: bold;"><input type="checkbox"
+                                                        checked name="convertRate" id="convertRate"> Accept
+                                                    conversion rate</p>
+
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="form-group topay"> <label for="currency">
+                                                <h6>Amount to Pay</h6>
+                                            </label>
+                                            <input type="hidden" value="{{ $data['currencyCode']->currencyCode }}"
+                                                name="currencyCode">
+                                            <div class="input-group"> <span class="input-group-text text-muted">
+                                                    {{ $data['currencyCode']->currencySymbol }} </span>
+                                                <input type="number" min="0.00" step="0.01" name="amount"
+                                                    id="typepayamount" placeholder="50.00" class="form-control"
+                                                    value="">
+                                                <div class="input-group-append"> </div>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="form-group topay"> <label for="currency">
+                                                <h6>Amount to Pay</h6>
+                                            </label>
+                                            <input type="hidden" value="{{ $data['currencyCode']->currencyCode }}"
+                                                name="currencyCode">
+                                            <div class="input-group"> <span class="input-group-text text-muted">
+                                                    {{ $data['currencyCode']->currencySymbol }} </span> <input
+                                                    type="number" min="0.00" step="0.01" name="amount"
+                                                    id="typepayamount" placeholder="50.00" class="form-control"
+                                                    value="1.00">
+                                                <div class="input-group-append"> </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
+
+                                    <div class="form-group"> <label for="netwmount">
+                                            Fee
+                                        </label>
+                                        <input type="text" name="commissiondeduct" class="form-control commissiondeduct"
+                                            id="commissiondeduct" value="" placeholder="0.00" readonly>
+
+                                        <input type="hidden" name="totalcharge" class="form-control"
+                                            id="totalcharge" value="" placeholder="0.00" readonly>
+
+                                    </div>
+
+
+
+                                    <div class="form-group">
+                                        <div class="commissionInfo"></div>
+                                    </div>
+
+                                    <hr>
+
+
+                                    {{-- Pay Using Moneris --}}
+
+                                    @if ($data['currencyCode']->gateway == 'Moneris')
+                                        <div class="form-group"> <label for="paycreditcard">
+                                                <h6>Card number</h6>
+                                            </label>
+                                            <div class="input-group"> <input type="number" name="creditcard_no"
+                                                    id="paycreditcard" placeholder="5199392421005430"
+                                                    class="form-control" maxlength="16" required>
+                                                <div class="input-group-append"> <span
+                                                        class="input-group-text text-muted"> <i
+                                                            class="fab fa-cc-visa mx-1"></i> <i
+                                                            class="fab fa-cc-mastercard mx-1"></i> <i
+                                                            class="fab fa-cc-amex mx-1"></i> </span> </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <div class="form-group"> <label><span class="hidden-xs">
+                                                            <h6>Month</h6>
+                                                        </span></label>
+                                                    <div class="input-group"> <select name='month' id="paymonth"
+                                                            class='form-control'>
+                                                            <option selected value='01'>January</option>
+                                                            <option value='02'>February</option>
+                                                            <option value='03'>March</option>
+                                                            <option value='04'>April</option>
+                                                            <option value='05'>May</option>
+                                                            <option value='06'>June</option>
+                                                            <option value='07'>July</option>
+                                                            <option value='08'>August</option>
+                                                            <option value='09'>September</option>
+                                                            <option value='10'>October</option>
+                                                            <option value='11'>November</option>
+                                                            <option value='12'>December</option>
+                                                        </select>
                                                     </div>
+
                                                 </div>
                                             </div>
+
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label><span class="hidden-xs">
+                                                            <h6>Year</h6>
+                                                        </span></label>
+                                                    <div class="input-group">
+                                                        <select name='expirydate' id="payyear"
+                                                            class='form-control'>
+                                                            @for ($i = 21; $i <= 50; $i++)
+                                                                <option value='{{ $i }}'>
+                                                                    {{ $i }}</option>
+                                                            @endfor
+
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-sm-4">
+                                                <div class="form-group mb-4"> <label data-toggle="tooltip"
+                                                        title="Three digit CV code on the back of your card">
+                                                        <h6>CVV <i class="fa fa-question-circle d-inline"></i></h6>
+                                                    </label> <input type="number" required class="form-control"
+                                                        name="cvv" placeholder="435"> </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="card-footer"> <button type="button"
+                                                onclick="handShake('payinshop')"
+                                                class="subscribe btn btn-primary btn-block shadow-sm {{ $countryBase == $data['currencyCode']->name ? 'cardSubmit' : 'sendmoneyBtn' }}">
+                                                Make Payment </button></div>
+
+                                    @endif
+
+
+                                    {{-- Pay Using Stripe --}}
+
+                                    @if ($data['currencyCode']->gateway == 'Stripe')
+                                        <input type="hidden" name="name" class="form-control" id="nameInput"
+                                            value="{{ $data['name'] }}" readonly>
+
+                                        <input type="hidden" name="email" class="form-control" id="emailInput"
+                                            value="{{ $data['email'] }}" readonly>
+
+                                        <div class="form-group"> <label for="card-elemet">
+                                                <h6>Card Detail</h6>
+                                            </label>
+                                            <div id="card-element"></div>
+                                        </div>
+
+
+
+                                        <div class="card-footer"> <button type="submit"
+                                                class="subscribe btn btn-info btn-block shadow-sm {{ $countryBase == $data['currencyCode']->name ? 'cardSubmit' : 'sendmoneyBtn' }}">
+                                                Make Payment</button></div>
+                                    @endif
+
+
+                                    {{-- Pay Using PayPal --}}
+
+                                    @if ($data['currencyCode']->gateway == 'PayPal')
+                                        <div class="card-footer" id="paypal-button-container"></div>
+                                    @endif
+
+
+                                    {{-- Pay Using PayStack --}}
+                                    @if ($data['currencyCode']->gateway == 'PayStack' || $data['currencyCode']->gateway == 'Express Payment Solution')
+                                        <div class="form-group topay disp-0"> <label for="currency">
+                                                <h6>Amount to Pay</h6>
+                                            </label>
+                                            <input type="hidden" value="{{ $data['currencyCode']->currencyCode }}"
+                                                name="currencyCode">
+                                            <div class="input-group"> <span class="input-group-text text-muted">
+                                                    {{ $data['currencyCode']->currencySymbol }} </span> <input
+                                                    type="number" min="0.00" step="0.01" name="amount"
+                                                    id="typepayamount" placeholder="50.00" class="form-control"
+                                                    value="">
+                                                <div class="input-group-append"> </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="card-footer"> <button type="button" onclick="payWithEPS()"
+                                                class="subscribe btn btn-info btn-block shadow-sm {{ $countryBase == $data['currencyCode']->name ? 'cardSubmit' : 'sendmoneyBtn' }}">
+                                                Make Payment </button></div>
+                                    @endif
+
+
+
+
+                                </form>
+                                                </div>
+                                            </div>
+                                        </div>
 
 
 
@@ -738,8 +697,7 @@
 
                                                         <p>
                                                             <a type="button" class="btn btn-primary"
-                                                                href="{{ route('register') }}"
-                                                                target="_blank">Create
+                                                                href="{{ route('register') }}" target="_blank">Create
                                                                 Consumer Account</a> <a type="button"
                                                                 class="btn btn-success"
                                                                 href="{{ route('AdminRegister') }}"
@@ -853,7 +811,7 @@
                     formData.append('amount', amount);
                     formData.append('amounttosend', amount);
                     formData.append('commissiondeduct', $('.commissiondeduct').val());
-                    formData.append('currencyCode', `{{ Auth::user()->currencyCode }}`);
+                    formData.append('currencyCode', `{{ $data['currencyCode']->currencyCode }}`);
 
                     Pace.restart();
                     Pace.track(function() {
@@ -908,7 +866,7 @@
 
                                             setTimeout(() => {
                                                 handShake(
-                                                    'estore_payment'
+                                                    'payinshop'
                                                 );
                                             }, 1000);
 
@@ -996,7 +954,7 @@
 
                             // alert("Looks like the transaction is approved.");
                             setTimeout(() => {
-                                handShake('estore_payment');
+                                handShake('payinshop');
                             }, 1000);
                         }
 
@@ -1020,10 +978,6 @@
     <script>
         $(function() {
             $('[data-toggle="tooltip"]').tooltip();
-
-            runCommission();
-
-
         });
 
 
@@ -1122,59 +1076,118 @@
         });
 
 
-        async function handShake(val) {
-            $('.sendmoneyBtn').text('Please wait...');
 
+                    function payLinkInShop(val) {
 
+                var route;
 
-            try {
+                var formData;
 
+                if (val == 'pay_as_customer') {
+                    formData = new FormData(forCustomers);
+                    route = "{{ URL('/api/v1/payinshop') }}";
 
-                var data = new FormData(forVisitors);
-                var headers = {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                    'Authorization': 'Bearer {{ $data['merchantApiKey'] }}'
-                };
+                    Pace.restart();
+                    Pace.track(function() {
+                        authHeaders();
+                        jQuery.ajax({
+                            url: route,
+                            method: 'post',
+                            data: formData,
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            dataType: 'JSON',
+                            beforeSend: function() {
+                                $('.sendmoneyBtn').text('Please wait...');
+                                $('.cardSubmit').text('Please wait...');
+                            },
+                            success: function(result) {
 
-                const config = {
-                    method: 'POST',
-                    url: "{{ URL('/api/v1/visitors-payment') }}",
-                    headers: headers,
-                    data: data
+                                $('.sendmoneyBtn').text('Make Payment');
+                                $('.cardSubmit').text('Make Payment');
+
+                                if (result.status == 200) {
+                                    swal("Success", result.message, "success");
+                                    setTimeout(function() {
+                                        location.href = "{{ route('home') }}";
+                                    }, 2000);
+                                } else {
+                                    swal("Oops", result.message, "error");
+                                }
+
+                            },
+                            error: function(err) {
+                                $('.sendmoneyBtn').text('Make Payment');
+                                $('.cardSubmit').text('Make Payment');
+                                swal("Oops", err.responseJSON.message, "error");
+
+                            }
+
+                        });
+                    });
+
                 }
 
-
-
-
-
-                const response = await axios(config);
-
-                $('.sendmoneyBtn').text('Make Payment');
-
-
-
-                swal("Great", response.data.message, "success");
-
-                setTimeout(function() {
-                    location.href =
-                        "{{ route('merchant shop now', $data['paymentorg']->businessname) }}";
-                }, 2000);
-
-
-
-            } catch (error) {
-
-                $('.sendmoneyBtn').text('Make Payment');
-
-                if (error.response) {
-                    swal("Oops", error.response.data.message, "error");
-                } else {
-                    swal("Oops", error.message, "error");
-                }
             }
 
-        }
 
+
+
+
+                    function handShake(val) {
+
+                var route;
+
+                var formData;
+
+                if (val == 'payinshop') {
+                    formData = new FormData(formElem);
+                    route = "{{ URL('/api/v1/payinshop') }}";
+
+                    Pace.restart();
+                    Pace.track(function() {
+                        setHeaders();
+                        jQuery.ajax({
+                            url: route,
+                            method: 'post',
+                            data: formData,
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            dataType: 'JSON',
+                            beforeSend: function() {
+                                $('.sendmoneyBtn').text('Please wait...');
+                                $('.cardSubmit').text('Please wait...');
+                            },
+                            success: function(result) {
+
+                                $('.sendmoneyBtn').text('Make Payment');
+                                $('.cardSubmit').text('Make Payment');
+
+                                if (result.status == 200) {
+                                    swal("Success", result.message, "success");
+                                    setTimeout(function() {
+                                        location.href = "{{ route('home') }}";
+                                    }, 2000);
+                                } else {
+                                    swal("Oops", result.message, "error");
+                                }
+
+                            },
+                            error: function(err) {
+                                $('.sendmoneyBtn').text('Make Payment');
+                                $('.cardSubmit').text('Make Payment');
+                                swal("Oops", err.responseJSON.message, "error");
+
+                            }
+
+                        });
+                    });
+
+                }
+
+            }
 
         // Axios to process the payment...
 
@@ -1227,6 +1240,29 @@
         }
 
 
+        //setup before functions
+var typingTimer;                //timer identifier
+var doneTypingInterval = 2000;  //time in ms, 5 seconds for example
+var $input = $('#amounttosend, #typepayamount');
+
+//on keyup, start the countdown
+$input.on('keyup', function () {
+  clearTimeout(typingTimer);
+  typingTimer = setTimeout(doneTyping, doneTypingInterval);
+});
+
+//on keydown, clear the countdown
+$input.on('keydown', function () {
+  clearTimeout(typingTimer);
+});
+
+//user is "finished typing," do something
+function doneTyping () {
+  runCommission();
+}
+
+
+
 
 
         function runCommission() {
@@ -1234,12 +1270,14 @@
 
             $('.commissionInfo').html("");
             $(".convertedCommission").html("");
-            var amount = $("#amounttosend").val();
+            var amount = ($('#cardType').val() === 'Debit Card') ? $("#typepayamount").val() : $("#amounttosend").val();
             // var amount = $("#conversionamount").val();
             var card_type = $('#cardType').val();
+            var refCode = $('#accountNumber').val();
+            var country = `{{ $data['paymentgateway']->name }}`;
 
 
-            var route = "{{ URL('Ajax/getCommission') }}";
+            var route = "{{ URL('Ajax/getlinkCommission') }}";
             var thisdata = {
                 check: $('#commission').prop("checked"),
                 amount: amount,
@@ -1247,7 +1285,9 @@
                 localcurrency: "{{ $data['paymentorg']->currencyCode }}",
                 foreigncurrency: "USD",
                 structure: "Add Funds/Money",
-                structureMethod: card_type
+                structureMethod: card_type,
+                refCode,
+                country
             };
 
 
@@ -1272,6 +1312,8 @@
 
                     success: function(result) {
 
+                        console.log(result);
+
 
 
                         var totalCharge;
@@ -1288,10 +1330,11 @@
 
                             if (result.walletCheck != "") {
                                 $(".sendmoneyBtn").attr("disabled", true);
-
+                                checkBoxConfirm();
 
                             } else {
                                 $(".sendmoneyBtn").attr("disabled", false);
+                                checkBoxConfirm();
                             }
 
 
@@ -1425,104 +1468,102 @@
 
         // EPS Integration...
 
-        async function estoreWithEPS() {
+            async function payWithEPS() {
+                $('.cardSubmit').text('Please wait...');
+                $('.sendmoneyBtn').text('Please wait...');
 
-            $('.sendmoneyBtn').text('Please wait...');
+                try {
 
-            try {
+                    var callbackUrl;
 
+                    var netamount = $('#typepayamount').val();
+                    var feeamount = $('.commissiondeduct').val();
+                    var amount = (+netamount + +feeamount).toFixed(2);
+                    var paymentToken = '' + Math.floor((Math.random() * 1000000000) + 1);
+                    var publicKey =
+                        `{{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_KEY_DEV') : env('EPXRESS_PAYMENT_KEY_PROD') }}`;
+                    var commission = $('#conversionamount').val();
+                    var currencyCode = `{{ $data['currencyCode']->currencyCode }}`;
+                    var conversionamount = $('#conversionamount').val();
+                    var ref_code = `{{ $data['refCode'] }}`;
 
-                var callbackUrl;
+                    if (`{{ env('APP_ENV') }}` != "local") {
+                        callbackUrl =
+                            `{{ env('APP_URL') }}/expresspay/business?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&ref_code=${ref_code}`;
+                    } else {
+                        callbackUrl =
+                            `http://localhost:9090/expresspay/business?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&ref_code=${ref_code}`;
+                    }
 
-                var netamount = $('#conversionamount').val();
-                var feeamount = $('.commissiondeduct').val();
-                var amount = (+netamount + +feeamount).toFixed(2);
-                var paymentToken = 'estore_' + Math.floor((Math.random() * 1000000000) + 1);
-                var publicKey =
-                    `{{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_KEY_DEV') : env('EPXRESS_PAYMENT_KEY_PROD') }}`;
-                var commission = $('#commission').val();
-                var currencyCode = `{{ $data['paymentorg']->currencyCode }}`;
-                var conversionamount = $('#conversionamount').val();
-                var purpose = $('#purpose').val();
-                var api_token = `{{ $data['merchantApiKey'] }}`;
-                var customername = $('#firstname').val() + ' ' + $('#lastname').val();
-                var country = `{{ request()->get('country') }}`;
-                var phone = $('#phone').val();
+                    var productId = paymentToken;
+                    var description = "Paid {{ $currencySymb }}" + netamount +
+                        " to {{ $data['name'] }} for " + $('#purpose').val();
 
-
-                if (`{{ env('APP_ENV') }}` != "local") {
-                    callbackUrl =
-                        `{{ env('APP_URL') }}/expresspay/estoreresp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}&purpose=${purpose}$name=${customername}&country=${country}&phone=${phone}`;
-                } else {
-                    callbackUrl =
-                        `http://localhost:8000/expresspay/estoreresp?paymentToken=${paymentToken}&commission=${commission}&amount=${amount}&commissiondeduct=${feeamount}&currencyCode=${currencyCode}&conversionamount=${conversionamount}&amounttosend=${netamount}&api_token=${api_token}&purpose=${purpose}$name=${customername}&country=${country}&phone=${phone}`;
-                }
-
-                var productId = "{{ $data['paymentorg']->ref_code }}";
-                var description = "Transfer {{ $data['paymentorg']->currencyCode }}" + netamount +
-                    " for " + $('#purpose').val() + " " +
-                    feeamount + " inclusive.";
-
-                var data = JSON.stringify({
-                    "amount": amount,
-                    "transactionId": paymentToken,
-                    "email": $('#email').val(),
-                    "publicKey": publicKey,
-                    "currency": "NGN",
-                    "mode": "Debug",
-                    "callbackUrl": callbackUrl,
-                    "productId": productId,
-                    "applyConviniencyCharge": true,
-                    "productDescription": description,
-                    "bodyColor": "#0000",
-                    "buttonColor": "#0000",
-                    "footerText": "Powered by Pro-filr Nig. LTD",
-                    "footerLink": "https://paysprint.ca",
-                    "footerLogo": "https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png",
-                    "metadata": [{
-                        "name": "name",
-                        "value": customername
-                    }, {
-                        "name": "description",
-                        "value": description
-                    }]
-                });
+                    var data = JSON.stringify({
+                        "amount": amount,
+                        "transactionId": paymentToken,
+                        "email": $('#email_address').val(),
+                        "publicKey": publicKey,
+                        "currency": "NGN",
+                        "mode": "Debug",
+                        "callbackUrl": callbackUrl,
+                        "productId": productId,
+                        "applyConviniencyCharge": true,
+                        "productDescription": description,
+                        "bodyColor": "#0000",
+                        "buttonColor": "#0000",
+                        "footerText": "Powered by Pro-filr Nig. LTD",
+                        "footerLink": "https://paysprint.ca",
+                        "footerLogo": "https://res.cloudinary.com/paysprint/image/upload/v1650628016/assets/pay_sprint_black_horizotal_fwqo6q_ekpq1g.png",
+                        "metadata": [{
+                            "name": "name",
+                            "value": "{{ $data['name'] }}"
+                        }, {
+                            "name": "description",
+                            "value": "Paid {{ $currencySymb }}" + netamount +
+                                " to {{ $data['name'] }} for " + $('#purpose').val()
+                        }]
+                    });
 
 
-                var config = {
-                    method: 'post',
-                    url: `{{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_URL_DEV') : env('EPXRESS_PAYMENT_URL_PROD') }}api/Payments/Initialize`,
-                    headers: {
-                        'Authorization': `bearer {{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_KEY_DEV') : env('EPXRESS_PAYMENT_KEY_PROD') }}`,
-                        'Content-Type': 'application/json'
-                    },
-                    data: data
-                };
+                    var config = {
+                        method: 'post',
+                        url: `{{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_URL_DEV') : env('EPXRESS_PAYMENT_URL_PROD') }}api/Payments/Initialize`,
+                        headers: {
+                            'Authorization': `bearer {{ env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_KEY_DEV') : env('EPXRESS_PAYMENT_KEY_PROD') }}`,
+                            'Content-Type': 'application/json'
+                        },
+                        data: data
+                    };
 
-                const response = await axios(config);
+                    // console.log(config);
 
-                console.log(response);
+                    const response = await axios(config);
 
-                $('.sendmoneyBtn').text('Make Payment');
+                    // console.log(response);
 
-
-
-
-                setTimeout(() => {
-                    location.href = response.data.data.paymentUrl;
-                }, 1000);
+                    $('.cardSubmit').text('Make Payment');
+                    $('.sendmoneyBtn').text('Make Payment');
 
 
+                    setTimeout(() => {
+                        location.href = response.data.data.paymentUrl;
+                    }, 1000);
 
-            } catch (error) {
+                } catch (error) {
+                    $('.cardSubmit').text('Make Payment');
+                    $('.sendmoneyBtn').text('Make Payment');
+                    console.log(error);
 
-                $('.sendmoneyBtn').text('Make Payment');
+                    if (error.response) {
+                        swal('Oops!', error.response.data.responseMessage, 'error');
 
+                    } else {
 
-                if (error.response) {
-                    swal('Oops!', error.response.data.responseMessage, 'error');
-                } else {
-                    swal('Oops!', error.message, 'error');
+                        swal("Oops", error.responseJSON.message, "error");
+
+                    }
+
                 }
 
 
@@ -1530,8 +1571,22 @@
 
 
 
-        }
+            function checkBoxConfirm() {
 
+
+                var convertRate = $('#convertRate').prop("checked");
+
+
+                if (convertRate == true) {
+                    // Enable button
+                    $(".sendmoneyBtn").attr("disabled", false);
+                } else {
+                    // Disable button
+                    $(".sendmoneyBtn").attr("disabled", true);
+
+                }
+
+            }
 
 
 

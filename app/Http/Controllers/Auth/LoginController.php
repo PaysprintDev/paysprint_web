@@ -54,7 +54,7 @@ class LoginController extends Controller
     public function redirectTo()
     {
         if (env('APP_ENV') == 'local') {
-            return '/verification';
+            return '/';
         } else {
             return '/verification';
         }
