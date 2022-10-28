@@ -358,7 +358,7 @@
         </script>
 
         <script src="{{ asset('pace/pace.min.js') }}"></script>
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
         <script src="https://js.paystack.co/v1/inline.js"></script>
 
 
