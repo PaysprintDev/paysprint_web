@@ -18,6 +18,8 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+    <!-- swiper js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
 
     <!-- Favicon -->
     <link rel="icon"
@@ -63,6 +65,8 @@
 
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+
 
 
 
@@ -77,6 +81,22 @@
         var channel = pusher.subscribe('my-channel');
         channel.bind('my-event', function(data) {
             console.log(JSON.stringify(data));
+        });
+
+
+        const appId = '{{ config('constants.onesignal.appId') }}';
+        const safari_web_id = '{{ config('constants.onesignal.safari_web_id') }}';
+        // One Signal Event
+        window.OneSignal = window.OneSignal || [];
+        OneSignal.push(function() {
+            OneSignal.init({
+                appId,
+                safari_web_id,
+                notifyButton: {
+                    enable: true,
+                },
+                subdomainName: "paysprint",
+            });
         });
     </script>
 
@@ -140,97 +160,97 @@
     </style>
 
     @if (Auth::check() == true)
-    <style>
-        .col-md-6.col-sm-6.builder {
-            background-color: #fff !important;
-            border-radius: 10px !important;
-            margin-bottom: 20px !important;
-            height: 450px !important;
-        }
-
-        .col-md-6.col-sm-6.builder.walletInformation {
-            background-color: #fff !important;
-            border-radius: 10px !important;
-            height: 100px !important;
-        }
-
-        ..professional_builders {
-            background: #f5f5f5 !important;
-            padding-top: 80px !important;
-            padding-bottom: 20px !important;
-        }
-
-        .infoRec {
-            height: 300px;
-            overflow-y: auto;
-        }
-
-        .fas.fa-circle {
-            font-size: 12px !important;
-        }
-
-        .badge.badge-success {
-            background-color: #2aad2d !important;
-        }
-
-        .badge.badge-danger {
-            background-color: #a94442 !important;
-        }
-
-        .list-group-item {
-            font-weight: bold;
-        }
-
-        /* Style the header */
-        .header {
-            padding: 10px 16px;
-            background: #555;
-            color: #f1f1f1;
-        }
-
-        /* Page content */
-        .content {
-            padding: 16px;
-        }
-
-        /* The sticky class is added to the header with JS when it reaches its scroll position */
-        .sticky {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 10000;
-            padding-left: 50px;
-            padding-right: 50px;
-
-        }
-
-        /* Add some top padding to the page content to prevent sudden quick movement (as the header gets a new position at the top of the page (position:fixed and top:0) */
-        .sticky+.content {
-            padding-top: 102px;
-        }
-
-        @keyframes fa-blink {
-            0% {
-                opacity: 1;
+        <style>
+            .col-md-6.col-sm-6.builder {
+                background-color: #fff !important;
+                border-radius: 10px !important;
+                margin-bottom: 20px !important;
+                height: 450px !important;
             }
 
-            50% {
-                opacity: 0.5;
+            .col-md-6.col-sm-6.builder.walletInformation {
+                background-color: #fff !important;
+                border-radius: 10px !important;
+                height: 100px !important;
             }
 
-            100% {
-                opacity: 0;
+            ..professional_builders {
+                background: #f5f5f5 !important;
+                padding-top: 80px !important;
+                padding-bottom: 20px !important;
             }
-        }
 
-        .fa-blink {
-            -webkit-animation: fa-blink .75s linear infinite;
-            -moz-animation: fa-blink .75s linear infinite;
-            -ms-animation: fa-blink .75s linear infinite;
-            -o-animation: fa-blink .75s linear infinite;
-            animation: fa-blink .75s linear infinite;
-        }
-    </style>
+            .infoRec {
+                height: 300px;
+                overflow-y: auto;
+            }
+
+            .fas.fa-circle {
+                font-size: 12px !important;
+            }
+
+            .badge.badge-success {
+                background-color: #2aad2d !important;
+            }
+
+            .badge.badge-danger {
+                background-color: #a94442 !important;
+            }
+
+            .list-group-item {
+                font-weight: bold;
+            }
+
+            /* Style the header */
+            .header {
+                padding: 10px 16px;
+                background: #555;
+                color: #f1f1f1;
+            }
+
+            /* Page content */
+            .content {
+                padding: 16px;
+            }
+
+            /* The sticky class is added to the header with JS when it reaches its scroll position */
+            .sticky {
+                position: fixed;
+                top: 0;
+                width: 100%;
+                z-index: 10000;
+                padding-left: 50px;
+                padding-right: 50px;
+
+            }
+
+            /* Add some top padding to the page content to prevent sudden quick movement (as the header gets a new position at the top of the page (position:fixed and top:0) */
+            .sticky+.content {
+                padding-top: 102px;
+            }
+
+            @keyframes fa-blink {
+                0% {
+                    opacity: 1;
+                }
+
+                50% {
+                    opacity: 0.5;
+                }
+
+                100% {
+                    opacity: 0;
+                }
+            }
+
+            .fa-blink {
+                -webkit-animation: fa-blink .75s linear infinite;
+                -moz-animation: fa-blink .75s linear infinite;
+                -ms-animation: fa-blink .75s linear infinite;
+                -o-animation: fa-blink .75s linear infinite;
+                animation: fa-blink .75s linear infinite;
+            }
+        </style>
     @endif
 
 
@@ -263,6 +283,40 @@
         s.src = "https://salesiq.zoho.com/widget";
         t = d.getElementsByTagName("script")[0];
         t.parentNode.insertBefore(s, t);
+    </script>
+
+    <script type="module">
+        import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.esm.browser.min.js'
+    
+      const swiper = new Swiper('.swiper', {
+    // Optional parameters
+    direction: 'horizontal',
+    loop: true,
+    
+    // If we need pagination
+    pagination: {
+    el: '.swiper-pagination',
+    },
+
+    //autoplay
+    autoplay: {
+    delay: 5000,
+  },
+    
+    // Navigation arrows
+    navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+    },
+    
+    // And if we need scrollbar
+    scrollbar: {
+    el: '.swiper-scrollbar',
+    },
+    });
+
+
+
     </script>
 
 

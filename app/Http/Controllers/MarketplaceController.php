@@ -10,6 +10,7 @@ use App\PromoDate;
 use App\TrialDate;
 use App\watchlist;
 use App\merchantTrial;
+use App\MarketplaceReviews;
 
 use Carbon\Carbon;
 
@@ -38,6 +39,7 @@ use App\HistoryReport;
 
 use App\MarketplaceNews;
 
+
 use App\ReferralClaim;
 
 use App\ReferredUsers;
@@ -53,8 +55,6 @@ use App\Traits\Trulioo;
 use App\InvestorRelation;
 
 use App\UnverifiedMerchant;
-
-use App\MarketplaceReviews;
 
 use App\ReferralGenerate;
 
@@ -172,6 +172,7 @@ use App\BVNVerificationList as BVNVerificationList;
 use App\StoreProducts;
 use App\StoreMainShop;
 use App\FlutterwaveModel;
+use App\MerchantReply;
 use App\Traits\SendgridMail;
 use Illuminate\Http\Response;
 
@@ -185,9 +186,10 @@ class MarketplaceController extends Controller
         try {
             // $data = ClientInfo::orderBy('industry', 'ASC')->groupBy('industry')->get();
 
-            $clients = ClientInfo::groupBy('industry')->select('industry', DB::raw('count(*) as total'))->get();
-            $unverified = UnverifiedMerchant::groupBy('industry')->select('industry', DB::raw('count(*) as total'))->get();
-            $data = array_merge($clients->toArray(), $unverified->toArray());
+            // $clients = ClientInfo::groupBy('industry')->select('industry', DB::raw('count(*) as total'))->get();
+
+            $data = UnverifiedMerchant::groupBy('industry')->select('industry', DB::raw('count(*) as total'))->get();
+            // $data = array_merge($clients->toArray(), $unverified->toArray());
             $status = 200;
 
             $response = [
@@ -386,7 +388,10 @@ class MarketplaceController extends Controller
 
             $result = [];
 
+
             $data = StoreProducts::get();
+
+            $totallikes = MarketplaceReviews::get();
 
             for ($i = 0; $i < count($data); $i++) {
                 $item = $data[$i];
@@ -394,14 +399,31 @@ class MarketplaceController extends Controller
 
                 $merchant = User::where('id', $item->merchantId)->first();
 
+                $like = MarketplaceReviews::where('product_id', $item->id)->sum('no_likes');
+
+                $comments = MarketplaceReviews::where('product_id', $item->id)->get();
+                $totalcommentscount = count($comments);
 
 
-                $result[] = ['data' => $item, 'merchant' => $merchant];
+                $result[] = ['data' => $item, 'merchant' => $merchant, 'likes' => $like, 'totalcomments' => $totalcommentscount];
             }
+
+            // for ($i = 0; $i < count($totallikes); $i++) {
+            //     $item = $totallikes[$i];
+
+
+            //     $like = MarketplaceReviews::where('merchant_id', $item->merchant_id)->sum('no_likes');
+
+
+
+            //     $likes[] = ['totallike' => $like];
+            // }
+
 
 
             $response = [
                 'data' => $result,
+                // 'likes' => $likes,
                 'status' => 'success',
             ];
 
@@ -475,7 +497,7 @@ class MarketplaceController extends Controller
     public function getUnverifiedMerchants(Request $request)
     {
         try {
-            $data = UnverifiedMerchant::get();
+            $data = UnverifiedMerchant::orderBy('name')->get();
 
             $response = [
                 'data' => $data,
@@ -546,6 +568,7 @@ class MarketplaceController extends Controller
             'comment' => 'required',
             'email' => 'required',
             'name_sender' => 'required',
+            'product_id' => 'required',
             'merchant_id' => 'required',
             'like' => 'required',
         ]);
@@ -553,12 +576,17 @@ class MarketplaceController extends Controller
         try {
 
             $data = MarketplaceReviews::create([
+                'product_id' => $req->product_id,
                 'merchant_id' => $req->merchant_id,
                 'name_of_sender' => $req->name_sender,
                 'email_of_sender' => $req->email,
                 'comment' => $req->comment,
                 'status' => 'pending',
                 'no_likes' => $req->like,
+            ]);
+
+             MailchimpMails::create([
+                'emails' => $req->email
             ]);
 
             $response = [
@@ -584,20 +612,38 @@ class MarketplaceController extends Controller
     public function viewComments(Request $req, $id)
     {
         try {
-            //code...
-            $data = MarketplaceReviews::where('merchant_id', $id)->get();
+
+            $result = [];
+
+
+            $data = MarketplaceReviews::where('product_id', $id)->get();
+
+
+            for ($i = 0; $i < count($data); $i++) {
+                $item = $data[$i];
+                $merchant= MerchantReply::where('comment_id',$item->id)->where('product_id',$id)->first();
+                if(isset($merchant)){
+                    $merchantreply=$merchant;
+                }else{
+                    $merchantreply = (object)[];
+                }
+                $result[] = ['data' => $item, 'reply' => $merchantreply];
+            }
+
             $response = [
-                'data' => $data,
+                'data' => $result,
+                // 'likes' => $likes,
                 'status' => 'success',
             ];
+
             $code = 200;
         } catch (\Throwable $th) {
-            //throw $th;
             $response = [
                 'data' => [],
-                'status' => 'error',
-                'message' => $th->getMessage()
+                'message' => $th->getMessage(),
+                'status' => 'error'
             ];
+
             $code = 400;
         }
 
@@ -678,5 +724,29 @@ class MarketplaceController extends Controller
         } catch (\Throwable $th) {
             $response = [];
         }
+    }
+
+    //totalcounts of likes
+    public function totallikesCount(Request $req, $id)
+    {
+        try {
+            $data = MarketplaceReviews::where('merchant_id', $id)->sum('no_likes');
+            $response = [
+                'data' => $data,
+                'status' => 'success'
+            ];
+
+            $code = 200;
+        } catch (\Throwable $th) {
+            $response = [
+                'data' => [],
+                'message' => $th->getMessage(),
+                'status' => 'error'
+            ];
+
+            $code = 400;
+        }
+
+        return response()->json($response, $code);
     }
 }

@@ -43,6 +43,7 @@ Route::prefix('/v1')->group(function () {
     Route::get('viewcomments/{id}',  ['uses' => 'MarketplaceController@viewComments'])->name('view comments');
     Route::get('countcomments/{id}',  ['uses' => 'MarketplaceController@countComment'])->name('view comment');
     Route::post('claimbusinesswithphone',  ['uses' => 'MarketplaceController@claimbusinessPhone'])->name('claim business phone');
+    Route::get('totallikes/{id}',  ['uses' => 'MarketplaceController@totallikesCount'])->name('total likes');
 
 
     Route::post('confirmtransaction',  ['uses' => 'MoexController@confirmThisTransactionId'])->name('confirm this transaction');
@@ -115,6 +116,8 @@ Route::prefix('/v1')->group(function () {
     Route::group(['middleware' => ['apitoken']], function () {
 
         Route::post('profile',  ['uses' => 'api\v1\UserController@updateProfile'])->name('update profile');
+
+        Route::post('update-player-id',  ['uses' => 'api\v1\UserController@updatePlayerId'])->name('update player id');
 
         // Points and Reward
         Route::get('/acquiredpoints', ['uses' => 'api\v1\UserController@acquiredPoints', 'as' => 'acquired points']);

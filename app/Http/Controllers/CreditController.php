@@ -12,10 +12,12 @@ class CreditController extends Controller
 {
      // update wallet credit
      public function updateWalletCredit(){
+      
         $updateamounts = ClaimedPoints::where('amount',NULL)->where('status','completed')->get();
    
 
         foreach ($updateamounts as $updateamount){
+
             $id=$updateamount->id;
             $user= User::where('id',$id)->first();
             $usertype = $user->accountType;
@@ -41,6 +43,7 @@ class CreditController extends Controller
                   'amount' => $merchantfee,
                 ]);
             }
+
         }
       
 

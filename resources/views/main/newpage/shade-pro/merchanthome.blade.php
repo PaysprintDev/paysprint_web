@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html>
 
 
-<!-- Mirrored from info.gartnerdigitalmarkets.com/paysprint-gdm-lp by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 19 Sep 2022 12:07:19 GMT -->
-<!-- Added by HTTrack -->
-<meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
 
+
+@extends('layouts.newpage.merchantapp')
+
+@section('content')
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="format-detection" content="telephone=no">
@@ -41,6 +40,11 @@
   </link>
   <link rel="preconnect dns-prefetch" href="https://fonts.gstatic.com/" crossorigin>
   </link>
+  <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"
+/>
+
 
 
 
@@ -61,6 +65,90 @@
       font-weight: 400;
       background: rgb(255, 255, 255);
     }
+
+    /* start review */
+    h3{
+      text-align: center;
+      font-size: 30px;
+      margin: 0;
+      padding-top: 10px;
+      }
+      a{
+      text-decoration: none;
+      }
+      .gallery{
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      margin: 50px 0;
+      }
+      .content{
+      width: 30%;
+      margin: 15px;
+      box-sizing: border-box;
+      float: left;
+      text-align: center;
+      border-radius:10px;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      padding-top: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      transition: .4s;
+      }
+      .content:hover{
+      box-shadow: 0 0 11px rgba(33,33,33,.2);
+      transform: translate(0px, -8px);
+      transition: .6s;
+      }
+     h3{
+      padding-bottom: 5px;
+     }
+      h4{
+      text-align: center;
+  
+      padding: 0 8px;
+      padding-bottom: 3px;
+      }
+      h6{
+      font-size: 26px;
+      text-align: center;
+ 
+      margin: 0;
+      padding-bottom: 10px;
+      }
+      .list-star{
+      list-style-type: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0px;
+      }
+      .star{
+      padding: 5px;
+      }
+      .fa{
+      color: #ff9f43;
+      font-size: 10px;
+      transition: .4s;
+      }
+      .fa:hover{
+      transform: scale(1.3);
+      transition: .6s;
+      }
+  
+      @media(max-width: 1000px){
+      .content{
+      width: 46%;
+      }
+      }
+      @media(max-width: 750px){
+      .content{
+      width: 100%;
+      }
+      }
+      /* end */
 
     a {
       text-decoration: none;
@@ -212,6 +300,18 @@
     .section-fit {
       max-width: 400px;
     }
+    .bullet-html{
+      display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 6px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  border-radius: 20px;
+  background-color: #5D329C;
+    }
 
     :root {
       --section-relative-margin: 0 auto;
@@ -271,7 +371,7 @@
     #element-139 {
       top: 26rem;
       left: 1.25rem;
-      height: 43.625rem;
+      height: 20.625rem;
       width: 22.5rem;
       z-index: 15;
     }
@@ -292,6 +392,7 @@
       height: 100%;
       margin-right: .625rem;
     }
+    
 
     [class*='line-'] {
       box-sizing: content-box;
@@ -525,6 +626,10 @@
       border-bottom: 0.1875rem solid;
       color: #fff;
     }
+    .swiper {
+      width: 600px;
+      height: 300px;
+      }
 
     .form-radio-label:before {
       border-radius: 50%;
@@ -1072,6 +1177,7 @@
       height: 2.8125rem;
       width: 2.5625rem;
       z-index: 58;
+     
     }
 
     #element-197 {
@@ -1801,7 +1907,7 @@
       }
 
       #element-265 {
-        top: 3.4375rem;
+        top: 10.4375rem;
         left: 31.6875rem;
         height: 6.8125rem;
         width: 6.6875rem;
@@ -1809,9 +1915,9 @@
       }
 
       #element-139 {
-        top: 5.3125rem;
+        top: 13.3125rem;
         left: 33.75rem;
-        height: 37.9375rem;
+        /* height: 5.9375rem; */
         width: 29.25rem;
         z-index: 15;
       }
@@ -1821,19 +1927,19 @@
         background: rgb(249, 249, 249);
       }
 
-      #element-139 .contents {
+      /* #element-139 .contents {
         font-family: Nunito !important;
         font-weight: 400 !important;
         background-color: rgb(255, 255, 255) !important;
         border-radius: 0px !important;
         width: 29.25rem !important;
-        height: 37.9375rem !important;
+        height: 27.9375rem !important;
         border-style: solid !important;
         background-repeat: repeat !important;
         background-position: left top !important;
         background-size: cover !important;
         box-shadow: 0px 31px 21px -13px rgba(222, 222, 222, .5) !important;
-      }
+      } */
 
       #element-143 {
         top: 8.875rem;
@@ -3224,7 +3330,10 @@
           </div>
 
           <div class="widget item-absolute " id="element-139">
-            <div class="contents shape  box figure " data-at="shape"></div>
+            <div class="contents shape  box figure " data-at="shape">
+              <img class="w-100" src=" {{ asset('images/paysprintlogo.png') }}" style="">
+
+            </div>
           </div>
 
           {{-- <div class="widget item-absolute headline  " id="element-143" data-at="headline">
@@ -3240,7 +3349,10 @@
 
             <div id="form-validation-error-box-element-141" class="item-cover item-absolute form-messagebox"
               data-at="form-validation-box" style="display:none;">
-              <div class="form-messagebox-contents" data-at="form-validation-box-message"></div>
+              <div class="form-messagebox-contents" data-at="form-validation-box-message">
+               
+              </div>
+              
             </div>
           </div> 
 
@@ -3266,7 +3378,7 @@
           </div>
 
           <div class="widget item-absolute hidden-mobile" id="element-132">
-            <div class="contents shape  circle figure " data-at="shape"></div>
+            <span class="bullet-html pulse"></span>
           </div>
 
           <div class="widget item-absolute paragraph hidden-mobile " id="element-137" data-at="paragraph">
@@ -3276,7 +3388,7 @@
           </div>
 
           <div class="widget item-absolute hidden-mobile" id="element-133">
-            <div class="contents shape  circle figure " data-at="shape"></div>
+            <span class="bullet-html pulse"></span>
           </div>
 
           <div class="widget item-absolute paragraph hidden-mobile " id="element-138" data-at="paragraph">
@@ -3286,7 +3398,7 @@
           </div>
 
           <div class="widget item-absolute hidden-mobile" id="element-134">
-            <div class="contents shape  circle figure " data-at="shape"></div>
+            <span class="bullet-html pulse"></span>
           </div>
 
         </div>
@@ -3296,14 +3408,6 @@
    
   <h1>
 
-    <div class="widget item-absolute headline  " id="element-162" data-at="headline">
-            <div class="contents">
-              <h1>
-                <span class="x_ab3dc331 x_26d449b5"><span class="x_93908647">Take advantage of merchant cash advance
-                    service</span></span>
-              </h1>
-            </div>
-          </div>
   
 
     <section class="section section-relative " id="page-block-5yg6cfwpzsk" data-at="section">
@@ -3437,12 +3541,12 @@
       </div>
     </section>
 
-    <section class="section section-relative " id="page-block-3cg5fcg36ot" data-at="section">
+    <section class="section section-relative  " id="page-block-3cg5fcg36ot" data-at="section">
 
-      <div class="section-holder-border item-block item-absolute" data-at="section-border"></div>
-      <div class="section-holder-overlay item-block item-absolute" data-at="section-overlay"></div>
+      {{-- <div class="section-holder-border item-block item-absolute" data-at="section-border"></div> --}}
+      {{-- <div class="section-holder-overlay item-block item-absolute" data-at="section-overlay"></div> --}}
       <div class="section-block">
-        <div class="section-inner section-fit section-relative">
+        <div class="section-inner section-fit section-relative ">
           <div class="widget item-absolute headline  " id="element-215" data-at="headline">
             <div class="contents">
               <h1>
@@ -3451,7 +3555,7 @@
               </h1>
             </div>
           </div>
-
+          <div class="">
           <div class="widget item-absolute  " id="element-256">
             <div class="contents cropped item-block" data-at="image-cropp">
               <img class="item-content-box item-block image img-lazy" data-at="image" alt=""
@@ -3473,72 +3577,6 @@
             <div class="contents">
               <p class="x_80f7663c x_4976ff6a"><span class="x_93908647">Save up to 90% of the cost of accepting customer
                   payments through swift and no-hassle transactions.</span></p>
-            </div>
-          </div>
-
-          <div class="widget item-absolute  " id="element-266">
-            <div class="contents cropped item-block" data-at="image-cropp">
-              <img class="item-content-box item-block image img-lazy" data-at="image" alt=""
-                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mM89h8AApEBx2iaqpQAAAAASUVORK5CYII&#x3D;"
-                data-src="https://v.fastcdn.co/u/e36f2c7e/62519955-0-l5-about-pattern.png"
-                data-retina-src="https://v.fastcdn.co/u/e36f2c7e/62519955-0-l5-about-pattern.png">
-            </div>
-          </div>
-
-          <div class="widget item-absolute " id="element-208">
-            <div class="contents shape  box figure " data-at="shape"></div>
-          </div>
-
-          <div class="widget item-absolute paragraph  " id="element-207" data-at="paragraph">
-            <div class="contents">
-              <p class="x_9811881d x_9a9d3d17"><span class="x_93908647">"PaySprint is easy and inexpensive to
-                  use."</span></p>
-            </div>
-          </div>
-
-          <div class="widget item-absolute  " id="element-209">
-            <div class="contents cropped item-block" data-at="image-cropp">
-              <img class="item-content-box item-block image img-lazy" data-at="image" alt=""
-                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mM89h8AApEBx2iaqpQAAAAASUVORK5CYII&#x3D;"
-                data-src="https://v.fastcdn.co/u/e36f2c7e/48280295-0-capterra-stars.png"
-                data-retina-src="https://v.fastcdn.co/u/e36f2c7e/48280295-0-capterra-stars.png">
-            </div>
-          </div>
-
-          <div class="widget item-absolute headline  " id="element-214" data-at="headline">
-            <div class="contents">
-              <h3>
-                <span class="x_9a9d3d17 x_b558b569"><span class="x_93908647">Taiwo A.</span></span>
-              </h3>
-            </div>
-          </div>
-
-          <div class="widget item-absolute headline  " id="element-210" data-at="headline">
-            <div class="contents">
-              <h3>
-                <span class="x_8b9dcb22 x_62b81fb4"><span class="x_93908647">Auditor, Accounting</span></span>
-              </h3>
-            </div>
-          </div>
-
-          <div class="widget item-absolute " id="element-211">
-            <div class="contents shape  line-horizontal line " data-at="shape"></div>
-          </div>
-
-          <div class="widget item-absolute paragraph  " id="element-213" data-at="paragraph">
-            <div class="contents">
-              <p class="x_911e5143 x_fae6260b"><span class="x_9508b241"><span>SOURCE:</span><a href="#element-234"
-                    id="link-arlydcynvu" data-link-arlydcynvu class="footnote-link"><sup><span
-                        class="show-for-sr">footnote</span>1</sup></a></span></p>
-            </div>
-          </div>
-
-          <div class="widget item-absolute  " id="element-212">
-            <div class="contents cropped item-block" data-at="image-cropp">
-              <img class="item-content-box item-block image img-lazy" data-at="image" alt=""
-                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mM89h8AApEBx2iaqpQAAAAASUVORK5CYII&#x3D;"
-                data-src="https://v.fastcdn.co/u/e36f2c7e/48289325-0-capterra-logo.svg"
-                data-retina-src="https://v.fastcdn.co/u/e36f2c7e/48289325-0-capterra-logo.svg">
             </div>
           </div>
 
@@ -3589,7 +3627,7 @@
                   customers to your business at no extra cost.</span></p>
             </div>
           </div>
-
+          </div>
         </div>
       </div>
     </section>
@@ -3617,155 +3655,213 @@
           </div>
 
           <div class="widget item-absolute  " id="element-218">
-            <a href="#page_block_header" id="link-3s1v37daorj" class="onpage-link btn    item-block" data-at="button"
+            <a href="{{ route('register') }}" id="link-3s1v37daorj" class="onpage-link btn    item-block" data-at="button"
               data-link-3s1v37daorj>
-              Get a Free Demo
+              Get a Free Demo now
             </a>
           </div>
 
         </div>
       </div>
+
+    
     </section>
+
+ {{-- Review  --}}
+
+     
+ <div class="gallery">
+  <div class="content">
+  
+  <h3>Taiwo A.</h3>
+  <h4 style="padding-bottom: 3px">PaySprint is easy and inexpensive to use. I love the app.</h4>
+ 
+  <ul class="list-star">
+  <li class="star"><i class="fa fa-star" aria-hidden="true"></i></li>
+  <li class="star"><i class="fa fa-star" aria-hidden="true"></i></li>
+  <li class="star"><i class="fa fa-star" aria-hidden="true"></i></li>
+  <li class="star"><i class="fa fa-star" aria-hidden="true"></i></li>
+  <li class="star"><i class="fa fa-star" aria-hidden="true"></i></li>
+  </ul>
+  <h6>Auditor,Accounting</h6>
+  </div>
+  <div class="content">
+
+  <h3>Tara W.</h3>
+  <h4>Great to work with, I really like invoicing, and easy to use app.</h4>
+  
+  <ul class="list-star">
+  <li class="star"><i class="fa fa-star" aria-hidden="true"></i></li>
+  <li class="star"><i class="fa fa-star" aria-hidden="true"></i></li>
+  <li class="star"><i class="fa fa-star" aria-hidden="true"></i></li>
+  <li class="star"><i class="fa fa-star" aria-hidden="true"></i></li>
+  <li class="star"><i class="fa fa-star" aria-hidden="true"></i></li>
+  </ul>
+  <h6>Real Estate</h6>
+  </div>
+  <div class="content">
+ 
+  <h3>Chantae T.</h3>
+  <h4>Just getting started, but love it so far, Easy to use! I find PaySprint to be very competitive.</h4>
+
+  <ul class="list-star">
+  <li class="star"><i class="fa fa-star" aria-hidden="true"></i></li>
+  <li class="star"><i class="fa fa-star" aria-hidden="true"></i></li>
+  <li class="star"><i class="fa fa-star" aria-hidden="true"></i></li>
+  <li class="star"><i class="fa fa-star" aria-hidden="true"></i></li>
+  <li class="star"><i class="fa fa-star" aria-hidden="true"></i></li>
+  </ul>
+  <h6>Owner</h6>
+  </div>
+</div>
+
+{{-- End of Review --}}
+
+
+
+
+      <!-- Featured On -->
+
+
+<div class="brand-section pt-13 pt-lg-17 pb-11 border-bottom bg-default-6">
+  <div class="container">
+      <div class="row justify-content-center align-items-center">
+          <div class="col-md-8">
+              {{-- <p class="gr-text-9 text-center mb-7">Trusted and Featured on:
+              </p> --}}
+              <h2 class="gr-text-4 text-center mb-8">As Featured on</h2>
+          </div>
+          <div class="col-12">
+              <div class="brand-logos d-flex justify-content-center justify-content-xl-between align-items-center mx-n9 flex-wrap">
+                  <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="500" data-aos-once="true">
+                      <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/questrade_znhne7_ua01kw.png" alt="" class="w-100" width="80" height="80">
+                  </div>
+                  <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="500" data-aos-delay="600" data-aos-once="true">
+                      <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/YahooFinanceLogo_geieeb_gpqual.png" alt="" class="w-100" width="60" height="60">
+                  </div>
+                  <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
+                      <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130249/assets/featuredon/private_capital_lxc1jr_kkswzw.png" alt="" class="w-100" width="60" height="60">
+                  </div>
+                  <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
+                      <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/benzinga_qpr7ot_kdvvtl.png" alt="" class="w-100" width="100" height="100">
+                  </div>
+                  <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
+                      <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/reuters_o3wnje_rmf94n.png" alt="" class="w-100" width="100" height="100">
+                  </div>
+                  <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="500" data-aos-delay="400" data-aos-once="true">
+                      <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130249/assets/featuredon/canadianbusinessjournal_e3mobm_lllwjj.png" alt="" class="w-100" width="100" height="100">
+                  </div>
+                  <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
+                      <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/magazinetoday_nsudvk_bjnihr.jpg" alt="" class="w-100" width="80" height="80">
+                  </div>
+                  <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
+                      <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/morningstar_ehxgue_mkpsrd.png" alt="" class="w-100" width="100" height="100">
+                  </div>
+                  <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
+                      <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/1280px-The_Globe_and_Mail__2019-10-31_.svg_ph46rz_qo87pl.png" alt="" class="w-100" style="width: 300px !important;">
+                  </div>
+
+
+
+
+
+
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+<!-- End Featured On -->
+
+<div class="cta-section pt-15 pt-lg-10 pb-5 pb-lg-5 bg-pattern pattern-7" style="background-color: #f2f2f2 !important;">
+  <div class="container">
+      <div class="row justify-content-center">
+          <div class="col-md-6">
+              <div class="text-center dark-mode-texts">
+                  <h2 class="gr-text-4 mb-7" style="color: #433d3d;">DOWNLOAD OUR APP</h2>
+
+                  <a href="https://play.google.com/store/apps/details?id=com.fursee.damilare.sprint_mobile" target="_blank" class="btn text-white gr-hover-y px-lg-9">
+                      <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130088/assets/l6-download-gplay_o9rcfj_l6erwf.png" alt="play store">
+                  </a>
+                  <a href="https://apps.apple.com/gb/app/paysprint/id1567742130" target="_blank" class="btn text-white gr-hover-y px-lg-7">
+                      <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130088/assets/l6-download-appstore_odcskf_atgygf.png" alt="apple store">
+                  </a>
+                  <p class="gr-text-11 mb-0 mt-6" style="color: #433d3d;">It takes only 2 mins!</p>
+              </div>
+
+              <div class="hero-img" data-aos="fade-left" data-aos-duration="500" data-aos-once="true">
+                  <div class="hero-video-thumb position-relative gr-z-index-1">
+                      <center>
+                          <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg" alt="" class="w-100 rounded-8" style="height: 350px !important;width: 350px !important;">
+                      </center>
+                      <a class="video-play-trigger gr-abs-center bg-white circle-xl gr-flex-all-center gr-abs-hover-y focus-reset" data-fancybox="" href="https://youtu.be/ptsmEYFJMx4" tabindex="-1"><i class="icon icon-triangle-right-17-2"></i></a>
+                   
+              </div>
+          </div>
+
+      </div>
+
     
 
-    <section class="section section-relative " id="page-block-lote38odq7l" data-at="section">
+  </div>
+</div>
 
-      <div class="section-holder-border item-block item-absolute" data-at="section-border"></div>
-      <div class="section-holder-overlay item-block item-absolute" data-at="section-overlay"></div>
-      <div class="section-block">
-        <div class="section-inner section-fit section-relative">
-          <div class="widget item-absolute headline  " id="element-222" data-at="headline">
-            <div class="contents">
-              <h1>
-                <span class="x_9a9d3d17"><span class="x_93908647">Headquarters</span></span>
-              </h1>
-            </div>
-          </div>
-
-          <div class="widget item-absolute paragraph  " id="element-223" data-at="paragraph">
-            <div class="contents">
-              <p class="x_fae6260b"><span class="x_93908647">PaySprint International
-                </span></p>
-              <p class="x_fae6260b"><span class="x_93908647">10 George St. North, Brampton. ON. L6X1R2. Canada</span>
-              </p>
-            </div>
-          </div>
-
-          <div class="widget item-absolute headline  " id="element-224" data-at="headline">
-            <div class="contents">
-              <h1>
-                <span class="x_9a9d3d17"><span class="x_93908647">Contact</span></span>
-              </h1>
-            </div>
-          </div>
-
-          <div class="widget item-absolute paragraph  " id="element-225" data-at="paragraph">
-            <div class="contents">
-              <p class="x_fae6260b"><span class="x_93908647">info@paysprint.ca<br></span></p>
-            </div>
-          </div>
-
-          <div class="widget item-absolute headline  " id="element-226" data-at="headline">
-            <div class="contents">
-              <h1>
-                <span class="x_9a9d3d17"><span class="x_93908647">Legal</span></span>
-              </h1>
-            </div>
-          </div>
-
-          <div class="widget item-absolute paragraph  " id="element-227" data-at="paragraph">
-            <div class="contents">
-              <p class="x_fae6260b"><u><span class="x_93908647"><a href="https://paysprint.ca/privacy-policy"
-                      id="link-nvmuwq5dti" target="_blank" data-link-nvmuwq5dti class="url-link">Privacy
-                      Policy</a><br><a href="https://paysprint.ca/terms-of-service" id="link-prahnjxmoji"
-                      target="_blank" data-link-prahnjxmoji class="url-link">Terms of Use</a></span></u></p>
-            </div>
-          </div>
-
-          <div class="widget item-absolute headline  " id="element-234" data-at="headline">
-            <div class="contents">
-              <h1>
-                
-                  </span><span class="x_93908647">Quick Link</span></span>
-              </h1>
-            </div>
-          </div>
-
-          <div class="widget item-absolute paragraph  " id="element-230" data-at="paragraph">
-            <div class="contents">
-              <p class="x_fae6260b"><u><span class="x_93908647">
-                <a href="https://paysprint.ca/privacy-policy"
-                id="link-nvmuwq5dti" target="_blank" data-link-nvmuwq5dti class="url-link">Privacy
-                Policy</a>
-                <br>
-                <a href="https://paysprint.ca/terms-of-service" id="link-prahnjxmoji"
-                target="_blank" data-link-prahnjxmoji class="url-link">Terms of Use</a>
-                <br>
-                <a href="https://paysprint.ca/terms-of-service" id="link-prahnjxmoji"
-                target="_blank" data-link-prahnjxmoji class="url-link">Terms of Use</a>
-                <br>
-                <a href="https://paysprint.ca/terms-of-service" id="link-prahnjxmoji"
-                target="_blank" data-link-prahnjxmoji class="url-link">Terms of Use</a>
-                <br>
-                <a href="https://paysprint.ca/terms-of-service" id="link-prahnjxmoji"
-                target="_blank" data-link-prahnjxmoji class="url-link">Terms of Use</a></span></u></p>
-            </div>
-          </div>
-
-          <div class="widget item-absolute  " id="element-221">
-            <div class="contents html-widget__text-center " data-at="html">
-              <p id="newDate"></p>
-
-              <script>
-
-                var d = new Date();
-                var n = d.getFullYear();
-                document.getElementById("newDate").innerHTML = n;
-                document.getElementById("newDate").innerHTML += " © PaySprint. All Rights Reserved.";
-
-              </script>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
+ 
 
   </main>
 
 
-  <div id="submit-popup" class="lightbox submit-lb item-cover" tabindex="0" role="button" style="display:none;">
-    <div class="lightbox-dim">
-      <div class="notification-text">Thank You!</div>
-    </div>
-  </div>
 
 
 
 
 
-  <!-- Workspace Level Script Footer -->
-
-  <!-- end Workspace Level Script Footer -->
+  
 
   <!-- custom FOOTER code-->
 
   <script>window.__gdprComplianceScripts = window.__gdprComplianceScripts || []; window.__gdprComplianceScripts.push(function () { });</script>
   <!-- end custom FOOTER code-->
 
-
-  <script src="https://g.fastcdn.co/js/utils.cd5b4894ab46ac49c25b.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+   <script src="https://g.fastcdn.co/js/utils.cd5b4894ab46ac49c25b.js"></script>
   <script src="https://g.fastcdn.co/js/Cradle.2834144546d6c56f4dd5.js"></script>
   <script src="https://g.fastcdn.co/js/UserConsent.774850cdd67203cf7eb7.js"></script>
   <script src="https://g.fastcdn.co/js/LazyImage.90aa95d960c719e556c2.js"></script>
   <script src="https://g.fastcdn.co/js/Form.9913500b352375ec139e.js"></script>
   <script async src="https://heatmap-events-collector.instapage.com/static/lib.js"></script>
+  <script>
+    const swiper = new Swiper('.swiper', {
+  // Optional parameters
+  direction: 'vertical',
+  loop: true,
+
+  // If we need pagination
+  pagination: {
+    el: '.swiper-pagination',
+  },
+
+  // Navigation arrows
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
+
+  // And if we need scrollbar
+  scrollbar: {
+    el: '.swiper-scrollbar',
+  },
+});
+  </script>
 
   <!-- Generated at: 2022-09-16T14:13:51.148Z -->
-  <!--
+ 
+@endsection
 
--->
 </body>
+
 
 
 <!-- Mirrored from info.gartnerdigitalmarkets.com/paysprint-gdm-lp by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 19 Sep 2022 12:07:19 GMT -->

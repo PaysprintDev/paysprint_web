@@ -2514,6 +2514,73 @@ class MoexController extends Controller
             $status = 200;
 
             $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
+        } catch (\Throwable $th) {
+            $status = 400;
+            $resData = ['data' => [], 'message' => $th->getMessage(), 'status' => $status];
+        }
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+
+    // Cron to MOEX..
+    public function sendDailyExchange()
+    {
+
+        $setupController = new CheckSetupController();
+
+        try {
+            $jsondata = $this->generateDailyExchangeRate();
+
+            // Decode json data and convert it
+            // into an associative array
+            $jsonans = json_decode($jsondata, true);
+
+
+            // CSV file name => date('d-m-Y') . '_report.xls';
+            $csv = date('d-m-Y') . '_report.xls';
+
+            // File pointer in writable mode
+            $file_pointer = fopen($csv, 'w');
+
+            // Traverse through the associative
+            // array using for each loop
+            foreach ($jsonans as $i) {
+
+                // Write the data to the CSV file
+                fputcsv($file_pointer, $i);
+            }
+
+            // Close the file pointer.
+            fclose($file_pointer);
+
+
+            $setupController->name = "Money Exchange";
+            // $setupController->email = "tasas@moneyexchange.es";
+            $setupController->email = env('APP_ENV') === 'local' ? "adenugaadebambo41@gmail.com" : "tasas@moneyexchange.es";
+            $setupController->subject = "Daily Exchange Rate - " . date('d-m-Y');
+            $setupController->message = "<p>Attached is the daily exchange rate from PaySprint today: ".date('d-m-Y').".</p><p>Best regards</p>";
+            $setupController->file = $csv;
+            $setupController->sendEmail($setupController->email, "Daily Transaction Report");
+
+            echo "Done";
+        } catch (\Throwable $th) {
+            throw $th->getMessage();
+        }
+    }
+
+    // API Call
+    public function callDailyExchange()
+    {
+        try {
+            $jsondata = $this->generateDailyExchangeRate();
+
+            $data = json_decode($jsondata, true);
+
+            $status = 200;
+
+            $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
 
         } catch (\Throwable $th) {
             $status = 400;
@@ -2522,5 +2589,10 @@ class MoexController extends Controller
 
         return $this->returnJSON($resData, $status);
     }
+
+    public function paymentConfirmation ()
+    {
+    }
+
 
 }

@@ -7,6 +7,8 @@ use Session;
 use App\Answer;
 use App\Points;
 
+use App\StoreProducts;
+
 use App\Community;
 
 use App\PromoDate;
@@ -167,7 +169,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback', 'displayCountry','merchantHome', 'displayCountryMerchant', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts']]);
+        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage', 'storeAskedQuestions', 'expressResponseback', 'displayCountry','merchantHome','merchantUseCase', 'displayCountryMerchant', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts']]);
 
         $location = $this->myLocation();
 
@@ -217,9 +219,10 @@ class HomeController extends Controller
                     'userdetails' => $this->checkTrial(Auth::id()),
                     'pending' => User::where('id', Auth::id())->where('account_check', 2)->first(),
                     'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first(),
-                    'specialpromo' => $this->specialpromoCount()
+                    'specialpromo' => $this->specialpromoCount(),
+                    'products' => StoreProducts::get(),
                 );
-
+                    // dd($data['products']);
                 $view = 'home';
             } else {
 
@@ -313,7 +316,19 @@ class HomeController extends Controller
 
         return view('main.newpage.shade-pro.merchanthome')->with(['pages' => $this->page, 'data' => $data]);
     }
+    
+    public function merchantUseCase()
+    {
+        $allcountry = AllCountries::where('approval', 1)->get();
+        $country = $this->myLocation()->country;
+        $this->page = 'Merchant';
+        $data = [
+            'availablecountry' => $allcountry,
+            'country' => $country
+        ];
 
+        return view('main.newpage.shade-pro.usecase')->with(['pages' => $this->page, 'data' => $data]);
+    }
 
     public function getStartedAccounts()
     {
@@ -1468,10 +1483,9 @@ class HomeController extends Controller
                 'paymentgateway' => AllCountries::where('name', Auth::user()->country)->first(),
                 'partner' => $this->getPartners(),
                 'providers' => MobileMoney::where('user_id', Auth::id())->get(),
-            'subscription' => $this->getConsumerCost(Auth::user()->country)
+                'subscription' => $this->getConsumerCost(Auth::user()->country),
+                'partner' => $this->getPartners()
             );
-
-
         } else {
             return redirect()->route('dashboard');
         }
@@ -3893,6 +3907,7 @@ class HomeController extends Controller
      
         
          $bulkaccount=$req->id;
+        //  dd($bulkaccount);
          $singleaccount= preg_split("/[,]/",$bulkaccount);
        
         if ($req->session()->has('email') == false) {
@@ -3927,9 +3942,10 @@ class HomeController extends Controller
             'getBank' => $this->getUserBank(),
             'getCard' => $this->getUserCard(),
             'bulkreceiver' => $singleaccount,
+            // 'refcode' => $bulkaccount
         );
 
-        // dd($data['bulkreceiver']);
+        // dd($data);
         
 
 
@@ -3938,22 +3954,15 @@ class HomeController extends Controller
 
     public function createBulkTransfer(Request $req)
     {
-        // dd($req->transaction_pin);
+        dd($req->all());
        
        
         $id= Auth::id();
        $data=User::where('id',$id)->first();
-        // dd($data);
-
        
-            if(Hash::check($req->transaction_pin, $data->transaction_pin)){
-                $balance=$data->wallet_balance;
-            }else{
-                dd('incorrectpin');
-            }
      
 
-        $req['record'] = ['receiver' => $req->receive, 'purpose' => $req->service, 'amount' => $req->amount];
+        $req['record'] = ['bulkreceiver'=>$req->receivers, 'receiver' => $req->receive, 'purpose' => $req->service, 'amount' => $req->amount];
        
        
         $bulkaccount=json_encode($req->receive);
@@ -3973,17 +3982,13 @@ class HomeController extends Controller
     public function bulkSend(Request $req)
     {
         $data= Transfers::where('sender_id',Auth::id())->first();
-    //    $response=[
-    //     'sender_id' => $data->sender_id,
-    //     'receiver' =>json_decode($data->receiver),
-    //     'amount'=> json_decode($data->amount),
-    //     'purpose'=>json_decode($data->amount),
-    //    ];
-
-    //    dd($response['receiver']);
+    
 
         return view('main.bulksend')->with($data);
     }
+
+    
+   
 
     public function notification($email)
     {
@@ -4487,7 +4492,7 @@ class HomeController extends Controller
 
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
-                $this->page = 'Create a Ticket';
+                $this->page = 'Verification Code';
                 $this->name = Auth::user()->name;
                 $this->email = Auth::user()->email;
                 $data = array(
@@ -6113,6 +6118,15 @@ class HomeController extends Controller
         return $data;
     }
 
+    
+    // ajaxbulkpayment
+
+    public function ajaxMakeBulkPayment(Request $req)
+    {
+
+      dd($req->all());
+
+    }
 
 
 

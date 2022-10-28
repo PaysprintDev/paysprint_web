@@ -81,7 +81,7 @@
         <!-- For demo purpose -->
         <div class="row mb-4">
             <div class="col-lg-10 mx-auto text-center">
-                <h1 class="display-4">Checkout Payment</h1>
+                <h1 class="display-4">{{ $data['pages'] }}</h1>
             </div>
         </div> <!-- End -->
         <div class="row">
@@ -113,7 +113,7 @@
 
                                 <div class="alert alert-info">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
 
                                             <table class="table table-hover">
                                                 <tbody>
@@ -126,6 +126,10 @@
                                                         <td><b>{{ $data['paymentorg']->address }}</b></td>
                                                     </tr>
                                                     <tr>
+                                                        <td>Telephone</td>
+                                                        <td><b>{{ $data['paymentorg']->telephone }}</b></td>
+                                                    </tr>
+                                                    <tr>
                                                         <td>Location</td>
                                                         <td><b>{{ $data['paymentorg']->city . ', ' . $data['paymentorg']->state . ' ' . $data['paymentorg']->country }}</b>
                                                         </td>
@@ -135,62 +139,7 @@
 
 
                                         </div>
-                                        <div class="col-md-6">
 
-                                            @php
-                                                $productCost = 0;
-                                                $shipCost = Request::get('fee') != null ? base64_decode(Request::get('fee')) : 0;
-                                                $taxCost = isset($data['storeTax']->taxValue) ? $data['storeTax']->taxValue / 100 : 0;
-                                                $totalCost = 0;
-                                            @endphp
-                                            @for ($i = 0; $i < count($data['getCart']); $i++)
-                                                @php
-                                                    $productCost += $data['getCart'][$i]->price * $data['getCart'][$i]->quantity;
-
-                                                @endphp
-                                            @endfor
-
-                                            <table class="table table-hover">
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Product Cost</td>
-                                                        <td><b>{{ $data['paymentorg']->currencyCode . ' ' . number_format($productCost, 2) }}</b>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Shipping Fee</td>
-                                                        <td><b>{{ $data['paymentorg']->currencyCode . ' ' . number_format($shipCost, 2) }}</b>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Tax</td>
-
-                                                        <td><b>{{ $data['paymentorg']->currencyCode . ' ' . number_format($productCost * $taxCost, 2) }}</b>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr>
-                                                        <td colspan="2" align="center">
-
-                                                            @php
-                                                                $totalCost = $productCost + $shipCost + $productCost * $taxCost;
-                                                            @endphp
-                                                            <h4><img
-                                                                    src="https://img.icons8.com/nolan/25/shopping-cart-promotion.png" />
-                                                                {{ $data['paymentorg']->currencyCode . ' ' . number_format($totalCost, 2) }}
-
-                                                            </h4>
-                                                            <small class="processFee disp-0">
-
-                                                            </small>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-
-
-
-                                        </div>
                                     </div>
                                 </div>
 
@@ -284,7 +233,7 @@
                                                                 </div>
                                                                 <input type="text" name="amount"
                                                                     class="form-control" id="amount"
-                                                                    value="{{ sprintf('%.2f', $totalCost) }}"
+                                                                    value="{{ sprintf('%.2f', 100) }}"
                                                                     placeholder="0.00" readonly>
                                                             </div>
                                                         </div>
@@ -339,7 +288,7 @@
                                                                 </div>
                                                                 <input type="text" name="purpose"
                                                                     class="form-control" id="purpose"
-                                                                    value="Purchase of {{ count($data['getCart']) }} items from {{ $data['paymentorg']->businessname }}"
+                                                                    value="Purchase of 1 items from {{ $data['paymentorg']->businessname }}"
                                                                     readonly>
                                                             </div>
                                                         </div>
@@ -395,8 +344,6 @@
 
 
                                         {{-- Check if validated account --}}
-
-                                        @if (Auth::user()->accountLevel == 3 && Auth::user()->approval == 2)
                                             <div class="card">
                                                 <div class="card-body">
                                                     <div class="mt-3">
@@ -421,7 +368,7 @@
                                                                     <input type="hidden" name="route"
                                                                         value="estore">
                                                                     <input type="hidden" name="accountNumber"
-                                                                        value="{{ Auth::user()->ref_code }}">
+                                                                        value="{{ $data['refCode'] }}">
                                                                     <input type="hidden" name="mode"
                                                                         value="{{ env('APP_ENV') == 'local' ? 'test' : 'live' }}">
                                                                     <input type="hidden" name="paymentToken"
@@ -492,7 +439,7 @@
                                                                     </div>
                                                                     <input type="text" name="amount"
                                                                         class="form-control" id="amounttosend"
-                                                                        value="{{ sprintf('%.2f', $totalCost) }}"
+                                                                        value="{{ sprintf('%.2f', 100) }}"
                                                                         placeholder="0.00" readonly>
 
                                                                     <input type="hidden" name="conversionamount"
@@ -588,7 +535,7 @@
                                                                     </div>
                                                                     <input type="text" name="purpose"
                                                                         class="form-control" id="purpose"
-                                                                        value="Purchase of {{ count($data['getCart']) }} items from {{ $data['paymentorg']->businessname }}"
+                                                                        value="Purchase of 1 items from {{ $data['paymentorg']->businessname }}"
                                                                         readonly>
                                                                 </div>
                                                             </div>
@@ -767,23 +714,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        @else
-                                            <div class="alert alert-danger mt-5">
-                                                <div class="row">
-                                                    <div class="col-md-12">
 
-                                                        <h5 class="text-center">
-                                                            This Service is available only to PaySprint Users that have
-                                                            been verified
-                                                        </h5>
-
-
-                                                    </div>
-
-                                                </div>
-                                            </div>
-
-                                        @endif
 
 
 
@@ -1629,7 +1560,7 @@
             jQuery.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                    'Authorization': 'Bearer {{ Auth::user()->api_token }}'
+                    'Authorization': "Bearer " + "{{ env('APP_KEY') }}"
                 }
             });
         }

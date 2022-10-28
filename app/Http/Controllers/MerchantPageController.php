@@ -11,6 +11,7 @@ use App\MerchantCashback;
 
 //Session
 use App\ClientInfo;
+use App\MailchimpMails;
 
 use App\PayoutAgent;
 use App\ServiceType;
@@ -197,7 +198,8 @@ class MerchantPageController extends Controller
         if ($validation->passes()) {
             $accept = $req->agree;
 
-            $id = Auth::id();
+            $id = $req->merchant_id;
+
             MerchantCashback::create([
                 'merchant_id' => $id,
                 'accept' => $accept
@@ -215,6 +217,9 @@ class MerchantPageController extends Controller
         $data = User::where('id', $id)->first();
         $mailer = new SendGridController;
         $mailer->requestReview($req->customer_email, $id, $data->businessname);
+            MailchimpMails::create([
+                'emails' => $req->customer_email
+            ]);
 
         return back()->with('msgs', "<div class='alert alert-success'>Review Request Sent Successfully</div>");
     }
@@ -271,6 +276,40 @@ class MerchantPageController extends Controller
         ]);
 
         return back()->with("msg", "<div class='alert alert-success'>Reply Added Successfully</div>");
+    }
+
+    public function makeReview(Request $req)
+    {
+
+        return view('merchant.pages.makereview');
+    }
+
+    public function submitReview(Request $req)
+    {
+
+        $validation = Validator::make($req->all(), [
+            "fullname" => "required",
+            "email" => "required",
+            "job_title" => "required",
+            "duration_of_use" => "required",
+            "review" => "required",
+            "product_service" => "required"
+        ]);
+
+        MarketplaceReviews::create([
+            "merchant_id" => $req->merchant_id,
+            "name_of_sender" => $req->fullname,
+            "email_of_sender" => $req->email,
+            "comment" => $req->review,
+            "status" => "pending",
+            "duration_of_use" => $req->duration_of_use,
+            "job_title" => $req->job_title,
+            "no_likes" => $req->like,
+            "product_service" => $req->product_service
+        ]);
+
+        return back()->with("msg", "<div class='alert alert-success'> Review Submitted Successfully</div>");
+
     }
 
     public function invoiceStatement()

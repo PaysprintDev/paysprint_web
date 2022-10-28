@@ -113,6 +113,9 @@
                                                                {{ $user->name}}
                                                        </b>
                                                        <input type="hidden" name="receive[{{$index}}]" id="receiver" value="{{$user->name}}" class="form-control">
+                                                       <input type="hidden" value="{{$user->ref_code}}" name="receivers_refcode">
+                                
+
                                                 </li>
                                                
                                             </ul>
@@ -137,6 +140,9 @@
 
                                         </div>
                                     </div>
+                                    
+
+                                   
 
 
 
@@ -200,46 +206,8 @@
                                         </div>
                                     </div>
 
-                                        {{-- @else --}}
+                                      
 
-                                        {{-- <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group"> <label for="currency">
-                                                        <h6>Receiver Currency</h6>
-                                                    </label>
-                                                    <input type="hidden" name="currency"
-                                                        value="{{ $user->currencyCode}}">
-                                                    <input type="hidden" name="type"
-                                                        value="international">
-                                                    <div class="input-group">
-                                                        <select name="localcurrency" id="localcurrency"
-                                                            class="form-control" readonly>
-                                                            <option value="{{ $user->currencyCode}}"
-                                                                selected>{{ $user->currencyCode}}
-                                                            </option>
-                                                        </select>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="form-group"> <label for="orgpayamount">
-                                                        <h6>Amount to Send</h6>
-                                                    </label>
-                                                    <div class="input-group"> <input type="number" name="amount"
-                                                            id="orgpayamount" placeholder="50.00" class="form-control"
-                                                            maxlength="16" required>
-                                                        <div class="input-group-append"> <span
-                                                                class="input-group-text text-muted"> <i
-                                                                    class="fas fa-money-check mx-1"></i> <i
-                                                                    class="fab fa-cc-mastercard mx-1"></i> <i
-                                                                    class="fab fa-cc-amex mx-1"></i> </span> </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> --}}
-{{-- 
-                                        @endif --}}
 
                                     </div>
 
@@ -260,45 +228,13 @@
 
 
 
-                                    {{-- <div class="form-group creditcard disp-0"> <label for="card_id">
-                                            <h6>Select Card</h6>
-                                        </label>
-                                        <div class="input-group">
-                                            <div class="input-group-append"> <span class="input-group-text text-muted"> <img src="https://img.icons8.com/fluent/20/000000/bank-card-back-side.png" />
-                                                </span> </div>
-                                            <select name="card_id" id="card_id" class="form-control" required>
-                                                @if (count($data['getCard']) > 0)
-                                                @foreach ($data['getCard'] as $mycard)
-                                                <option value="{{ $mycard->id }}">{!! wordwrap(substr($mycard->card_number, 0, 4) . str_repeat('*', strlen($mycard->card_number) - 8) . substr($mycard->card_number, -4), 4, ' - ', true) !!}
-                                                </option>
-                                                @endforeach
-                                                @else
-                                                <option value="">Add a new card</option>
-                                                @endif
-                                            </select>
-
-                                        </div>
-                                    </div> --}}
+                                  
 
 
 
 
 
-                                    {{-- <div class="form-group disp-0">
-                                        <div class="input-group">
-                                            <p style="color: red; font-weight: bold;"><input type="checkbox" name="commission" id="commission"> Transfer include commission
-                                            </p>
-
-                                        </div>
-                                    </div>
-
-                                    @if (Request::get('country') != $data['paymentorg']->country)
-                                    <div class="form-group"> <label for="netwmount">
-                                            <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate </b></small></h6>
-                                            {{-- <p style="font-weight: bold;">
-                                                    {{ $data['currencyCode']->currencyCode }}
-                                            <=> {{ $data['othercurrencyCode']['data']->currencyCode }}
-                                                </p> --}}
+                                 
 
 
                                                 <table class="table table-bordered table-striped">
@@ -319,37 +255,7 @@
 
                                         </label>
 
-                                    {{-- </div>
-
-                                    <div class="form-group">
-                                        <label for="conversionamount">
-                                            <p>
-                                            <h6>Amount To Deduct
-                                                ({{ $data['currencyCode']->currencyCode }})
-                                                <br><small class="text-success"><b>Total amount that would be
-                                                        received </b></small>
-                                            </h6>
-                                            </p>
-                                        </label>
-                                        <div class="input-group">
-
-                                            <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
-                                        </div>
-                                    </div>
-                                    @else
-                                    <div class="form-group disp-0"> <label for="netwmount">
-                                            <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate </b></small></h6>
-                                            <p style="font-weight: bold;">
-                                                {{ $data['currencyCode']->currencyCode }}
-                                                <=>
-                                                    {{ $data['othercurrencyCode']['data']->currencyCode }}
-                                            </p>
-                                        </label>
-                                        <div class="input-group">
-                                            <input type="text" name="conversionamount" class="form-control" id="conversionamount" value="" placeholder="0.00" readonly>
-                                        </div>
-                                    </div>
-                                    @endif  --}}
+                             
 
 
 
@@ -491,14 +397,7 @@
                                                     <label class="form-check-label" for="flexSwitchCheckChecked">Save a beneficiary</label>
                                                 </div>
 
-                                                <div class="form-group"> <label for="transaction_pin">
-                                                    <h6>Transaction Pin</h6>
-                                                </label>
-                                                <div class="input-group">
-                                                    <div class="input-group-append"> <span class="input-group-text text-muted"> <i class="fas fa-lock"></i> </span> </div> <input type="password" name="transaction_pin" id="transaction_pin" class="form-control" maxlength="4" required>
-        
-                                                </div>
-                                            </div>
+                                              
                                                 
                                                 <button type="submit" class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn">
                                                     Send Money </button>

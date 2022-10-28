@@ -217,7 +217,7 @@ Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 
 Route::get('/run-queue', function () {
 
-	Artisan::call('queue:work');
+	Artisan::call('queue:work --tries=3 --timeout=60');
 	return "Queue work done!";
 });
 
@@ -242,7 +242,7 @@ Route::get('/estore', ['uses' => 'HomeController@estores', 'as' => 'paysprint es
 
 Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 'merchant home']);
 Route::get('/merchant-test', ['uses' => 'HomeController@merchantHome', 'as' => 'merchant test']);
-
+Route::get('usecase', ['uses' => 'HomeController@merchantUseCase', 'as' => 'use case']);
 Route::get('/accounts', ['uses' => 'HomeController@getStartedAccounts', 'as' => 'accounts']);
 
 Route::get('/home', ['uses' => 'HomeController@authIndex', 'as' => 'user home']);
@@ -254,6 +254,10 @@ Route::get('/viewreviews', ['uses' => 'MerchantPageController@viewReviews', 'as'
 Route::post('/merchantreply', ['uses' => 'MerchantPageController@merchantReply', 'as' => 'merchant reply']);
 
 Route::get('/viewreply/{id}', ['uses' => 'MerchantPageController@viewmarketReplies', 'as' => 'view replies']);
+
+Route::get('/makereview', ['uses' => 'MerchantPageController@makeReview', 'as' => 'make review']);
+
+Route::post('/submitreview', ['uses' => 'MerchantPageController@submitReview', 'as' => 'submit review']);
 
 
 
@@ -270,6 +274,7 @@ Route::get('payorganization', ['uses' => 'HomeController@payOrganization', 'as' 
 
 Route::get('bulkpayment', ['uses' => 'HomeController@bulkPayment', 'as' => 'bulk payment']);
 Route::get('bulksend', ['uses' => 'HomeController@bulkSend', 'as' => 'bulk send']);
+Route::get('deletebulksend', ['uses' => 'HomeController@deleteBulkSend', 'as' => 'delete bulk send']);
 Route::post('bulktransfer', ['uses' => 'HomeController@createBulkTransfer', 'as' => 'create bulk transfer']);
 Route::get('contact', ['uses' => 'HomeController@contact', 'as' => 'contact']);
 
@@ -374,6 +379,7 @@ Route::get('payment/link/{invoice}/{country}', ['uses' => 'HomeController@paymen
 Route::get('payment/sendmoney/{user_id}', ['uses' => 'HomeController@paymentOrganization', 'as' => 'sendmoney payment']);
 Route::get('new/payment/createuser', ['uses' => 'HomeController@createnewPayment', 'as' => 'create new payment']);
 Route::get('payment/receivemoney/{id}', ['uses' => 'HomeController@receiveMoney', 'as' => 'receivemoney payment']);
+
 
 
 
@@ -1022,6 +1028,8 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('activity-report', ['uses' => 'AdminController@activityReport', 'as' => 'activity report']);
 	Route::get('paysprintpoint', ['uses' => 'AdminController@paysprintPoint', 'as' => 'paysprint point']);
 	Route::get('claimreward', ['uses' => 'AdminController@claimReward', 'as' => 'claim reward']);
+	Route::get('walletdebit', ['uses' => 'AdminController@walletDebit', 'as' => 'wallet debit']);
+	Route::post('submitwalletdebit', ['uses' => 'AdminController@submitWalletDebit', 'as' => 'submit wallet debit']);
 	Route::get('cashadvancelist', ['uses' => 'AdminController@cashAdvanceList', 'as' => 'cash advance list']);
 	Route::get('crossborderlist', ['uses' => 'AdminController@crossBorderList', 'as' => 'cross border list']);
 	Route::get('viewbeneficiarydetail/{id}', ['uses' => 'AdminController@crossBorderBeneficiaryDetail', 'as' => 'view beneficiary detail']);
@@ -1409,7 +1417,8 @@ Route::group(['prefix' => 'Ajax'], function () {
 	Route::post('promotionaction', ['uses' => 'AdminController@ajaxpromotionaction', 'as' => 'Ajaxpromotionaction']);
 
 	Route::post('acceptcrossborderpayment', ['uses' => 'AdminController@ajaxacceptcrossborderpayment', 'as' => 'Ajaxacceptcrossborderpayment']);
-
+	// bulk payment
+     Route::post('makebulkpayment', ['uses' => 'HomeController@ajaxMakeBulkPayment', 'as' => 'Ajaxmakebulkpayment']);
 
 	// Get Commision and payment
 	Route::post('getCommission', ['uses' => 'HomeController@ajaxgetCommission', 'as' => 'AjaxgetCommission']);

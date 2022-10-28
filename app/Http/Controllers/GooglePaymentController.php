@@ -170,13 +170,22 @@ class GooglePaymentController extends Controller
 
 
                     if ($req->type === 'international') {
-                        $debitAmount = $req->totalcharge;
-                        $creditAmount = $req->amount;
+                        $debitAmount = floatval($req->totalcharge);
+                        $creditAmount = floatval($req->amount);
                     } else {
-                        $debitAmount = $req->totalcharge;
-                        $creditAmount = $req->totalcharge;
+                        $debitAmount = floatval($req->totalcharge);
+                        $creditAmount = floatval($req->totalcharge);
                     }
 
+
+                    if($user->wallet_balance < $debitAmount){
+                        $resData = ['res' => 'Insufficient wallet balance', 'message' => 'error', 'title' => 'Oops!'];
+
+                        $response = 'Insufficient wallet balance';
+                        $respaction = 'error';
+
+                        return redirect()->back()->with($respaction, $response);
+                    }
 
 
 

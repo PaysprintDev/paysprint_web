@@ -19,6 +19,7 @@ trait SendgridMail
     {
         $this->mailInstance = new Mail();
         $this->sendgridConfig = new \SendGrid(config('constants.sendgrid.api_key'));
+        $this->marketplaceConfig= new \SendGrid(config('constants.marketplace.api_key'));
     }
 
 
@@ -75,6 +76,36 @@ trait SendgridMail
         return $data;
     }
 
+     public function marketplaceDynamicMail($receiver, $data, $template_id)
+    {
+        $this->sendgridUrl = config("constants.marketplace.baseurl") . '/mail/send';
+
+        $this->sendgridPosts = json_encode([
+            "from" => ["email" => config('constants.marketplace.from'), "name" => config('constants.marketplace.from_name')],
+            "personalizations" => [
+                [
+                    "to" => [["email" => $receiver]],
+                    "dynamic_template_data" => $data
+
+                ]
+            ],
+            "template_id" => $template_id
+        ]);
+
+        
+       
+
+
+
+
+        $data = $this->sendGridMarketPlace();
+
+
+        
+
+        return $data;
+    }
+
     public function sendGridPostCurl()
     {
         $curl = curl_init();
@@ -96,6 +127,34 @@ trait SendgridMail
         ));
 
         $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        return json_decode($response);
+    }
+
+     public function sendGridMarketPlace()
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $this->sendgridUrl,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $this->sendgridPosts,
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Bearer ' . config('constants.marketplace.api_key'),
+                'Content-Type: application/json'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        
 
         curl_close($curl);
 
