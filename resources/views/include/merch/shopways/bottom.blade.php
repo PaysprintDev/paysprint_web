@@ -281,8 +281,7 @@
                </li>
                <li class="mini-cart-btns">
                    <div class="cart-btns">
-                       <a href="/product/cart?store=${response.data.merchant.businessname}"
-                           class="btn btn-style1">View cart</a>
+
                        <a href="/product/checkout?store=${response.data.merchant.businessname}"
                            class="btn btn-style1">Checkout</a>
                    </div>
@@ -295,6 +294,9 @@
                         subInfo = ``;
 
                     }
+
+                    // <a href="/product/cart?store=${response.data.merchant.businessname}"
+                    //        class="btn btn-style1">View cart</a>
 
 
 

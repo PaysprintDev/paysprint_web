@@ -4038,6 +4038,63 @@ class AdminController extends Controller
         }
     }
 
+    public function deleteAvatar(Request $req)
+    {
+       User::where('id',$req->user_id)->update([
+        'avatar' => ''
+       ]);
+
+       return back()->with("msg","<div class='alert alert-success'>Avatar Removed Successfully</div>");
+    }
+
+    public function deleteGovtid(Request $req)
+    {
+    
+       User::where('id',$req->user_id)->update([
+        'nin_front' => '',
+        'nin_back' => ''
+       ]);
+
+       return back()->with("msg","<div class='alert alert-success'>Government Issued ID Removed Successfully</div>");
+       
+    }
+
+    public function deleteLicense(Request $req)
+    {
+
+       User::where('id',$req->user_id)->update([
+        'drivers_license_front' => '',
+        'drivers_license_back' => ''
+       ]);
+
+       return back()->with("msg","<div class='alert alert-success'>Drivers License ID Removed Successfully</div>");
+    }
+
+     public function deletePassport(Request $req)
+    {
+
+       User::where('id',$req->user_id)->update([
+        'international_passport_front' => '',
+        'international_passport_back' => ''
+       ]);
+
+       return back()->with("msg","<div class='alert alert-success'>International Passport Removed Successfully</div>");
+
+    }
+
+      public function deleteIncopDocument(Request $req)
+    {
+
+       User::where('id',$req->user_id)->update([
+        'incorporation_doc_front' => '',
+        'incorporation_doc_back' => '',
+        
+       ]);
+
+       return back()->with("msg","<div class='alert alert-success'>Document Removed Successfully</div>");
+
+    }
+
 
     public function allMatchedUsers(Request $req)
     {
@@ -12082,8 +12139,8 @@ class AdminController extends Controller
 
     public function submitWalletDebit(Request $req)
     {
-        
-        
+
+
         $validation = $req->validate([
             'user_id' => 'required',
             'customer_name' => 'required',
@@ -12094,20 +12151,20 @@ class AdminController extends Controller
         ]);
 
         $user = $this->getUserBalance($req->user_id);
-       
+
         $reason = $req->debit_reason;
         $walletbalance = $user->wallet_balance;
 
 
         $totalwallet = $walletbalance - $req->debit_amount;
 
-       
+
 
         User::where('id', $req->user_id)->update([
             'wallet_balance' => $totalwallet
         ]);
 
-        
+
 
         // Send Mail...
 
@@ -12126,7 +12183,7 @@ class AdminController extends Controller
 
 
         $this->sendEmail($this->to, "Wallet Debit");
-        $this->createNotification($user->ref_code, $message);
+        $this->createNotification($user->ref_code, $message, $user->playerId, $message, "Wallet Debit");
         $activity = 'Wallet debit of ' . $user->currencyCode . '' . $req->debit_amount . ' from  wallet for ' . $reason;
         $credit = 0;
         $debit = $req->debit_amount;
@@ -12144,7 +12201,7 @@ class AdminController extends Controller
 
 
         $usersPhone = User::where('email', $user->email)->where('telephone', 'LIKE', '%+%')->first();
-      
+
 
         if (isset($usersPhone)) {
 
@@ -12169,7 +12226,7 @@ class AdminController extends Controller
         return redirect()->route('wallet debit')->with("msg", "<div class='alert alert-success'>Wallet Debited Successfully</div>");
 
 
-         
+
 
 
     }
@@ -14032,7 +14089,7 @@ class AdminController extends Controller
 
 
         $this->sendEmail($this->to, "Refund Request");
-        $this->createNotification($userinfo->ref_code, $message);
+        $this->createNotification($userinfo->ref_code, $message, $userinfo->playerId, $message, "Wallet Credit");
         $activity = 'Wallet credit of ' . $userinfo->currencyCode . '' . $referralclaim . 'in wallet for referral ';
         $credit = $referralclaim;
         $debit = 0;
@@ -14135,7 +14192,7 @@ class AdminController extends Controller
 
 
         $this->sendEmail($this->to, "Refund Request");
-        $this->createNotification($userinfo->ref_code, $message);
+        $this->createNotification($userinfo->ref_code, $message, $userinfo->playerId, $message, "Wallet Credit");
         $activity = 'Wallet credit of ' . $userinfo->currencyCode . '' . $pointclaim . 'in wallet for claimed points  ';
         $credit = $pointclaim;
         $debit = 0;
@@ -14412,7 +14469,7 @@ class AdminController extends Controller
 
 
         $this->sendEmail($this->to, "Reward Credit");
-        $this->createNotification($user->ref_code, $message);
+        $this->createNotification($user->ref_code, $message, $user->playerId, $message, "Wallet Credit");
         $activity = 'Wallet credit of ' . $user->currencyCode . '' . $req->topup_credit . 'in wallet for ' . $reason;
         $credit = $req->topup_credit;
         $debit = 0;
@@ -14510,7 +14567,7 @@ class AdminController extends Controller
             $this->to,
             "Referral Point Credit"
         );
-        $this->createNotification($user->ref_code, $message);
+        $this->createNotification($user->ref_code, $message, $user->playerId, $message, "PaySprint Referral Point Credit");
         $activity = 'Referral Point Credit of ' . $req->topup_point . 'added to referral point for participating in the  ' . $reason;
         $credit = $req->topup_point;
         $debit = 0;
@@ -18525,7 +18582,8 @@ class AdminController extends Controller
                 $recipients = "+" . $data->code . $data->telephone;
             }
 
-            $this->createNotification($data->ref_code, $message);
+            $this->createNotification($data->ref_code, $message, $data->playerId, $message, "Account information approved");
+
 
             if ($data->country == "Nigeria") {
 
@@ -18656,7 +18714,7 @@ class AdminController extends Controller
             $recipients = "+" . $data->code . $data->telephone;
         }
 
-        $this->createNotification($data->ref_code, $message);
+        $this->createNotification($data->ref_code, $message, $data->playerId, $message, "Account information needs update");
 
         if ($data->country == "Nigeria") {
 
@@ -18724,7 +18782,7 @@ class AdminController extends Controller
             $recipients = "+" . $data->code . $data->telephone;
         }
 
-        $this->createNotification($data->ref_code, $message);
+        $this->createNotification($data->ref_code, $message, $data->playerId, $message, $subject);
 
         if ($data->country == "Nigeria") {
 
@@ -18818,7 +18876,7 @@ class AdminController extends Controller
             $recipients = "+" . $data->code . $data->telephone;
         }
 
-        $this->createNotification($data->ref_code, $message);
+        $this->createNotification($data->ref_code, $message, $data->playerId, $message, $subject);
 
         if ($data->country == "Nigeria") {
 
@@ -18877,7 +18935,7 @@ class AdminController extends Controller
                 $recipients = "+" . $thisuser->code . $thisuser->telephone;
             }
 
-            $this->createNotification($thisuser->ref_code, $message);
+            $this->createNotification($thisuser->ref_code, $message, $thisuser->playerId, $message, $subject);
 
             // if ($thisuser->country == "Nigeria") {
 
@@ -18947,7 +19005,7 @@ class AdminController extends Controller
                 $recipients = "+" . $thisuser->code . $thisuser->telephone;
             }
 
-            $this->createNotification($thisuser->ref_code, $message);
+            $this->createNotification($thisuser->ref_code, $message, $thisuser->playerId, $message, $subject);
             // if ($thisuser->country == "Nigeria") {
 
             //     $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
@@ -19015,7 +19073,7 @@ class AdminController extends Controller
 
 
 
-        $this->createNotification($user->ref_code, $message);
+        $this->createNotification($user->ref_code, $message, $user->playerId, $message, "Your PaySprint Account has been activated");
         if ($user->country == "Nigeria") {
 
             $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
@@ -19060,7 +19118,7 @@ class AdminController extends Controller
             $recipients = "+" . $thisuser->code . $thisuser->telephone;
         }
 
-        $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $this->message);
+        $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $this->message, $thisuser->playerId, $this->message, $this->subject);
 
         if ($thisuser->country == "Nigeria") {
 
@@ -19097,10 +19155,10 @@ class AdminController extends Controller
         //hitting dusuPay Endpoint for withdrawal
         $payment = $this->mobileMoneyWithdrawal($currency, $amount, $provider, $accountnumber, $accountname, $reference, $userdetails->id);
 
-            
+
 
         $status = $payment->status;
-        
+
         if ($status == 'accepted') {
             BankWithdrawal::where('id', $req->id)->update(['status' => 'PROCESSED']);
             $paysprintdetails = BankWithdrawal::where('transaction_id', $payment->data->merchant_reference)->first();
@@ -19141,7 +19199,7 @@ class AdminController extends Controller
                 $recipients = "+" . $thisuser->code . $thisuser->telephone;
             }
 
-            $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $this->message);
+            $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $this->message, $thisuser->playerId, $this->message, $this->subject);
 
             if ($thisuser->country == "Nigeria") {
 
@@ -19196,7 +19254,7 @@ class AdminController extends Controller
             $recipients = "+" . $thisuser->code . $thisuser->telephone;
         }
 
-        $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $this->message);
+        $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $this->message, $thisuser->playerId, $this->message, $this->subject);
 
         if ($thisuser->country == "Nigeria") {
 
@@ -19252,7 +19310,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
             $recipients = "+" . $thisuser->code . $thisuser->telephone;
         }
 
-        $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message);
+        $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $message, $thisuser->playerId, $this->message, $this->subject);
 
         if ($thisuser->country == "Nigeria") {
 
@@ -19373,7 +19431,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
             $recipients = "+" . $thisuser->code . $thisuser->telephone;
         }
 
-        $this->createNotification($thisuser->ref_code, $message);
+        $this->createNotification($thisuser->ref_code, $message, $thisuser->playerId, $this->message, $this->subject);
 
 
         if ($thisuser->country == "Nigeria") {
@@ -19402,7 +19460,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
             $recipients2 = "+" . $recuser->code . $recuser->telephone;
         }
 
-        $this->createNotification($recuser->ref_code, $message);
+        $this->createNotification($recuser->ref_code, $message, $recuser->playerId, $this->message, $this->subject);
 
         if ($recuser->country == "Nigeria") {
 
@@ -19495,7 +19553,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
             $this->message = $req->message;
 
 
-            $this->createNotification($user->ref_code, strip_tags($req->message));
+            $this->createNotification($user->ref_code, strip_tags($req->message), $user->playerId, strip_tags($this->message), $this->subject);
 
 
             $this->sendEmail($this->to, "Refund Request");
@@ -19524,7 +19582,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
                 $this->message = $req->message;
 
 
-                $this->createNotification($user->ref_code, strip_tags($req->message));
+                $this->createNotification($user->ref_code, strip_tags($req->message), $user->playerId, strip_tags($this->message), $this->subject);
 
 
                 $this->sendEmail($this->to, "Refund Request");

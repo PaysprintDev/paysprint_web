@@ -423,9 +423,9 @@ class GooglePaymentController extends Controller
 
 
 
-                                                    $this->createNotification($user->ref_code, $sendMsg);
+                                                    $this->createNotification($user->ref_code, $sendMsg, $user->playerId, $sendMsg, "Wallet Transaction");
 
-                                                    $this->createNotification($client->ref_code, $recMsg);
+                                                    $this->createNotification($client->ref_code, $recMsg, $client->playerId, $recMsg, "Wallet Transaction");
 
                                                     $this->updatePoints($user->id, 'Send money');
                                                     $this->updatePoints($client->id, 'Receive money');
@@ -715,7 +715,7 @@ class GooglePaymentController extends Controller
 
 
                                                 // Log Activities here
-                                                $currencyFX->createNotification($client->ref_code, $sendMsg);
+                                                $currencyFX->createNotification($client->ref_code, $sendMsg, $client->playerId, $sendMsg, "Wallet Transaction");
 
                                                 $currencyFX->slack('Congratulations!, ' . $client->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
@@ -763,7 +763,7 @@ class GooglePaymentController extends Controller
                                                     $sendPhone = "+" . $user->code . $user->telephone;
                                                 }
 
-                                                $this->createNotification($user->ref_code, $sendMsg2);
+                                                $this->createNotification($user->ref_code, $sendMsg2, $user->playerId, $sendMsg2, "Wallet Transaction");
 
                                                 $this->updatePoints($user->id, 'Send money');
                                                 $this->updatePoints($client->id, 'Receive money');
@@ -898,9 +898,9 @@ class GooglePaymentController extends Controller
 
 
 
-                                                    $this->createNotification($user->ref_code, $sendMsg);
+                                                    $this->createNotification($user->ref_code, $sendMsg, $user->playerId, $sendMsg, "Wallet Transaction");
 
-                                                    $this->createNotification($client->ref_code, $recMsg);
+                                                    $this->createNotification($client->ref_code, $recMsg, $client->playerId, $recMsg, "Wallet Transaction");
 
                                                     $this->updatePoints($user->id, 'Send money');
                                                     $this->updatePoints($client->id, 'Receive money');
@@ -1636,7 +1636,7 @@ class GooglePaymentController extends Controller
                                                         $message = $response;
 
 
-                                                        $this->createNotification($thisuser->ref_code, $sendMsg);
+                                                        $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
                                                         $this->createNotification($ref_code, $recMesg);
 

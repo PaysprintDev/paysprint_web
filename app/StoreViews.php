@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MailchimpMails extends Model
+class StoreViews extends Model
 {
     //
     protected $guarded=[];

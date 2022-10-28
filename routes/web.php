@@ -53,6 +53,9 @@ Route::get('claimmerchantbusiness', ['uses' => 'AdminController@claimingBusiness
 Route::get('renewsub', 'MaintenanceFeeCharge@renewSubscription');
 Route::get('refreshbid', 'CurrencyFxController@refreshBids');
 
+Route::get('testonesignal', 'CheckSetupController@testOneSignal');
+
+
 Route::get('quicksetup', 'CheckSetupController@updateQuickSetup');
 Route::get('autodepositoff', 'CheckSetupController@autoDepositOff');
 Route::get('accountactivity', 'CheckSetupController@checkAccountAcvtivity');
@@ -353,10 +356,20 @@ Route::get('referrallink', ['uses' => 'HomeController@referralLink', 'as' => 're
 
 
 Route::get('verification', ['uses' => 'HomeController@verifyAuthentication', 'as' => 'verification page']);
+
+Route::get('verificationpage', ['uses' => 'HomeController@checkVerification', 'as' => 'check verification page']);
+
 Route::post('verifyotp', ['uses' => 'HomeController@verifyOtp', 'as' => 'verifyotp']);
 Route::get('regenerateotp', ['uses' => 'HomeController@regenerateOtp', 'as' => 'regenerate otp']);
 
 
+//updating verification details
+Route::post('verifyphoto', ['uses' => 'HomeController@verifyPhoto', 'as' => 'verify photo']);
+Route::post('verifyidentitycard', ['uses' => 'HomeController@verifyIdentityCard', 'as' => 'verify identity card']);
+Route::post('verifypassport', ['uses' => 'HomeController@verifyPassport', 'as' => 'verify passport']);
+Route::post('verifybill', ['uses' => 'HomeController@verifyBill', 'as' => 'verify bill']);
+Route::post('verifylicense', ['uses' => 'HomeController@verifyLicense', 'as' => 'verify license']);
+Route::post('verifybvn', ['uses' => 'HomeController@verifyBvn', 'as' => 'verify bvn']);
 
 // Terms or USE
 Route::get('terms-of-service', ['uses' => 'HomeController@termsOfUse', 'as' => 'terms of use']);
@@ -675,6 +688,12 @@ Route::get('Admin/businesspromotion', ['uses' => 'AdminController@businessPromot
 
 Route::get('Admin/emailcampaign', ['uses' => 'AdminController@runEmailCampaign', 'as' => 'run mail campaign']);
 
+//Admin deleting documents
+Route::post('delete avatar', ['uses' => 'AdminController@deleteAvatar', 'as' => 'delete avatar']);
+Route::post('delete govtid', ['uses' => 'AdminController@deleteGovtid', 'as' => 'delete govt id']);
+Route::post('delete license', ['uses' => 'AdminController@deleteLicense', 'as' => 'delete license']);
+Route::post('delete passport', ['uses' => 'AdminController@deletePassport', 'as' => 'delete passport']);
+Route::post('delete document', ['uses' => 'AdminController@deleteIncopDocument', 'as' => 'delete incop document']);
 
 
 
@@ -1422,6 +1441,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 
 	// Get Commision and payment
 	Route::post('getCommission', ['uses' => 'HomeController@ajaxgetCommission', 'as' => 'AjaxgetCommission']);
+	Route::post('getlinkCommission', ['uses' => 'HomeController@ajaxgetlinkCommission', 'as' => 'AjaxgetlinkCommission']);
 	Route::post('getwalletBalance', ['uses' => 'HomeController@ajaxgetwalletBalance', 'as' => 'AjaxgetwalletBalance']);
 
 	Route::post('charges', ['uses' => 'ApplePayController@ajaxcharges', 'as' => 'charges']);

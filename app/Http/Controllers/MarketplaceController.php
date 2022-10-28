@@ -10,6 +10,7 @@ use App\PromoDate;
 use App\TrialDate;
 use App\watchlist;
 use App\merchantTrial;
+use App\MailchimpMails;
 use App\MarketplaceReviews;
 
 use Carbon\Carbon;
@@ -178,7 +179,7 @@ use Illuminate\Http\Response;
 
 class MarketplaceController extends Controller
 {
-    use SendgridMail;
+    use SendgridMail,MailChimpNewsLetter;
     //
     public function getmarketCategory(Request $req)
     {
@@ -497,7 +498,8 @@ class MarketplaceController extends Controller
     public function getUnverifiedMerchants(Request $request)
     {
         try {
-            $data = UnverifiedMerchant::orderBy('name')->get();
+            // $data = UnverifiedMerchant::orderBy('name')->get();
+            $data=UnverifiedMerchant::paginate($request->all())->groupBy('name');
 
             $response = [
                 'data' => $data,
@@ -585,9 +587,20 @@ class MarketplaceController extends Controller
                 'no_likes' => $req->like,
             ]);
 
-             MailchimpMails::create([
-                'emails' => $req->email
-            ]);
+            $email=MailchimpMails::where('email',$req->email)->first();
+
+                if($email == null){
+                 MailchimpMails::create([
+                'email' => $req->email
+                ]);
+
+                $this->mailListCategorize('',$req->email,'','','','','');
+                }
+                
+
+            
+
+             
 
             $response = [
                 'status' => 'success',

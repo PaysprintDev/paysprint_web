@@ -6,7 +6,10 @@ use App\Tax;
 use Session;
 use App\Points;
 
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
 use App\Statement;
+use App\StoreViews;
 use App\MerchantCashback;
 
 //Session
@@ -42,6 +45,7 @@ use App\Traits\SpecialInfo;
 use Illuminate\Http\Request;
 use App\Traits\PointsHistory;
 use App\Traits\PaysprintPoint;
+use App\Traits\MailChimpNewsLetter;
 use App\Traits\ServiceStoreShop;
 use App\ImportExcel as ImportExcel;
 use Illuminate\Support\Facades\Auth;
@@ -52,7 +56,7 @@ use illuminate\Support\Facades\Validator;
 class MerchantPageController extends Controller
 {
 
-    use PaysprintPoint, PointsHistory, SpecialInfo, MyEstore, ServiceStoreShop;
+    use PaysprintPoint, PointsHistory, SpecialInfo, MyEstore, ServiceStoreShop, MailChimpNewsLetter;
 
     public function __construct()
     {
@@ -217,12 +221,20 @@ class MerchantPageController extends Controller
         $data = User::where('id', $id)->first();
         $mailer = new SendGridController;
         $mailer->requestReview($req->customer_email, $id, $data->businessname);
-            MailchimpMails::create([
+
+             $email=MailchimpMails::where('email',$req->customer_email)->first();
+
+                if($email == null){
+                 MailchimpMails::create([
                 'emails' => $req->customer_email
-            ]);
+                ]);
+
+                $this->mailListCategorize('',$req->customer_email,'','','','','');
+                }    
 
         return back()->with('msgs', "<div class='alert alert-success'>Review Request Sent Successfully</div>");
     }
+
 
     public function endcashback(Request $req)
     {
@@ -231,6 +243,7 @@ class MerchantPageController extends Controller
 
         return back()->with('msg', "<div class='alert alert-success'>Cashback Ended Successfully</div>");
     }
+
 
     public function viewReviews(Request $Req)
     {
@@ -245,16 +258,16 @@ class MerchantPageController extends Controller
         return view('merchant.pages.marketplacereviews')->with(['data' => $data]);
     }
 
+
     public function viewmarketReplies(Request $req, $id)
     {
 
         $data = [
             'comments' => MerchantReply::where('comment_id', $id)->get(),
         ];
-
-
         return view('merchant.pages.viewreply')->with(['data' => $data]);
     }
+
 
     public function merchantReply(Request $req)
     {
@@ -307,6 +320,16 @@ class MerchantPageController extends Controller
             "no_likes" => $req->like,
             "product_service" => $req->product_service
         ]);
+
+          $email=MailchimpMails::where('email',$req->email)->first();
+
+                if($email == null){
+                 MailchimpMails::create([
+                'email' => $req->email
+                ]);
+
+                $this->mailListCategorize('',$req->email,'','','','','');
+                }
 
         return back()->with("msg", "<div class='alert alert-success'> Review Submitted Successfully</div>");
 
@@ -381,6 +404,14 @@ class MerchantPageController extends Controller
                 'payment_link_expiry' => date('Y-m-d H:i:s', strtotime($today . '+ 1 day'))
             ]);
 
+
+            // Send Link and QRCode...
+
+            $business = Auth::user()->businessname . '/' . Auth::user()->ref_code;
+            $url = str_replace(' ', '%20', $business);
+
+            QrCode::size(300)->generate(route('home') . '/merchant/' . $url, public_path('images/'.Auth::user()->businessname.'.svg') );
+
             $message = 'Link generated successfully';
             $status = 'success';
         } catch (\Throwable $th) {
@@ -426,7 +457,10 @@ class MerchantPageController extends Controller
 
 
             if (isset($merchantStore)) {
-
+                    StoreViews::create([
+                        'merchant_id' => $getMerchantId->id,
+                        'likes' => 1,
+                    ]);
 
 
                 $data = [
@@ -1016,7 +1050,8 @@ class MerchantPageController extends Controller
             'storepickup' => $this->getStorePickupCount(Auth::user()->id),
             'deliverypickup' => $this->getDeliveryPickupCount(Auth::user()->id),
             'activeCountry' => $this->getActiveCountries(),
-            'myserviceStore' => $this->getServiceStore(Auth::user()->id)
+            'myserviceStore' => $this->getServiceStore(Auth::user()->id),
+            'views' => StoreViews::where('merchant_id',Auth::user()->id)->sum('likes'),
         ];
 
         ActivationEstore::updateOrCreate([

@@ -936,7 +936,7 @@ class CurrencyFxController extends Controller
 
                         $this->createNotification(
                             $thisuser->ref_code,
-                            "Hello " . strtoupper($thisuser->name) . $message . "."
+                            "Hello " . strtoupper($thisuser->name) . $message . ".", $thisuser->playerId, $message, "New FX Wallet Created"
                         );
 
                         $this->slack("New FX Account of " . $allcountry->currencyCode . " created by :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
@@ -1072,7 +1072,7 @@ class CurrencyFxController extends Controller
 
 
                                     // Log Activities here
-                                    $this->createNotification($thisuser->ref_code, $sendMsg);
+                                    $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg,"Escrow Wallet Debit");
 
 
 
@@ -1244,7 +1244,7 @@ class CurrencyFxController extends Controller
 
                 Log::info("Currency exchange transaction of " . $getWallet->currencyCode . " " . number_format($value->sell, 2) . " by " . $thisuser->name . " returned back to wallet");
 
-                $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $sendMsg);
+                $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $sendMsg, $thisuser->playerId, $sendMsg, "Escrow Wallet Credit");
 
                 echo "Done for ".$expiry."<hr>";
                 }
@@ -1420,13 +1420,13 @@ class CurrencyFxController extends Controller
                         }
 
                         // Log Activities here
-                        $this->createNotification($thisuser->ref_code, $sendMsg1);
-                        $this->createNotification($getthisbidders->ref_code, $sendMsg2);
+                        $this->createNotification($thisuser->ref_code, $sendMsg1, $thisuser->playerId, $sendMsg1, "PaySprint FX Bid");
+                        $this->createNotification($getthisbidders->ref_code, $sendMsg2, $thisuser->playerId, $sendMsg2, "PaySprint FX Bid");
 
 
                         // Send Response
                         $data = true;
-                        $message = 'Transaction successfull. Funds transferred to your ' . strtoupper($getOrderItem->buy_currencyCode) . ' wallet account';
+                        $message = 'Transaction successful. Funds transferred to your ' . strtoupper($getOrderItem->buy_currencyCode) . ' wallet account';
                         $status = 200;
                     } else {
                         $data = [];
@@ -1929,7 +1929,7 @@ class CurrencyFxController extends Controller
                             $this->sendMessage($sendMsg, $sendPhone);
                         }
 
-                        $this->createNotification($thisuser->ref_code, $sendMsg);
+                        $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Escrow Wallet Credit");
 
 
                         // Markup value to sender local currency i.e USD/NGN = 584.33
@@ -2103,7 +2103,7 @@ class CurrencyFxController extends Controller
                             }
 
                             // Log Activities here
-                            $this->createNotification($thisuser->ref_code, $sendMsg);
+                            $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Escrow Wallet Credit");
 
                             $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
@@ -2171,7 +2171,7 @@ class CurrencyFxController extends Controller
                             }
 
                             // Log Activities here
-                            $this->createNotification($thisuser->ref_code, $sendMsg);
+                            $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Escrow Wallet Credit");
 
                             $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
@@ -2242,7 +2242,7 @@ class CurrencyFxController extends Controller
                         FxPayment::insert($queryRec);
 
                         // Log Activities here
-                        $this->createNotification($thisuser->ref_code, $sendMsg);
+                        $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Escrow Wallet Credit");
 
                         $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 

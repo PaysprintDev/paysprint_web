@@ -27,7 +27,7 @@ return [
         'from' => 'businessdev@paysprint.ca',
         'from_name' => 'PaySprint',
         'claimsbusiness' => "d-edb129442335450e8ea09742c826f8e2",
-       
+
     ],
 
     'shuftipro' => [
@@ -45,6 +45,8 @@ return [
         'sender_licence' => env('MOEX_SENDER_DRL'),
     ],
     'onesignal' => [
+        'api_key' => env('ONESIGNAL_API_KEY'),
+        'url' => env('ONESIGNAL_URL'),
         'appId' => env('ONESIGNAL_APP_ID'),
         'safari_web_id' => env('ONESIGNAL_SAFARI_ID')
     ]

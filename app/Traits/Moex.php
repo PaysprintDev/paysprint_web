@@ -26,26 +26,18 @@ trait Moex
         $responseData = [];
 
         $this->moexPost = '<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:WSmoneyIntf-IWSmoney">
-                <soapenv:Header/>
-                <soapenv:Body>
-                    <urn:MEGetExtTransactionMoEx soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-                        <login xsi:type="urn:TWSauth" xmlns:urn="urn:WSmoneyClasses">
-                            <Username xsi:type="xsd:string">' . config("constants.moex.username") . '</Username>
-                            <Password xsi:type="xsd:string">' . config("constants.moex.password") . '</Password>
-                            <Version xsi:type="xsd:string">' . config("constants.moex.version") . '</Version>
-                        </login>
-                        <Reference xsi:type="xsd:string">' . $transactionId . '</Reference>
-                        <phoneConfig xsi:type="urn:TWSPhoneConfig" xmlns:urn="urn:WSmoneyClasses">
-                            <IncSenderCountryCode xsi:type="xsd:boolean">true</IncSenderCountryCode>
-                            <SenderExitPrefix xsi:type="xsd:string">+</SenderExitPrefix>
-                            <IncSenderHyphen xsi:type="xsd:boolean">false</IncSenderHyphen>
-                            <IncReceiverCountryCode xsi:type="xsd:boolean">true</IncReceiverCountryCode>
-                            <ReceiverExitPrefix xsi:type="xsd:string">+</ReceiverExitPrefix>
-                            <IncReceiverHyphen xsi:type="xsd:boolean">false</IncReceiverHyphen>
-                        </phoneConfig>
-                    </urn:MEGetExtTransactionMoEx>
-                </soapenv:Body>
-            </soapenv:Envelope>';
+   <soapenv:Header/>
+   <soapenv:Body>
+      <urn:MEGetTransactionMoEx soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+         <login xsi:type="urn:TWSauth" xmlns:urn="urn:WSmoneyClasses">
+            <Username xsi:type="xsd:string">' . config("constants.moex.username") . '</Username>
+            <Password xsi:type="xsd:string">' . config("constants.moex.password") . '</Password>
+            <Version xsi:type="xsd:string">' . config("constants.moex.version") . '</Version>
+         </login>
+         <Reference xsi:type="xsd:string">' . $transactionId . '</Reference>
+      </urn:MEGetTransactionMoEx>
+   </soapenv:Body>
+</soapenv:Envelope>';
 
 
         $result = $this->moExPostCurl();

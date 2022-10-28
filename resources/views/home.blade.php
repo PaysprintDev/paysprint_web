@@ -192,6 +192,8 @@ use App\Http\Controllers\User; ?>
                             <h3 class="c-stepper__title">Account Verification-Completed</h3>
                             {{-- <p class="c-stepper__desc">Some desc text</p> --}}
                         </li>
+                        
+
 
                         @isset($data['userdetails'])
 
@@ -460,34 +462,36 @@ use App\Http\Controllers\User; ?>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">
                                     Current Plan: {{ strtoupper(Auth::user()->plan) }} <br><br>
-            
+
                                     <form action="#" method="post" id="formElemchangeplan" class="disp-0">
                                         @csrf
                                         <input value="{{ Auth::id() }}" name="user_id">
                                     </form>
-            
+
                                     @if (Auth::user()->plan == 'basic')
-                                    <button class="btn btn-primary" onclick="changeMyPlan('changeplan')" id="cardSubmit">Upgrade
+                                    <button class="btn btn-primary" onclick="changeMyPlan('changeplan')"
+                                        id="cardSubmit">Upgrade
                                         Account</button>
                                     @else
                                     @if (Auth::user()->country == 'Canada' || Auth::user()->country == 'United States')
-                                    <button class="btn btn-danger" onclick="changeMyPlan('changeplan')" id="cardSubmit">Downgrade
+                                    <button class="btn btn-danger" onclick="changeMyPlan('changeplan')"
+                                        id="cardSubmit">Downgrade
                                         Account</button>
-            
+
                                     @isset($data['myplan'])
                                     <br>
                                     <br>
                                     <p class="text-info">Next Renewal:
                                         {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}
                                     </p>
-            
+
                                     @php
                                     $expire = date('Y-m-d', strtotime($data['myplan']->expire_date));
                                     $now = time();
                                     $your_date = strtotime($expire);
                                     $datediff = $your_date - $now;
                                     @endphp
-            
+
                                     <p class="text-danger">
                                         {{ round($datediff / (60 * 60 * 24)) > 1 ? round($datediff / (60 * 60 * 24)) .
                                         'days' :
@@ -500,14 +504,14 @@ use App\Http\Controllers\User; ?>
                                     <p class="text-info">Next Renewal:
                                         {{ date('d-m-Y', strtotime($data['myplan']->expire_date)) }}
                                     </p>
-            
+
                                     @php
                                     $expire = date('Y-m-d', strtotime($data['myplan']->expire_date));
                                     $now = time();
                                     $your_date = strtotime($expire);
                                     $datediff = $your_date - $now;
                                     @endphp
-            
+
                                     <p class="text-danger">
                                         {{ round($datediff / (60 * 60 * 24)) > 1 ? round($datediff / (60 * 60 * 24)) .
                                         'days' :
@@ -517,13 +521,13 @@ use App\Http\Controllers\User; ?>
                                     @endisset
                                     @endif
                                     @endif
-            
+
                                     <hr>
-            
+
                                     <a href="{{ route('pricing structure') }}">Do more with PaySprint. Check our
                                         Pricing</a>
                                 </li>
-            
+
                             </ul>
                         </div>
                     </div>
@@ -541,16 +545,16 @@ use App\Http\Controllers\User; ?>
                         @foreach ($data['products'] as $products)
                         <div class="swiper-slide">
                             <div class="row">
-                            <div class="col-md-5" style="object-fit:cover; height:400px"> 
-                                <img src="{{$products->image}}" alt="pictures"
-                                    >
-                                
-                            </div>
-                            <div class="col-md-5">
-                                <h3>{{$products->productName}}</h3>
-                                <p style="margin-top:30px">{!! $products->description !!}</p>
-                                <a href="https://paysprintmarketplace.com" target="_blank" class="btn btn-primary" style="margin-top:30px">Visit the Marketplace</a>
-                            </div>
+                                <div class="col-md-5" style="object-fit:cover; height:400px">
+                                    <img src="{{$products->image}}" alt="pictures">
+
+                                </div>
+                                <div class="col-md-5">
+                                    <h3>{{$products->productName}}</h3>
+                                    <p style="margin-top:30px">{!! $products->description !!}</p>
+                                    <a href="https://paysprintmarketplace.com" target="_blank" class="btn btn-primary"
+                                        style="margin-top:30px">Visit the Marketplace</a>
+                                </div>
                             </div>
                         </div>
                         @endforeach
@@ -570,15 +574,16 @@ use App\Http\Controllers\User; ?>
             </div> --}}
 
             @if (Auth::user()->plan == 'classic')
-            <div class="col-md-4" >
-                <div class="card" >
+            <div class="col-md-4">
+                <div class="card">
 
-                    <ul class="list-group list-group-flush" >
+                    <ul class="list-group list-group-flush">
                         <li class="list-group-item">
                             Trade FX with PaySprint <br><br>
 
                             @if ($data['imtAccess']->imt == 'false' && $data['imtAccess']->outbound == 'false')
-                            <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit" disabled>PaySprint
+                            <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit"
+                                disabled>PaySprint
                                 FX</a>
 
                             <hr>
@@ -611,7 +616,8 @@ use App\Http\Controllers\User; ?>
                             Trade FX with PaySprint <br><br>
 
                             @if ($data['imtAccess']->imt == 'false' && $data['imtAccess']->outbound == 'false')
-                            <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit" disabled>PaySprint
+                            <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit"
+                                disabled>PaySprint
                                 FX</a>
 
                             <hr>
@@ -1145,18 +1151,18 @@ use App\Http\Controllers\User; ?>
                     <div class="card-header"
                         style="background-color:#ffba00; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
                         Money Transfer
-                
+
                     </div>
                     <ul class="list-group list-group-flush">
-                
-                
+
+
                         <li class="list-group-item" title="Rental Property Management">
                             <div class="row">
                                 <div class="col-md-12">
                                     <a href="javascript:void()" onclick="$('#sendMoney').click()">Money Transfer</a>
                                 </div>
                             </div>
-                
+
                         </li>
 
                         <li class="list-group-item" title="Rental Property Management">
@@ -1165,7 +1171,7 @@ use App\Http\Controllers\User; ?>
                                     <a href="{{ route('invoice') }}">Pay Invoice</a>
                                 </div>
                             </div>
-                        
+
                         </li>
                     </ul>
                 </div>
@@ -1227,18 +1233,18 @@ use App\Http\Controllers\User; ?>
                     <div class="card-header"
                         style="background-color:#ffba00; padding: 10px; font-weight: bold; border-radius: 10px 10px 0px 0px;">
                         Wallet Set-up
-                
+
                     </div>
                     <ul class="list-group list-group-flush">
-                
-                
+
+
                         <li class="list-group-item" title="Rental Property Management">
                             <div class="row">
                                 <div class="col-md-12">
                                     <a href="{{ route('Choose Payment') }}">Topup Wallet</a>
                                 </div>
                             </div>
-                
+
                         </li>
                         <li class="list-group-item" title="Rental Property Management">
                             <div class="row">
@@ -1246,9 +1252,9 @@ use App\Http\Controllers\User; ?>
                                     <a href="{{ route('Choose Withdraw') }}">Withdraw Funds</a>
                                 </div>
                             </div>
-                        
+
                         </li>
-                
+
                     </ul>
                 </div>
 

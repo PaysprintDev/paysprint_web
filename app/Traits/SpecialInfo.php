@@ -15,20 +15,23 @@ use App\ClientInfo as ClientInfo;
 use App\SuperAdmin as SuperAdmin;
 use App\User;
 use App\Notifications;
+use App\Traits\OneSignal;
 
 trait SpecialInfo
 {
 
+    use OneSignal;
+
     public function createInfo($query)
     {
 
-        if($query['communication'] == "Notification"){
+        if ($query['communication'] == "Notification") {
 
             $data = SpecialNotification::updateOrCreate(['country' => $query['country']], $query);
-            
+
             $getUsers = User::where('country', $query['country'])->get();
 
-            foreach ($getUsers as $users){
+            foreach ($getUsers as $users) {
                 Notifications::insert([
                     'ref_code' => $users->ref_code,
                     'period' => date('Y-m-d'),
@@ -37,16 +40,18 @@ trait SpecialInfo
                     'platform' => 'web'
                 ]);
 
-            }
 
-        }
-        else{
+                if ($users->playerId !== null) {
+                    $this->notifyOneUser($users->playerId, $query['information'], 'Important Information');
+                }
+            }
+        } else {
 
             $data = SpecialInformation::updateOrCreate(['country' => $query['country']], $query);
 
             $getUsers = User::where('country', $query['country'])->get();
 
-            foreach ($getUsers as $users){
+            foreach ($getUsers as $users) {
                 Notifications::insert([
                     'ref_code' => $users->ref_code,
                     'period' => date('Y-m-d'),
@@ -55,9 +60,12 @@ trait SpecialInfo
                     'platform' => 'web'
                 ]);
 
+                if ($users->playerId !== null) {
+                    $this->notifyOneUser($users->playerId, $query['information'], 'Important Information');
+                }
             }
         }
-        
+
 
 
 

@@ -243,7 +243,7 @@
                                                                             src="https://img.icons8.com/emoji/25/000000/keycap-number-sign-emoji.png" /></span>
                                                                 </div> <input type="text" name="accountNumber"
                                                                     id="accountNumber" class="form-control"
-                                                                    placeholder="11111" required>
+                                                                    placeholder="11111" value="{{ Auth::user()->ref_code }}" readonly>
 
                                                                 <input type="hidden" name="route" value="estore">
                                                                 <input type="hidden" name="mode"
@@ -416,7 +416,7 @@
                                                                                 src="https://img.icons8.com/stickers/25/000000/user.png" /></span>
                                                                     </div> <input type="text" name="firstname"
                                                                         id="firstname" class="form-control"
-                                                                        placeholder="First Name:" required>
+                                                                        placeholder="First Name:" value="{{ explode(" ", Auth::user()->name)[0] }}" readonly>
 
                                                                     <input type="hidden" name="route"
                                                                         value="estore">
@@ -443,7 +443,7 @@
                                                                                 src="https://img.icons8.com/stickers/25/000000/user.png" /></span>
                                                                     </div> <input type="text" name="lastname"
                                                                         id="lastname" class="form-control"
-                                                                        placeholder="Last Name:" required>
+                                                                        placeholder="Last Name:" value="{{ explode(" ", Auth::user()->name)[1] }}" readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group"> <label for="email">
@@ -459,7 +459,7 @@
                                                                                 src="https://img.icons8.com/color/25/000000/email-sign.png" /></span>
                                                                     </div> <input type="email" name="email"
                                                                         id="email" class="form-control"
-                                                                        placeholder="Email Address:" required>
+                                                                        placeholder="Email Address:" value="{{ Auth::user()->email }}" readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group"> <label for="phone">
@@ -474,7 +474,7 @@
                                                                                 src="https://img.icons8.com/external-icongeek26-flat-icongeek26/25/000000/external-phone-essentials-icongeek26-flat-icongeek26.png" /></span>
                                                                     </div> <input type="text" name="phone"
                                                                         id="phone" class="form-control"
-                                                                        placeholder="Phone Number:" required>
+                                                                        placeholder="Phone Number:" value="{{ Auth::user()->telephone }}" readonly>
                                                                 </div>
                                                             </div>
 
@@ -1092,6 +1092,7 @@
 
             runCommission();
 
+            checkWallet();
 
         });
 
@@ -1134,8 +1135,7 @@
         }
 
 
-
-        $('#accountNumber').on('keyup', async function() {
+        async function checkWallet () {
 
             if ($('#accountNumber').val() != '') {
 
@@ -1188,7 +1188,9 @@
             }
 
 
-        });
+        }
+
+
 
 
         async function handShake(val) {
@@ -1248,10 +1250,11 @@
         // Axios to process the payment...
 
         async function payForOrder() {
-            try {
-
 
                 $('.sendmoneyBtn').text('Processing...');
+
+            try {
+
 
                 var data = new FormData(forCustomers);
                 var headers = {
@@ -1267,14 +1270,13 @@
                 }
 
 
-
-                $('.sendmoneyBtn').text('Make Payment');
-
-
                 const response = await axios(config);
 
 
                 swal("Great", response.data.message, "success");
+
+                $('.sendmoneyBtn').text('Make Payment');
+
 
                 setTimeout(function() {
                     location.href =

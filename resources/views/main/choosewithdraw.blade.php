@@ -107,7 +107,8 @@
                                     </div>
                                 </div>
 
-                                @if(isset($data['partner']))
+                                @if (Auth::user()->country != 'Canada')
+                                    @if(isset($data['partner']))
                                 <div class="col-md-6">
                                     <div class="card" style="width: 100%;">
                                         <div class="card-body">
@@ -121,6 +122,9 @@
                                     </div>
                                 </div>
                                 @endif
+                                @endif
+
+
 
                             </div>
 

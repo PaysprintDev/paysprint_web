@@ -21,11 +21,12 @@ use App\Classes\Mobile_Detect;
 
 use App\User as User;
 use App\Traits\PaymentGateway;
+use App\Traits\OneSignal;
 
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, PaymentGateway;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, PaymentGateway, OneSignal;
 
 
 
@@ -657,7 +658,7 @@ class Controller extends BaseController
 
 
 
-    public function createNotification($ref_code, $activity, $platform = null)
+    public function createNotification($ref_code, $activity, $playerId = null, $content = null, $heading = null, $platform = null)
     {
 
         $platform = ($this->detectMobile()->isMobile() ? ($this->detectMobile()->isTablet() ? 'tablet' : 'mobile') : 'web');
@@ -667,6 +668,13 @@ class Controller extends BaseController
             $thisuser = User::where('ref_code', $ref_code)->first();
 
             Notifications::insert(['ref_code' => $ref_code, 'activity' => $activity, 'notify' => 0, 'platform' => $platform, 'country' => $thisuser->country, 'period' => date('Y-m-d')]);
+
+
+            if($playerId !== null) {
+                $this->notifyOneUser($playerId, $content, $heading);
+            }
+
+
         } catch (\Throwable $th) {
 
             // Log::error('Error: '.$th->getMessage());
