@@ -50,7 +50,7 @@
                         
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('use case')}}" role="button"
-                                aria-expanded="false">USECASE</a>
+                                aria-expanded="false">USE CASES</a>
                         </li>
 
                         <li class="nav-item">
