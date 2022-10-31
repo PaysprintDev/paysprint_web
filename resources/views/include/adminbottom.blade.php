@@ -5,7 +5,9 @@ C</div>
 <!-- jQuery 3 -->
 <script src="{{ asset('ext/bower_components/jquery/dist/jquery.min.js') }}"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"
+    integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 @if (Session::has('username') == true)
 @if (session('loginCount') < 1) <script src="{{ asset('hopscotch/dist/js/hopscotch.js') }}">
@@ -19,7 +21,9 @@ C</div>
     <script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js" integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+        integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <!-- jQuery UI 1.11.4 -->
     <script src="{{ asset('ext/bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
@@ -30,7 +34,8 @@ C</div>
     </script>
 
     <!-- bootstrap js-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
     <!-- Bootstrap 3.3.7 -->
     <script src="{{ asset('ext/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
@@ -110,7 +115,8 @@ C</div>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.25/b-1.7.1/b-html5-1.7.1/datatables.min.js">
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/dt-1.10.25/b-1.7.1/b-html5-1.7.1/datatables.min.js">
     </script>
 
 
@@ -249,6 +255,13 @@ C</div>
 
         });
 
+        //datazoo
+        function dataZoo()
+        {
+             $('#datazooform').submit()
+             
+            
+        }
 
 
 
@@ -5273,6 +5286,42 @@ C</div>
         function checkAutoCredit(id, val) {
             $('#myvalue' + id).val(val);
             $('#checkers' + id).submit();
+        }
+
+        function deleteTransaction(id) {
+        
+        swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this transaction!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+        $('#deletetransaction' + id).submit();
+        }
+        });
+        
+        
+        }
+
+        function restoreTransaction(id) {
+        
+        swal({
+        title: "Are you sure?",
+        text: "Are you sure you want to restore this transaction?",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+        $('#restoretransaction' + id).submit();
+        }
+        });
+        
+        
         }
     </script>
 
