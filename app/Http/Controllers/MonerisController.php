@@ -7604,6 +7604,25 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         return $this->returnJSON($resData, $status);
     }
 
+    //softdelete for transaction
+    public function deleteTransaction(Request $req)
+    {
+      
+         $data = MonerisActivity::where('transaction_id', $req->transactionid)->delete();
+
+        return back()->with("msg", "<div class='alert alert-success'>Transaction Deleted Successfully</div>");
+    }
+
+    //retore deleted transactions
+    public function restoreTransaction(Request $req)
+    {
+      
+         $data = MonerisActivity::withTrashed()->where('transaction_id',$req->transactionid)->restore();
+
+        return back()->with("msg", "<div class='alert alert-success'>Transaction restored Successfully</div>");
+
+    }
+
 
     public function paymentReleaseFeeBack(Request $req)
     {

@@ -4373,11 +4373,45 @@ class AdminController extends Controller
             $getxPay = $this->getxpayTrans();
             $allusers = $this->allUsersOverride();
 
+            
+
 
             return view('admin.allusersoverride')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
         } else {
             return redirect()->route('AdminLogin');
         }
+    }
+
+    public function datazooVerify(Request $req)
+    {
+        $validation=Validator::make($req->all(),[
+            'user_refcode' => "required",
+            "verifcation_method" => "required"
+        ]);
+
+        $attributes= User::where('ref_code',$req->user_refcode)->first();
+        dd($attributes);
+        $countrydetails=AllCountries::where('name',$attributes->country)->first();
+        $code=$countrydetails->code;
+        $service='phone';
+        $reference='verify';
+        $firstname=$attributes['name'];
+        $middlename='';
+        $lastname='';
+        $dob=$attributes['dayOfBirth'].'/'.$attributes['monthOfBirth'].'/'.$attributes['yearOfBirth'];
+        $address=$attributes['address'];
+        $city=$attributes['city'];
+        $state=$attributes['state'];
+        $postalcode=$attributes['zip'];
+        $idno=$attributes['nin_number'];
+
+
+        if($attributes->country == 'Argentina' || $attributes->country == 'Brazil' || $attributes->country == 'Chile' || $attributes->country == 'Mexico' || $attributes->country == 'Peru' || $attributes->country == 'United States'){
+            
+        }
+
+        dd($attributes['name']);
+
     }
 
 
@@ -9839,6 +9873,63 @@ class AdminController extends Controller
         } else {
             return redirect()->route('AdminLogin');
         }
+    }
+
+    public function deletedTransactions(Request $req)
+    {
+         if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing" || session('role') == "Customer Success") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'transfer' => MonerisActivity::onlyTrashed()->get()
+            );
+
+
+            return view('admin.escrow.deletedelectronictransfer')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+
     }
 
 
@@ -20134,6 +20225,8 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
     {
 
         $data = User::where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->orderBy('created_at', 'DESC')->get();
+
+       
 
         return $data;
     }

@@ -655,6 +655,22 @@
 
                 </ul>
             </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="far fa-handshake"></i>
+                    <span>Deleted Transactions</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li title="Transfers"><a href="{{ route('deleted transactions') }}"><i
+                                class="fa fa-circle-o text-red"></i>
+                            Bank/Wire/Electronic Transfers</a></li>
+
+
+                </ul>
+            </li>
 
             <li class="treeview">
                 <a href="#">

@@ -671,6 +671,7 @@ Route::get('newmerchants', ['uses' => 'AdminController@allNewMerchants', 'as' =>
 Route::get('archiveduserslist', ['uses' => 'AdminController@archivedUsersList', 'as' => 'archiveduserslist']);
 Route::get('/addtowatchlist/{id}', ['uses' => 'AdminController@addTowatchlist', 'as' => 'addtowatchlist']);
 Route::get('/removefromwatchlist/{id}', ['uses' => 'AdminController@removeFromWatchList', 'as' => 'removefromwatchlist']);
+Route::post('/datazooverify', ['uses' => 'AdminController@datazooVerify', 'as' => 'datazoo verify']);
 
 
 Route::get('Admin/x-wireless', ['uses' => 'AdminController@smsWirelessPlatform', 'as' => 'sms wireless platform']);
@@ -708,7 +709,7 @@ Route::get('overrideusersbycountry', ['uses' => 'AdminController@allOverrideUser
 Route::get('psusersnotactivebycountry', ['uses' => 'AdminController@allPSUsersNotActiveByCountry', 'as' => 'ps not active by country']);
 Route::get('closedusersbycountry', ['uses' => 'AdminController@allClosedUsersByCountry', 'as' => 'closed users by country']);
 Route::get('suspendedusersbycountry', ['uses' => 'AdminController@allSuspendedUsersByCountry', 'as' => 'suspended users by country']);
-
+Route::post('datazooverify', ['uses' => 'AdminController@datazooVerify', 'as' => 'datazoo verify']);
 
 Route::get('newusersbycountry', ['uses' => 'AdminController@newUsersByCountry', 'as' => 'new users by country']);
 Route::get('newmerchantsbycountry', ['uses' => 'AdminController@newMerchantsByCountry', 'as' => 'new merchants by country']);
@@ -772,6 +773,9 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::get('refundmoneyrequest', ['uses' => 'AdminController@refundMoneyRequest', 'as' => 'refund money request']);
 	Route::get('escrowfundinglist', ['uses' => 'AdminController@escrowFundingList', 'as' => 'escrow funding list']);
 	Route::get('electronictransfer', ['uses' => 'AdminController@electronicTransferList', 'as' => 'electronic transfer']);
+	Route::post('deletetransaction', ['uses' => 'MonerisController@deleteTransaction', 'as' => 'delete transaction']);
+	Route::get('deletedtransaction', ['uses' => 'AdminController@deletedTransactions', 'as' => 'deleted transactions']);
+	Route::post('restoretransaction', ['uses' => 'MonerisController@restoreTransaction', 'as' => 'restore transaction']);
 
 	Route::post('confirmespay', ['uses' => 'AdminController@confirmEsPay', 'as' => 'confirm es pay']);
 
