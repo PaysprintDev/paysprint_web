@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         //
         Commands\DailyMetricsTask::class,
+        Commands\TestPSMoex::class,
     ];
 
     /**
@@ -28,7 +29,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
 
-        $schedule->command('daily-metrics')->everyTwoMinutes();
+        $schedule->command('daily-metrics:run')->everyTwoMinutes();
+        $schedule->command('psmoex:test')->everyMinute();
     }
 
     /**
