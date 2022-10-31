@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\CheckSetupController;
 
 class UserArchive extends Command
 {
@@ -11,14 +12,14 @@ class UserArchive extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'userarchive:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'PaySprint user archive';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,10 @@ class UserArchive extends Command
      */
     public function handle()
     {
-        return 0;
+        $checkSetup = new CheckSetupController();
+
+        $checkSetup->userAccountArchive();
+
+        $this->info("PaySprint user archive completed successfully");
     }
 }

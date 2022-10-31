@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\CheckSetupController;
 
 class NumberOfWithdrawals extends Command
 {
@@ -11,14 +12,14 @@ class NumberOfWithdrawals extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'numberofwithdrawals:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'PaySprint number of withdrawals';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,10 @@ class NumberOfWithdrawals extends Command
      */
     public function handle()
     {
-        return 0;
+        $checkSetup = new CheckSetupController();
+
+        $checkSetup->updateNumberofWithdrawal();
+
+        $this->info("PaySprint number of withdrawals completed successfully");
     }
 }

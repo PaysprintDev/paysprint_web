@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\CurrencyFxController;
 
 class RefreshBid extends Command
 {
@@ -11,14 +12,14 @@ class RefreshBid extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'refreshbid:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'PaySprint refresh fx bids';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,10 @@ class RefreshBid extends Command
      */
     public function handle()
     {
-        return 0;
+        $checkSetup = new CurrencyFxController();
+
+        $checkSetup->refreshBids();
+
+        $this->info("PaySprint refresh fx bids completed successfully");
     }
 }

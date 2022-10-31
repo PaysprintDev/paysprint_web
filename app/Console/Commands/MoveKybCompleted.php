@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\CheckSetupController;
 
 class MoveKybCompleted extends Command
 {
@@ -11,14 +12,14 @@ class MoveKybCompleted extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'movekybcompleted:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'PaySprint move completed kyb';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,10 @@ class MoveKybCompleted extends Command
      */
     public function handle()
     {
-        return 0;
+        $checkSetup = new CheckSetupController();
+
+        $checkSetup->moveKYBCompleted();
+
+        $this->info("PaySprint move completed kyb completed successfully");
     }
 }

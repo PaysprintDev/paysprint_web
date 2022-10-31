@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\MaintenanceFeeCharge;
 
 class RenewSub extends Command
 {
@@ -11,14 +12,14 @@ class RenewSub extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'renewsub:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'PaySprint renew subscription';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,10 @@ class RenewSub extends Command
      */
     public function handle()
     {
-        return 0;
+        $checkSetup = new MaintenanceFeeCharge();
+
+        $checkSetup->renewSubscription();
+
+        $this->info("PaySprint renew subscription completed successfully");
     }
 }

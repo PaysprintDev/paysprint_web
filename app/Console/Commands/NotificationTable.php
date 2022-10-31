@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\CheckSetupController;
 
 class NotificationTable extends Command
 {
@@ -11,14 +12,14 @@ class NotificationTable extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'notificationtable:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'PaySprint notification table';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,10 @@ class NotificationTable extends Command
      */
     public function handle()
     {
-        return 0;
+        $checkSetup = new CheckSetupController();
+
+        $checkSetup->notificationTable();
+
+        $this->info("PaySprint notification table completed successfully");
     }
 }

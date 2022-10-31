@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\CheckSetupController;
 
 class NonMonthlyTransaction extends Command
 {
@@ -11,14 +12,14 @@ class NonMonthlyTransaction extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'nonmonthlytransaction:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'PaySprint non monthly transaction statement completed successfully';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,10 @@ class NonMonthlyTransaction extends Command
      */
     public function handle()
     {
-        return 0;
+        $checkSetup = new CheckSetupController();
+
+        $checkSetup->nonMonthlyTransactionHistory();
+
+        $this->info("PaySprint non monthly transaction statement completed successfully");
     }
 }

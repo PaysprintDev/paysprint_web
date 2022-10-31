@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\CheckSetupController;
 
 class WeeklyLimit extends Command
 {
@@ -11,14 +12,14 @@ class WeeklyLimit extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'weeklylimit:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'PaySprint weekly limit';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,10 @@ class WeeklyLimit extends Command
      */
     public function handle()
     {
-        return 0;
+        $checkSetup = new CheckSetupController();
+
+        $checkSetup->weeklyLimit();
+
+        $this->info("PaySprint weekly limit completed successfully");
     }
 }
