@@ -72,6 +72,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('mailqueue:run')->cron('*/1 * * * *');
         $schedule->command('approvedusersmove:run')->cron('0 0 * * *');
         $schedule->command('autodepositoff:run')->cron('0 0 * * *');
         $schedule->command('bvnlistupdate:run')->cron('0 0 * * *');
@@ -117,7 +118,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('userarchive:run')->cron('0 0 1 * *');
         $schedule->command('virtualaccounttopup:run')->cron('* * * * *');
         $schedule->command('weeklylimit:run')->cron('0 0 * * 0');
-        $schedule->command('mailqueue:run')->cron('*/1 * * * *');
+
     }
 
     /**
