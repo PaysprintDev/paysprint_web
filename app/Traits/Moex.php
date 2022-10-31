@@ -422,7 +422,17 @@ trait Moex
             "IdCountry" => $IdCountry
         ]);
 
-        dd($BranchesMoex);
+        if($BranchesMoex['return'] === 0){
+            $responseData = $BranchesMoex;
+        }
+        else {
+            $description = $BranchesMoex['error']->Description;
+            $responseData = [
+                'error' => $description
+            ];
+        }
+
+        return $responseData;
     }
 
 
