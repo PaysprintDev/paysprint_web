@@ -390,7 +390,7 @@ use App\Http\Controllers\AllCountries; ?>
                                     {!! QrCode::size(150)->generate(Auth::user()->businessname.' payment link '.route('home') . '/merchant/' . $url); !!}
                                 </center>
                                 <br>
-                                <a href="{{ asset('images/'.Auth::user()->businessname.'.svg') }}" download="" style="color: navy; font-weight: 700; text-align: left;">Download and share QRCode</a>
+                                <a href="{{ asset('images/'.Auth::user()->businessname.'.svg') }}" download="" style="color: navy; font-weight: 700; text-align: left;">Download and print QRCode</a>
 
 
                             </div>

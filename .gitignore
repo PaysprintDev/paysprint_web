@@ -4,7 +4,6 @@
 /public/storage
 /storage/*.key
 /vendor
-/public
 /.idea
 /.vscode
 /.vagrant
@@ -14,3 +13,4 @@ npm-debug.log
 yarn-error.log
 .env
 .phpunit.result.cache
+*.zip

@@ -194,7 +194,7 @@
         </script>
 
         <script src="{{ asset('pace/pace.min.js') }}"></script>
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha256/0.9.0/sha256.js"></script>
         {{-- <script src="https://xpresspayonlinepluginssandbox.xpresspayments.com/js/plugin.js"></script> --}}

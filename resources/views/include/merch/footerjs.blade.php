@@ -45,7 +45,7 @@
 <script src="{{ asset('merchantassets/assets/js/dropzone/dropzone-script.js') }}"></script>
 <script src="{{ asset('merchantassets/assets/js/dropzone/dropzone.js') }}"></script>
 <script src="{{ asset('merchantassets/assets/js/print.js') }}"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
 <script src="{{ asset('pace/pace.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>

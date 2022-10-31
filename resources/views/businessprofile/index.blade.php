@@ -330,7 +330,7 @@
 
                         <!-- #JQUERY-PLUGINS# -->
                         <script src="{{ asset('business/js/jquery.min.js') }}"></script>
-                        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
                         <script src="{{ asset('business/js/bootstrap.min.js') }}"></script>
                         <script src="{{ asset('business/js/jquery.magnific-popup.min.js') }}"></script>
                         <script src="{{ asset('business/js/swiper.min.js') }}"></script>
