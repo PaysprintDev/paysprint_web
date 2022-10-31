@@ -84,6 +84,9 @@ padding: 10px 30px;
 border:2px solid #f8ca56;
 margin-top:-2px  */
 } 
+.hero-imgs{
+ top:-15.456rem;
+}
 </style>
 
 <!-- Hero Area -->
@@ -92,7 +95,7 @@ margin-top:-2px  */
         {{-- <p style="background: aquamarine;padding: 10px;border-radius: 10px;font-size: 20px;font-weight: 700;"><marquee behavior="" direction="">You are at the right website, Paypinn.com is same as Paysprint.ca!!!</marquee></p> --}}
         <div class="row justify-content-center align-items-center">
             <div class="col-9 col-md-7 col-lg-5 offset-xl-1 align-self-sm-end order-lg-2">
-                <div class="hero-img position-relative" data-aos="fade-left" data-aos-duration="500" data-aos-once="true">
+                <div class="hero-imgs position-relative" data-aos="fade-left" data-aos-duration="500" data-aos-once="true">
                     <img class="w-100" src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg" alt="" style="border-radius: 100%;">
                     <div class="gr-abs-tl gr-z-index-n1" data-aos="zoom-in" data-aos-delay="600" data-aos-duration="800" data-aos-once="true">
                         <img src="{{ asset('newpage/image/l5/png/l5-dot-shape.png') }}" alt="">

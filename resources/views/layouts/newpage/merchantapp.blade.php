@@ -1,5 +1,5 @@
     @include('include.newpage.merchant.top')
-    @include('include.newpage.header')
+    @include('include.newpage.newheader')
 
     @yield('content')
 

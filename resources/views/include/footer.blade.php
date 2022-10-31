@@ -76,6 +76,8 @@ $subdate )
 
     });
 
+   
+
 
     function trigger() {
         var user_id = "{{Auth::id()}}";
@@ -99,6 +101,12 @@ $subdate )
     }
 </script>
 
+<script>
+     $('#menu4').click(function(){
+     alert('hello');
+    })
+</script>
+
 
 @endif
 
@@ -106,6 +114,11 @@ $subdate )
 
 <script>
     function payOrg(user_id) {
+
+        location.href = location.origin + "/payment/sendmoney/" + user_id + "?country={{ Auth::user()->country }}";
+    }
+
+    function bulkOrg(user_id) {
 
         location.href = location.origin + "/payment/sendmoney/" + user_id + "?country={{ Auth::user()->country }}";
     }
@@ -1162,7 +1175,7 @@ $subdate )
                     code: $('#countryCode').val(),
                     action: val
                 };
-
+                
                 Pace.restart();
                 Pace.track(function() {
                     setHeaders();
@@ -1332,9 +1345,134 @@ $subdate )
                     });
                 });
             }
+        } else if (val == "check") {
+            // alert(1234);
+            if ($('#bulkInfo').val() == "") {
+                $('tbody#orgRec').html("");
+                swal("Oops!", "Enter receivers code", "info");
+            } else {
+                route = "{{ URL('Ajax/getOrganization') }}";
+                thisdata = {
+                    user_id: $('#bulkInfo').val(),
+                    code: $('#countryCode').val(),
+                    action: val
+                };
+                //  alert($('#countryCode').val());   
+                Pace.restart();
+                Pace.track(function() {
+                    setHeaders();
+                    jQuery.ajax({
+                        url: route,
+                        method: 'post',
+                        data: thisdata,
+                        dataType: 'JSON',
+                        beforeSend: function() {
+                            $('tbody#orgRec').html(
+                                "<tr><td colspan='8' align='center'>Please wait...</td></tr>");
+                        },
+                        success: function(result) {
+
+
+
+                            if (result.message == "success") {
+                                var res = JSON.parse(result.data);
+
+                               
+                                var datainfo = "";
+                                var datarec;
+                                var check;
+                                var avatar;
+                                var name;
+
+
+
+                                
+                                $.each(res, function(v, k) {
+
+                                    if (result.country == k.country) {
+                                        check = "<input class='form-check-input transfer' type='checkbox' value='" + k.ref_code + "' name='bulk[]'>"
+                                           
+                                            
+
+                                    } else {
+                                        
+                                        check =  "<input class='form-check-input transfer' type='checkbox' value='" + k.ref_code + "' name='bulk[]'>"
+                                            // "<button class='btn btn-secondary' onclick=payOrg('" +
+                                            // k.ref_code + "')>Send Money</button>";
+                                    }
+
+                                    if (k.avatar != null) {
+                                        avatar = k.avatar;
+                                    } else {
+                                        avatar =
+                                            "https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg";
+                                    }
+
+                                    if(k.accountType === 'Individual'){
+                                        name = k.name;
+                                    }
+                                    else{
+                                        name = k.businessname;
+                                    }
+
+                                    datarec = "<tr><td><img src='" + avatar +
+                                        "' style='width:200px; object-fit: contain; border-radius: 100%;'></td><td>" +
+                                        name + "</td><td>" + k.address + "</td><td>" + k
+                                        .ref_code + "</td><td>" + k.city + "</td><td>" + k
+                                        .state + "</td><td>" + k.country + "</td><td>" +
+                                        check + "</td></tr>";
+
+                                    datainfo += datarec;
+                                });
+                               
+
+
+
+                                $('tbody#bulkRec').html(datainfo);
+
+
+                                // $('tbody#orgRec').html("<tr><td>"+res.name+"</td><td>"+res.address+"</td><td>"+res.ref_code+"</td><td>"+res.city+"</td><td>"+res.state+"</td><td>"+res.country+"</td><td><button class='btn btn-primary' onclick=payOrg('"+res.ref_code+"')>Send Money</button></td></tr>");
+                            } else {
+                                $('tbody#bulkRec').html("<tr><td colspan='8' align='center'>" +
+                                    result.res + "</td></tr>");
+                                // swal(result.title, result.res, result.message);
+                            }
+
+
+                        }
+
+                    });
+                });
+            } 
         }
 
     }
+
+
+
+   $(function () {
+        $("#btnGet").click(function () {
+           
+            var selected = new Array();
+ 
+            //Reference the CheckBoxes and insert the checked CheckBox value in Array.
+            $("#bulkRec input[type=checkbox]:checked").each(function () {
+                selected.push(this.value);
+            });
+            //  $("#bulk_submit").submit();
+            //Display the selected CheckBox values.
+            if (selected.length > 0) {
+                // alert("Selected values: " + selected.join(","));
+
+                bulkTransfer(selected.join(","))
+            }
+        });
+    });
+
+function bulkTransfer(params) {
+    location.href ='/bulkpayment?id='+[params]
+}
+
 
     $('#orgInfo').change(function() {
         $('tbody#orgRec').html("");
@@ -3039,6 +3177,8 @@ $subdate )
         });
 
     }
+
+
 </script>
 @endauth
 
