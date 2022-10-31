@@ -7,100 +7,105 @@
 <?php use \App\Http\Controllers\OrganizationPay; ?>
 <?php use \App\Http\Controllers\ClientInfo; ?>
 
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-         All IDV Failed By Country
-      </h1>
-      <ol class="breadcrumb">
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      All IDV Failed By Country
+    </h1>
+    <ol class="breadcrumb">
       <li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">All IDV Failed By Country</li>
-      </ol>
-    </section>
+      <li class="active">All IDV Failed By Country</li>
+    </ol>
+  </section>
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="box">
-            <div class="box-header">
-              <div class="row">
-                <div class="col-md-2 col-md-offset-0">
-                <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i class="fas fa-chevron-left"></i> Go back</button>
+  <!-- Main content -->
+  <section class="content">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="box">
+          <div class="box-header">
+            <div class="row">
+              <div class="col-md-2 col-md-offset-0">
+                <button class="btn btn-secondary btn-block bg-red" onclick="goBack()"><i
+                    class="fas fa-chevron-left"></i> Go back</button>
+              </div>
             </div>
-            </div>
-              
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body table table-responsive">
 
-              <table class="table table-bordered table-striped" id="example3">
+          </div>
+          <!-- /.box-header -->
+          <div class="box-body table table-responsive">
 
-                <thead>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <h3 id="period_start"></h3>
-                    </div>
-                    <div class="col-md-6">
-                      <h3 id="period_stop"></h3>
-                    </div>
+            <table class="table table-bordered table-striped" id="example3">
+
+              <thead>
+                <div class="row">
+                  <div class="col-md-6">
+                    <h3 id="period_start"></h3>
                   </div>
+                  <div class="col-md-6">
+                    <h3 id="period_stop"></h3>
+                  </div>
+                </div>
                 <tr>
                   <th>S/N</th>
                   <th>Country</th>
                   <th>Total Count</th>
+                  <th>KYC Method</th>
                   <th>Action</th>
                 </tr>
-                </thead>
-                <tbody>
-                    @if (count($allusers) > 0)
-                    <?php $i = 1;?>
-                        @foreach ($allusers as $data)
-                        <tr>
-                            <td>{{ $i++ }}</td>
-                            
-                            <td>{{ $data->country }}</td>
+              </thead>
+              <tbody>
+                @if (count($allusers) > 0)
+                <?php $i = 1;?>
+                @foreach ($allusers as $data)
+                @if($kyc = \App\AllCountries::where('name',$data->country)->first())
 
-                            @if($allusersdata = \App\User::where([['country', '=', $data->country],['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->count())
-                                <td>{{ $allusersdata }}</td>
-                            @endif
+                <tr>
+                  <td>{{ $i++ }}</td>
 
-                            
+                  <td>{{ $data->country }}</td>
 
-                            <td>
+                  @if($allusersdata = \App\User::where([['country', '=', $data->country],['accountLevel', '=', 2],
+                  ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->count())
+                  <td>{{ $allusersdata }}</td>
+                  @endif
 
-                              <a href="{{ route('overrideusers', 'country='.$data->country) }}" type="button" class="btn btn-primary">View details</a>
+                  <td>{{$kyc->verification_tool}}</td>
 
-                              
-                            </td>
+                  <td>
+
+                    <a href="{{ route('overrideusers', 'country='.$data->country) }}" type="button"
+                      class="btn btn-primary">View details</a>
 
 
-                        </tr>
-                        @endforeach
+                  </td>
 
-                        
 
-                    @else
-                    <tr>
-                        <td colspan="4" align="center">No record available</td>
-                    </tr>
-                    @endif
-                </tbody>
-              </table>
-            </div>
-            <!-- /.box-body -->
+                </tr>
+                @endif
+                @endforeach
+
+
+
+                @else
+                <tr>
+                  <td colspan="4" align="center">No record available</td>
+                </tr>
+                @endif
+              </tbody>
+            </table>
           </div>
-          <!-- /.box -->
+          <!-- /.box-body -->
         </div>
-        <!-- /.col -->
+        <!-- /.box -->
       </div>
-      <!-- /.row -->
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
 @endsection
-
-

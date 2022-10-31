@@ -88,7 +88,7 @@ use App\Http\Controllers\FxPayment; ?>
 									<td>{{ $user->name}}</td>
 									<td>{{ date('d/M/Y h:i a', strtotime($transfers->created_at)) }}</td>
 									<!-- <td>Hi</td> -->
-									@if ($transfers->flag_state == 0)
+									{{-- @if ($transfers->flag_state == 0)
 
 									<td>
 										<form action="{{ route('flag this money') }}" method="post"
@@ -105,15 +105,15 @@ use App\Http\Controllers\FxPayment; ?>
 											style="background: black; color: white; cursor: not-allowed;"
 											href="javascript:void(0)" style="cursor: not-allowed">Flagged</a>
 									</td>
-									@endif
+									@endif --}}
 
 									<td>
 										@if ($transfers->reversal_state == 0)
 										<button class="btn btn-danger" id="btns{{ $transfers->transaction_id}}"
-											onclick="deleteTransaction('{{ $transfers->transaction_id }}');">Delete</button>
-										<form action="{{ route('delete transaction') }}" method="post"
+											onclick="restoreTransaction('{{ $transfers->transaction_id }}');">Restore</button>
+										<form action="{{ route('restore transaction') }}" method="post"
 											style="visibility: hidden"
-											id="deletetransaction{{ $transfers->transaction_id }}">
+											id="restoretransaction{{ $transfers->transaction_id }}">
 											@csrf
 											<input type="hidden" name="transactionid"
 												value="{{ $transfers->transaction_id}}">
@@ -121,7 +121,7 @@ use App\Http\Controllers\FxPayment; ?>
 										@endif
 
 									</td>
-									<td>
+									{{-- <td>
 										@if ($transfers->hold_fee == 1)
 										@if ($userStatement = \App\Statement::where('reference_code',
 										$transfers->transaction_id)->first())
@@ -145,7 +145,7 @@ use App\Http\Controllers\FxPayment; ?>
 											style="cursor: not-allowed">Released</a>
 										@endif
 
-									</td>
+									</td> --}}
 
 								</tr>
 								@endif

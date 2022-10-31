@@ -3,23 +3,23 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\CheckSetupController;
 
-class DailyMetricsTask extends Command
+class ApprovedUsersMove extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'daily-metrics:run';
+    protected $signature = 'approvedusersmove:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Daily metrics run command';
+    protected $description = 'PaySprint move approved users...';
 
     /**
      * Create a new command instance.
@@ -38,7 +38,10 @@ class DailyMetricsTask extends Command
      */
     public function handle()
     {
+        $checkSetup = new CheckSetupController();
 
-        return 0;
+        $checkSetup->approvedUsersAccount();
+
+        $this->info("PaySprint move approved users completed successfully");
     }
 }

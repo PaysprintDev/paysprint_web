@@ -2,8 +2,10 @@
 
 namespace App\Traits;
 
-use App\AllCountries;
+use SoapClient;
 
+use App\AllCountries;
+use App\Classes\TWSauth;
 use App\ConversionCountry;
 use function GuzzleHttp\json_decode;
 
@@ -396,6 +398,41 @@ trait Moex
 
         return json_encode($getRate);
 
+    }
+
+
+
+    // Alternative Integration...
+
+    public function paysprintMoex()
+    {
+        $login = new TWSauth();
+        $login->Username = config("constants.moex.username");
+        $login->Password = config("constants.moex.password");
+        $login->Version = config("constants.moex.version");
+
+        $url_wsdl = config('constants.moex.baseurl');
+
+        $IdCountry = 'ESP';
+
+        $clientSoap = new \SoapClient($url_wsdl);
+
+        $BranchesMoex = $clientSoap->__soapCall("MEGetActiveBranchesMoEX", [
+            "Login" => $login,
+            "IdCountry" => $IdCountry
+        ]);
+
+        if($BranchesMoex['return'] === 0){
+            $responseData = $BranchesMoex;
+        }
+        else {
+            $description = $BranchesMoex['error']->Description;
+            $responseData = [
+                'error' => $description
+            ];
+        }
+
+        return $responseData;
     }
 
 

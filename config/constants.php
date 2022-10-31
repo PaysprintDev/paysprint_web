@@ -49,6 +49,10 @@ return [
         'url' => env('ONESIGNAL_URL'),
         'appId' => env('ONESIGNAL_APP_ID'),
         'safari_web_id' => env('ONESIGNAL_SAFARI_ID')
-    ]
+    ],
+    'datazoo' =>[
+        'baseurl' => 'https://idu-test.datazoo.com/api/v2/verify',
+        'token' => env('DATAZOO_TOKEN'),
+    ],
 
 ];
