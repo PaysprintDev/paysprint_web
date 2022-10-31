@@ -47,6 +47,12 @@
                                 aria-expanded="false">LOGIN</a>
                         </li>
 
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('use case')}}" role="button"
+                                aria-expanded="false">USECASE</a>
+                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('AdminRegister') }}" role="button"
                                 aria-expanded="false">SIGN UP FOR FREE</a>

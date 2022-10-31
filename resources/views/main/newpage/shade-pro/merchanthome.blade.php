@@ -1172,7 +1172,7 @@
     }
 
     #element-256 {
-      top: 14.1875rem;
+      top: 18.1875rem;
       left: 1.25rem;
       height: 2.8125rem;
       width: 2.5625rem;
@@ -2522,7 +2522,7 @@
         height: 2.8125rem;
         width: 2.5625rem;
         z-index: 58;
-      }
+      } 
 
       #element-197 {
         top: 15.5625rem;
@@ -3791,7 +3791,7 @@
                   <p class="gr-text-11 mb-0 mt-6" style="color: #433d3d;">It takes only 2 mins!</p>
               </div>
 
-              <div class="hero-img" data-aos="fade-left" data-aos-duration="500" data-aos-once="true">
+              <div class="hero-img-1" data-aos="fade-left" data-aos-duration="500" data-aos-once="true">
                   <div class="hero-video-thumb position-relative gr-z-index-1">
                       <center>
                           <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg" alt="" class="w-100 rounded-8" style="height: 350px !important;width: 350px !important;">

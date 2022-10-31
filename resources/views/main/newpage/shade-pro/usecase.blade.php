@@ -2,330 +2,237 @@
 
 @section('content')
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Karla:wght@300;400;700&display=swap");
-
-/* Fonts and colors variables */
-:root {
-	--shadow-green: #9bc1bc;
-	--riptide: #79e5cb;
-	--matise: #2374ab;
-	--white: #fff;
-
-	--base-font: "Karla", sans-serif;
-}
-
-/* Reset styles and also used Normalize */
+   @import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
 * {
-	padding: 0;
-	margin: 0;
-	box-sizing: border-box;
-}
-/* .hero-container{
-  margin-bottom: 52px  
-} */
-
-body {
-	background-color: #f2f2f2;
-	font-family: var(--base-font);
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
-img {
-	width: 100%;
-	vertical-align: top;
+.blog-card {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem auto;
+  box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.6%;
+  background: #fff;
+  line-height: 1.4;
+  font-family: sans-serif;
+  border-radius: 5px;
+  overflow: hidden;
+  z-index: 0;
+}
+.blog-card a {
+  color: inherit;
+}
+.blog-card a:hover {
+  color: #5ad67d;
+}
+.blog-card:hover .photo {
+  transform: scale(1.3) rotate(3deg);
+}
+.blog-card .meta {
+  position: relative;
+  z-index: 0;
+  height: 200px;
+}
+.blog-card .photo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.2s;
+}
+.blog-card .details, .blog-card .details ul {
+  margin: auto;
+  padding: 0;
+  list-style: none;
+}
+.blog-card .details {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -100%;
+  margin: auto;
+  transition: left 0.2s;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 10px;
+  width: 100%;
+  font-size: 0.9rem;
+}
+.blog-card .details a {
+  text-decoration: dotted underline;
+}
+.blog-card .details ul li {
+  display: inline-block;
+}
+.blog-card .details .tags li {
+  margin-right: 2px;
+}
+.blog-card .details .tags li:first-child {
+  margin-left: -4px;
+}
+.blog-card .description {
+  padding: 1rem;
+  background: #fff;
+  position: relative;
+  z-index: 1;
+}
+.blog-card .description h1, .blog-card .description h2 {
+  font-family: Poppins, sans-serif;
+}
+.blog-card .description h1 {
+  line-height: 1;
+  margin: 0;
+  font-size: 1.7rem;
+}
+.blog-card .description h2 {
+  font-size: 1rem;
+  font-weight: 300;
+  text-transform: uppercase;
+  color: #a2a2a2;
+  margin-top: 5px;
+}
+.blog-card .description .read-more {
+  text-align: right;
+}
+.blog-card .description .read-more a {
+  color: #5ad67d;
+  display: inline-block;
+  position: relative;
+  text-decoration: none;
+}
+.blog-card p {
+  position: relative;
+  margin: 1rem 0 0;
 }
 
-.container {
-	width: 100%;
-	max-width: 1000px;
-	margin-top: 50px;
-	margin-bottom: 100px;
-	margin-left: auto;
-	margin-right: auto;
-	padding: 0 20px;
-
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 40px;
+.blog-card:hover .details {
+  left: 0%;
+}
+@media (min-width: 640px) {
+  .blog-card {
+    flex-direction: row;
+    max-width: 700px;
+  }
+  .blog-card .meta {
+    flex-basis: 40%;
+    height: auto;
+  }
+  .blog-card .description {
+    flex-basis: 60%;
+  }
+  .blog-card.alt {
+    flex-direction: row-reverse;
+  }
+  .blog-card.alt .details {
+    padding-left: 25px;
+  }
+  .content{
+   
+    margin-left:20rem;
+    margin-right: 20rem
+  }
+  .content p{
+    font-size: 16px;
+    line-height: 35px
+  }
 }
 
-
-/* Card */
-.product-card {
-	max-width: 200px;
-	flex-basis: 180px;
-	flex-grow: 1;
-	background-color: var(--white);
-}
-	@media screen and (max-width: 440px) {
-		max-width: 100%;
-	}
-
-
-	/* Top part of the card */
-	.product-card__images {
-		cursor: pointer;
-		position: relative;
-    }
-		/* Show the 'see more' button on hover */
-        .product-card__images:hover,
-        .product-card__images:focus {
-			.product-card__btn {
-				display: block;
-			}
-		}
-	
-
-	.product-card__img {
-    }
-		.product-card--hidden {
-			opacity: 0;
-			position: absolute;
-			left: 0;
-			top: 0;
-			transition: 0.3s;
-        }
-			.product-card:hover {
-				opacity: 1;
-			}
-		
-	
-
-	/* Bottom part of the card */
-	.product-card__info {
-		padding: 10px;
-		text-align: center;
-	}
-
-	.product-card__name {
-		font-size: 13px;
-		font-weight: normal;
-		text-transform: capitalize;
-	}
-
-	.product-card__price {
-		color: var(--matise);
-		font-size: 13px;
-		margin: 10px 0;
-	}
-
-	.product-card__promo {
-		color: #000;
-		margin-left: 5px;
-		text-decoration: line-through;
-	}
-
-	.product-card__stars {
-		color: var(--matise);
-	}
-
-	.product-card__review-count {
-		color: #000;
-		font-size: 13px;
-		font-weight: 300;
-	}
-
-	/* Like button */
-	.product-card__like {
-		color: var(--riptide);
-		cursor: pointer;
-		font-size: 30px;
-		left: 15px;
-		position: absolute;
-		top: 15px;
-	}
-
-	/* Hide the checkbox and the filled heart by default */
-	.product-card__like-check,
-	.product-card__heart--filled {
-		display: none;
-	}
-
-	/* Toggle hearts display w/CSS */
-	.product-card__like-check {
-		&:checked + .product-card__heart {
-			display: none;
-			+ .product-card__heart--filled {
-				display: inline;
-			}
-		}
-	}
-
-	/* See more button */
-	.product-card__btn {
-		background-color: var(--riptide);
-		border-radius: 5px;
-		border: none;
-		color: var(--white);
-		cursor: pointer;
-		display: none;
-		font-size: 14px;
-		font-weight: bold;
-		left: 50%;
-		padding: 10px 15px;
-		position: absolute;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		width: 50%;
-
-		&:hover {
-			background-color: var(--shadow-green);
-		}
-	}
 
 </style>
     <div class="hero-container" >
-        <div class="col-xl-8 col-lg-9">
-            <div class="px-md-15 text-center">
-                <h2 class="title gr-text-2 mb-8 mb-lg-10">case</h2>
-                {{-- <p class="gr-text-7 mb-0 mb-lg-13">Full Time, Remote</p> --}}
-
-
-
-            </div>
-        </div>
-    
-
-     <div class="container" >
-       
-        <div class="product-card">
-            <div class="product-card__images">
-                <div class="product-card__img">
-                    <img class="img-1" src="https://raw.githubusercontent.com/Javieer57/e-commerce-cards/807c6da77f7ed83f22f4c569c5281d43dbe73656/img/card_item_1.jpg" />
-                </div>
-
-
-                {{-- <label class="product-card__like">
-                    <input class="product-card__like-check" aria-label="like this product" type="checkbox" />
-                    <i class="product-card__heart far fa-heart"></i>
-                    <i class="product-card__heart--filled fas fa-heart"></i>
-                </label>
-
-                <button class="product-card__btn">See more</button> --}}
-            </div>
-
-            <div class="product-card__info">
-                <h3 class="product-card__name">SHINee The Story of Light Dad Hat</h3>
-
-                <div class="product-card__price">
-                    <span>$25.00</span>
-                    <span class="product-card__promo">$30.00</span>
-                </div>
-
-                <div class="product-card__stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                    <span class="product-card__review-count">(16)</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="product-card__images">
-                <div class="product-card__img">
-                    <img class="img-1" src="https://raw.githubusercontent.com/Javieer57/e-commerce-cards/807c6da77f7ed83f22f4c569c5281d43dbe73656/img/card_item_3.jpg" />
-                </div>
-
-
-                {{-- <label class="product-card__like">
-                    <input class="product-card__like-check" aria-label="like this product" type="checkbox" />
-                    <i class="product-card__heart far fa-heart"></i>
-                    <i class="product-card__heart--filled fas fa-heart"></i>
-                </label>
-
-                <button class="product-card__btn">See more</button> --}}
-            </div>
-
-            <div class="product-card__info">
-                <h3 class="product-card__name">BoA Debut 20th Anniversary Big Soju Glass</h3>
-
-                <div class="product-card__price">
-                    <span>$25.00</span>
-                </div>
-
-                <div class="product-card__stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                    <span class="product-card__review-count">(10)</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="product-card__images">
-                <div class="product-card__img">
-                    <img class="img-1" src="https://raw.githubusercontent.com/Javieer57/e-commerce-cards/807c6da77f7ed83f22f4c569c5281d43dbe73656/img/card_item_8.jpg" />
-                </div>
-
-
-                {{-- <label class="product-card__like">
-                    <input class="product-card__like-check" aria-label="like this product" type="checkbox" />
-                    <i class="product-card__heart far fa-heart"></i>
-                    <i class="product-card__heart--filled fas fa-heart"></i>
-                </label>
-
-                <button class="product-card__btn">See more</button> --}}
-            </div>
-
-            <div class="product-card__info">
-                <h3 class="product-card__name">Pre-Order - aespa Logo Printed Sweatshirts</h3>
-
-                <div class="product-card__price">
-                    <span>$42.00</span>
-                </div>
-
-                <div class="product-card__stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <span class="product-card__review-count">(11)</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <div class="product-card__images">
-                <div class="product-card__img">
-                    <img class="img-1" src="https://raw.githubusercontent.com/Javieer57/e-commerce-cards/807c6da77f7ed83f22f4c569c5281d43dbe73656/img/card_item_5.jpg" />
-                </div>
-
-{{--               
-                <label class="product-card__like">
-                    <input class="product-card__like-check" aria-label="like this product" type="checkbox" />
-                    <i class="product-card__heart far fa-heart"></i>
-                    <i class="product-card__heart--filled fas fa-heart"></i>
-                </label>
-
-                <button class="product-card__btn">See more</button> --}}
-            </div>
-
-            <div class="product-card__info">
-                <h3 class="product-card__name">SHINee Official Fanlight (Lightstick)</h3>
-
-                <div class="product-card__price">
-                    <span>$50.00</span>
-                </div>
-
-                <div class="product-card__stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <span class="product-card__review-count">(311)</span>
-                </div>
-            </div>
-        </div>
-     </div>
+      <div>
+       <h1 style="padding-bottom: 70px">cases</h1>  
     </div> 
+     <div class="sub-container" >
+        <div class="blog-card">
+            <div class="meta">
+              <div class="photo" >
+                <img src="{{ asset('images/sellitic.JPG') }}" alt="sellitic" style="width: 20rem; height:15rem"/>
+              </div>
+              <ul class="details">
+                <li class="author"><a href="#">Consumer Services</a></li>
+                <li class="date">Brampton, Ontario, Canada</li>
+           
+              </ul>
+            </div>
+            <div class="description">
+              <h1>SELLITIC Marketplace Inc.</h1>
+              <h2>SELLITIC - An online handicraft marketplace for the creative (handicraft) sector. </h2>
+              <p>Consumer Services </p>
+              <p>Brampton, Ontario, Canada</p>
+             
+            </div>
+            
+        </div>
+        <div class="content">
+        <p style="">SELLITIC adopts a purpose-driven and decentralized business model that drives diversity, equity and inclusion within the creative economy. Their mission to drive prosperity within the creative economy relies significantly on reducing the barriers to entry and operations for artists and artisans across Africa and the globe. <br>
+            The marketplace connects artists and artisans (creators) with buyers globally which offers the creators more visibility and opportunities to export their products across the globe.
+            PaySprint is supporting the SELLITIC Marketplace with a flexible, tailored-made, and affordable payments processing service that enables artisans in the informal sectors in over 100 countries to accept payments at zero costs to creators selling on the marketplace.<br>
+            The low cost of completing the end-to-end transaction provides a huge incentive to both SELLITIC and creators selling on the marketplace.
+        </p>
+      </div>
+      <hr>
+           
+        
+      <div class="blog-card">
+        <div class="meta">
+          <div class="photo">
+            <img src="{{ asset('images/Busy Wrench.JPG') }}" alt="busywrench" style="width: 20rem; height:15rem"/></div>
+          <ul class="details">
+            <li class="author"><a href="#">Automotive</a></li>
+            <li class="date">Brampton, Ontario, Canada</li>
+        
+          </ul>
+        </div>
+        <div class="description">
+          <h1>Automotive</h1>
+          <h2>Busy Wrench - More than a Shop Management Software</h2>
+          <p>Automotive</p>
+          <p>Ontario, Canada</p>
+        
+        </div>
+        
+    </div>
+    <div class="content">
+    <p style="">Busy Wrench offers shop management software to auto repair sub-sector in automotive industry. The auto repair shop owners in the sub-sector are usually looking for Shop Management Software that offers not only an end-to-end shop operation management but also helps to drive traffic to shop floor, improve sales, track expenses, and boost the profitability of the business.These are the objectives Busy Wrench is designed to achieve.<br>
+        PaySprint provides Busy Wrench with a unique opportunity to offer over 65, 000 Auto Repair shop-owners and 51,000 Auto Dealers on Busy Wrench with a low cost and affordable method of accepting payments from vehicle owners.
+        
+    </p>
+  </div>
+  <hr>
+  <div class="blog-card">
+    <div class="meta">
+      <div class="photo">
+        <img src="{{ asset('images/Renard-Blue.JPG') }}" alt="Renard" style="width: 20rem; height:15rem"/></div>
+      <ul class="details">
+        <li class="author"><a href="#">Retail</a></li>
+        <li class="date">Quebec, Canada</li>
+       
+      </ul>
+    </div>
+    <div class="description">
+      <h1>Renard-Bleuc</h1>
+      <h2>Renard-Blue–Online Grocery Shopping with a Difference</h2>
+      <p>Retail</p>
+      <p>Quebec,Canada</p>
+    
+    </div>
+    
+</div>
+<div class="content">
+<p style="">Renard Blue offers affordable grocery shopping experience. The online grocery service provides customer with much ease of doing essentials from the comfort of their home.<br>
+    Retail business is naturally characterised by high volume, low margin and high risk and costs of cash handling.
+    PaySprint offers Renard-Blue the opportunity to accept online payments from customers at no costs which improves the profitability of the business.
+    
+</p>
+</div>
+    </div>
+     
     
 
 @endsection

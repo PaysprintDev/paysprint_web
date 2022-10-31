@@ -245,7 +245,7 @@ Route::get('/estore', ['uses' => 'HomeController@estores', 'as' => 'paysprint es
 
 Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 'merchant home']);
 Route::get('/merchant-test', ['uses' => 'HomeController@merchantHome', 'as' => 'merchant test']);
-Route::get('usecase', ['uses' => 'HomeController@merchantUseCase', 'as' => 'use case']);
+Route::get('/Usecase', ['uses' => 'HomeController@merchantUseCase', 'as' => 'use case']);
 Route::get('/accounts', ['uses' => 'HomeController@getStartedAccounts', 'as' => 'accounts']);
 
 Route::get('/home', ['uses' => 'HomeController@authIndex', 'as' => 'user home']);

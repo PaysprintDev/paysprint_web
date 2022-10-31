@@ -59,6 +59,9 @@
             border: 1px solid #ffe29f;
         }
     }
+    .hero-imgs{
+ top:-15.456rem;
+}
 </style>
 
 @section('content')
@@ -72,7 +75,7 @@
 
         <div class="row align-items-center justify-content-center">
             <div class="col-9 col-md-7 col-lg-5 offset-xl-1 align-self-sm-end order-lg-2">
-                <div class="hero-img image-group-p12 position-relative mb-9 mb-sm-15 mb-lg-0" data-aos="fade-left" data-aos-duration="500" data-aos-once="true">
+                <div class="hero-imgs image-group-p12 position-relative mb-9 mb-sm-15 mb-lg-0" data-aos="fade-left" data-aos-duration="500" data-aos-once="true">
                     <img class="w-100" src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg" alt="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg" style="border-radius: 100%">
                     <div class="image-bg-positioning">
                         <img src="{{ asset('newpage/image/telemedicine/png/hero-img-sub.png') }}" alt="hero-img-sub.png">
