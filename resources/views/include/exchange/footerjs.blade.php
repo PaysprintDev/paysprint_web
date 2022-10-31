@@ -18,7 +18,7 @@
 
  <script src="https://kit.fontawesome.com/384ade21a6.js" crossorigin="anonymous"></script>
 
- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
  </body>
 

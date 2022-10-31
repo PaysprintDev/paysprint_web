@@ -3,7 +3,7 @@
 <script src="{{ asset('js/jquery-1.12.0.min.js') }}"></script>
 <script src="{{ asset('js/country-state-select.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <script src="https://raw.githubusercontent.com/HubSpot/pace/v1.0.0/pace.min.js"></script>
 <!-- Bootstrap JS -->
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>

@@ -150,34 +150,42 @@
                                     </div>
                                 </div>
 
-
+                                <h4>Pay with:</h4>
+                                <hr>
                                 <ul class="nav nav-tabs" id="myTab" role="tablist">
+
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="haveAccount" data-toggle="tab"
+                                        <button class="nav-link active" id="dontHaveAccount" data-toggle="tab"
+                                            data-target="#profile" type="button" role="tab" aria-controls="profile"
+                                            aria-selected="false" onclick="setCardType('Debit Card')">
+                                            <img src="https://img.icons8.com/color/25/000000/mastercard-logo.png" />
+                                            Debit/Credit Card (Fee applies)</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="haveAccount" data-toggle="tab"
                                             data-target="#home" type="button" role="tab" aria-controls="home"
                                             aria-selected="true" onclick="setCardType('Wallet')"><img
                                                 src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_icon_png_rhxm1e_sqhgj0.png"
                                                 style="width:25px; height: 25px;" />
-                                            I have a PaySprint Wallet</button>
+                                            PaySprint Wallet (No fee)</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="dontHaveAccount" data-toggle="tab"
-                                            data-target="#profile" type="button" role="tab" aria-controls="profile"
-                                            aria-selected="false" onclick="setCardType('Debit Card')">
-
-                                            <img src="https://img.icons8.com/color/25/000000/mastercard-logo.png" />
-                                            Debit/Credit Card Payment</button>
+                                        <button class="nav-link" id="paysprintpoint" data-toggle="tab"
+                                            data-target="#pointtab" type="button" role="tab" aria-controls="pointtab"
+                                            aria-selected="false">
+                                            <img src="https://img.icons8.com/external-flat-icons-inmotus-design/25/000000/external-Dot-basic-ui-navigation-elements-flat-icons-inmotus-design.png"/>
+                                            PaySprint Points (Coming soon)</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link" id="createAccount" data-toggle="tab"
                                             data-target="#contact" type="button" role="tab" aria-controls="contact"
                                             aria-selected="false"><img
                                                 src="https://img.icons8.com/external-ui-website-adri-ansyah/25/000000/external-create-basic-ui-ui-website-adri-ansyah.png" />
-                                            Create a PaySprint Wallet</button>
+                                            Create a PaySprint Account</button>
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="home" role="tabpanel"
+                                    <div class="tab-pane fade" id="home" role="tabpanel"
                                         aria-labelledby="haveAccount">
 
 
@@ -351,7 +359,7 @@
 
 
                                     </div>
-                                    <div class="tab-pane fade" id="profile" role="tabpanel"
+                                    <div class="tab-pane fade show active" id="profile" role="tabpanel"
                                         aria-labelledby="dontHaveAccount">
 
 
@@ -770,7 +778,7 @@
 
     <script src="{{ asset('pace/pace.min.js') }}"></script>
     <script src="{{ asset('js/country-state-select.js') }}"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
     <script language="javascript">
         populateCountries("country", "state");
@@ -978,6 +986,8 @@
     <script>
         $(function() {
             $('[data-toggle="tooltip"]').tooltip();
+
+            setCardType('Debit Card');
         });
 
 
