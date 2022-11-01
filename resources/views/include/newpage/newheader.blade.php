@@ -41,6 +41,11 @@
                             <a class="nav-link" href="https://www.paysprintmarketplace.com" target="_blank"
                                 role="button" aria-expanded="false">MARKETPLACE</a>
                         </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('use case')}}" role="button"
+                                aria-expanded="false">USE CASES</a>
+                        </li>
 
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('AdminLogin') }}" role="button"
@@ -48,10 +53,7 @@
                         </li>
 
                         
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('use case')}}" role="button"
-                                aria-expanded="false">USE CASES</a>
-                        </li>
+                        
 
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('AdminRegister') }}" role="button"

@@ -15,7 +15,7 @@
                                 <p>PaySprint is the fastest and most affordable way to create and send invoice, pay
                                     invoice and getting paid at anytime!</p>
                             @else
-                                <p>PaySprint is the fastest and most affordable way to send and receive money invoice, pay invoice and getting paid at anytime!</p>
+                                <p style="padding-top: 1rem">PaySprint is the fastest and most affordable way to send and receive money invoice, pay invoice and getting paid at anytime!</p>
                             @endif
 
 
