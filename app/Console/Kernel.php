@@ -52,7 +52,7 @@ class Kernel extends ConsoleKernel
         Commands\RenewSub::class,
         Commands\ReportStatus::class,
         Commands\RewardPoint::class,
-        // Commands\RunQueue::class,
+        Commands\RunQueue::class,
         Commands\SuspendedAccountList::class,
         Commands\TransactionLimits::class,
         Commands\TrullioVerification::class,
@@ -72,12 +72,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('mailqueue:run')->cron('*/1 * * * *');
         $schedule->command('virtualaccounttopup:run')->cron('* * * * *');
         $schedule->command('approvedusersmove:run')->cron('0 0 * * *');
         $schedule->command('autodepositoff:run')->cron('0 0 * * *');
         $schedule->command('bvnlistupdate:run')->cron('0 0 * * *');
-        $schedule->command('chargefee:run')->cron('* * * * *');
+        $schedule->command('chargefee:run')->cron('10 */1 * * *');
         $schedule->command('checktelephone:run')->cron('*/5 * * * *');
         $schedule->command('crontoconsumer:run')->cron('0 9 * * 5');
         $schedule->command('crontomerchant:run')->cron('0 9 * * 1');
@@ -112,12 +111,13 @@ class Kernel extends ConsoleKernel
         $schedule->command('transactionlimits:run')->cron('0,30 * * * *');
         $schedule->command('trullioverification:run')->cron('0,30 * * * *');
         $schedule->command('userarchive:run')->cron('0 0 1 * *');
-        $schedule->command('updatestatementcountry:run')->cron('* * * * *');
-        $schedule->command('refundbycountryupdate:run')->cron('* * * * *');
-        $schedule->command('reportstatus:run')->cron('* * * * *');
-        $schedule->command('migratetolevelone:run')->cron('* * * * *');
+        $schedule->command('updatestatementcountry:run')->cron('5 */5 * * *');
+        $schedule->command('refundbycountryupdate:run')->cron('0 0 * * *');
+        $schedule->command('reportstatus:run')->cron('0 0 * * *');
+        $schedule->command('migratetolevelone:run')->cron('0 0 * * 1');
         $schedule->command('weeklylimit:run')->cron('0 0 * * 0');
-        $schedule->command('notificationtable:run')->cron('* * * * *');
+        $schedule->command('notificationtable:run')->cron('0 0 * * 2');
+        $schedule->command('mailqueue:run')->cron('*/1 * * * *');
 
     }
 
