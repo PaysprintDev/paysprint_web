@@ -224,7 +224,6 @@ Route::get('/run-queue', function () {
 	return "Queue work done!";
 });
 
-// /usr/local/bin/php /home/paysprint/public_html/paysprint/artisan schedule:run >> /dev/null 2>&1
 
 
 Route::get('/clear', function () {
