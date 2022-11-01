@@ -272,34 +272,33 @@ class CheckSetupController extends Controller
                 // Get Bank Name...
                 $bankaccount = FlutterwaveModel::where('userId', $user->ref_code)->first();
 
-                $this->message = '<p> We have received your funds transferred through the PaySprint Bank Account with '.$bankaccount->bank_name.'. However, we need you to properly complete the set-up of
+                $this->message = '<p> We have received your funds transferred through the PaySprint Bank Account with ' . $bankaccount->bank_name . '. However, we need you to properly complete the set-up of
 your PaySprint Account.</p><p>You need to provide the outstanding information and complete the quick set up in order for us to deposit the funds into your Wallet.</p><p><ul>' . $approval . '' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . '</ul></p><p>Kindly complete these important tasks to enable us proceed with processing the deposit into your PaySprint Wallet.</p><p>a href=' . route('profile') . ' class="text-primary" style="text-decoration: underline">Click here to login to your account</a></p>';
 
 
-$sendMsg = ' We have received your funds transferred through the PaySprint Bank Account with '.$bankaccount->bank_name.'. However, we need you to properly complete the set-up of
-your PaySprint Account.You need to provide the outstanding information and complete the quick set up in order for us to deposit the funds into your Wallet.'.$approval.' ' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card .'Kindly complete these important tasks to enable us proceed with processing the deposit into your PaySprint Wallet. Click here to login to your PaySprint account '.route('profile');
+                $sendMsg = ' We have received your funds transferred through the PaySprint Bank Account with ' . $bankaccount->bank_name . '. However, we need you to properly complete the set-up of
+your PaySprint Account.You need to provide the outstanding information and complete the quick set up in order for us to deposit the funds into your Wallet.' . $approval . ' ' . $avatar . '' . $transaction . '' . $security . '' . $bankVerify . '' . $card . 'Kindly complete these important tasks to enable us proceed with processing the deposit into your PaySprint Wallet. Click here to login to your PaySprint account ' . route('profile');
 
                 $this->sendEmail($this->email, "Incomplete Setup");
 
                 $userPhone = User::where('email', $user->email)->where('telephone', 'LIKE', '%+%')->first();
 
-                        if (isset($userPhone)) {
+                if (isset($userPhone)) {
 
-                            $sendPhone = $user->telephone;
-                        } else {
-                            $sendPhone = "+" . $user->code . $user->telephone;
-                        }
+                    $sendPhone = $user->telephone;
+                } else {
+                    $sendPhone = "+" . $user->code . $user->telephone;
+                }
 
-                        if ($user->country == "Nigeria") {
+                if ($user->country == "Nigeria") {
 
-                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                            $this->sendSms($sendMsg, $correctPhone);
-                        } else {
-                            $this->sendMessage($sendMsg, $sendPhone);
-                        }
+                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                    $this->sendSms($sendMsg, $correctPhone);
+                } else {
+                    $this->sendMessage($sendMsg, $sendPhone);
+                }
 
-                $this->slack($this->subject.' to ' . $this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
+                $this->slack($this->subject . ' to ' . $this->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
             }
         } catch (\Throwable $th) {
             // Log::critical('Cannot send quick setup mail '.$th->getMessage());
@@ -572,12 +571,10 @@ your PaySprint Account.You need to provide the outstanding information and compl
                 $country = $key->country;
                 $email = $key->email;
 
-                if($email != 'merchant@paysprint.ca'){
+                if ($email != 'merchant@paysprint.ca') {
                     // Update Statememt country
                     Statement::where('user_id', $email)->update(['country' => $country]);
                 }
-
-
             }
         } else {
             // Do nothing
@@ -1067,7 +1064,7 @@ your PaySprint Account.You need to provide the outstanding information and compl
         if (isset($exbcMerchant)) {
 
 
-            $transaction_id = "wallet-".date('dmY').time();
+            $transaction_id = "wallet-" . date('dmY') . time();
             // $transaction_id = "esytiw0o2f";
 
             // $activity = "Added ".$exbcMerchant->currencyCode.''.number_format(20, 2)." to your Wallet to load EXBC Prepaid Card";
@@ -2506,10 +2503,9 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
             foreach ($users as $user) {
 
-                if($user->accountType === 'Individual'){
+                if ($user->accountType === 'Individual') {
                     $username = explode(" ", $user->name);
-                }
-                else{
+                } else {
                     $username = explode(" ", $user->businessname);
                 }
 
@@ -2529,139 +2525,277 @@ in the your business category.</p> <p>This means your competitors are receiving 
     public function getAllTransactionTransfers()
     {
         $moneris = new MonerisController();
-        try {
-            $data = $this->flutterwave->fetchGetAllTransfers();
+        $data = $this->flutterwave->fetchGetAllTransfers();
 
-            if (count($data) > 0) {
-                foreach ($data as $record) {
+        try {
+
+            if (count($data->data) > 0) {
+                foreach ($data->data as $record) {
+
                     $referenced_code = $record->flw_ref;
                     $gateway = "Flutterwave";
 
                     $email = $record->customer->email;
 
                     $thisuser = User::where('email', $email)->first();
-                    // Insert Flutterwave transaction fee record...
-                    $recordedPayment = FlutterwavePaymentRecord::where('recordId', $record->id)->first();
 
-                    if (isset($recordedPayment) && $recordedPayment->status == 'successful') {
-                        // Update the record and move...
-                        FlutterwavePaymentRecord::where('recordId', $record->id)->update([
-                            'userId' => $thisuser->ref_code,
-                            'recordId' => $record->id,
-                            'tx_ref' => $record->tx_ref,
-                            'flw_ref' => $record->flw_ref,
-                            'amount' => $record->amount,
-                            'currency' => $record->currency,
-                            'charged_amount' => $record->charged_amount,
-                            'app_fee' => $record->app_fee,
-                            'merchant_fee' => $record->merchant_fee,
-                            'processor_response' => $record->processor_response,
-                            'auth_model' => $record->auth_model,
-                            'narration' => $record->narration,
-                            'status' => $record->status,
-                            'payment_type' => $record->payment_type,
-                            'amount_settled' => $record->amount_settled,
-                            'customer' => json_encode($record->customer),
-                            'account_id' => $record->account_id,
-                            'meta' => json_encode($record->meta)
-                        ]);
-                    } else {
+                    if (isset($thisuser)) {
+                        // Insert Flutterwave transaction fee record...
+                        $recordedPayment = FlutterwavePaymentRecord::where('recordId', $record->id)->first();
 
-                        FlutterwavePaymentRecord::insert([
-                            'userId' => $thisuser->ref_code,
-                            'recordId' => $record->id,
-                            'tx_ref' => $record->tx_ref,
-                            'flw_ref' => $record->flw_ref,
-                            'amount' => $record->amount,
-                            'currency' => $record->currency,
-                            'charged_amount' => $record->charged_amount,
-                            'app_fee' => $record->app_fee,
-                            'merchant_fee' => $record->merchant_fee,
-                            'processor_response' => $record->processor_response,
-                            'auth_model' => $record->auth_model,
-                            'narration' => $record->narration,
-                            'status' => $record->status,
-                            'payment_type' => $record->payment_type,
-                            'amount_settled' => $record->amount_settled,
-                            'customer' => json_encode($record->customer),
-                            'account_id' => $record->account_id,
-                            'meta' => json_encode($record->meta)
-                        ]);
-
-                        $walletBal = $thisuser->wallet_balance;
-                        $holdBal = $thisuser->hold_balance + $record->amount_settled;
-
-                        User::where('email', $email)->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
-
-
-                        $activity = "Added " . $record->currency . '' . number_format($record->amount_settled, 2) . " to Wallet including a fee charge of " . $record->currency . '' . number_format($record->app_fee, 2) . " was deducted from your Wallet";
-                        $credit = $record->amount_settled;
-                        $debit = 0;
-                        $reference_code = $referenced_code;
-                        $balance = 0;
-                        $trans_date = date('Y-m-d');
-                        $status = "Delivered";
-                        $action = "Wallet credit";
-                        $regards = $thisuser->ref_code;
-                        $statement_route = "wallet";
-
-                        $moneris->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1);
-                        $moneris->getfeeTransaction($reference_code, $thisuser->ref_code, $record->amount, $record->app_fee, $record->amount_settled);
-
-
-                        $this->name = $thisuser->name;
-                        $this->email = $thisuser->email;
-                        $this->subject = $record->currency . ' ' . number_format($record->amount_settled, 2) . " now added to your wallet with PaySprint";
-
-                        $this->message = '<p>Bank transfer of <strong>' . $record->currency . ' ' . number_format($record->amount_settled, 2) . '</strong> <em>(Gross Amount of ' . $record->currency . ' ' . number_format($record->amount, 2) . ' less transaction fee ' . $record->currency . ' ' . number_format($record->app_fee, 2) . ')</em> successfully sent to your wallet with PaySprint by ' . $record->meta->originatorname . ' ' . $record->meta->bankname . ' ' . $record->meta->originatoraccountnumber . '. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $record->currency . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
-
-                        $sendMsg = 'Bank transfer of ' . $record->currency . ' ' . number_format($record->amount_settled, 2) . ' (Gross Amount of ' . $record->currency . ' ' . number_format($record->amount, 2) . ' less transaction fee ' . $record->currency . ' ' . number_format($record->app_fee, 2) . ') successfully sent to your wallet with PaySprint by ' . $record->meta->originatorname . ' ' . $record->meta->bankname . ' ' . $record->meta->originatoraccountnumber . '. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $record->currency . ' ' . number_format($walletBal, 2) . ' balance in your account';
-
-                        $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                        if (isset($userPhone)) {
-
-                            $sendPhone = $thisuser->telephone;
+                        if (isset($recordedPayment) && $recordedPayment->status == 'successful') {
+                            // Update the record and move...
+                            FlutterwavePaymentRecord::where('recordId', $record->id)->update([
+                                'userId' => $thisuser->ref_code,
+                                'recordId' => $record->id,
+                                'tx_ref' => $record->tx_ref,
+                                'flw_ref' => $record->flw_ref,
+                                'amount' => $record->amount,
+                                'currency' => $record->currency,
+                                'charged_amount' => $record->charged_amount,
+                                'app_fee' => $record->app_fee,
+                                'merchant_fee' => $record->merchant_fee,
+                                'processor_response' => $record->processor_response,
+                                'auth_model' => $record->auth_model,
+                                'narration' => $record->narration,
+                                'status' => $record->status,
+                                'payment_type' => $record->payment_type,
+                                'amount_settled' => $record->amount_settled,
+                                'customer' => json_encode($record->customer),
+                                'account_id' => $record->account_id,
+                                'meta' => json_encode($record->meta)
+                            ]);
                         } else {
-                            $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+
+                            FlutterwavePaymentRecord::insert([
+                                'userId' => $thisuser->ref_code,
+                                'recordId' => $record->id,
+                                'tx_ref' => $record->tx_ref,
+                                'flw_ref' => $record->flw_ref,
+                                'amount' => $record->amount,
+                                'currency' => $record->currency,
+                                'charged_amount' => $record->charged_amount,
+                                'app_fee' => $record->app_fee,
+                                'merchant_fee' => $record->merchant_fee,
+                                'processor_response' => $record->processor_response,
+                                'auth_model' => $record->auth_model,
+                                'narration' => $record->narration,
+                                'status' => $record->status,
+                                'payment_type' => $record->payment_type,
+                                'amount_settled' => $record->amount_settled,
+                                'customer' => json_encode($record->customer),
+                                'account_id' => $record->account_id,
+                                'meta' => json_encode($record->meta)
+                            ]);
+
+                            $walletBal = $thisuser->wallet_balance;
+                            $holdBal = $thisuser->hold_balance + $record->amount_settled;
+
+                            User::where('email', $email)->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
+
+
+                            $activity = "Added " . $record->currency . '' . number_format($record->amount_settled, 2) . " to Wallet including a fee charge of " . $record->currency . '' . number_format($record->app_fee, 2) . " was deducted from your Wallet";
+                            $credit = $record->amount_settled;
+                            $debit = 0;
+                            $reference_code = $referenced_code;
+                            $balance = 0;
+                            $trans_date = date('Y-m-d');
+                            $status = "Delivered";
+                            $action = "Wallet credit";
+                            $regards = $thisuser->ref_code;
+                            $statement_route = "wallet";
+
+                            $moneris->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1);
+                            $moneris->getfeeTransaction($reference_code, $thisuser->ref_code, $record->amount, $record->app_fee, $record->amount_settled);
+
+
+                            $this->name = $thisuser->name;
+                            $this->email = $thisuser->email;
+                            $this->subject = $record->currency . ' ' . number_format($record->amount_settled, 2) . " now added to your wallet with PaySprint";
+
+                            $this->message = '<p>Bank transfer of <strong>' . $record->currency . ' ' . number_format($record->amount_settled, 2) . '</strong> <em>(Gross Amount of ' . $record->currency . ' ' . number_format($record->amount, 2) . ' less transaction fee ' . $record->currency . ' ' . number_format($record->app_fee, 2) . ')</em> successfully sent to your wallet with PaySprint by ' . $record->meta->originatorname . ' ' . $record->meta->bankname . ' ' . $record->meta->originatoraccountnumber . '. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $record->currency . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+
+                            $sendMsg = 'Bank transfer of ' . $record->currency . ' ' . number_format($record->amount_settled, 2) . ' (Gross Amount of ' . $record->currency . ' ' . number_format($record->amount, 2) . ' less transaction fee ' . $record->currency . ' ' . number_format($record->app_fee, 2) . ') successfully sent to your wallet with PaySprint by ' . $record->meta->originatorname . ' ' . $record->meta->bankname . ' ' . $record->meta->originatoraccountnumber . '. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $record->currency . ' ' . number_format($walletBal, 2) . ' balance in your account';
+
+                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                            if (isset($userPhone)) {
+
+                                $sendPhone = $thisuser->telephone;
+                            } else {
+                                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                            }
+
+                            if ($thisuser->country == "Nigeria") {
+
+                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                $this->sendSms($sendMsg, $correctPhone);
+                            } else {
+                                $this->sendMessage($sendMsg, $sendPhone);
+                            }
+
+
+                            $message = 'You have successfully added ' . $record->currency . ' ' . number_format($record->amount_settled, 2) . ' to your wallet';
+
+                            $moneris->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $message, "Wallet credit");
+
+                            $moneris->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, 1);
+
+                            $moneris->updatePoints($thisuser->id, 'Add money');
+
+
+                            $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                            $this->sendEmail($this->email, "Fund remittance");
+
+                            $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $record->currency . ' ' . number_format($record->amount_settled, 2) . "</p><p>Status: Successful</p>";
+
+                            if ($thisuser->account_check < 2) {
+                                $this->oneUserQuickSetup($thisuser->id);
+                            }
+
+                            $moneris->notifyAdmin($gateway . " inflow", $adminMessage);
                         }
-
-                        if ($thisuser->country == "Nigeria") {
-
-                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                            $this->sendSms($sendMsg, $correctPhone);
-                        } else {
-                            $this->sendMessage($sendMsg, $sendPhone);
-                        }
-
-
-                        $message = 'You have successfully added ' . $record->currency . ' ' . number_format($record->amount_settled, 2) . ' to your wallet';
-
-                        $moneris->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $message,"Wallet credit");
-
-                        $moneris->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, 1);
-
-                        $moneris->updatePoints($thisuser->id, 'Add money');
-
-
-                        $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-                        $this->sendEmail($this->email, "Fund remittance");
-
-                        $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $record->currency . ' ' . number_format($record->amount_settled, 2) . "</p><p>Status: Successful</p>";
-
-                        if ($thisuser->account_check < 2) {
-                            $this->oneUserQuickSetup($thisuser->id);
-                        }
-
-                        $moneris->notifyAdmin($gateway . " inflow", $adminMessage);
                     }
                 }
             }
 
-
             echo "Process complete!";
         } catch (\Throwable $th) {
+
+            if (count($data->data) > 0) {
+                foreach ($data->data as $record) {
+
+                    $referenced_code = $record->flw_ref;
+                    $gateway = "Flutterwave";
+
+                    $email = $record->customer->email;
+
+                    $thisuser = User::where('email', $email)->first();
+
+                    if (isset($thisuser)) {
+                        // Insert Flutterwave transaction fee record...
+                        $recordedPayment = FlutterwavePaymentRecord::where('recordId', $record->id)->first();
+
+                        if (isset($recordedPayment) && $recordedPayment->status == 'successful') {
+                            // Update the record and move...
+                            FlutterwavePaymentRecord::where('recordId', $record->id)->update([
+                                'userId' => $thisuser->ref_code,
+                                'recordId' => $record->id,
+                                'tx_ref' => $record->tx_ref,
+                                'flw_ref' => $record->flw_ref,
+                                'amount' => $record->amount,
+                                'currency' => $record->currency,
+                                'charged_amount' => $record->charged_amount,
+                                'app_fee' => $record->app_fee,
+                                'merchant_fee' => $record->merchant_fee,
+                                'processor_response' => $record->processor_response,
+                                'auth_model' => $record->auth_model,
+                                'narration' => $record->narration,
+                                'status' => $record->status,
+                                'payment_type' => $record->payment_type,
+                                'amount_settled' => $record->amount_settled,
+                                'customer' => json_encode($record->customer),
+                                'account_id' => $record->account_id,
+                                'meta' => json_encode($record->meta)
+                            ]);
+                        } else {
+
+                            FlutterwavePaymentRecord::insert([
+                                'userId' => $thisuser->ref_code,
+                                'recordId' => $record->id,
+                                'tx_ref' => $record->tx_ref,
+                                'flw_ref' => $record->flw_ref,
+                                'amount' => $record->amount,
+                                'currency' => $record->currency,
+                                'charged_amount' => $record->charged_amount,
+                                'app_fee' => $record->app_fee,
+                                'merchant_fee' => $record->merchant_fee,
+                                'processor_response' => $record->processor_response,
+                                'auth_model' => $record->auth_model,
+                                'narration' => $record->narration,
+                                'status' => $record->status,
+                                'payment_type' => $record->payment_type,
+                                'amount_settled' => $record->amount_settled,
+                                'customer' => json_encode($record->customer),
+                                'account_id' => $record->account_id,
+                                'meta' => json_encode($record->meta)
+                            ]);
+
+                            $walletBal = $thisuser->wallet_balance;
+                            $holdBal = $thisuser->hold_balance + $record->amount_settled;
+
+                            User::where('email', $email)->update(['wallet_balance' => $walletBal, 'hold_balance' => $holdBal]);
+
+
+                            $activity = "Added " . $record->currency . '' . number_format($record->amount_settled, 2) . " to Wallet including a fee charge of " . $record->currency . '' . number_format($record->app_fee, 2) . " was deducted from your Wallet";
+                            $credit = $record->amount_settled;
+                            $debit = 0;
+                            $reference_code = $referenced_code;
+                            $balance = 0;
+                            $trans_date = date('Y-m-d');
+                            $status = "Delivered";
+                            $action = "Wallet credit";
+                            $regards = $thisuser->ref_code;
+                            $statement_route = "wallet";
+
+                            $moneris->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country, 1);
+                            $moneris->getfeeTransaction($reference_code, $thisuser->ref_code, $record->amount, $record->app_fee, $record->amount_settled);
+
+
+                            $this->name = $thisuser->name;
+                            $this->email = $thisuser->email;
+                            $this->subject = $record->currency . ' ' . number_format($record->amount_settled, 2) . " now added to your wallet with PaySprint";
+
+                            $this->message = '<p>Bank transfer of <strong>' . $record->currency . ' ' . number_format($record->amount_settled, 2) . '</strong> <em>(Gross Amount of ' . $record->currency . ' ' . number_format($record->amount, 2) . ' less transaction fee ' . $record->currency . ' ' . number_format($record->app_fee, 2) . ')</em> successfully sent to your wallet with PaySprint by ' . $record->meta->originatorname . ' ' . $record->meta->bankname . ' ' . $record->meta->originatoraccountnumber . '. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have <strong>' . $record->currency . ' ' . number_format($walletBal, 2) . '</strong> balance in your account</p>';
+
+                            $sendMsg = 'Bank transfer of ' . $record->currency . ' ' . number_format($record->amount_settled, 2) . ' (Gross Amount of ' . $record->currency . ' ' . number_format($record->amount, 2) . ' less transaction fee ' . $record->currency . ' ' . number_format($record->app_fee, 2) . ') successfully sent to your wallet with PaySprint by ' . $record->meta->originatorname . ' ' . $record->meta->bankname . ' ' . $record->meta->originatoraccountnumber . '. Kindly allow up to 12-24 hours for the funds to reflect in your wallet. You have ' . $record->currency . ' ' . number_format($walletBal, 2) . ' balance in your account';
+
+                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                            if (isset($userPhone)) {
+
+                                $sendPhone = $thisuser->telephone;
+                            } else {
+                                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                            }
+
+                            if ($thisuser->country == "Nigeria") {
+
+                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                $this->sendSms($sendMsg, $correctPhone);
+                            } else {
+                                $this->sendMessage($sendMsg, $sendPhone);
+                            }
+
+
+                            $message = 'You have successfully added ' . $record->currency . ' ' . number_format($record->amount_settled, 2) . ' to your wallet';
+
+                            $moneris->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $message, "Wallet credit");
+
+                            $moneris->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, 1);
+
+                            $moneris->updatePoints($thisuser->id, 'Add money');
+
+
+                            $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                            $this->sendEmail($this->email, "Fund remittance");
+
+                            $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $record->currency . ' ' . number_format($record->amount_settled, 2) . "</p><p>Status: Successful</p>";
+
+                            if ($thisuser->account_check < 2) {
+                                $this->oneUserQuickSetup($thisuser->id);
+                            }
+
+                            $moneris->notifyAdmin($gateway . " inflow", $adminMessage);
+                        }
+                    }
+                }
+            }
+            else{
+                echo "Process FAILED!";
+            }
             echo $th->getMessage();
         }
     }

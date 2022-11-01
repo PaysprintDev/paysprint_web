@@ -12,7 +12,7 @@ class MigrateToLevelOne extends Command
      *
      * @var string
      */
-    protected $signature = 'migratetolevelone:name';
+    protected $signature = 'migratetolevelone:run';
 
     /**
      * The console command description.

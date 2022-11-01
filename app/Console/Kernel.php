@@ -52,7 +52,7 @@ class Kernel extends ConsoleKernel
         Commands\RenewSub::class,
         Commands\ReportStatus::class,
         Commands\RewardPoint::class,
-        Commands\RunQueue::class,
+        // Commands\RunQueue::class,
         Commands\SuspendedAccountList::class,
         Commands\TransactionLimits::class,
         Commands\TrullioVerification::class,
@@ -72,7 +72,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('mailqueue:run')->cron('*/1 * * * *');
+        // $schedule->command('mailqueue:run')->cron('*/1 * * * *');
+        $schedule->command('virtualaccounttopup:run')->cron('* * * * *');
         $schedule->command('approvedusersmove:run')->cron('0 0 * * *');
         $schedule->command('autodepositoff:run')->cron('0 0 * * *');
         $schedule->command('bvnlistupdate:run')->cron('0 0 * * *');
@@ -93,31 +94,30 @@ class Kernel extends ConsoleKernel
         $schedule->command('idvpassedlist:run')->cron('0 4 * * *');
         $schedule->command('mailtovirtualaccount:run')->cron('0 8 * * 4');
         $schedule->command('matchedusersmove:run')->cron('0 0 * * *');
-        $schedule->command('migratetolevelone:run')->cron('* * * * *');
         $schedule->command('monthlylimit:run')->cron('0 0 1 * *');
         $schedule->command('monthlytransaction:run')->cron('0 7 28 * *');
         $schedule->command('moveindustry:run')->cron('0 0,12 * * *');
         $schedule->command('movekybcompleted:run')->cron('0 0,12 * * *');
         $schedule->command('nonmonthlytransaction:run')->cron('0 12 28 * *');
         $schedule->command('notificationperiod:run')->cron('*/5 * * * *');
-        $schedule->command('notificationtable:run')->cron('* * * * *');
         $schedule->command('numberofwithdrawals:run')->cron('0 0 1 * *');
         $schedule->command('numberofwithdrawalsformerchant:run')->cron('0 0 * * 1');
         $schedule->command('publisharchive:run')->cron('0 0 * * *');
         $schedule->command('publishexisting:run')->cron('0 0 * * *');
         $schedule->command('quicksetup:run')->cron('10 15 1,15 * *');
         $schedule->command('refreshbid:run')->cron('59 23 * * *');
-        $schedule->command('refundbycountryupdate:run')->cron('* * * * *');
         $schedule->command('renewsub:run')->cron('55 23 * * *');
-        $schedule->command('reportstatus:run')->cron('* * * * *');
         $schedule->command('rewardpoint:run')->cron('0 13 26 * 1');
         $schedule->command('suspendedaccountlist:run')->cron('0 0 * * *');
         $schedule->command('transactionlimits:run')->cron('0,30 * * * *');
         $schedule->command('trullioverification:run')->cron('0,30 * * * *');
-        $schedule->command('updatestatementcountry:run')->cron('* * * * *');
         $schedule->command('userarchive:run')->cron('0 0 1 * *');
-        $schedule->command('virtualaccounttopup:run')->cron('* * * * *');
+        $schedule->command('updatestatementcountry:run')->cron('* * * * *');
+        $schedule->command('refundbycountryupdate:run')->cron('* * * * *');
+        $schedule->command('reportstatus:run')->cron('* * * * *');
+        $schedule->command('migratetolevelone:run')->cron('* * * * *');
         $schedule->command('weeklylimit:run')->cron('0 0 * * 0');
+        $schedule->command('notificationtable:run')->cron('* * * * *');
 
     }
 
