@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\CheckSetupController;
 
 class QuickSetup extends Command
 {
@@ -11,14 +12,14 @@ class QuickSetup extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'quicksetup:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'PaySprint update quick setup';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,10 @@ class QuickSetup extends Command
      */
     public function handle()
     {
-        return 0;
+        $checkSetup = new CheckSetupController();
+
+        $checkSetup->updateQuickSetup();
+
+        $this->info("PaySprint update quick setup completed successfully");
     }
 }

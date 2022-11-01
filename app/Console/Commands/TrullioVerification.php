@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\CheckSetupController;
 
 class TrullioVerification extends Command
 {
@@ -11,14 +12,14 @@ class TrullioVerification extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'trullioverification:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'PaySprint trullio verification';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,10 @@ class TrullioVerification extends Command
      */
     public function handle()
     {
-        return 0;
+        $checkSetup = new CheckSetupController();
+
+        $checkSetup->checkTrullioVerification();
+
+        $this->info("PaySprint trullio verification completed successfully");
     }
 }

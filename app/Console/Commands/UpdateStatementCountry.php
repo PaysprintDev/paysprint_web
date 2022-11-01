@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\CheckSetupController;
 
 class UpdateStatementCountry extends Command
 {
@@ -11,14 +12,14 @@ class UpdateStatementCountry extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'updatestatementcountry:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'PaySprint update statement country';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,10 @@ class UpdateStatementCountry extends Command
      */
     public function handle()
     {
-        return 0;
+        $checkSetup = new CheckSetupController();
+
+        $checkSetup->statementCountry();
+
+        $this->info("PaySprint update statement country completed successfully");
     }
 }

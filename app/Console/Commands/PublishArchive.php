@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\CheckSetupController;
 
 class PublishArchive extends Command
 {
@@ -11,14 +12,14 @@ class PublishArchive extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'publisharchive:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'PaySprint publish archive users';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,10 @@ class PublishArchive extends Command
      */
     public function handle()
     {
-        return 0;
+        $checkSetup = new CheckSetupController();
+
+        $checkSetup->publishArchiveUsers();
+
+        $this->info("PaySprint publish archive users completed successfully");
     }
 }

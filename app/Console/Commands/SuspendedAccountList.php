@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\CheckSetupController;
 
 class SuspendedAccountList extends Command
 {
@@ -11,14 +12,14 @@ class SuspendedAccountList extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'suspendedaccountlist:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'PaySprint suspended account list';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,10 @@ class SuspendedAccountList extends Command
      */
     public function handle()
     {
-        return 0;
+        $checkSetup = new CheckSetupController();
+
+        $checkSetup->suspendedAccountList();
+
+        $this->info("PaySprint suspended account list completed successfully");
     }
 }

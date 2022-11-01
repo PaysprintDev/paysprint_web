@@ -82,7 +82,7 @@ class FlutterwaveController extends Controller
 
             $result = $this->getAllTransactions();
 
-            $response = $result->data;
+            $response = $result;
         } catch (\Throwable $th) {
             $response = [
                 "data" => $th->getMessage()

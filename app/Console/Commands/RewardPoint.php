@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\SendGridController;
 
 class RewardPoint extends Command
 {
@@ -11,14 +12,14 @@ class RewardPoint extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'rewardpoint:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'PaySprint reward point';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,10 @@ class RewardPoint extends Command
      */
     public function handle()
     {
-        return 0;
+        $checkSetup = new SendGridController();
+
+        $checkSetup->cronToCustomersOnRewardStatement();
+
+        $this->info("PaySprint reward point completed successfully");
     }
 }

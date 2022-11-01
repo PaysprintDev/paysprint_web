@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\CheckSetupController;
 
 class VirtualAccountTopUp extends Command
 {
@@ -11,14 +12,14 @@ class VirtualAccountTopUp extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'virtualaccounttopup:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'PaySprint virtual account top up';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,10 @@ class VirtualAccountTopUp extends Command
      */
     public function handle()
     {
-        return 0;
+        $checkSetup = new CheckSetupController();
+
+        $checkSetup->getAllTransactionTransfers();
+
+        $this->info("PaySprint virtual account top up completed successfully");
     }
 }

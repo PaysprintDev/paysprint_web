@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\CheckSetupController;
 
 class TransactionLimits extends Command
 {
@@ -11,14 +12,14 @@ class TransactionLimits extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'transactionlimits:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'PaySprint update transaction limits';
 
     /**
      * Create a new command instance.
@@ -37,6 +38,10 @@ class TransactionLimits extends Command
      */
     public function handle()
     {
-        return 0;
+        $checkSetup = new CheckSetupController();
+
+        $checkSetup->updateTransLimit();
+
+        $this->info("PaySprint update transaction limits completed successfully");
     }
 }
