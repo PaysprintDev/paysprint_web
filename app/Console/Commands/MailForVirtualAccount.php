@@ -3,23 +3,23 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\SendGridController;
 
-class DailyMetricsTask extends Command
+class MailForVirtualAccount extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'daily-metrics:run';
+    protected $signature = 'mailtovirtualaccount:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Daily metrics run command';
+    protected $description = 'PaySprint send cron to consumers on virtual account';
 
     /**
      * Create a new command instance.
@@ -38,7 +38,10 @@ class DailyMetricsTask extends Command
      */
     public function handle()
     {
+        $checkSetup = new SendGridController();
 
-        return 0;
+        $checkSetup->cronToCustomersOnVirtualAccount();
+
+        $this->info("PaySprint send cron to consumers on virtual account completed successfully");
     }
 }

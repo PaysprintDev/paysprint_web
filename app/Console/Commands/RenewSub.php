@@ -3,23 +3,23 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\MaintenanceFeeCharge;
 
-class DailyMetricsTask extends Command
+class RenewSub extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'daily-metrics:run';
+    protected $signature = 'renewsub:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Daily metrics run command';
+    protected $description = 'PaySprint renew subscription';
 
     /**
      * Create a new command instance.
@@ -38,7 +38,10 @@ class DailyMetricsTask extends Command
      */
     public function handle()
     {
+        $checkSetup = new MaintenanceFeeCharge();
 
-        return 0;
+        $checkSetup->renewSubscription();
+
+        $this->info("PaySprint renew subscription completed successfully");
     }
 }

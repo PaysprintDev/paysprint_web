@@ -3,23 +3,23 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Artisan;
 
-class DailyMetricsTask extends Command
+class RunQueue extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'daily-metrics:run';
+    protected $signature = 'mailqueue:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Daily metrics run command';
+    protected $description = 'Laravel command to run queue for mail';
 
     /**
      * Create a new command instance.
@@ -38,7 +38,8 @@ class DailyMetricsTask extends Command
      */
     public function handle()
     {
+        Artisan::call('queue:work --tries=3 --timeout=60');
 
-        return 0;
+        $this->info("Queue work done!");
     }
 }

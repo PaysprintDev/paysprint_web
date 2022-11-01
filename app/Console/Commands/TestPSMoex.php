@@ -3,23 +3,24 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
+use \App\Traits\Moex;
 
-class DailyMetricsTask extends Command
+class TestPSMoex extends Command
 {
+    use Moex;
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'daily-metrics:run';
+    protected $signature = 'psmoex:test';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Daily metrics run command';
+    protected $description = 'This is to test the PaySprint Moex handshake on SOAP server';
 
     /**
      * Create a new command instance.
@@ -38,7 +39,8 @@ class DailyMetricsTask extends Command
      */
     public function handle()
     {
+        $data = $this->paysprintMoex();
 
-        return 0;
+        $this->info($data);
     }
 }

@@ -13,63 +13,138 @@
 
                             @if (route('home') == 'https://paysprintmerchantservices.com')
                                 <p>PaySprint is the fastest and most affordable way to create and send invoice, pay
-                                    invoice and get paid at anytime!</p>
+                                    invoice and getting paid at anytime!</p>
                             @else
-                                <p>PaySprint is the fastest and most affordable way to send and receive money. Pay
-                                    invoices
-                                    and get paid at anytime!</p>
+                                <p>PaySprint is the fastest and most affordable way to send and receive money invoice, pay invoice and getting paid at anytime!</p>
                             @endif
 
 
                         </div>
-                    </div>
-                    <div class="col-6 col-lg-2">
-                        <div class="single-footer mb-13 mb-lg-9">
-                            <p class="footer-title gr-text-11 mb-7" style="font-size: 20px;"><strong>SERVICES</strong>
-                            </p>
-
+                        <ul class="footer-list list-unstyled">
 
                             @if (route('home') == 'https://paysprintmerchantservices.com')
-                                <ul class="footer-list list-unstyled">
-
-                                    <li class="py-2"><a class="gr-text-9 gr-text-color"
-                                            href="{{ route('invoice') }}">Create and Send Invoice</a></li>
-
-
-                                    <li class="py-2"><a class="gr-text-9 gr-text-color" href="{{ route('my account') }}">Accept
-                                            Payments</a>
-                                    </li>
-
-                                    <li class="py-2"><a class="gr-text-9 gr-text-color" onclick="comingSoon()"
-                                            href="javascript:void(0)">eStore</a></li>
-                                    <li class="py-2"><a class="gr-text-9 gr-text-color"
-                                            href="{{ route('my account') }}">Wallet</a></li>
-
-
-
-                                </ul>
+                                <li class="py-2"><a
+                                        class="gr-text-9 text-primary font-weight-bold hover-underline active"
+                                        href="mailto:info@paysprintmerchantservices.com"><i class="fa fa-envelope"
+                                            aria-hidden="true"></i> info@paysprintmerchantservices.com</a></li>
                             @else
-                                <ul class="footer-list list-unstyled">
-                                    @guest
-                                        <li class="py-2"><a class="gr-text-9 gr-text-color"
-                                                href="{{ route('my account') }}">Money Transfer</a></li>
-                                    @endguest
-
-                                    @auth
-                                        <li onclick="$('#sendMoney').click()"><a href="javascript:void()">Money Transfer</a>
-                                        </li>
-                                    @endauth
-
-                                    <li class="py-2"><a class="gr-text-9 gr-text-color"
-                                            href="{{ route('invoice') }}">Pay Invoice</a></li>
-                                    <li class="py-2"><a class="gr-text-9 gr-text-color"
-                                            href="{{ route('my account') }}">Wallet</a></li>
-
-
-
-                                </ul>
+                                <li class="py-2"><a
+                                        class="gr-text-9 text-primary font-weight-bold hover-underline active"
+                                        href="mailto:info@paysprint.ca"><i class="fa fa-envelope"
+                                            aria-hidden="true"></i> info@paysprint.ca</a></li>
                             @endif
+
+                            <li class="py-2"><a
+                                    class="gr-text-9 text-primary font-weight-bold hover-underline active"
+                                    href="javascript:void()"><i class="fa fa-map-marker" aria-hidden="true"></i>
+                                    PaySprint International<br>
+                                    10 George St. North, Brampton. ON. L6X1R2. Canada</a></li>
+                        </ul>
+                    </div>
+                    
+                    
+                    <div class="col-6 col-lg-4">
+
+                        <p class="footer-title gr-text-11 mb-7" style="font-size: 20px;"><strong>SERVICES</strong>
+                        </p>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="single-footer mb-13 mb-lg-9">
+
+                                    @if (route('home') == 'https://paysprintmerchantservices.com')
+                                    <ul class="footer-list list-unstyled">
+    
+                                        <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                                href="{{ route('invoice') }}">Create and Send Invoice</a></li>
+    
+    
+                                        <li class="py-2"><a class="gr-text-9 gr-text-color" href="{{ route('my account') }}">Accept
+                                                Payments</a>
+                                        </li>
+    
+                                        <li class="py-2"><a class="gr-text-9 gr-text-color" onclick="comingSoon()"
+                                                href="javascript:void(0)">eStore</a></li>
+                                        <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                                href="{{ route('my account') }}">Wallet</a></li>
+    
+    
+    
+                                    </ul>
+                                @else
+                                    <ul class="footer-list list-unstyled">
+                                        @guest
+                                            <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                                    href="{{ route('my account') }}">Money Transfer</a></li>
+                                        @endguest
+    
+                                        @auth
+                                            <li onclick="$('#sendMoney').click()"><a href="javascript:void()">Money Transfer</a>
+                                            </li>
+                                        @endauth
+    
+                                        <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                                href="{{ route('invoice') }}">Pay Invoice</a></li>
+                                        <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                                href="{{ route('my account') }}">Wallet</a></li>
+                                               
+    
+    
+    
+                                    </ul>
+                                @endif
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div class="single-footer mb-13 mb-lg-9">
+
+                                    @if (route('home') == 'https://paysprintmerchantservices.com')
+                                    <ul class="footer-list list-unstyled">
+    
+                                        <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                                href="{{ route('invoice') }}">Create and Send Invoice</a></li>
+    
+    
+                                        <li class="py-2"><a class="gr-text-9 gr-text-color" href="{{ route('my account') }}">Accept
+                                                Payments</a>
+                                        </li>
+    
+                                        <li class="py-2"><a class="gr-text-9 gr-text-color" onclick="comingSoon()"
+                                                href="javascript:void(0)">eStore</a></li>
+                                        <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                                href="{{ route('my account') }}">Wallet</a></li>
+    
+    
+    
+                                    </ul>
+                                @else
+                                    <ul class="footer-list list-unstyled">
+                                       
+                                        <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                                    href="#">Receive Payment</a></li>
+                                   
+    
+                                       
+    
+                                        <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                                href="#">Merchant Cash Advance</a></li>
+                                        <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                                href="#">Cross Border Business Payment</a></li>
+                                        <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                                    href="#">Invoicing System</a></li>
+                                        <li class="py-2"><a class="gr-text-9 gr-text-color"
+                                                        href="#">Marketplace</a></li>
+    
+    
+    
+                                    </ul>
+                                @endif
+                                </div>
+                            </div>
                         </div>
+
+
                     </div>
                     <div class="col-6 col-lg-4">
 
@@ -91,7 +166,7 @@
                                         <li class="py-2"><a class="gr-text-9 gr-text-color"
                                                 href="{{ route('community') }}">Community forum</a></li>
                                         <li class="py-2"><a class="gr-text-9 gr-text-color"
-                                                href="https://investor.paysprint.ca" target="_blank">Investor
+                                                href="https://investor.paysprint.ca" target="_blank">Investor's
                                                 relation</a></li>
                                     </ul>
                                 </div>
@@ -140,44 +215,20 @@
 
                     </div>
 
-                    <div class="col-md-6 col-lg-3">
-                        <div class="single-footer mb-13 mb-lg-9">
-                            <p class="footer-title gr-text-11 mb-7" style="font-size: 20px;"><strong>CONTACT US</strong>
-                            </p>
-                            <ul class="footer-list list-unstyled">
-
-                                @if (route('home') == 'https://paysprintmerchantservices.com')
-                                    <li class="py-2"><a
-                                            class="gr-text-9 text-primary font-weight-bold hover-underline active"
-                                            href="mailto:info@paysprintmerchantservices.com"><i class="fa fa-envelope"
-                                                aria-hidden="true"></i> info@paysprintmerchantservices.com</a></li>
-                                @else
-                                    <li class="py-2"><a
-                                            class="gr-text-9 text-primary font-weight-bold hover-underline active"
-                                            href="mailto:info@paysprint.ca"><i class="fa fa-envelope"
-                                                aria-hidden="true"></i> info@paysprint.ca</a></li>
-                                @endif
-
-                                <li class="py-2"><a
-                                        class="gr-text-9 text-primary font-weight-bold hover-underline active"
-                                        href="javascript:void()"><i class="fa fa-map-marker" aria-hidden="true"></i>
-                                        PaySprint International<br>
-                                        10 George St. North, Brampton. ON. L6X1R2. Canada</a></li>
-                            </ul>
-                        </div>
-                    </div>
+                 
 
                     <div class="col-md-12 col-lg-12">
-                        <p>
-                            <a href="https://www10.fintrac-canafe.gc.ca/msb-esm/public/msb-search/name-search-results/7b227072696d617279536561726368223a7b226f72674e616d65223a22706179737072696e74222c2273656172636854797065223a317d7d/"
+                        
+                            <ul  class="footer-list list-unstyled">
+                            <li><a href="https://www10.fintrac-canafe.gc.ca/msb-esm/public/msb-search/name-search-results/7b227072696d617279536561726368223a7b226f72674e616d65223a22706179737072696e74222c2273656172636854797065223a317d7d/"
                                 target="_blank" style="padding: 5px; font-weight: bold; font-size: 16px;"><i
                                     class="fas fa-thumbtack" aria-hidden="true"></i> Canada: FINTRAC Reg No:
-                                M21469983</a>
-                            <a href="https://www.fincen.gov/msb-registrant-search" target="_blank"
+                                M21469983</a></li>
+                            <li><a href="https://www.fincen.gov/msb-registrant-search" target="_blank"
                                 style="padding: 5px; font-weight: bold; font-size: 16px;"><i class="fas fa-thumbtack"
-                                    aria-hidden="true"></i> USA: FINCEN Reg No: 31000189515339</a>
-
-                        </p>
+                                    aria-hidden="true"></i> USA: FINCEN Reg No: 31000189515339</a></li>
+                            </ul>
+                        
                     </div>
                 </div>
             </div>

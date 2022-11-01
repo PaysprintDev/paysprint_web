@@ -244,7 +244,8 @@ Route::get('/userjourney', ['uses' => 'HomeController@userJourney', 'as' => 'use
 Route::get('/estore', ['uses' => 'HomeController@estores', 'as' => 'paysprint estore']);
 
 Route::get('/merchant-home', ['uses' => 'HomeController@merchantIndex', 'as' => 'merchant home']);
-
+Route::get('/merchant-test', ['uses' => 'HomeController@merchantHome', 'as' => 'merchant test']);
+Route::get('/Usecase', ['uses' => 'HomeController@merchantUseCase', 'as' => 'use case']);
 Route::get('/accounts', ['uses' => 'HomeController@getStartedAccounts', 'as' => 'accounts']);
 
 Route::get('/home', ['uses' => 'HomeController@authIndex', 'as' => 'user home']);
@@ -274,6 +275,10 @@ Route::get('Statement', ['uses' => 'HomeController@statement', 'as' => 'statemen
 
 Route::get('payorganization', ['uses' => 'HomeController@payOrganization', 'as' => 'payorganization']);
 
+Route::get('bulkpayment', ['uses' => 'HomeController@bulkPayment', 'as' => 'bulk payment']);
+Route::get('bulksend', ['uses' => 'HomeController@bulkSend', 'as' => 'bulk send']);
+Route::get('deletebulksend', ['uses' => 'HomeController@deleteBulkSend', 'as' => 'delete bulk send']);
+Route::post('bulktransfer', ['uses' => 'HomeController@createBulkTransfer', 'as' => 'create bulk transfer']);
 Route::get('contact', ['uses' => 'HomeController@contact', 'as' => 'contact']);
 
 Route::get('countrylist', ['uses' => 'HomeController@displayCountry', 'as' => 'display country']);
@@ -1437,7 +1442,8 @@ Route::group(['prefix' => 'Ajax'], function () {
 	Route::post('promotionaction', ['uses' => 'AdminController@ajaxpromotionaction', 'as' => 'Ajaxpromotionaction']);
 
 	Route::post('acceptcrossborderpayment', ['uses' => 'AdminController@ajaxacceptcrossborderpayment', 'as' => 'Ajaxacceptcrossborderpayment']);
-
+	// bulk payment
+     Route::post('makebulkpayment', ['uses' => 'HomeController@ajaxMakeBulkPayment', 'as' => 'Ajaxmakebulkpayment']);
 
 	// Get Commision and payment
 	Route::post('getCommission', ['uses' => 'HomeController@ajaxgetCommission', 'as' => 'AjaxgetCommission']);

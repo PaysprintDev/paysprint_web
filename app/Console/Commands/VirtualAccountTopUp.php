@@ -3,23 +3,23 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\CheckSetupController;
 
-class DailyMetricsTask extends Command
+class VirtualAccountTopUp extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'daily-metrics:run';
+    protected $signature = 'virtualaccounttopup:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Daily metrics run command';
+    protected $description = 'PaySprint virtual account top up';
 
     /**
      * Create a new command instance.
@@ -38,7 +38,10 @@ class DailyMetricsTask extends Command
      */
     public function handle()
     {
+        $checkSetup = new CheckSetupController();
 
-        return 0;
+        $checkSetup->getAllTransactionTransfers();
+
+        $this->info("PaySprint virtual account top up completed successfully");
     }
 }
