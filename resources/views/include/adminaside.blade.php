@@ -599,14 +599,17 @@
             <li class="treeview">
                 <a href="#">
                     <i class="far fa-handshake"></i>
-                    <span>Wallet Debit</span>
+                    <span>Wallet Action</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
                     <li title="Wallet Debit"><a href="{{ route('wallet debit')}}"><i
-                                class="fa fa-circle-o text-red"></i>Wallet Debit</a></li>
+                                class="fa fa-circle-o text-red"></i>Wallet Debit</a>
+                    </li>
+                    <li title="Wallet Credit"><a href="{{ route('wallet account credit')}}"><i
+                                class="fa fa-circle-o text-red"></i>WalletCredit</a></li>
 
                 </ul>
             </li>
