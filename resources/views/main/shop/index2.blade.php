@@ -1152,7 +1152,7 @@
                 var formData;
 
                 if (val == 'payinshop') {
-                    formData = new FormData(formElem);
+                    formData = new FormData(forVisitors);
                     route = "{{ URL('/api/v1/payinshop') }}";
 
                     Pace.restart();
