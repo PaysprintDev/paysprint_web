@@ -12,7 +12,7 @@ class NumberOfWithdrawalsForMerchant extends Command
      *
      * @var string
      */
-    protected $signature = 'numberofwithdrawalsformerchant:name';
+    protected $signature = 'numberofwithdrawalsformerchant:run';
 
     /**
      * The console command description.

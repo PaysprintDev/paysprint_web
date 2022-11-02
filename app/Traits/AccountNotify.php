@@ -121,7 +121,7 @@ trait AccountNotify
             Log::info("Error updating notification table: " . $th->getMessage());
         }
 
-        return "done";
+        echo "done";
     }
 
     public function updateNotificationPeriod()
