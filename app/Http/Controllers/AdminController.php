@@ -19964,6 +19964,31 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         return redirect()->back()->with($resp, $resData);
     }
 
+    public function ajaxAccessToUsePaysprintFx(Request $req)
+    {
+       
+        $check = AllCountries::where('id', $req->country_id)->first();
+
+        if (isset($check)) {
+
+            if ($check->fx == 'true') {
+                AllCountries::where('id', $req->country_id)->update(['fx' => 'false']);
+                $resData = "Access Denied!";
+            } else {
+                AllCountries::where('id', $req->country_id)->update(['fx' => 'true']);
+                $resData = "Access Granted!";
+            }
+
+            $resp = "success";
+        } else {
+            $resData = "Not found";
+            $resp = "error";
+        }
+
+
+        return redirect()->back()->with($resp, $resData);
+    }
+
     public function activatemerchantaccount(Request $req)
     {
 

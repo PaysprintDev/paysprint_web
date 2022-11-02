@@ -2444,6 +2444,34 @@ C</div>
                 });
         }
 
+        function grantFx(id) {
+        
+        // Open Modal, ask for permission to accept Inbound, Outbound or Both...
+        
+        
+        
+        var route = "{{ URL('Ajax/accesstousepaysprintfx') }}";
+        
+        swal({
+        title: "Are you sure?",
+        text: "Your decision is about to be processed",
+        icon: "info",
+        buttons: true,
+        dangerMode: false,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+        
+        $('#grantfxform' + id).submit();
+        
+        // $("input[name='imt_id']").val(id);
+        
+        
+        }
+        });
+        }
+
+
 
         function imtRequestBtn() {
             var imt_options = $('#imt_options').val();
