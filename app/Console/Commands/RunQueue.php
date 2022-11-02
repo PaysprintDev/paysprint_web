@@ -38,8 +38,7 @@ class RunQueue extends Command
      */
     public function handle()
     {
-        Artisan::call('queue:work --tries=3 --timeout=60');
-
+        Artisan::call('queue:work --tries=2 --timeout=60 --stop-when-empty');
         $this->info("Queue work done!");
     }
 }

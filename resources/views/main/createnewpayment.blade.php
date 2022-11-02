@@ -90,17 +90,6 @@
                                 <form role="form" action="#" method="POST" id="formElem">
                                     @csrf
 
-                                    {{-- Receiver Start --}}
-                                    <div class="receiveonpaysprint">
-
-                                    </div>
-                                    {{-- Receiver End --}}
-
-
-
-                                    {{-- Partner Start --}}
-                                    <div class="receiveonpartner"></div>
-                                    {{-- Partner End --}}
 
 
                                     <input type="hidden" name="orgpayname" id="orgpayname" value="{{ $name }}">
@@ -113,7 +102,34 @@
 
                                     <input type="hidden" name="paymentToken" id="paymentToken" value="">
 
-                                    <div class="form-group">
+                                    <div class="form-group"> <label for="fname">
+                                            <h6>How do you want the receiver to get paid?</h6>
+                                        </label>
+                                        <div class="input-group">
+
+                                            <select name="paymentMode" id="paymentMode" class="form-control">
+                                                <option value="">Select option</option>
+                                                <option value="PaySprint">Receive on PaySprint (No fee)</option>
+                                                <option value="Partner">Receive via dedicated partners (fee applicable)</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group"> <label for="fname">
+                                            <h6>Select Payment Wallet</h6>
+                                        </label>
+                                        <div class="input-group">
+
+                                            <select name="paymentWallet" id="paymentWallet" class="form-control">
+                                                <option value="">Select option</option>
+                                                <option value="ps_wallet">PaySprint Wallet</option>
+                                                <option value="fx_wallet">FX Wallet</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group disp-0 wallet_details">
 
                                         <div class="alert alert-warning">
                                             <div class="row">

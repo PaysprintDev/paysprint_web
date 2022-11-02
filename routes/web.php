@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
@@ -220,7 +219,7 @@ Route::get('merchantinvoiceupdate', 'WorkorderController@controlInvoice');
 
 Route::get('/run-queue', function () {
 
-	Artisan::call('queue:work --tries=3 --timeout=60');
+	Artisan::call('queue:work --tries=2 --timeout=60 --stop-when-empty');
 	return "Queue work done!";
 });
 
