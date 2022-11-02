@@ -878,6 +878,15 @@ class CurrencyFxController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
+
+        public function getFxWalletsFromController(Int $userid, String $escrowId)
+    {
+            $getmywallet = EscrowAccount::where('user_id', $userid)->where('escrow_id', $escrowId)->first();
+
+            return $getmywallet;
+
+    }
+
     // Create New Wallet
     public function createNewWallet(Request $req)
     {
@@ -2574,10 +2583,10 @@ class CurrencyFxController extends Controller
     public function checkImt($country){
         $imtCountry = AllCountries::where('name', $country)->first();
 
-        if($imtCountry->outbound == "true" || $imtCountry->imt == "true"){
-            return "true";
-        }
+        if($imtCountry->outbound == "true" || $imtCountry->imt == "true") return "true";
 
-        return $imtCountry->imt;
+        // TODO:: Return to default value...
+        // return $imtCountry->imt;
+        return "true";
     }
 }
