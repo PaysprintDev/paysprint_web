@@ -48,11 +48,10 @@
 
 
 
-
-
+{{-- 
   <link type="text/css" rel="stylesheet"
-    href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,100italic,300italic,400italic,500,500italic,700,700italic,900,900italic" />
-  <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700" />
+    href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,100italic,300italic,400italic,500italic,,700italic,900italic" /> --}}
+  <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" /> 
 
 
   <style type="text/css" media="screen">
@@ -794,6 +793,7 @@
       text-align: left;
       line-height: 1.8125rem;
       font-size: 1.1146rem;
+   
     }
 
     #element-136 {
@@ -2126,19 +2126,22 @@
       #element-131 {
         top: 22.375rem;
         left: -3.125rem;
-        height: 5.4375rem;
+        height: 7.4375rem;
         width: 25.5625rem;
         z-index: 5;
         color: #37465A;
         font-size: 1.1146rem;
         line-height: 1.8rem;
         text-align: left;
+        padding-bottom: 4rem
       }
 
       #element-131 .x_8ae9aa76 {
         text-align: left;
-        line-height: 1.8125rem;
-        font-size: 1.1146rem;
+        line-height: 1.7125rem;
+        font-size:16px;
+        margin-bottom: 3rem;
+        
       }
 
       #element-136 {
@@ -2524,6 +2527,16 @@
         z-index: 58;
       } 
 
+      #element-356 {
+        top: 16.5625rem;
+        left: -4.125rem;
+        height: 2.8125rem;
+        background-color: white;
+        padding: 8px;
+        width: 2.5625rem;
+        z-index: 58;
+      } 
+
       #element-197 {
         top: 15.5625rem;
         left: 0.3125rem;
@@ -2729,6 +2742,15 @@
         width: 2.5625rem;
         z-index: 61;
       }
+      #element-358 {
+        top: 25.5375rem;
+        left: -4.125rem;
+        padding: 10px;
+        background-color: white;
+        height: 2.8125rem;
+        width: 2.5625rem;
+        z-index: 61;
+      }
 
       #element-200 {
         top: 24.4375rem;
@@ -2780,6 +2802,16 @@
         height: 2.8125rem;
         width: 2.5625rem;
         z-index: 55;
+        
+      }
+      #element-355 {
+        top: 34.3125rem;
+        left: -4.125rem;
+        height: 2.8125rem;
+        width: 2.5625rem;
+        z-index: 55;
+        padding: 10px;
+        background-color: white
       }
 
       #element-203 {
@@ -3331,7 +3363,7 @@
 
           <div class="widget item-absolute " id="element-139">
             <div class="contents shape  box figure " data-at="shape">
-              <img class="w-100" src=" {{ asset('images/paysprintlogo.png') }}" style="">
+              <img class="w-100" src=" {{ asset('images/PSM.jpg') }}" style="">
 
             </div>
           </div>
@@ -3364,21 +3396,21 @@
             </div>
           </div>
 
-          <div class="widget item-absolute paragraph  " id="element-131" data-at="paragraph">
-            <div class="contents">
-              <p class="x_8ae9aa76 x_b6c3675a">PaySprint enables you to accept payments on any mobile device (for
-                in-store sales) and your website (for online sales) with no transaction fees.</p>
+          <div class="widget item-absolute paragraph mb-3" id="element-131" data-at="paragraph" >
+            <div class="contents mb-3" >
+              <p class="x_8ae9aa76 x_b6c3675a">PaySprint for Business enables you to receive payments on any mobile device (for in-store sales) and your website (for online sales) with no transaction fees. </p>
             </div>
           </div>
-
-          <div class="widget item-absolute paragraph hidden-mobile " id="element-136" data-at="paragraph">
+        
+            
+          <div class="widget item-absolute paragraph hidden-mobile" id="element-136" data-at="paragraph">
             <div class="contents">
-              <p class="x_3579aa00 x_8b9ce48e">Identity verification</p>
+              <p class="x_3579aa00 x_8b9ce48e" >Identity verification</p>
             </div>
           </div>
 
           <div class="widget item-absolute hidden-mobile" id="element-132">
-            <span class="bullet-html pulse"></span>
+            <span class="bullet-html pulse" ></span>
           </div>
 
           <div class="widget item-absolute paragraph hidden-mobile " id="element-137" data-at="paragraph">
@@ -3540,6 +3572,93 @@
         </div>
       </div>
     </section>
+     
+    <section class="section section-relative  " id="page-block-3cg5fcg36ot" data-at="section">
+
+      {{-- <div class="section-holder-border item-block item-absolute" data-at="section-border"></div> --}}
+      {{-- <div class="section-holder-overlay item-block item-absolute" data-at="section-overlay"></div> --}}
+      <div class="section-block">
+        <div class="section-inner section-fit section-relative ">
+          <div class="widget item-absolute headline  " id="element-215" data-at="headline">
+            <div class="contents">
+              <h1>
+                <span class="x_ab3dc331 x_26d449b5"><span class="x_93908647">Ways to Receive Payments with<br>No fees</span></span>
+              </h1>
+            </div>
+          </div>
+          <div class="">
+          <div class="widget item-absolute  " id="element-356">
+            <div class="contents cropped item-block" data-at="image-cropp">
+              <img class="item-content-box item-block image img-lazy" data-at="image" alt=""
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mM89h8AApEBx2iaqpQAAAAASUVORK5CYII&#x3D;"
+                data-src="https://img.icons8.com/carbon-copy/2x/barcode-scanner.png"
+                data-retina-src="https://img.icons8.com/carbon-copy/2x/barcode-scanner.png">
+            </div>
+          </div>
+
+          <div class="widget item-absolute headline  " id="element-197" data-at="headline">
+            <div class="contents">
+              <h3>
+                <span class="x_8b236db7 x_561aca13"><span class="x_93908647">Face-to-Face Payment</span></span>
+              </h3>
+            </div>
+          </div>
+
+          <div class="widget item-absolute paragraph  " id="element-198" data-at="paragraph">
+            <div class="contents">
+              <p class="x_80f7663c x_4976ff6a"><span class="x_93908647">Dispaly QR Code for Customers to scan and make payments with Debit/Credit Card or PaySprint Wallet.</span></p>
+            </div>
+          </div>
+
+          <div class="widget item-absolute  " id="element-358">
+            <div class="contents cropped item-block" data-at="image-cropp">
+              <img class="item-content-box item-block image img-lazy" data-at="image" alt=""
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mM89h8AApEBx2iaqpQAAAAASUVORK5CYII&#x3D;"
+                data-src="https://img.icons8.com/external-wanicon-lineal-wanicon/2x/external-customer-online-shopping-wanicon-lineal-wanicon.png"
+                data-retina-src="https://img.icons8.com/external-wanicon-lineal-wanicon/2x/external-customer-online-shopping-wanicon-lineal-wanicon.png">
+            </div>
+          </div>
+
+          <div class="widget item-absolute headline  " id="element-200" data-at="headline">
+            <div class="contents">
+              <h3>
+                <span class="x_8b236db7 x_561aca13"><span class="x_93908647">Remote Customers</span></span>
+              </h3>
+            </div>
+          </div>
+
+          <div class="widget item-absolute paragraph  " id="element-201" data-at="paragraph">
+            <div class="contents">
+              <p class="x_80f7663c x_4976ff6a"><span class="x_93908647">Share Payments link with customers to make payments with Debit/Credit Card or PaySprint Wallet.</span></p>
+            </div>
+          </div>
+
+          <div class="widget item-absolute  " id="element-355">
+            <div class="contents cropped item-block" data-at="image-cropp">
+              <img class="item-content-box item-block image img-lazy" data-at="image" alt=""
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mM89h8AApEBx2iaqpQAAAAASUVORK5CYII&#x3D;"
+                data-src="https://img.icons8.com/external-icongeek26-linear-colour-icongeek26/2x/external-customer-ads-icongeek26-linear-colour-icongeek26.png"
+                data-retina-src="https://img.icons8.com/external-icongeek26-linear-colour-icongeek26/2x/external-customer-ads-icongeek26-linear-colour-icongeek26.png">
+            </div>
+          </div>
+
+          <div class="widget item-absolute headline  " id="element-203" data-at="headline">
+            <div class="contents">
+              <h3>
+                <span class="x_8b236db7 x_0fa34b5f"><span class="x_93908647">Online Customers.</span></span>
+              </h3>
+            </div>
+          </div>
+
+          <div class="widget item-absolute paragraph  " id="element-204" data-at="paragraph">
+            <div class="contents">
+              <p class="x_80f7663c x_390ad34e"><span class="x_93908647">Install PaySprint on website for customers to make payment with Debit/Credit Card or PaySprint Wallet.</span></p>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section class="section section-relative  " id="page-block-3cg5fcg36ot" data-at="section">
 
@@ -3551,7 +3670,7 @@
             <div class="contents">
               <h1>
                 <span class="x_ab3dc331 x_26d449b5"><span class="x_93908647">Connect your bank account to have your
-                    payments deposited directly</span></span>
+                  payments deposited directly</span></span>
               </h1>
             </div>
           </div>

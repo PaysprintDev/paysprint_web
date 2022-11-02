@@ -84,9 +84,14 @@
 
                             <!-- credit card info-->
                             <div id="credit-card" class="tab-pane fade show active pt-3">
-                                <form role="form" action="#" method="POST" id="formElem">
 
+
+
+                                <form role="form" action="#" method="POST" id="formElem">
                                     @csrf
+
+
+
                                     <input type="hidden" name="orgpayname" id="orgpayname" value="{{ $name }}">
 
                                     <input type="hidden" name="orgpayemail" id="orgpayemail"
@@ -97,7 +102,34 @@
 
                                     <input type="hidden" name="paymentToken" id="paymentToken" value="">
 
-                                    <div class="form-group">
+                                    <div class="form-group"> <label for="fname">
+                                            <h6>How do you want the receiver to get paid?</h6>
+                                        </label>
+                                        <div class="input-group">
+
+                                            <select name="paymentMode" id="paymentMode" class="form-control">
+                                                <option value="">Select option</option>
+                                                <option value="PaySprint">Receive on PaySprint (No fee)</option>
+                                                <option value="Partner">Receive via dedicated partners (fee applicable)</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group"> <label for="fname">
+                                            <h6>Select Payment Wallet</h6>
+                                        </label>
+                                        <div class="input-group">
+
+                                            <select name="paymentWallet" id="paymentWallet" class="form-control">
+                                                <option value="">Select option</option>
+                                                <option value="ps_wallet">PaySprint Wallet</option>
+                                                <option value="fx_wallet">FX Wallet</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group disp-0 wallet_details">
 
                                         <div class="alert alert-warning">
                                             <div class="row">
@@ -197,10 +229,10 @@
                                                  @foreach ($data['availablecountry'] as $country )
                                                 <option data-countryCode="{{$country->code}}" value="{{$country->callingCode}}">{{$country->name}}(+{{$country->callingCode}})</option>
                                                  @endforeach
-                                                    
+
                                                 @endif
-                                                
-                                                
+
+
                                             </select>
                                             <input type="number" min="0" step="1" name="phone" id="phone"
                                                 placeholder="Telephone" class="form-control">
@@ -216,12 +248,12 @@
                                             <select id="country" name="country" class="form-control" readonly>
                                                 <option value="{{ Auth::user()->country }}" selected>
                                                     {{ Auth::user()->country }}</option>
-                                               
+
                                                     @if (count($data['availablecountry']))
                                                     @foreach ($data['availablecountry'] as $country )
                                                    <option data-countryCode="{{$country->code}}" value="{{$country->callingCode}}">{{$country->name}}</option>
                                                     @endforeach
-                                                       
+
                                                    @endif
                                             </select>
 
