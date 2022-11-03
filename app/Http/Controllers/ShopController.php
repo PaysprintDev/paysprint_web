@@ -84,7 +84,7 @@ class ShopController extends Controller
             );
 
             // dd($data);
-            $views = env('APP_ENV') === 'local' ? 'main.shop.index2' : 'main.shop.index2';
+            $views = env('APP_ENV') === 'local' ? 'main.shop.index2' : 'main.shop.index';
 
             return view($views)->with(['data' => $data]);
         } else {
