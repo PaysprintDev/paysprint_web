@@ -131,11 +131,11 @@
   .blog-card.alt .details {
     padding-left: 25px;
   }
-  .content{
+  /* .content{
    
     margin-left:20rem;
     margin-right: 20rem
-  }
+  } */
   .content p{
     font-size: 16px;
     line-height: 35px
@@ -152,7 +152,7 @@
         <div class="blog-card">
             <div class="meta">
               <div class="photo" >
-                <img src="{{ asset('images/sellitic.JPG') }}" alt="sellitic" style="width: 20rem; height:15rem"/>
+                <img src="{{ asset('images/sellitic.JPG') }}" alt="sellitic" style="width: 100%; height:15rem"/>
               </div>
               <ul class="details">
                 <li class="author"><a href="#">Consumer Services</a></li>
@@ -169,12 +169,18 @@
             </div>
             
         </div>
-        <div class="content">
-        <p style="">SELLITIC adopts a purpose-driven and decentralized business model that drives diversity, equity and inclusion within the creative economy. Their mission to drive prosperity within the creative economy relies significantly on reducing the barriers to entry and operations for artists and artisans across Africa and the globe. <br>
+       <div class="row content">
+        <div class="col-md-3">
+        
+        </div>
+        <div class="col-md-6 px-2" >
+          <p style="">SELLITIC adopts a purpose-driven and decentralized business model that drives diversity, equity and inclusion within the creative economy. Their mission to drive prosperity within the creative economy relies significantly on reducing the barriers to entry and operations for artists and artisans across Africa and the globe. <br>
             The marketplace connects artists and artisans (creators) with buyers globally which offers the creators more visibility and opportunities to export their products across the globe.
             PaySprint is supporting the SELLITIC Marketplace with a flexible, tailored-made, and affordable payments processing service that enables artisans in the informal sectors in over 100 countries to accept payments at zero costs to creators selling on the marketplace.<br>
             The low cost of completing the end-to-end transaction provides a huge incentive to both SELLITIC and creators selling on the marketplace.
         </p>
+        </div>
+        <div class="col-md-3"></div>
       </div>
       <hr>
            
@@ -182,7 +188,7 @@
       <div class="blog-card">
         <div class="meta">
           <div class="photo">
-            <img src="{{ asset('images/Busy Wrench.JPG') }}" alt="busywrench" style="width: 20rem; height:15rem"/></div>
+            <img src="{{ asset('images/Busy Wrench.JPG') }}" alt="busywrench" style="width: 100%; height:15rem"/></div>
           <ul class="details">
             <li class="author"><a href="#">Automotive</a></li>
             <li class="date">Brampton, Ontario, Canada</li>
@@ -198,17 +204,22 @@
         </div>
         
     </div>
-    <div class="content">
-    <p style="">Busy Wrench offers shop management software to auto repair sub-sector in automotive industry. The auto repair shop owners in the sub-sector are usually looking for Shop Management Software that offers not only an end-to-end shop operation management but also helps to drive traffic to shop floor, improve sales, track expenses, and boost the profitability of the business.These are the objectives Busy Wrench is designed to achieve.<br>
+   
+  <div class="row content">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 px-2">
+      <p style="">Busy Wrench offers shop management software to auto repair sub-sector in automotive industry. The auto repair shop owners in the sub-sector are usually looking for Shop Management Software that offers not only an end-to-end shop operation management but also helps to drive traffic to shop floor, improve sales, track expenses, and boost the profitability of the business.These are the objectives Busy Wrench is designed to achieve.<br>
         PaySprint provides Busy Wrench with a unique opportunity to offer over 65, 000 Auto Repair shop-owners and 51,000 Auto Dealers on Busy Wrench with a low cost and affordable method of accepting payments from vehicle owners.
         
     </p>
+    </div>
+    <div class="col-md-3"></div>
   </div>
   <hr>
   <div class="blog-card">
     <div class="meta">
       <div class="photo">
-        <img src="{{ asset('images/Renard-Blue.JPG') }}" alt="Renard" style="width: 20rem; height:15rem"/></div>
+        <img src="{{ asset('images/Renard-Blue.JPG') }}" alt="Renard" style="width: 100%; height:15rem"/></div>
       <ul class="details">
         <li class="author"><a href="#">Retail</a></li>
         <li class="date">Quebec, Canada</li>
@@ -224,14 +235,18 @@
     </div>
     
 </div>
-<div class="content">
-<p style="">Renard Blue offers affordable grocery shopping experience. The online grocery service provides customer with much ease of doing essentials from the comfort of their home.<br>
-    Retail business is naturally characterised by high volume, low margin and high risk and costs of cash handling.
-    PaySprint offers Renard-Blue the opportunity to accept online payments from customers at no costs which improves the profitability of the business.
-    
-</p>
+
+<div class="row content">
+  <div class="col-md-3"></div>
+  <div class="col-md-6 px-2">
+    <p style="">Renard Blue offers affordable grocery shopping experience. The online grocery service provides customer with much ease of doing essentials from the comfort of their home.<br>
+      Retail business is naturally characterised by high volume, low margin and high risk and costs of cash handling.
+      PaySprint offers Renard-Blue the opportunity to accept online payments from customers at no costs which improves the profitability of the business.
+      
+  </p>
+  </div>
+  <div class="col-md-3"></div>
 </div>
-    </div>
      
     
 
