@@ -395,6 +395,14 @@ trait Moex
 
         $getRate = ConversionCountry::select('country as currency', 'rate')->where('country', 'Canadian Dollar')->get();
 
+        $getRate["0"] = [
+            'Correspondent' => 'Currency Rates',
+            'Country' => 'Canada',
+            'Currency' => 'CAD',
+            'cadRate' => (float)$getRate[0]->rate,
+            'usdRate' => 1 / $getRate[0]->rate
+        ];
+
 
         return json_encode($getRate);
 

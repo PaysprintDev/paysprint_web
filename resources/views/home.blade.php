@@ -192,7 +192,7 @@ use App\Http\Controllers\User; ?>
                             <h3 class="c-stepper__title">Account Verification-Completed</h3>
                             {{-- <p class="c-stepper__desc">Some desc text</p> --}}
                         </li>
-                        
+
 
 
                         @isset($data['userdetails'])
@@ -581,7 +581,7 @@ use App\Http\Controllers\User; ?>
                         <li class="list-group-item">
                             Trade FX with PaySprint <br><br>
 
-                            @if ($data['imtAccess']->imt == 'false' && $data['imtAccess']->outbound == 'false')
+                            @if ($data['imtAccess']->fx == 'false')
                             <a type="button" class="btn btn-primary" href="javascript:void()" id="cardSubmit"
                                 disabled>PaySprint
                                 FX</a>

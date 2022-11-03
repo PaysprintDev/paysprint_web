@@ -2557,7 +2557,6 @@ class MoexController extends Controller
 
 
             $setupController->name = "Money Exchange";
-            // $setupController->email = "tasas@moneyexchange.es";
             $setupController->email = env('APP_ENV') === 'local' ? "adenugaadebambo41@gmail.com" : "tasas@moneyexchange.es";
             $setupController->subject = "Daily Exchange Rate - " . date('d-m-Y');
             $setupController->message = "<p>Attached is the daily exchange rate from PaySprint today: ".date('d-m-Y').".</p><p>Best regards</p>";
