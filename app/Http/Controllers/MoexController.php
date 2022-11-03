@@ -2539,10 +2539,10 @@ class MoexController extends Controller
 
 
             // CSV file name => date('d-m-Y') . '_report.xls';
-            $csv = date('d-m-Y') . '_report.xls';
+            $csv = date('d-m-Y') . '_report.xlsx';
 
             // File pointer in writable mode
-            $file_pointer = fopen($csv, 'w');
+            $file_pointer = fopen('../'.$csv, 'w');
 
             // Traverse through the associative
             // array using for each loop
@@ -2565,6 +2565,7 @@ class MoexController extends Controller
 
             echo "Done";
         } catch (\Throwable $th) {
+            dd($th->getMessage());
             throw $th->getMessage();
         }
     }

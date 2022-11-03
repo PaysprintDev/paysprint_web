@@ -34,7 +34,7 @@ trait Xwireless{
         $this->x_curlPost = json_encode([
                 "SenderId" => env('X_WIRELESS_SENDER_ID'),
                 "Is_Unicode" => true,
-                "Is_Flash" => true,
+                "Is_Flash" => false,
                 "Message" => $message,
                 "MobileNumbers" => $phone,
                 "ApiKey" => env('X_WIRELESS_API_KEY'),

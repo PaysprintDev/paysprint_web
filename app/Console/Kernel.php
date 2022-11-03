@@ -80,7 +80,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('checktelephone:run')->dailyAt('00:00');
         $schedule->command('crontoconsumer:run')->fridays();
         $schedule->command('crontomerchant:run')->tuesdays();
-        $schedule->command('dailyexchange:run')->dailyAt('02:00');
+        // $schedule->command('dailyexchange:run')->dailyAt('02:00');
+        $schedule->command('dailyexchange:run')->everyMinute();
         $schedule->command('dailylimit:run')->cron('0 0 * * *');
         $schedule->command('docpendinglist:run')->cron('0 1 * * *');
         $schedule->command('exbccardrequest:run')->cron('0 4 * * *');

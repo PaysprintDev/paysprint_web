@@ -8,9 +8,11 @@ use App\AllCountries;
 use App\Classes\TWSauth;
 use App\ConversionCountry;
 use function GuzzleHttp\json_decode;
+use App\Traits\PaymentGateway;
 
 trait Moex
 {
+    use PaymentGateway;
 
     public $moexPost;
 
@@ -206,7 +208,7 @@ trait Moex
                     <ReceiverAddress xsi:type="xsd:string"></ReceiverAddress>
                     <ReceiverCity xsi:type="xsd:string"></ReceiverCity>
                     <ReceiverCountry xsi:type="xsd:string">' . $data['receiverCountry'] . '</ReceiverCountry>
-                    <ReceiverPhone xsi:type="xsd:string">'.$data['phoneNumber'].'</ReceiverPhone>
+                    <ReceiverPhone xsi:type="xsd:string">' . $data['phoneNumber'] . '</ReceiverPhone>
                     <ReceiverPhone2 xsi:type="xsd:string"></ReceiverPhone2>
                     <ReceiverIdDocumentNumber xsi:type="xsd:string"></ReceiverIdDocumentNumber>
                     <ReceiverIdDocumentType xsi:type="xsd:string"></ReceiverIdDocumentType>
@@ -224,9 +226,9 @@ trait Moex
                     <PaymentBranchName xsi:type="xsd:string"></PaymentBranchName>
                     <PaymentBranchAddress xsi:type="xsd:string"></PaymentBranchAddress>
                     <PaymentBranchPhone xsi:type="xsd:string"></PaymentBranchPhone>
-                    <PaymentBranchAuxId xsi:type="xsd:string">'.$data['branchCode'].'</PaymentBranchAuxId>
+                    <PaymentBranchAuxId xsi:type="xsd:string">' . $data['branchCode'] . '</PaymentBranchAuxId>
                     <OriginCountry xsi:type="xsd:string">' . $data['originCountry'] . '</OriginCountry>
-                    <Reference xsi:type="xsd:string">'.$data['reference'].'</Reference>
+                    <Reference xsi:type="xsd:string">' . $data['reference'] . '</Reference>
                     <AuxiliaryInfo xsi:type="xsd:string">' . json_encode($data['auxiliaryInfo']) . '</AuxiliaryInfo>
                         </transaction>
                     </urn:MEAddTransaction>
@@ -393,19 +395,40 @@ trait Moex
     public function generateDailyExchangeRate()
     {
 
-        $getRate = ConversionCountry::select('country as currency', 'rate')->where('country', 'Canadian Dollar')->get();
+        $dataRate = ConversionCountry::select('country as currency', 'rate', 'official')->where('country', 'Canadian Dollar')->get();
 
-        $getRate["0"] = [
-            'Correspondent' => 'Currency Rates',
-            'Country' => 'Canada',
-            'Currency' => 'CAD',
-            'cadRate' => (float)$getRate[0]->rate,
-            'usdRate' => 1 / $getRate[0]->rate
+        // Get Markup Value
+        $markuppercent = $this->markupPercentage();
+
+        $markValue = (1 + ($markuppercent[0]->percentage / 100));
+
+        $sellingRate = $dataRate[0]->official * $markValue;
+        $buyingRate = $dataRate[0]->official * 0.95;
+
+
+        $getRate["0"] =  [
+            '0' => 'Correspondent',
+            '1' => 'Country',
+            '2' => 'Currency',
+            '3' => 'CAD Rate',
+            '4' => 'USD Rate',
+            '5' => 'Active',
         ];
 
 
-        return json_encode($getRate);
 
+        $getRate["1"] =  [
+            'Correspondent' => 'Currency Rates',
+            'Country' => 'Canada',
+            'Currency' => 'CAD',
+            'cadRate' => (float)$sellingRate,
+            'usdRate' => (float)($buyingRate * $markValue),
+            'active' => 'Yes'
+        ];
+
+
+
+        return json_encode($getRate);
     }
 
 
@@ -430,10 +453,9 @@ trait Moex
             "IdCountry" => $IdCountry
         ]);
 
-        if($BranchesMoex['return'] === 0){
+        if ($BranchesMoex['return'] === 0) {
             $responseData = $BranchesMoex;
-        }
-        else {
+        } else {
             $description = $BranchesMoex['error']->Description;
             $responseData = [
                 'error' => $description
