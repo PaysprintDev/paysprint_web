@@ -481,56 +481,20 @@
 
                                         <div class="paymentpolicySupport disp-0">
 
-                                            <div class="form-group"> <label for="fname">
-                                                <h6>First Name</h6>
-                                            </label>
-                                            <div class="input-group">
-                                                <input type="text" name="fname" id="partner_fname"
-                                                    placeholder="First Name" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="form-group"> <label for="lname">
-                                                <h6>Last Name</h6>
-                                            </label>
-                                            <div class="input-group">
-                                                <input type="text" name="lname" id="partner_lname"
-                                                    placeholder="Last Name" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="form-group"> <label for="email">
-                                                <h6>Email Address</h6>
-                                            </label>
-                                            <div class="input-group">
-                                                <input type="email" name="email" id="partner_email"
-                                                    placeholder="Email Address" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="form-group"> <label for="phone">
-                                                <h6>Telephone</h6>
-                                            </label>
-                                            <div class="input-group">
-                                                <select name="countryCode" id="partner_reccountryCode"
-                                                    class="form-control billinginput_box" readonly>
-                                                    <option value="{{ Auth::user()->code }}" selected>
-                                                        {{ Auth::user()->country }} (+{{ Auth::user()->code }})
-                                                    </option>
 
-                                                    @if (count($data['availablecountry']))
-                                                        @foreach ($data['availablecountry'] as $country)
-                                                            <option data-countryCode="{{ $country->code }}"
-                                                                value="{{ $country->callingCode }}">
-                                                                {{ $country->name }}(+{{ $country->callingCode }})
-                                                            </option>
-                                                        @endforeach
-
-                                                    @endif
-
-
-                                                </select>
-                                                <input type="number" min="0" step="1" name="phone"
-                                                    id="partner_phone" placeholder="Telephone" class="form-control">
+                                            <div class="compulsory_data disp-0">
                                             </div>
-                                        </div>
+                                            <div class="mandatory_data disp-0">
+                                            </div>
+                                            <div class="payoutAgent_data disp-0">
+
+                                            </div>
+                                            <div class="information_data disp-0"></div>
+
+                                            <br>
+                                           <h4>Other Information</h4>
+                                        <hr>
+
 
                                         <div class="form-group"> <label for="orgpayservice">
                                                 <h6>Purpose of Transfer</h6>
@@ -743,6 +707,10 @@
                     runCommission();
                 });
 
+                $("#partner_orgpayamount").on("keyup", function() {
+                    runPartnerCommission();
+                });
+
 
                 if (window.ApplePaySession) {
                     var merchantIdentifier = 'simple.moneris.paysprint.exbc.ca';
@@ -758,6 +726,14 @@
 
             $('#orgpayservice').change(function() {
                 if ($('#orgpayservice').val() == "Others") {
+                    $('.others').removeClass('disp-0');
+                } else {
+                    $('.others').addClass('disp-0');
+                }
+            });
+
+            $('#partner_orgpayservice').change(function() {
+                if ($('#partner_orgpayservice').val() == "Others") {
                     $('.others').removeClass('disp-0');
                 } else {
                     $('.others').addClass('disp-0');
@@ -935,6 +911,66 @@
                     });
 
                 }
+                else if('sendviapartner'){
+                    route = "{{ URL('/api/v1/sendmoneytoanonymous') }}";
+
+                    Pace.restart();
+                    Pace.track(function() {
+                        setHeaders();
+                        jQuery.ajax({
+                            url: route,
+                            method: 'post',
+                            data: formData,
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            dataType: 'JSON',
+                            beforeSend: function() {
+                                $('.sendmoneyBtn').text('Please wait...');
+                            },
+                            success: function(result) {
+                                console.log(result);
+
+                                $('.sendmoneyBtn').text('Send Money');
+
+                                if (result.status == 200) {
+                                    swal("Success", result.message, "success");
+                                    setTimeout(function() {
+                                        location.href = "{{ route('payorganization') }}";
+                                    }, 2000);
+                                } else {
+                                    swal("Oops", result.message, "error");
+                                }
+
+                            },
+                            error: function(err) {
+
+                                // console.log(err);
+
+                                if (err.responseJSON.status == 400) {
+
+                                    $('.sendmoneyBtn').text('Send Money');
+                                    swal("Oops", err.responseJSON.message, "error");
+                                } else {
+
+
+                                    $('.sendmoneyBtn').text('Send Money');
+                                    swal("User already exist",
+                                        "You'll be redirected in 3sec to continue your transfer", "info"
+                                    );
+
+                                    setTimeout(function() {
+                                        location.href = err.responseJSON.link;
+                                    }, 2000);
+                                }
+
+
+
+                            }
+
+                        });
+                    });
+                }
 
             }
 
@@ -947,6 +983,10 @@
 
             $('#commission').click(function() {
                 runCommission();
+            });
+
+            $('#partner_commission').click(function() {
+                runPartnerCommission();
             });
 
 
@@ -1036,6 +1076,107 @@
                                     $("#totalcharge").val((+result.data + +result.collection));
 
                                     currencyConvert($('#orgpayamount').val());
+
+                                }
+
+
+                            }
+
+
+                        }
+
+                    });
+
+                });
+            }
+
+
+            function runPartnerCommission() {
+
+                $('.commissionInfo').html("");
+                var amount = $("#partner_orgpayamount").val();
+                // var amount = $("#conversionamount").val();
+
+
+                var route = "{{ URL('Ajax/getCommission') }}";
+                var thisdata = {
+                    check: $('#commission').prop("checked"),
+                    amount: amount,
+                    pay_method: $("#make_payment_method").val(),
+                    localcurrency: "{{ $data['currencyCode']->currencyCode }}",
+                    foreigncurrency: "{{ $data['currencyCode']->currencyCode }}",
+                    structure: "Send Money/Pay Invoice",
+                    structureMethod: "Wallet"
+                };
+
+
+                Pace.restart();
+                Pace.track(function() {
+
+                    setHeaders();
+
+                    jQuery.ajax({
+                        url: route,
+                        method: 'post',
+                        data: thisdata,
+                        dataType: 'JSON',
+                        beforeSend: function() {
+                            $('.commissionInfo').addClass('');
+                        },
+
+                        success: function(result) {
+
+
+                            if (result.message == "success") {
+
+                                $(".wallet-info").html(result.walletCheck);
+                                $('.withWallet').removeClass('disp-0');
+
+                                if (result.walletCheck != "") {
+                                    $(".sendmoneyBtn").attr("disabled", true);
+
+
+                                } else {
+                                    $(".sendmoneyBtn").attr("disabled", false);
+                                }
+
+
+                                if (result.state == "commission available") {
+
+                                    $('.commissionInfo').addClass('alert alert-success');
+                                    $('.commissionInfo').removeClass('alert alert-danger');
+
+                                    $('.commissionInfo').html(
+                                        "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
+                                        result.data.toFixed(2) + " will be deducted from your " + $(
+                                            '#make_payment_method').val() + ".</span></li></li></ul>");
+
+                                    $("#partner_amounttosend").val(result.data);
+                                    $("#partner_commissiondeduct").val(result.collection);
+
+                                    $("#partner_totalcharge").val($('#partner_conversionamount').val());
+
+                                    currencyConvert($('#partner_orgpayamount').val());
+
+                                } else {
+
+                                    // $('.commissionInfo').addClass('alert alert-danger');
+                                    // $('.commissionInfo').removeClass('alert alert-success');
+
+                                    $('.commissionInfo').addClass('alert alert-success');
+                                    $('.commissionInfo').removeClass('alert alert-danger');
+
+                                    $('.commissionInfo').html(
+                                        "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
+                                        (+result.data + +result.collection).toFixed(2) +
+                                        " will be deducted from your " + $('#make_payment_method')
+                                        .val() + ".</span></li></li></ul>");
+
+                                    $("#partner_amounttosend").val(result.data);
+                                    $("#partner_commissiondeduct").val(result.collection);
+                                    $("#partner_totalcharge").val((+result.data + +result.collection));
+
+                                    currencyConvert($('#partner_orgpayamount').val());
 
                                 }
 
@@ -1389,11 +1530,135 @@
                     if (result.status === 200) {
                         let data = filterPaymentPolicy(country, result.data);
 
-                        console.log(data);
+                        let compulsoryInput = $('.compulsory_data');
+                        let mandatoryInput = $('.mandatory_data');
+                        let informationInput = $('.information_data');
+                        let payoutAgentInput = $('.payoutAgent_data');
+                        let payoutAgentSelect = $('#payout_record');
+
+                        compulsoryInput.addClass('disp-0');
+                        mandatoryInput.addClass('disp-0');
+                        informationInput.addClass('disp-0');
+                        payoutAgentInput.addClass('disp-0');
+
+
+                        informationInput.html('');
+                        compulsoryInput.html('');
+                        mandatoryInput.html('');
+                        payoutAgentInput.html('');
+                        payoutAgentSelect.html('');
 
                         if (data.length > 0){
                             $('.nonpaymentpolicySupport').addClass('disp-0');
                             $('.paymentpolicySupport').removeClass('disp-0');
+
+
+                            if(data[0].compulsory_data.length > 0){
+                                compulsoryInput.removeClass('disp-0');
+
+                                compulsoryInput.html(`<br><h4>Compulsory Information - (Sender)</h4><hr>`);
+
+                                for (let i = 0; i < data[0].compulsory_data.length; i++) {
+                                    const element = data[0].compulsory_data[i];
+
+                                    compulsoryInput.append(`
+
+                                        <div class="form-group"> <label for="compulsory_${element+'_'+i}">
+                                                <h6><span class="text-danger">* </span>${element.toUpperCase()}</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" name="compulsory_${element}" id="compulsory_${element+'_'+i}"
+                                                     class="form-control" required>
+                                            </div>
+                                        </div>
+                                    `);
+
+                                }
+
+
+                            }
+
+                            if(data[0].mandatory_data.length > 0){
+                                mandatoryInput.removeClass('disp-0');
+
+                                mandatoryInput.html(`<br><h4>Mandatory Information - (Receiver)</h4><hr>`);
+
+                                for (let i = 0; i < data[0].mandatory_data.length; i++) {
+                                    const value = data[0].mandatory_data[i];
+
+                                    mandatoryInput.append(`
+
+                                        <div class="form-group"> <label for="mandatory_${value+'_'+i}">
+                                                <h6><span class="text-danger">* </span>${value.toUpperCase()}</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" name="mandatory_${value}" id="mandatory_${value+'_'+i}"
+                                                    class="form-control" required>
+                                            </div>
+                                        </div>
+                                    `);
+
+                                }
+                            }
+
+                            if(data[0].payoutAgent !== undefined){
+
+
+                                if(data[0].payoutAgent.length > 0){
+                                    let options = [];
+                                payoutAgentInput.removeClass('disp-0');
+
+                                $.each(data[0].payoutAgent, function(v, k) {
+                                    options.push(`<option value="${k}">${k}</option>`);
+                                });
+
+                                payoutAgentInput.html(`<br><h4>Payout Information</h4><hr><div class="form-group"> <label for="payout_agent">
+                                                <h6><span class="text-danger">* </span>Select Payout</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <select class="form-control" name="payout" id="payout_record" required>
+                                                    ${options}
+                                                </select>
+                                            </div>
+                                        </div>`);
+
+
+                            }
+
+                            }
+
+
+
+                            informationInput.removeClass('disp-0');
+                            informationInput.html(`
+                                <div class="alert alert-info">
+                                    <table class="table table-responsive table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td>Max. Amount</td>
+                                            <td><strong>${data[0].currency+' '+data[0].max_amount.toFixed(2)}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Notification</td>
+                                            <td><strong>${data[0].notification !== undefined ? data[0].notification : '-'}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Payment Type</td>
+                                            <td><strong>${data[0].payment_type !== undefined ? data[0].payment_type : '-'}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Remark</td>
+                                            <td class="text-danger">${data[0].remarks}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                </div>
+                            `);
+
+
+
+
                         }
                         else{
                             $('.nonpaymentpolicySupport').removeClass('disp-0');
@@ -1409,7 +1674,7 @@
                                                 </div>
                                                 <div class="col-md-12">
                                                     <p>
-                                                        We are currently not available in ${country}
+                                                        This feature is currently not available in ${country}
                                                     </p>
                                                 </div>
                                             </div>

@@ -1065,6 +1065,15 @@ class GooglePaymentController extends Controller
 
                 if (isset($req->paymentMode) && $req->paymentMode === "Partner") {
 
+
+                    $data = [];
+                $message = 'This feature is currently under maintenance. Please check back on Monday, 05/11/2022 09:00AM GMT';
+                $status = 400;
+
+                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                return $this->returnJSON($resData, $status);
+
                     $validator = Validator::make($req->all(), [
                             'fname' => 'required',
                             'lname' => 'required',
