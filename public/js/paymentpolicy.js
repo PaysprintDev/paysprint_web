@@ -1,4 +1,4 @@
-const paymentcountry = [
+[
     {
         "country": "Nigeria",
         "currency": "NGN",
@@ -45,6 +45,5 @@ const paymentcountry = [
         "compulsory_data": [],
         "remarks": " Wallet deductions of 1.5% could be applied in the beneficiary wallet when cash out is made in destination country. Mobile number must match the network operator otherwise the transaction will be cancelled."
 
-    },
-
-];
+    }
+]

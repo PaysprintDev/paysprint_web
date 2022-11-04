@@ -452,18 +452,258 @@
                                     </div>
 
                                     <div class="paywithpatners disp-0">
-                                        <div class="alert alert-info">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <h4>
-                                                        COMING SOON...
-                                                    </h4>
+                                        <h4>Receiver's Information</h4>
+                                        <hr>
+
+                                        <div class="form-group"> <label for="orgpayservice">
+                                                <h6>Country</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <select id="partner_country" name="country" class="form-control"
+                                                    readonly>
+                                                    <option value="{{ Auth::user()->country }}" selected>
+                                                        {{ Auth::user()->country }}</option>
+
+                                                    @if (count($data['availablecountry']))
+                                                        @foreach ($data['availablecountry'] as $country)
+                                                            <option data-countryCode="{{ $country->code }}"
+                                                                value="{{ $country->name }}">
+                                                                {{ $country->name }}</option>
+                                                        @endforeach
+
+                                                    @endif
+                                                </select>
+
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="paymentpolicySupport disp-0">
+
+                                            <div class="form-group"> <label for="fname">
+                                                <h6>First Name</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" name="fname" id="partner_fname"
+                                                    placeholder="First Name" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"> <label for="lname">
+                                                <h6>Last Name</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" name="lname" id="partner_lname"
+                                                    placeholder="Last Name" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"> <label for="email">
+                                                <h6>Email Address</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="email" name="email" id="partner_email"
+                                                    placeholder="Email Address" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group"> <label for="phone">
+                                                <h6>Telephone</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <select name="countryCode" id="partner_reccountryCode"
+                                                    class="form-control billinginput_box" readonly>
+                                                    <option value="{{ Auth::user()->code }}" selected>
+                                                        {{ Auth::user()->country }} (+{{ Auth::user()->code }})
+                                                    </option>
+
+                                                    @if (count($data['availablecountry']))
+                                                        @foreach ($data['availablecountry'] as $country)
+                                                            <option data-countryCode="{{ $country->code }}"
+                                                                value="{{ $country->callingCode }}">
+                                                                {{ $country->name }}(+{{ $country->callingCode }})
+                                                            </option>
+                                                        @endforeach
+
+                                                    @endif
+
+
+                                                </select>
+                                                <input type="number" min="0" step="1" name="phone"
+                                                    id="partner_phone" placeholder="Telephone" class="form-control">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group"> <label for="orgpayservice">
+                                                <h6>Purpose of Transfer</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <select name="service" id="partner_orgpayservice"
+                                                    class="form-control" required>
+                                                    <option value="Offering">Offering</option>
+                                                    <option value="Tithe">Tithe</option>
+                                                    <option value="Seed">Seed</option>
+                                                    <option value="Contribution">Contribution</option>
+                                                    <option value="Others">Others</option>
+                                                </select>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group others disp-0"> <label for="orgpaypurpose">
+                                                <h6>Specify Purpose</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" name="purpose" id="partner_orgpaypurpose"
+                                                    placeholder="Specify Purpose" class="form-control">
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group"> <label for="currency">
+                                                        <h6>Currency</h6>
+                                                    </label>
+                                                    <input type="hidden" name="localcurrency"
+                                                        value="{{ $data['currencyCode']->currencyCode }}">
+                                                    <div class="input-group">
+                                                        <select name="currency" id="partner_currency"
+                                                            class="form-control" readonly>
+                                                            <option value="{{ $data['currencyCode']->currencyCode }}"
+                                                                selected>{{ $data['currencyCode']->currencyCode }}
+                                                            </option>
+                                                        </select>
+
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-12">
-                                                    <p>This feature is coming soon...</p>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="form-group"> <label for="orgpayamount">
+                                                        <h6>Amount to Send</h6>
+                                                    </label>
+                                                    <div class="input-group"> <input type="number" name="amount"
+                                                            id="partner_orgpayamount" placeholder="50.00"
+                                                            class="form-control" maxlength="16" required>
+                                                        <div class="input-group-append"> <span
+                                                                class="input-group-text text-muted"> <i
+                                                                    class="fas fa-money-check mx-1"></i> <i
+                                                                    class="fab fa-cc-mastercard mx-1"></i> <i
+                                                                    class="fab fa-cc-amex mx-1"></i> </span> </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+
+
+                                        <div class="form-group disp-0">
+                                            <div class="input-group">
+                                                <p style="color: red; font-weight: bold;"><input type="checkbox"
+                                                        name="commission" id="partner_commission"> Transfer include
+                                                    commission
+                                                </p>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group disp-0"> <label for="netwmount">
+                                                <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate
+                                                            today according to currencylayer.com</b></small></h6>
+                                                <p style="font-weight: bold;">
+                                                    {{ $data['currencyCode']->currencyCode }} <=> USD
+                                                </p>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" name="conversionamount" class="form-control"
+                                                    id="partner_conversionamount" value="" placeholder="0.00"
+                                                    readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group"> <label for="netwmount">
+                                                <h6>Net Amount <br><small class="text-success"><b>Total amount that
+                                                            would
+                                                            be received</b></small></h6>
+
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" name="amounttosend" class="form-control"
+                                                    id="partner_amounttosend" value="" placeholder="0.00"
+                                                    readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group"> <label for="netwmount">
+                                                <h6>Fee <small class="text-success"><b>(FREE)</b></small></h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" name="commissiondeduct" class="form-control"
+                                                    id="partner_commissiondeduct" value="" placeholder="0.00"
+                                                    readonly>
+
+                                                <input type="hidden" name="totalcharge" class="form-control"
+                                                    id="partner_totalcharge" value="" placeholder="0.00"
+                                                    readonly>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group"> <label for="transaction_pin">
+                                                <h6>Transaction Pin</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <div class="input-group-append"> <span
+                                                        class="input-group-text text-muted">
+                                                        <i class="fas fa-lock"></i> </span> </div> <input
+                                                    type="password" name="transaction_pin"
+                                                    id="partner_transaction_pin" class="form-control" maxlength="4"
+                                                    required>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group disp-0">
+                                            <span class="text-success">Please note that International transfer are sent
+                                                in
+                                                USD conversion</span>
+                                        </div>
+
+                                        <hr>
+
+                                        <div class="form-group">
+                                            <strong><span class="text-danger wallet-info"></span></strong>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="commissionInfo"></div>
+                                        </div>
+
+                                        <div class="card-footer">
+
+
+
+                                            <div class="row">
+                                                <div class="col-md-12 withCardGoogle disp-0">
+                                                    <center>
+                                                        <div id="container"></div>
+                                                    </center>
+                                                </div>
+
+                                                <div class="col-md-12 withWallet">
+                                                    <button type="button" onclick="handShake('sendviapartner')"
+                                                        class="subscribe btn btn-primary btn-block shadow-sm sendmoneyBtn">
+                                                        Send Money </button>
+                                                </div>
+
+                                                {{-- <div class="col-md-6">
+                                                <button type="button" onclick="beginApplePay()" class="subscribe btn btn-primary btn-block shadow-sm disp-0"> Apple Pay </button>
+                                            </div> --}}
+                                            </div>
+
+
+                                        </div>
+
+                                        </div>
+                                        <div class="nonpaymentpolicySupport disp-0"></div>
+
+
                                     </div>
 
 
@@ -533,9 +773,18 @@
                 } else {
                     $('.paywithpaysprint').addClass('disp-0');
                     $('.paywithpatners').removeClass('disp-0');
+
+                    // Load Payment Policy on change...
+                    let country = $('#partner_country').val();
+
+                    getPaymentPolicy(country);
                 }
 
 
+            });
+
+            $('#partner_country').change(function() {
+                getPaymentPolicy($('#partner_country').val());
             });
 
 
@@ -552,6 +801,7 @@
 
 
             });
+
 
 
             $('#make_payment_method').change(function() {
@@ -577,7 +827,7 @@
             const fetchMyFXWallet = async () => {
                 try {
 
-                $('#paymentFxWallet').html('');
+                    $('#paymentFxWallet').html('');
 
 
                     const headers = {
@@ -687,6 +937,8 @@
                 }
 
             }
+
+
 
 
 
@@ -1118,6 +1370,72 @@
             }
 
 
+
+            const getPaymentPolicy = async (country) => {
+                try {
+
+                    const headers = {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    }
+
+                    const config = {
+                        method: 'get',
+                        url: "{{ asset('js/paymentpolicy.js') }}",
+                        headers
+                    }
+
+                    const result = await axios(config);
+
+                    if (result.status === 200) {
+                        let data = filterPaymentPolicy(country, result.data);
+
+                        console.log(data);
+
+                        if (data.length > 0){
+                            $('.nonpaymentpolicySupport').addClass('disp-0');
+                            $('.paymentpolicySupport').removeClass('disp-0');
+                        }
+                        else{
+                            $('.nonpaymentpolicySupport').removeClass('disp-0');
+                            $('.paymentpolicySupport').addClass('disp-0');
+
+                            $('.nonpaymentpolicySupport').html(`
+                            <div class="alert alert-info">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h4>
+                                                       Coming Soon...
+                                                    </h4>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <p>
+                                                        We are currently not available in ${country}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                            `);
+                        }
+
+                    }
+
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+
+            const filterPaymentPolicy = (nameKey, paymentcountry) => {
+                    let response = [];
+
+                paymentcountry.find((element) => {
+                    if(element.country === nameKey) {
+                        response.push(element);
+                    }
+                });
+
+
+                return response;
+            }
 
 
 
