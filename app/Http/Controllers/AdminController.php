@@ -12610,6 +12610,7 @@ class AdminController extends Controller
 
     public function crossBorderBeneficiaryDetail(Request $req, $id)
     {
+        dd($req->all());
 
         if ($req->session()->has('username') == true) {
             // dd(Session::all());
@@ -12658,7 +12659,6 @@ class AdminController extends Controller
                 'allthecountries' => $this->getAllCountries(),
                 'beneficiary' => $this->getThisBeneficiary($id)
             );
-
 
 
             return view('admin.crossborderbeneficiarydetail')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);

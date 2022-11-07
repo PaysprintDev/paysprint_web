@@ -247,11 +247,13 @@ class HomeController extends Controller
                 'continent' => $this->timezone[0],
                 'availablecountry' => $allcountry,
                 'country' => $country,
+                'totaltransactions' => $this->totalTransactions($country),
+                'code'=> $this->currencyCode($country)
 
             ];
         }
 
-        // dd($data);
+        // dd($data['totaltransactions']);
 
 
 
@@ -268,6 +270,26 @@ class HomeController extends Controller
 
 
         return view('main.displaycountry', compact('posts'));
+    }
+
+    public function totalTransactions($country)
+    {
+        $addedAmount = Statement::where('country', $country)->where('report_status', 'Added to wallet')->sum('credit');
+        $receivedAmount = Statement::where('country', $country)->where('report_status', 'Money received')->sum('credit');
+        $debitedAmount = Statement::where('country', $country)->where('report_status', 'Withdraw from wallet')->sum('debit');
+        $monthlyAmount = Statement::where('country', $country)->where('report_status', 'Monthly fee')->sum('debit');
+        $sendInvoice = Statement::where('country', $country)->where('action', 'Invoice')->sum('credit');
+        $withdrawAmount = Statement::where('country', $country)->where('report_status', 'Withdraw from wallet')->sum('debit');
+         $credits = $addedAmount + $receivedAmount + $sendInvoice + (- $debitedAmount - $monthlyAmount - $withdrawAmount);
+         return $credits;
+
+    }
+
+    public function currencyCode($country)
+    {
+       $data= AllCountries::where('name',$country)->first();
+        $code=$data->currencyCode;
+        return $code;
     }
 
     public function estores()

@@ -54,5 +54,9 @@ return [
         'baseurl' => 'https://idu-test.datazoo.com/api/v2/verify',
         'token' => env('DATAZOO_TOKEN'),
     ],
+     'vetofx' =>[
+        'baseurl' => 'https://api-v3-sandbox.vertofx.com',
+        'token' => env('VETOFX_TOKEN'),
+    ],
 
 ];
