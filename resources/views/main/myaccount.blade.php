@@ -532,20 +532,12 @@
 
                                     @if (Auth::user()->approval == 2 && Auth::user()->accountLevel == 3)
 
-                                    @if (isset($data['specialInfo']))
-                                    <div class="col-md-6 mb-3">
-                                        <a type="button" href="javascript:void()" class="btn btn-secondary btn-block"
-                                            onclick="restriction('specialinfo', '{{ Auth::user()->name }}')">Withdraw
-                                            Money <i class="fa fa-credit-card"></i></a>
-
-                                    </div>
-                                    @else
-                                    <div class="col-md-6 mb-3">
+                                     <div class="col-md-6 mb-3">
                                         <a type="button" href="{{ route('Choose Withdraw') }}"
                                             class="btn btn-secondary btn-block">Withdraw Money <i
                                                 class="fa fa-credit-card"></i></a>
                                     </div>
-                                    @endif
+
                                     @else
                                     <div class="col-md-6 mb-3">
                                         <a type="button" href="javascript:void()" class="btn btn-secondary btn-block"

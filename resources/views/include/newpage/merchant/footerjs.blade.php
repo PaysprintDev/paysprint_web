@@ -32,14 +32,14 @@
 
   $('#amount').keyup(function (){
     $('.currencyResult').addClass('disp-0');
-   
+
     $('.currencyShow');
   });
 
 
-  function convertFee() {
-    
-    
+  function convertFee(method = null) {
+
+
     const amount= $('#amount').val();
    const sending= $('#sendingcountry').val();
    // alert(sending)
@@ -52,53 +52,53 @@
      $('#shift').text('Loading...');
 
      $.ajax({
-       
+
        url: "/api/v1/conversionrate/"+ sending + '/' + receiving,
        method:'GET' ,
-     
+
        success: function (rsp){
         $('.currencyResult').removeClass('disp-0');
-        
+
 
          const data = rsp;
          const total = data * amount;
          const convertrate = 1 / data
         $('#result').text(total);
-       
+
         $('#round').text(data);
 
         var sender = 1 +' ' + sending + ' '+'=' +''+ parseFloat(data).toFixed(4)+ ' '+ receiving;
-        
+
         $('#rate').text(sender);
 
 
         var exchange = 1 + ' ' + receiving + '=' + convertrate.toFixed(4)+ ' ' + sending
-       
+
         $('#local').text(exchange)
         var price = amount + ' ' +  sending+ ''+'=' +''+total.toFixed(4) + ' ' + receiving;
         $('#totalprice').text(price);
-       
+
         $('#shift').text('Convert');
-      
+
 
        }
      });
-   
+
  }
 
  $('#paying').keyup(function (){
-    
+
     $('.currencyDisplay').addClass('disp-0');
     $('.currencyShow');
   });
 
-  function rateFee() {
-    
-   
+  function rateFee(method = null) {
+
+
     const pay= $('#paying').val();
     //  alert(pay)
    const local= $('#localcountry').val();
-   
+
    const foreign= $('#foreigncountry').val();
 
      const data = {
@@ -107,20 +107,20 @@
      $('#shift2').text('Loading...');
 
      $.ajax({
-       
-       url: "/api/v1/conversionrate/"+ local + "/" + foreign,
+
+       url: "/api/v1/conversionrate/"+ local + "/" + foreign +'?method='+method,
        method:'GET' ,
-     
+
        success: function (rsp){
 
         $('.currencyDisplay').removeClass('disp-0');
-       
+
          const total = rsp;
-         
+
          const total_divide = total * pay;
 
-         
-       
+
+
          const payer = 1 / total;
         //  alert(payer)
         // $('#result').text(total);
@@ -129,31 +129,31 @@
         var sender = 1 + ' '+ local + ''+'=' +''+ parseFloat(total).toFixed(4) + foreign;
         $('#rates').text(sender);
 
-        var exchange = 1 + ' ' + foreign + '' + '=' +payer.toFixed(4) + ' ' + local 
+        var exchange = 1 + ' ' + foreign + '' + '=' +payer.toFixed(4) + ' ' + local
         $('#locals').text(exchange)
-        
+
         var pricetotal = pay +' '+local+ '' + '=' + '' +total_divide.toFixed(4) + ' ' + foreign;
         $('#totalpricerate').text(pricetotal);
 
-        
+
         $('#shift2').text('Convert');
        }
      });
-   
+
  }
 
   $('#receive_money').click(function(){
       $('#receive_money').show();
       $('#send_money').hide();
   })
-  
- 
- 
+
+
+
 
 
 
   </script>
-  
+
 </body>
 
 

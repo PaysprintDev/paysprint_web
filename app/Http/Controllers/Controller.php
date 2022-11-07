@@ -22,7 +22,7 @@ use App\Classes\Mobile_Detect;
 use App\User as User;
 use App\Traits\PaymentGateway;
 use App\Traits\OneSignal;
-
+use GuzzleHttp\Psr7\Request;
 
 class Controller extends BaseController
 {
@@ -280,6 +280,8 @@ class Controller extends BaseController
     public function getConversionRate($localcountry, $foreign, $route = null)
     {
 
+        $request = Request();
+
 
         // Get Markup
         $markuppercent = $this->markupPercentage();
@@ -315,6 +317,7 @@ class Controller extends BaseController
 
         if ($result->success == true) {
 
+
             if ($currencyA !== 'USDUSD') {
                 $convRateA = $result->quotes->$currencyA * $markValue;
             } else {
@@ -330,13 +333,54 @@ class Controller extends BaseController
 
 
 
-            if ($currencyA === $currencyB) {
-                $actualRate = $convRateA / $convRateB;
-            } elseif ($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD') {
-                $actualRate = ($convRateA / $convRateB) * $markValue;
+            if ($request->method === 'selling') {
+
+
+                if ($currencyA === $currencyB) {
+                    $actualRate = $convRateA / $convRateB;
+                } elseif ($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD') {
+                    $actualRate = ($convRateA / $convRateB) * $markValue;
+                } else {
+                    $actualRate = $convRateA / $convRateB;
+                }
+            } elseif ($request->method === 'buying') {
+
+                if ($currencyA !== 'USDUSD') {
+                $convRateA = ($result->quotes->$currencyA * 0.95) * $markValue;
             } else {
-                $actualRate = $convRateA / $convRateB;
+                $convRateA = 1;
             }
+
+
+            if ($currencyB !== 'USDUSD') {
+                $convRateB = ($result->quotes->$currencyB * 0.95) * $markValue;
+            } else {
+                $convRateB = 1;
+            }
+
+                if ($currencyA === $currencyB) {
+                    $actualRate = $convRateA / $convRateB;
+                } elseif ($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD') {
+                    $actualRate = ($convRateA / $convRateB) * $markValue;
+                } else {
+                    $actualRate = $convRateA / $convRateB;
+                }
+            } else {
+
+
+
+                if ($currencyA === $currencyB) {
+                    $actualRate = $convRateA / $convRateB;
+                } elseif ($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD') {
+                    $actualRate = ($convRateA / $convRateB) * $markValue;
+                } else {
+                    $actualRate = $convRateA / $convRateB;
+                }
+            }
+
+
+
+
 
 
 
@@ -670,11 +714,9 @@ class Controller extends BaseController
             Notifications::insert(['ref_code' => $ref_code, 'activity' => $activity, 'notify' => 0, 'platform' => $platform, 'country' => $thisuser->country, 'period' => date('Y-m-d')]);
 
 
-            if($playerId !== null) {
+            if ($playerId !== null) {
                 $this->notifyOneUser($playerId, $content, $heading);
             }
-
-
         } catch (\Throwable $th) {
 
             // Log::error('Error: '.$th->getMessage());

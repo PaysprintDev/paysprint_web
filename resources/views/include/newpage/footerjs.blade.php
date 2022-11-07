@@ -225,7 +225,7 @@
   });
 
 
-  function convertFee() {
+  function convertFee(method = null) {
 
 
     const amount = $('#amount').val();
@@ -243,11 +243,12 @@
 
     $.ajax({
 
-      url: "/api/v1/conversionrate/" + sending + '/' + receiving,
+      url: "/api/v1/conversionrate/" + sending + '/' + receiving +'?method='+method,
       method: 'GET',
 
       success: function(rsp) {
         $('.currencyResult').removeClass('disp-0');
+
 
         const data = rsp;
         const total = data * amount;
@@ -318,7 +319,7 @@
     $('.currencyShow');
   });
 
-  function rateFee() {
+  function rateFee(method = null) {
     // alert(1234)
 
 
@@ -337,7 +338,7 @@
 
     $.ajax({
 
-      url: "/api/v1/conversionrate/" + local + "/" + foreign,
+      url: "/api/v1/conversionrate/" + local + "/" + foreign + '?method='+method,
       method: 'GET',
 
       success: function(rsp) {

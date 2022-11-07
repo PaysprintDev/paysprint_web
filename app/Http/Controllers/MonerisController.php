@@ -5684,7 +5684,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                             $minWithdrawalBal = $this->minimumAmountToWithdrawal($subminType, $thisuser->country);
 
-                            $specialInfo = SpecialInformation::where('country', $thisuser->country)->first();
 
                             // Check amount in wallet
                             if ($req->amount > ($thisuser->wallet_balance - $minBal)) {
@@ -5724,25 +5723,12 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                 $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                             } else {
 
-                                if (isset($specialInfo) && $thisuser->accountType == "Individual") {
-                                    $messageOut = $specialInfo->information;
-
-                                    $data = [];
-                                    $message = $messageOut;
-                                    $status = 400;
-
-                                    // Log::info('Oops!, Though this is a test, but '.$thisuser->name.', '.$message);
-
-                                    $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ', ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                                } else {
 
                                     if ($req->card_type == "Prepaid Card") {
                                         $cardType = "EXBC Prepaid Card";
                                     } else {
                                         $cardType = $req->card_type;
                                     }
-
-
 
 
                                     $checkTransaction = TransactionCost::where('method', $cardType)->where('country', $thisuser->country)->first();
@@ -6442,7 +6428,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                         $this->slack('Oops!, Though this is a test, but ' . $thisuser->name . ', ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                                     }
-                                }
+
                             }
                         }
                     } else {
@@ -6514,10 +6500,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                 $minWithdrawalBal = $this->minimumAmountToWithdrawal($subminType, $thisuser->country);
 
-                                $specialInfo = SpecialInformation::where('country', $thisuser->country)->first();
-
-
-
 
                                 // Check amount in wallet
                                 if ($req->amount > ($thisuser->wallet_balance - $withdrawalCharge - $minBal)) {
@@ -6555,20 +6537,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                     $this->slack('Oops!, ' . $thisuser->name . ' has ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                                 } else {
-
-
-                                    if (isset($specialInfo) && $thisuser->accountType == "Individual") {
-
-                                        $messageOut = $specialInfo->information;
-
-                                        $data = [];
-                                        $message = $messageOut;
-                                        $status = 400;
-
-                                        // Log::info('Oops!, '.$thisuser->name.', '.$message);
-
-                                        $this->slack('Oops!, ' . $thisuser->name . ', ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                                    } else {
 
 
 
@@ -7459,7 +7427,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                 $this->slack('Oops!, ' . $thisuser->name . ', ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                                             }
                                         }
-                                    }
+
                                 }
                             }
                         } else {
@@ -7607,7 +7575,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     //softdelete for transaction
     public function deleteTransaction(Request $req)
     {
-      
+
          $data = MonerisActivity::where('transaction_id', $req->transactionid)->delete();
 
         return back()->with("msg", "<div class='alert alert-success'>Transaction Deleted Successfully</div>");
@@ -7616,7 +7584,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     //retore deleted transactions
     public function restoreTransaction(Request $req)
     {
-      
+
          $data = MonerisActivity::withTrashed()->where('transaction_id',$req->transactionid)->restore();
 
         return back()->with("msg", "<div class='alert alert-success'>Transaction restored Successfully</div>");

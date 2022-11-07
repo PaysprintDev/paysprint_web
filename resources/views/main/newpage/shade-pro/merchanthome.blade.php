@@ -3363,7 +3363,7 @@
 
           <div class="widget item-absolute " id="element-139">
             <div class="contents shape  box figure " data-at="shape">
-              <img class="w-100" src=" {{ asset('images/PSM.jpg') }}" style="">
+              <img class="w-100" src=" {{ asset('images/Paysprintmerchant.jpg') }}" style="">
 
             </div>
           </div>
@@ -3587,7 +3587,7 @@
             </div>
           </div>
           <div class="">
-          <div class="widget item-absolute  " id="element-356">
+          <div class="widget item-absolute hidden-mobile " id="element-356">
             <div class="contents cropped item-block" data-at="image-cropp">
               <img class="item-content-box item-block image img-lazy" data-at="image" alt=""
                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mM89h8AApEBx2iaqpQAAAAASUVORK5CYII&#x3D;"
@@ -3610,7 +3610,7 @@
             </div>
           </div>
 
-          <div class="widget item-absolute  " id="element-358">
+          <div class="widget item-absolute  hidden-mobile" id="element-358">
             <div class="contents cropped item-block" data-at="image-cropp">
               <img class="item-content-box item-block image img-lazy" data-at="image" alt=""
                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mM89h8AApEBx2iaqpQAAAAASUVORK5CYII&#x3D;"
@@ -3633,7 +3633,7 @@
             </div>
           </div>
 
-          <div class="widget item-absolute  " id="element-355">
+          <div class="widget item-absolute hidden-mobile " id="element-355">
             <div class="contents cropped item-block" data-at="image-cropp">
               <img class="item-content-box item-block image img-lazy" data-at="image" alt=""
                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mM89h8AApEBx2iaqpQAAAAASUVORK5CYII&#x3D;"
@@ -3660,7 +3660,7 @@
       </div>
     </section>
 
-    <section class="section section-relative  " id="page-block-3cg5fcg36ot" data-at="section">
+    <section class="section section-relative  " id="page-block-5yg6cfwpzsk" data-at="section">
 
       {{-- <div class="section-holder-border item-block item-absolute" data-at="section-border"></div> --}}
       {{-- <div class="section-holder-overlay item-block item-absolute" data-at="section-overlay"></div> --}}
@@ -3751,11 +3751,11 @@
       </div>
     </section>
 
-    <section class="section section-relative " id="page-block-p0avpzvahxp" data-at="section">
+    <section class="section section-relative " id="page-block-p0avpzvahxp" data-at="section" >
 
       <div class="section-holder-border item-block item-absolute" data-at="section-border"></div>
       <div class="section-holder-overlay item-block item-absolute" data-at="section-overlay"></div>
-      <div class="section-block">
+      <div class="section-block" >
         <div class="section-inner section-fit section-relative">
           <div class="widget item-absolute headline  " id="element-216" data-at="headline">
             <div class="contents">

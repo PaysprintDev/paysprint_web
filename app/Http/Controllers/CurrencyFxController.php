@@ -878,6 +878,15 @@ class CurrencyFxController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
+
+        public function getFxWalletsFromController(Int $userid, String $escrowId)
+    {
+            $getmywallet = EscrowAccount::where('user_id', $userid)->where('escrow_id', $escrowId)->first();
+
+            return $getmywallet;
+
+    }
+
     // Create New Wallet
     public function createNewWallet(Request $req)
     {

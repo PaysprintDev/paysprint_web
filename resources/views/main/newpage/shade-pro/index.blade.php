@@ -508,7 +508,7 @@
     </div>
     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">bola</div>
     <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">..dgfhj.</div>
-</div>
+  </div>
 --}}
 
 {{-- End of tab box --}}
