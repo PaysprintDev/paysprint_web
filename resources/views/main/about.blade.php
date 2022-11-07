@@ -20,7 +20,9 @@
                     <div class="subtittle">
                         <h2>WHO WE ARE</h2>
                     </div>
-                    <p>PaySprint is the fastest and affordable way to send and receive money. Pay invoices and get paid anytime!</p>
+                    <p>PaySprint is 100% subscription-based digital wallet that enhances payment processing among individuals and merchants. The digital wallet offers seamless, end-to-end payments at minimum costs.<br>
+                    Our digital wallet enables individuals to send and receive money locally and across the border while merchants can receive payments from customers on any mobile device (for In-store sales) and on the business's website (for online sale) with no usage fees.
+                    </p>
                     <a href="{{ route('contact') }}" class="button_all">Contact Now</a>
                 </div>
                 <div class="col-md-5 our_skill_inner">
