@@ -73,8 +73,12 @@
 
                                 <tr>
                                     <td>Address:</td>
-                                    <td style="font-weight: bold;">{{ $data['beneficiary']->address }}</td>
+                                    <td style="font-weight: bold;">{{ $data['beneficiary']->beneficiary_address }}</td>
                                 </tr>
+                                {{-- <tr>
+                                    <td>Bank Address:</td>
+                                    <td style="font-weight: bold;">{{ $data['beneficiary']->address }}</td>
+                                </tr> --}}
 
 
                                 @else

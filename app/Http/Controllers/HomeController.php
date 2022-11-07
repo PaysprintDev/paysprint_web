@@ -146,6 +146,7 @@ use App\OrganizationPay as OrganizationPay;
 use App\TransactionCost as TransactionCost;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\MaintenanceRequest as MaintenanceRequest;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -248,12 +249,14 @@ class HomeController extends Controller
                 'availablecountry' => $allcountry,
                 'country' => $country,
                 'totaltransactions' => $this->totalTransactions($country),
-                'code'=> $this->currencyCode($country)
+                'code'=> $this->currencyCode($country),
+                'totalusers' => $this->noUsers($country),
+                'totaldays' => $this->totalDays(),
 
             ];
         }
 
-        // dd($data['totaltransactions']);
+        // dd($data['totaldays']);
 
 
 
@@ -281,8 +284,26 @@ class HomeController extends Controller
         $sendInvoice = Statement::where('country', $country)->where('action', 'Invoice')->sum('credit');
         $withdrawAmount = Statement::where('country', $country)->where('report_status', 'Withdraw from wallet')->sum('debit');
          $credits = $addedAmount + $receivedAmount + $sendInvoice + (- $debitedAmount - $monthlyAmount - $withdrawAmount);
-         return $credits;
+        //  $total=round($credits,2);
+         return number_format($credits,2);
 
+    }
+
+    public function noUsers($country)
+    {
+        $data=User::where('country',$country)->get();
+            return count($data);
+    }
+
+    public function totalDays()
+    {
+        $start=Carbon::today();
+        $now=Carbon::now()->format('Y-m-d');
+        $year=$start->startOfYear()->format('Y-m-d');
+        $end=$start->endOfYear()->format('Y-m-d');
+        $start_year=Carbon::createFromFormat('Y-m-d', $year);
+        $days=$start_year->diffInDays($now);
+        return $days;
     }
 
     public function currencyCode($country)

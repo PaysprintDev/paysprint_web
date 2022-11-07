@@ -167,6 +167,35 @@
                     </p>
 
 
+                    @if($data['country'] == 'Nigeria' || $data['country'] == 'Canada' || $data['country'] == 'India' ||
+                    $data['country'] == 'United States')
+                    <p class="gr-text-9 gr-text-color pr-md-7 font-weight-bold">
+                        <br>
+                        <hr>
+                    <h5 class="font-weight-bold">Our Impact</h5>
+                    <table class="table table-striped table-responsiveness">
+                        <thead>
+                            <tr>
+                                <th>Number of users</th>
+                                <th>Transaction Value</th>
+                                <th>Number of Days</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{$data['totalusers']}}</td>
+                                <td>{{$data['code']}} {{$data['totaltransactions']}}</td>
+                                <td>{{$data['totaldays']}} days</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </p>
+
+                    @endif
+
+
+
+
 
                 </div>
             </div>
@@ -175,7 +204,7 @@
 </div>
 <!-- Brand section -->
 
-<div class="container">
+{{-- <div class="container">
     <div class="row">
         <div class="col-md-12 mb-5 mt-3">
             <h3 class="text-center">
@@ -184,14 +213,15 @@
             </h3>
         </div>
     </div>
-</div>
+</div> --}}
 <!-- currency converter -->
 {{-- Box tab --}}
 @include('include.newpage.currencyconversion')
 
 {{-- End of tab box --}}
 
-<!-- end of currency converter -->
+<!-- end of currency converter --
+    >
 
 <!-- unique features -->
 <div class="content-section pt-13 pt-lg-12 pb-11 pb-lg-22 hover-tilt bg-default-6">
@@ -508,7 +538,7 @@
     </div>
     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">bola</div>
     <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">..dgfhj.</div>
-  </div>
+</div>
 --}}
 
 {{-- End of tab box --}}
