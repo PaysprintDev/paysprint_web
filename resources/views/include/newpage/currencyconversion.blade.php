@@ -144,7 +144,7 @@
           </div><br>
           <div class="row">
             <div class="col-md-2">
-              <button type="button" class="btn" style="background-color:#e8aa07;" id="shift" onClick='convertFee();'>Get Result</button>
+              <button type="button" class="btn" style="background-color:#e8aa07;" id="shift" onClick='convertFee("selling");'>Get Result</button>
             </div>
             <div class="col-md-10 ps-2 pt-3">
               <span id="rate" style="font-size:15px; font-weight:bolder; color:#000"></span> <br> <span id="local" style="font-size:15px; font-weight:bolder; color:#000"></span>
@@ -175,7 +175,7 @@
               <div class="col-md-4 mx-auto">
 
               </div>
-              
+
             </div> -->
           </div>
 
@@ -226,7 +226,7 @@
           </div><br>
           <div class="row">
             <div class="col-md-2">
-              <button type="button" class="btn" style="background-color:#e8aa07;" id="shift2" onClick='rateFee()'>Get Result</button>
+              <button type="button" class="btn" style="background-color:#e8aa07;" id="shift2" onClick='rateFee("buying")'>Get Result</button>
             </div>
             <div class="col-md-10 ps-2 pt-3">
               <span id="rates" style="font-size:15px; font-weight:bolder; color:#000;"></span> <br> <span id="locals" style="font-size:15px; font-weight:bolder; color:#000 ;"></span>
@@ -250,7 +250,7 @@
             <!-- <div class="row">
               <div class="col-md-4">
               </div>
-              
+
             </div> -->
           </div>
 
