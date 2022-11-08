@@ -72,7 +72,8 @@ class ShopController extends Controller
 
             $data = array(
                 'pages' => $shop . ' Shop',
-                'currencyCode' => $this->getCountryCode($thisuser->country),
+                'currencyCode' => $this->getCountryCode('Nigeria'),
+                // 'currencyCode' => $this->getCountryCode($thisuser->country),
                 'continent' => $timezone[0],
                 'name' => $thisuser->businessname,
                 'refCode' => $thisuser->ref_code,

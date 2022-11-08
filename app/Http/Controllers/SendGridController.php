@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Points;
+use App\StoreProducts;
 use App\PromoDate;
 use App\ClientInfo;
 use App\Walletcredit;
@@ -62,12 +63,12 @@ class SendGridController extends Controller
 
 
     //  refer and earn mail to customers
-    public function cronToCustomersOnCustomerStatement()
+    public function cromerStatementonToCustomersOnCust()
     {
 
         try {
 
-            $thisuser = User::take(3)->get();
+            $thisuser = User::take(50)->get();
             $promodate = PromoDate::first();
 
             if (count($thisuser) > 0) {
@@ -519,37 +520,8 @@ class SendGridController extends Controller
                     }
 
 
-
-
-
-                    // for ($i = 0; $i < count($user); $i++) {
-
-
-                    //     $receiver = $user[$i]['email'];
-
-
-                    //     $businesses['name'] = $user[$i]['name'];
-
-
-                    //     echo $receiver . "<hr>";
-                    //     // echo $businesses."<hr>";
-
-
-
-                    //     // $template_id = config('constants.sendgrid.publicize_merchant');
-
-                    //     // $response = $this->sendGridDynamicMail($receiver, $businesses, $template_id);
-
-                    // }
                 }
 
-
-
-
-
-
-                //  dd($response);
-                //  echo $response;
 
             }
         } catch (\Throwable $th) {
@@ -558,36 +530,7 @@ class SendGridController extends Controller
     }
 
 
-    public function userList(array $businesses, String $country)
-    {
-        $user = User::where('country', $country)->get();
-
-
-        for ($i = 0; $i < count($user); $i++) {
-
-
-            $receiver = $user[$i]['email'];
-
-
-            $businesses['name'] = $user[$i]['name'];
-
-
-
-
-            echo $receiver . ' ! ' . $user[$i]['country'] . "<hr>";
-
-            var_dump($businesses);
-
-            echo "<hr>";
-
-
-
-            // $template_id = config('constants.sendgrid.publicize_merchant');
-
-            // $response = $this->sendGridDynamicMail($receiver, $businesses, $template_id);
-
-        }
-    }
+    
 
     //marketplace claim your business with cron
     public function claimBusiness()
@@ -697,6 +640,74 @@ class SendGridController extends Controller
 
         } catch (\Throwable $th) {
             throw $th;
+        }
+    }
+
+
+    //   publicize product list to consumers
+    public function productList(){
+       try{
+        
+        $products = StoreProducts::get();
+        if (count($products) > 0) {
+            $businesses = ['businesses' => []];
+           
+            foreach ($products as $product) {
+                // Get each product...
+                $images = $product->image;
+                $details = strip_tags($product->description);
+              
+                $productName= $product->ProductName;
+                $industry = $product->category;
+                $user_id = $product->merchantId;
+              
+
+                $data = [
+                        
+                        "productName"  => $productName,
+                        "images" => $images,
+                        "industry" => $industry,
+                        "details" => $details,
+                        "url" =>  route('merchant business profile', $user_id),
+
+                ];
+                //   dd($data);
+                
+                $businesses['businesses'][] = $data;
+
+
+
+                    $this->userList($businesses);
+                }
+
+
+            }
+            
+
+        }catch(\Throwable $th) {
+        throw $th;
+       }
+    }
+    public function userList(array $businesses)
+    {
+        $user = User::take(3)->get();
+        // dd($user);
+
+
+        for ($i = 0; $i < count($user); $i++) {
+        
+            // $receiver = $user[$i]['email'];
+            // $receiver = $user[$i]['olasunkanmimunirat@gmail.com'];
+              $receiver = 'olasunkanmimunirat@gmail.com';
+            
+            $businesses['name'] = $user[$i]['name'];
+            // dd($businesses);
+
+            $template_id = config('constants.sendgrid.productlist');
+
+            $response = $this->sendGridDynamicMail($receiver, $businesses, $template_id);
+            // dd($response);
+
         }
     }
 }
