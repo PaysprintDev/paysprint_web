@@ -2539,7 +2539,7 @@ class MoexController extends Controller
 
 
             // CSV file name => date('d-m-Y') . '_report.xls';
-            $csv = date('d-m-Y') . '_report.xlsx';
+            $csv = date('d-m-Y') . '_report.xls';
 
             // File pointer in writable mode
             $file_pointer = fopen('../'.$csv, 'w');
