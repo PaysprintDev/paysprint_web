@@ -12,7 +12,7 @@ class CronToMerchant extends Command
      *
      * @var string
      */
-    protected $signature = 'crontomerchant:name';
+    protected $signature = 'crontomerchant:run';
 
     /**
      * The console command description.

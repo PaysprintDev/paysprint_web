@@ -2595,4 +2595,23 @@ class MoexController extends Controller
     }
 
 
+    public function moexPS($body)
+    {
+        try {
+
+            $data = $this->addTransactionToMoex($body);
+
+
+        } catch (\Throwable $th) {
+            $data = [
+                'error' => $th->getMessage()
+            ];
+        }
+
+
+            return $data;
+
+    }
+
+
 }

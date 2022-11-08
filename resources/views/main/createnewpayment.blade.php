@@ -487,7 +487,8 @@
                                             <div class="mandatory_data disp-0">
                                             </div>
                                             <div class="payoutAgent_data disp-0">
-
+                                            </div>
+                                            <div class="paymentType_data disp-0">
                                             </div>
                                             <div class="information_data disp-0"></div>
 
@@ -595,7 +596,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group"> <label for="netwmount">
-                                                <h6>Fee <small class="text-success"><b>(FREE)</b></small></h6>
+                                                <h6>Fee <small class="text-success"><b>(10% Payout Fee)</b></small></h6>
                                             </label>
                                             <div class="input-group">
                                                 <input type="text" name="commissiondeduct" class="form-control"
@@ -1146,13 +1147,17 @@
                                     $('.commissionInfo').addClass('alert alert-success');
                                     $('.commissionInfo').removeClass('alert alert-danger');
 
+                                    let commissionVal = Number(result.data) * 0.1;
+                                    let finalDeduct = Number(result.data) + commissionVal
+
                                     $('.commissionInfo').html(
                                         "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
-                                        result.data.toFixed(2) + " will be deducted from your " + $(
+                                        finalDeduct.toFixed(2) + " will be deducted from your " + $(
                                             '#make_payment_method').val() + ".</span></li></li></ul>");
 
+
                                     $("#partner_amounttosend").val(result.data);
-                                    $("#partner_commissiondeduct").val(result.collection);
+                                    $("#partner_commissiondeduct").val(commissionVal);
 
                                     $("#partner_totalcharge").val($('#partner_conversionamount').val());
 
@@ -1166,15 +1171,18 @@
                                     $('.commissionInfo').addClass('alert alert-success');
                                     $('.commissionInfo').removeClass('alert alert-danger');
 
+                                    let commissionVal = Number(result.data) * 0.1;
+                                    let finalDeduct = Number(result.data) + commissionVal
+
                                     $('.commissionInfo').html(
                                         "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
-                                        (+result.data + +result.collection).toFixed(2) +
+                                        finalDeduct.toFixed(2) +
                                         " will be deducted from your " + $('#make_payment_method')
                                         .val() + ".</span></li></li></ul>");
 
                                     $("#partner_amounttosend").val(result.data);
-                                    $("#partner_commissiondeduct").val(result.collection);
-                                    $("#partner_totalcharge").val((+result.data + +result.collection));
+                                    $("#partner_commissiondeduct").val(commissionVal);
+                                    $("#partner_totalcharge").val(finalDeduct);
 
                                     currencyConvert($('#partner_orgpayamount').val());
 
@@ -1532,12 +1540,14 @@
 
                         let compulsoryInput = $('.compulsory_data');
                         let mandatoryInput = $('.mandatory_data');
+                        let paymentTypeInput = $('.paymentType_data');
                         let informationInput = $('.information_data');
                         let payoutAgentInput = $('.payoutAgent_data');
                         let payoutAgentSelect = $('#payout_record');
 
                         compulsoryInput.addClass('disp-0');
                         mandatoryInput.addClass('disp-0');
+                        paymentTypeInput.addClass('disp-0');
                         informationInput.addClass('disp-0');
                         payoutAgentInput.addClass('disp-0');
 
@@ -1545,6 +1555,7 @@
                         informationInput.html('');
                         compulsoryInput.html('');
                         mandatoryInput.html('');
+                        paymentTypeInput.html('');
                         payoutAgentInput.html('');
                         payoutAgentSelect.html('');
 
@@ -1599,6 +1610,21 @@
                                     `);
 
                                 }
+                            }
+
+
+                            if(data[0].payment_type){
+                                paymentTypeInput.removeClass('disp-0');
+
+                                paymentTypeInput.html(`
+                                <br><h4>Payment Type</h4><hr>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <input type="text" name="payment_type" id="paymentType" value="${data[0].payment_type}"
+                                                    class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                    `);
                             }
 
                             if(data[0].payoutAgent !== undefined){
