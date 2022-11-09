@@ -2539,7 +2539,7 @@ class MoexController extends Controller
 
 
             // CSV file name => date('d-m-Y') . '_report.xls';
-            $csv = date('d-m-Y') . '_report.xlsx';
+            $csv = date('d-m-Y') . '_report.xls';
 
             // File pointer in writable mode
             $file_pointer = fopen('../'.$csv, 'w');
@@ -2592,6 +2592,25 @@ class MoexController extends Controller
 
     public function paymentConfirmation ()
     {
+    }
+
+
+    public function moexPS($body)
+    {
+        try {
+
+            $data = $this->addTransactionToMoex($body);
+
+
+        } catch (\Throwable $th) {
+            $data = [
+                'error' => $th->getMessage()
+            ];
+        }
+
+
+            return $data;
+
     }
 
 

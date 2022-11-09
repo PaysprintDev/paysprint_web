@@ -8,6 +8,7 @@
         "mandatory_data": [
             "surname",
             "fullname",
+            "emailAddress",
             "phoneNumber",
             "bankName",
             "accountNumber"
@@ -37,6 +38,7 @@
         "mandatory_data": [
             "surname",
             "fullname",
+            "emailAddress",
             "phoneNumber",
             "idDocument",
             "bankName",

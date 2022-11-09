@@ -121,6 +121,7 @@ Route::get('mailstatement', 'SendGridController@cronToCustomersOnCustomerStateme
 Route::get('rewardpoint', 'SendGridController@cronToCustomersOnRewardStatement');
 Route::get('mailtocustomer', 'SendGridController@cronToPublicizeMerchantToConsumer');
 Route::get('claimbusiness', 'SendGridController@claimBusiness');
+Route::get('productlist', 'SendGridController@productList');
 
 // country flag
 Route::get('countryflag', 'CountryFlagController@displayCountryFlag');
