@@ -27,6 +27,8 @@ Route::prefix('/v1')->group(function () {
 
     Route::post('/becomepayoutagent', ['uses' => 'PayoutAgentController@beAnAgent', 'as' => 'be an agent on paysprint']);
 
+    Route::post('/activatemerchantpaymentlink', ['uses' => 'PayoutAgentController@activateMerchantPaymentLink', 'as' => 'activate merchant payment link']);
+
     Route::get('latestmerchant',  ['uses' => 'MarketplaceController@newestMerchant'])->name('newest merchant');
     Route::get('specialpromo',  ['uses' => 'MarketplaceController@specialPromo'])->name('special promo');
     Route::get('findproduct',  ['uses' => 'MarketplaceController@findProduct'])->name('find product');

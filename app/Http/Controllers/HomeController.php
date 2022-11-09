@@ -369,7 +369,7 @@ class HomeController extends Controller
         $data = [
             'availablecountry' => $allcountry,
             'country' => $country,
-            'totaltransactions' => $this->totalTransactions($country),
+            // 'totaltransactions' => $this->totalTransactions($country),
             'code'=> $this->currencyCode($country),
             'totalusers' => $this->noUsers($country),
             'totaldays' => $this->totalDays(),
