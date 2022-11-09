@@ -25,102 +25,124 @@
         cursor: pointer;
     }
 
-     .tab-menu { 
-        margin-top:34px; 
+    .tab-menu {
+        margin-top: 34px;
     }
-   .tab-menu ul {
-    margin:0;
-    padding:0;
-    list-style:none;
-    display: -webkit-box; 
-    display: -webkit-flex; display: -ms-flexbox; 
-    display: flex;
-     }
-  .tab-menu ul li {
-     -ms-flex-preferred-size: 0;
-      flex-basis: 0;
-     -ms-flex-positive: 1;
-     flex-grow: 1;
-      max-width: 100%;
-    text-align:center;
-   }
-.tab-menu ul li a {
-    color: #fff; 
-    text-transform: uppercase; 
-    letter-spacing: 0.44px; 
-    
-    font-weight:bold; 
-    display:inline-block;
-    padding:18px 26px;
-    display:block; 
-    text-decoration:none;
-    transition:0.5s all;
-    background: #e8aa07; 
-    border: 2px solid #e8aa07;
-    border-bottom: 0;
-     }
-.tab-menu ul li a:hover {
- background:#e8aa07;
-color:#fff; 
-text-decoration:none; }
-.tab-menu ul li a.active {
-background:#f2f2f2;
-color:#000;
- text-decoration:none; 
-}
-.tab-box {
- display:none;
- }
 
-*/.tab-teaser {
-max-width:100%;
-width:100%; 
-margin:0 auto; 
+    .tab-menu ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+    }
 
- } 
- .tab-main-box { 
-background:##f2f2f2;
-padding: 10px 30px;
-border:2px solid #f8ca56;
-margin-top:-2px  */
-} 
-.hero-imgs{
- top:-15.456rem;
-}
+    .tab-menu ul li {
+        -ms-flex-preferred-size: 0;
+        flex-basis: 0;
+        -ms-flex-positive: 1;
+        flex-grow: 1;
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .tab-menu ul li a {
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 0.44px;
+
+        font-weight: bold;
+        display: inline-block;
+        padding: 18px 26px;
+        display: block;
+        text-decoration: none;
+        transition: 0.5s all;
+        background: #e8aa07;
+        border: 2px solid #e8aa07;
+        border-bottom: 0;
+    }
+
+    .tab-menu ul li a:hover {
+        background: #e8aa07;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .tab-menu ul li a.active {
+        background: #f2f2f2;
+        color: #000;
+        text-decoration: none;
+    }
+
+    .tab-box {
+        display: none;
+    }
+
+    */.tab-teaser {
+        max-width: 100%;
+        width: 100%;
+        margin: 0 auto;
+
+    }
+
+    .tab-main-box {
+        background: ##f2f2f2;
+        padding: 10px 30px;
+        border: 2px solid #f8ca56;
+        margin-top: -2px */
+    }
+
+    .hero-imgs {
+        top: -15.456rem;
+    }
 </style>
 
 <!-- Hero Area -->
 <div class="position-relative bg-default-2 bg-pattern pattern-2 pt-27 pt-lg-32 pb-15 pb-lg-27">
     <div class="container">
-        {{-- <p style="background: aquamarine;padding: 10px;border-radius: 10px;font-size: 20px;font-weight: 700;"><marquee behavior="" direction="">You are at the right website, Paypinn.com is same as Paysprint.ca!!!</marquee></p> --}}
+        {{-- <p style="background: aquamarine;padding: 10px;border-radius: 10px;font-size: 20px;font-weight: 700;">
+            <marquee behavior="" direction="">You are at the right website, Paypinn.com is same as Paysprint.ca!!!
+            </marquee>
+        </p> --}}
         <div class="row justify-content-center align-items-center">
             <div class="col-9 col-md-7 col-lg-5 offset-xl-1 align-self-sm-end order-lg-2">
-                <div class="hero-imgs position-relative" data-aos="fade-left" data-aos-duration="500" data-aos-once="true">
-                    <img class="w-100" src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg" alt="" style="border-radius: 100%;">
-                    <div class="gr-abs-tl gr-z-index-n1" data-aos="zoom-in" data-aos-delay="600" data-aos-duration="800" data-aos-once="true">
+                <div class="hero-imgs position-relative" data-aos="fade-left" data-aos-duration="500"
+                    data-aos-once="true">
+                    <img class="w-100"
+                        src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg"
+                        alt="" style="border-radius: 100%;">
+                    <div class="gr-abs-tl gr-z-index-n1" data-aos="zoom-in" data-aos-delay="600" data-aos-duration="800"
+                        data-aos-once="true">
                         <img src="{{ asset('newpage/image/l5/png/l5-dot-shape.png') }}" alt="">
                     </div>
                 </div>
             </div>
-            <div class="col-11 col-md-10 col-lg-7 col-xl-6 order-lg-1" data-aos="fade-right" data-aos-duration="500" data-aos-once="true">
+            <div class="col-11 col-md-10 col-lg-7 col-xl-6 order-lg-1" data-aos="fade-right" data-aos-duration="500"
+                data-aos-once="true">
                 <div class="hero-content mt-11 mt-lg-0">
                     <h4 class="pre-title gr-text-12 text-red text-uppercase mb-7" style="font-size: 22px;">Let’s lift
                         your business</h4>
-                    <h1 class="title gr-text-2 mb-8" style="font-size:60px">Save up to 90% on fees when you accept payments from Customers with PaySprint</h1>
-                    <p class="gr-text-8 mb-11 pr-md-12">Accept Payments on any mobile device (for In-Store Sales) and on Website (for Online Sales) with no transaction fees.</p>
+                    <h1 class="title gr-text-2 mb-8" style="font-size:60px">Save up to 90% on fees when you accept
+                        payments from Customers with PaySprint</h1>
+                    <p class="gr-text-8 mb-11 pr-md-12">Accept Payments on any mobile device (for In-Store Sales) and on
+                        Website (for Online Sales) with no transaction fees.</p>
 
 
 
                     <div class="hero-btn">
 
                         @guest
-                        <a href="{{ route('AdminLogin') }}" class="btn btn-warning with-icon gr-hover-y">Get Started<i class="icon icon-tail-right font-weight-bold"></i></a>
+                        <a href="{{ route('AdminLogin') }}" class="btn btn-warning with-icon gr-hover-y">Get Started<i
+                                class="icon icon-tail-right font-weight-bold"></i></a>
                         @endguest
 
 
                     </div>
 
-                    <a data-fancybox href="https://youtu.be/ptsmEYFJMx4" class="video-link gr-text-color mt-8 gr-flex-y-center justify-content-center justify-content-lg-start">
+                    <a data-fancybox href="https://youtu.be/ptsmEYFJMx4"
+                        class="video-link gr-text-color mt-8 gr-flex-y-center justify-content-center justify-content-lg-start">
                         <span class="mr-2 gr-text-color circle-18 border border-black-dynamic">
                             <i class="icon icon-triangle-right-17-2 gr-text-14"></i>
                         </span>
@@ -132,12 +154,16 @@ margin-top:-2px  */
                         <br>
                         <hr>
                     <h5 class="font-weight-bold">Secure Environment</h5>
-                    <i class="fas fa-circle" style="font-size: 12px; color: #f64b4b;"></i> Identity Verification <i class="fas fa-circle" style="font-size: 12px; color: #f64b4b;"></i> Multi-level authentication
+                    <i class="fas fa-circle" style="font-size: 12px; color: #f64b4b;"></i> Identity Verification <i
+                        class="fas fa-circle" style="font-size: 12px; color: #f64b4b;"></i> Multi-level authentication
                     <i class="fas fa-circle" style="font-size: 12px; color: #f64b4b;"></i> Full Encryption
                     </p>
 
+
                 </div>
             </div>
+
+
         </div>
     </div>
 </div>
@@ -155,33 +181,52 @@ margin-top:-2px  */
                 <h2 class="gr-text-4 text-center mb-8">Featured on</h2>
             </div>
             <div class="col-12">
-                <div class="brand-logos d-flex justify-content-center justify-content-xl-between align-items-center mx-n9 flex-wrap">
-                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="500" data-aos-once="true">
-                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/questrade_znhne7_ua01kw.png" alt="" class="w-100" width="80" height="80">
+                <div
+                    class="brand-logos d-flex justify-content-center justify-content-xl-between align-items-center mx-n9 flex-wrap">
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/questrade_znhne7_ua01kw.png"
+                            alt="" class="w-100" width="80" height="80">
                     </div>
-                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="500" data-aos-delay="600" data-aos-once="true">
-                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/YahooFinanceLogo_geieeb_gpqual.png" alt="" class="w-100" width="60" height="60">
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="600" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/YahooFinanceLogo_geieeb_gpqual.png"
+                            alt="" class="w-100" width="60" height="60">
                     </div>
-                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
-                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130249/assets/featuredon/private_capital_lxc1jr_kkswzw.png" alt="" class="w-100" width="60" height="60">
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130249/assets/featuredon/private_capital_lxc1jr_kkswzw.png"
+                            alt="" class="w-100" width="60" height="60">
                     </div>
-                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
-                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/benzinga_qpr7ot_kdvvtl.png" alt="" class="w-100" width="100" height="100">
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/benzinga_qpr7ot_kdvvtl.png"
+                            alt="" class="w-100" width="100" height="100">
                     </div>
-                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
-                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/reuters_o3wnje_rmf94n.png" alt="" class="w-100" width="100" height="100">
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/reuters_o3wnje_rmf94n.png"
+                            alt="" class="w-100" width="100" height="100">
                     </div>
-                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="500" data-aos-delay="400" data-aos-once="true">
-                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130249/assets/featuredon/canadianbusinessjournal_e3mobm_lllwjj.png" alt="" class="w-100" width="100" height="100">
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="400" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130249/assets/featuredon/canadianbusinessjournal_e3mobm_lllwjj.png"
+                            alt="" class="w-100" width="100" height="100">
                     </div>
-                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
-                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/magazinetoday_nsudvk_bjnihr.jpg" alt="" class="w-100" width="80" height="80">
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/magazinetoday_nsudvk_bjnihr.jpg"
+                            alt="" class="w-100" width="80" height="80">
                     </div>
-                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
-                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/morningstar_ehxgue_mkpsrd.png" alt="" class="w-100" width="100" height="100">
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/morningstar_ehxgue_mkpsrd.png"
+                            alt="" class="w-100" width="100" height="100">
                     </div>
-                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right" data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
-                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/1280px-The_Globe_and_Mail__2019-10-31_.svg_ph46rz_qo87pl.png" alt="" class="w-100" style="width: 300px !important;">
+                    <div class="single-brand mx-9 py-6 gr-opacity-8 gr-hover-opacity-full" data-aos="zoom-in-right"
+                        data-aos-duration="500" data-aos-delay="200" data-aos-once="true">
+                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130250/assets/featuredon/1280px-The_Globe_and_Mail__2019-10-31_.svg_ph46rz_qo87pl.png"
+                            alt="" class="w-100" style="width: 300px !important;">
                     </div>
 
 
@@ -217,7 +262,8 @@ margin-top:-2px  */
 
 
             <div class="col-md-6 col-lg-4 mb-9 mb-lg-0" data-aos="fade-up" data-aos-duration="800" data-aos-once="true">
-                <div class="service-card rounded-10 gr-hover-shadow-4 d-flex flex-column text-center pt-15 px-9 pb-11 dark-mode-texts bg-blue h-100">
+                <div
+                    class="service-card rounded-10 gr-hover-shadow-4 d-flex flex-column text-center pt-15 px-9 pb-11 dark-mode-texts bg-blue h-100">
                     <div class="card-img mb-11">
                         <img src="{{ asset('newpage/image/l5/png/l5-service-card2.png') }}" alt="...">
                     </div>
@@ -230,8 +276,10 @@ margin-top:-2px  */
                 </div>
             </div>
 
-            <div class="col-md-6 col-lg-4 mb-9 mb-lg-0" data-aos="fade-right" data-aos-duration="800" data-aos-once="true">
-                <div class="service-card rounded-10 gr-hover-shadow-4 d-flex flex-column text-center pt-15 px-9 pb-11 dark-mode-texts bg-green h-100">
+            <div class="col-md-6 col-lg-4 mb-9 mb-lg-0" data-aos="fade-right" data-aos-duration="800"
+                data-aos-once="true">
+                <div
+                    class="service-card rounded-10 gr-hover-shadow-4 d-flex flex-column text-center pt-15 px-9 pb-11 dark-mode-texts bg-green h-100">
                     <div class="card-img mb-11">
                         <img src="{{ asset('newpage/image/l5/png/l5-service-card1.png') }}" alt="...">
                     </div>
@@ -244,8 +292,10 @@ margin-top:-2px  */
                 </div>
             </div>
 
-            <div class="col-md-6 col-lg-4 mb-9 mb-lg-0" data-aos="fade-left" data-aos-duration="800" data-aos-once="true">
-                <div class="service-card rounded-10 gr-hover-shadow-4 d-flex flex-column text-center pt-15 px-9 pb-11 dark-mode-texts bg-red h-100">
+            <div class="col-md-6 col-lg-4 mb-9 mb-lg-0" data-aos="fade-left" data-aos-duration="800"
+                data-aos-once="true">
+                <div
+                    class="service-card rounded-10 gr-hover-shadow-4 d-flex flex-column text-center pt-15 px-9 pb-11 dark-mode-texts bg-red h-100">
                     <div class="card-img mb-11">
                         <img src="{{ asset('newpage/image/l5/png/l5-service-card3.png') }}" alt="...">
                     </div>
@@ -255,7 +305,8 @@ margin-top:-2px  */
                     <a href="{{ route('AdminLogin') }}" class="gr-text-9 btn-link with-icon text-white mt-auto">Get
                         Started <i class="icon icon-tail-right"></i></a>
                 </div>
-                <div class="gr-abs-br-custom gr-z-index-n1" data-aos="zoom-in-right" data-aos-delay="600" data-aos-duration="800" data-aos-once="true">
+                <div class="gr-abs-br-custom gr-z-index-n1" data-aos="zoom-in-right" data-aos-delay="600"
+                    data-aos-duration="800" data-aos-once="true">
                     <img src="{{ asset('newpage/image/l5/png/l5-dot-shape2.png') }}" alt="">
                 </div>
             </div>
@@ -287,7 +338,9 @@ margin-top:-2px  */
                 <div class="col-xl-11 col-lg-12">
                     <div class="review-widget media align-items-center px-lg-7 flex-column flex-sm-row">
                         <div class="widget-image mr-12 mr-lg-19 mb-9 mb-md-0">
-                            <img class="circle-xxxl" src="https://res.cloudinary.com/paysprint/image/upload/v1651130086/assets/create_invoice_icljdw_zrz9jh.png" alt="">
+                            <img class="circle-xxxl"
+                                src="https://res.cloudinary.com/paysprint/image/upload/v1651130086/assets/create_invoice_icljdw_zrz9jh.png"
+                                alt="">
                         </div>
                         <div class="widget-text">
                             <img class="rating mb-11" src="{{ asset('newpage/image/l5/png/5-stars.png') }}" alt="">
@@ -323,7 +376,9 @@ margin-top:-2px  */
                         </div>
 
                         <div class="widget-image mr-12 mr-lg-19 mb-9 mb-md-0">
-                            <img class="circle-xxxl" src="https://res.cloudinary.com/paysprint/image/upload/v1651130084/assets/Accept_more_payments_aao3ta_xplqth.png" alt="">
+                            <img class="circle-xxxl"
+                                src="https://res.cloudinary.com/paysprint/image/upload/v1651130084/assets/Accept_more_payments_aao3ta_xplqth.png"
+                                alt="">
                         </div>
 
                     </div>
@@ -337,7 +392,9 @@ margin-top:-2px  */
                 <div class="col-xl-11 col-lg-12">
                     <div class="review-widget media align-items-center px-lg-7 flex-column flex-sm-row">
                         <div class="widget-image mr-12 mr-lg-19 mb-9 mb-md-0">
-                            <img class="circle-xxxl" src="https://res.cloudinary.com/paysprint/image/upload/v1651130084/assets/Additional_feature_bd4ib0_ztsdsh.png" alt="">
+                            <img class="circle-xxxl"
+                                src="https://res.cloudinary.com/paysprint/image/upload/v1651130084/assets/Additional_feature_bd4ib0_ztsdsh.png"
+                                alt="">
                         </div>
                         <div class="widget-text">
                             <img class="rating mb-11" src="{{ asset('newpage/image/l5/png/5-stars.png') }}" alt="">
@@ -380,7 +437,9 @@ margin-top:-2px  */
                         </div>
 
                         <div class="widget-image mr-12 mr-lg-19 mb-9 mb-md-0">
-                            <img class="circle-xxxl" src="https://res.cloudinary.com/paysprint/image/upload/v1651130084/assets/Additional_feature_bd4ib0_ztsdsh.png" alt="">
+                            <img class="circle-xxxl"
+                                src="https://res.cloudinary.com/paysprint/image/upload/v1651130084/assets/Additional_feature_bd4ib0_ztsdsh.png"
+                                alt="">
                         </div>
 
                     </div>
@@ -395,7 +454,9 @@ margin-top:-2px  */
                 <div class="col-xl-11 col-lg-12">
                     <div class="review-widget media align-items-center px-lg-7 flex-column flex-sm-row">
                         <div class="widget-image mr-12 mr-lg-19 mb-9 mb-md-0">
-                            <img class="circle-xxxl" src="https://res.cloudinary.com/paysprint/image/upload/v1651130084/assets/Additional_feature_bd4ib0_ztsdsh.png" alt="">
+                            <img class="circle-xxxl"
+                                src="https://res.cloudinary.com/paysprint/image/upload/v1651130084/assets/Additional_feature_bd4ib0_ztsdsh.png"
+                                alt="">
                         </div>
                         <div class="widget-text">
                             <img class="rating mb-11" src="{{ asset('newpage/image/l5/png/5-stars.png') }}" alt="">
@@ -441,7 +502,9 @@ margin-top:-2px  */
                         </div>
 
                         <div class="widget-image mr-12 mr-lg-19 mb-9 mb-md-0">
-                            <img class="circle-xxxl" src="https://res.cloudinary.com/paysprint/image/upload/v1651130084/assets/Additional_feature_bd4ib0_ztsdsh.png" alt="">
+                            <img class="circle-xxxl"
+                                src="https://res.cloudinary.com/paysprint/image/upload/v1651130084/assets/Additional_feature_bd4ib0_ztsdsh.png"
+                                alt="">
                         </div>
 
                     </div>
@@ -467,22 +530,27 @@ margin-top:-2px  */
         </div>
         <div class="row">
             <div class="col-lg-5">
-                <div class="about-image img-big pt-lg-13" data-aos="fade-right" data-aos-duration="800" data-aos-once="true">
+                <div class="about-image img-big pt-lg-13" data-aos="fade-right" data-aos-duration="800"
+                    data-aos-once="true">
                     <img class="w-100 rounded-10" src="{{ asset('') }}newpage/image/l5/jpg/l5-about-big.jpg" alt="">
                 </div>
             </div>
             <div class="col-lg-7">
                 <div class="row justify-content-between align-items-center pl-lg-13">
                     <div class="col-md-6">
-                        <div class="about-image img-mid mt-9 mt-lg-0" data-aos="fade-up" data-aos-duration="900" data-aos-once="true">
-                            <img class="w-100 rounded-10" src="{{ asset('') }}newpage/image/l5/jpg/l5-about-mid.jpg" alt="">
-                            <div class="abs-pattern gr-abs-tr-custom" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="300" data-aos-once="true">
+                        <div class="about-image img-mid mt-9 mt-lg-0" data-aos="fade-up" data-aos-duration="900"
+                            data-aos-once="true">
+                            <img class="w-100 rounded-10" src="{{ asset('') }}newpage/image/l5/jpg/l5-about-mid.jpg"
+                                alt="">
+                            <div class="abs-pattern gr-abs-tr-custom" data-aos="zoom-in" data-aos-duration="800"
+                                data-aos-delay="300" data-aos-once="true">
                                 <img src="{{ asset('') }}newpage/image/l5/png/l5-about-pattern.png" alt="">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-5">
-                        <div class="about-image img-sm mt-9 mt-lg-0" data-aos="fade-left" data-aos-duration="1000" data-aos-once="true">
+                        <div class="about-image img-sm mt-9 mt-lg-0" data-aos="fade-left" data-aos-duration="1000"
+                            data-aos-once="true">
                             <img class="rounded-10" src="{{ asset('') }}newpage/image/l5/jpg/l5-about-sm.jpg" alt="">
                         </div>
                     </div>
@@ -537,7 +605,8 @@ margin-top:-2px  */
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <div class="row align-items-center justify-content-center">
-                    <div class="col-lg-6 col-md-10 mb-11 mb-lg-19" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200" data-aos-once="true">
+                    <div class="col-lg-6 col-md-10 mb-11 mb-lg-19" data-aos="fade-left" data-aos-duration="800"
+                        data-aos-delay="200" data-aos-once="true">
                         <div class="feature-widget media">
                             <div class="widget-icon p-7 rounded-15 mr-9 gr-bg-blue-opacity-1">
                                 <img src="{{ asset('') }}newpage/image/svg/l5-feature-icon1.svg" alt="">
@@ -549,7 +618,8 @@ margin-top:-2px  */
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-10 mb-11 mb-lg-19" data-aos="fade-left" data-aos-duration="800" data-aos-delay="400" data-aos-once="true">
+                    <div class="col-lg-6 col-md-10 mb-11 mb-lg-19" data-aos="fade-left" data-aos-duration="800"
+                        data-aos-delay="400" data-aos-once="true">
                         <div class="feature-widget media">
                             <div class="widget-icon p-7 rounded-15 mr-9 gr-bg-red-opacity-1">
                                 <img src="{{ asset('') }}newpage/image/svg/l5-feature-icon2.svg" alt="">
@@ -561,7 +631,8 @@ margin-top:-2px  */
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-10 mb-11 mb-lg-19" data-aos="fade-right" data-aos-duration="800" data-aos-delay="600" data-aos-once="true">
+                    <div class="col-lg-6 col-md-10 mb-11 mb-lg-19" data-aos="fade-right" data-aos-duration="800"
+                        data-aos-delay="600" data-aos-once="true">
                         <div class="feature-widget media">
                             <div class="widget-icon p-7 rounded-15 mr-9 gr-bg-green-opacity-1">
                                 <img src="{{ asset('') }}newpage/image/svg/l5-feature-icon3.svg" alt="">
@@ -573,7 +644,8 @@ margin-top:-2px  */
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-10 mb-11 mb-lg-19" data-aos="fade-right" data-aos-duration="800" data-aos-delay="800" data-aos-once="true">
+                    <div class="col-lg-6 col-md-10 mb-11 mb-lg-19" data-aos="fade-right" data-aos-duration="800"
+                        data-aos-delay="800" data-aos-once="true">
                         <div class="feature-widget media">
                             <div class="widget-icon p-7 rounded-15 mr-9 gr-bg-blackish-blue-opacity-1">
                                 <img src="{{ asset('') }}newpage/image/svg/l5-feature-icon4.svg" alt="">
@@ -669,7 +741,8 @@ margin-top:-2px  */
             </div>
             <div class="col-lg-7">
                 <div class="more-btn case-btn text-center">
-                    <a href="#" class="btn-link with-icon mb-0 gr-text-7 font-weight-bold">See all works<i class="icon icon-tail-right font-weight-bold"></i></a>
+                    <a href="#" class="btn-link with-icon mb-0 gr-text-7 font-weight-bold">See all works<i
+                            class="icon icon-tail-right font-weight-bold"></i></a>
                 </div>
             </div>
         </div>
@@ -678,7 +751,8 @@ margin-top:-2px  */
 
 
 <!-- Testimonial section 2 -->
-<div class="testimonial-section2 position-relative bg-blue dark-mode-texts bg-pattern pattern-4 pt-14 pt-lg-26 pb-14 pb-lg-26 disp-0">
+<div
+    class="testimonial-section2 position-relative bg-blue dark-mode-texts bg-pattern pattern-4 pt-14 pt-lg-26 pb-14 pb-lg-26 disp-0">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-7 col-xl-6">
@@ -693,7 +767,8 @@ margin-top:-2px  */
                     <h3 class="review-text gr-text-5 mb-11">“Simply the best. Better than all the rest. I’d recommend
                         this product to beginners and advanced users.”</h3>
                     <div class="reviewer-img mb-7">
-                        <img class="circle-lg mx-auto" src="{{ asset('') }}newpage/image/l5/jpg/l5-testimonial2.jpg" alt="">
+                        <img class="circle-lg mx-auto" src="{{ asset('') }}newpage/image/l5/jpg/l5-testimonial2.jpg"
+                            alt="">
                     </div>
                     <h3 class="username gr-text-9 mb-1">Ian Klein</h3>
                     <span class="rank gr-text-11 gr-text-color-opacity">Digital Marketer</span>
@@ -710,9 +785,11 @@ margin-top:-2px  */
             {{-- <div class="col-sm-10 col-md-9 col-lg-6 col-xl-5 mb-n7 mb-lg-0">
                 <div class="double-image-group position-relative" data-aos="fade-right" data-aos-duration="1000"
                     data-aos-once="true">
-                    <img class="main-img w-100 w-lg-auto" src="newpage/image/telemedicine/png/content-3-img.png" alt="" />
+                    <img class="main-img w-100 w-lg-auto" src="newpage/image/telemedicine/png/content-3-img.png"
+                        alt="" />
                     <div class="gr-abs-img-custom-2 animation-tilt">
-                        <img src="newpage/image/telemedicine/png/content3-img-sub.png" alt="" class="responsive-scaling">
+                        <img src="newpage/image/telemedicine/png/content3-img-sub.png" alt=""
+                            class="responsive-scaling">
                     </div>
                 </div>
             </div> --}}
@@ -807,7 +884,8 @@ margin-top:-2px  */
 <div class="container mt-8 mb-5">
     <div class="row justify-content-center align-items-center">
         <div class="">
-            <h2 class="title gr-text-4 mb-4">Cross Border Business Payments from {{($data['country'])}} to {{count($data['availablecountry'] )}} Countries</h2><br>
+            <h2 class="title gr-text-4 mb-4">Cross Border Business Payments from {{($data['country'])}} to
+                {{count($data['availablecountry'] )}} Countries</h2><br>
         </div>
     </div>
     <div class="row mx-auto">
@@ -837,11 +915,15 @@ margin-top:-2px  */
                 <div class="text-center dark-mode-texts">
                     <h2 class="gr-text-4 mb-7" style="color: #433d3d;">DOWNLOAD OUR APP</h2>
 
-                    <a href="https://play.google.com/store/apps/details?id=com.fursee.damilare.sprint_mobile" target="_blank" class="btn text-white gr-hover-y px-lg-9">
-                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130088/assets/l6-download-gplay_o9rcfj_l6erwf.png" alt="play store">
+                    <a href="https://play.google.com/store/apps/details?id=com.fursee.damilare.sprint_mobile"
+                        target="_blank" class="btn text-white gr-hover-y px-lg-9">
+                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130088/assets/l6-download-gplay_o9rcfj_l6erwf.png"
+                            alt="play store">
                     </a>
-                    <a href="https://apps.apple.com/gb/app/paysprint/id1567742130" target="_blank" class="btn text-white gr-hover-y px-lg-9">
-                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130088/assets/l6-download-appstore_odcskf_atgygf.png" alt="apple store">
+                    <a href="https://apps.apple.com/gb/app/paysprint/id1567742130" target="_blank"
+                        class="btn text-white gr-hover-y px-lg-9">
+                        <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130088/assets/l6-download-appstore_odcskf_atgygf.png"
+                            alt="apple store">
                     </a>
                     <p class="gr-text-11 mb-0 mt-6" style="color: #433d3d;">It takes only 2 mins!</p>
                 </div>
@@ -849,28 +931,37 @@ margin-top:-2px  */
                 <div class="hero-img" data-aos="fade-left" data-aos-duration="500" data-aos-once="true">
                     <div class="hero-video-thumb position-relative gr-z-index-1">
                         <center>
-                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg" alt="" class="w-100 rounded-8" style="height: 350px !important;width: 350px !important;">
+                            <img src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_jpeg_black_bk_ft8qly_frobtx.jpg"
+                                alt="" class="w-100 rounded-8"
+                                style="height: 350px !important;width: 350px !important;">
                         </center>
-                        <a class="video-play-trigger gr-abs-center bg-white circle-xl gr-flex-all-center gr-abs-hover-y focus-reset" data-fancybox="" href="https://youtu.be/ptsmEYFJMx4" tabindex="-1"><i class="icon icon-triangle-right-17-2"></i></a>
+                        <a class="video-play-trigger gr-abs-center bg-white circle-xl gr-flex-all-center gr-abs-hover-y focus-reset"
+                            data-fancybox="" href="https://youtu.be/ptsmEYFJMx4" tabindex="-1"><i
+                                class="icon icon-triangle-right-17-2"></i></a>
                         {{-- <div class="abs-shape gr-abs-tr-custom gr-z-index-n1">
-                      <img src="{{ asset('newpage/image/l4/png/l4-hero-shape.png') }}" alt="" class="w-100" data-aos="zoom-in" data-aos-delay="400" data-aos-duration="800" data-aos-once="true">
-                    </div> --}}
+                            <img src="{{ asset('newpage/image/l4/png/l4-hero-shape.png') }}" alt="" class="w-100"
+                                data-aos="zoom-in" data-aos-delay="400" data-aos-duration="800" data-aos-once="true">
+                        </div> --}}
+                    </div>
                 </div>
+
+            </div>
+
+            <div class="col-md-3">
+                <center>
+                    <img class="shadow-lg"
+                        src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/image_zuxln4_kzk3zb.png"
+                        alt="mobile app"
+                        style="width: 100%; height: 500px; border-radius: 10px; position: relative; z-index: 1000;">
+                    {{-- <img class="shadow-lg"
+                        src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_front_v55thg_gjjpzj.jpg"
+                        alt="mobile app" style="width: 80%; border-radius: 10px; position: relative; z-index: 1000;">
+                    --}}
+                </center>
             </div>
 
         </div>
-
-        <div class="col-md-3">
-            <center>
-                <img class="shadow-lg" src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/image_zuxln4_kzk3zb.png" alt="mobile app" style="width: 100%; height: 500px; border-radius: 10px; position: relative; z-index: 1000;">
-                {{-- <img class="shadow-lg"
-                            src="https://res.cloudinary.com/paysprint/image/upload/v1651130089/assets/paysprint_front_v55thg_gjjpzj.jpg"
-                            alt="mobile app" style="width: 80%; border-radius: 10px; position: relative; z-index: 1000;"> --}}
-            </center>
-        </div>
-
     </div>
-</div>
 </div>
 
 @endsection
