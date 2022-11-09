@@ -176,14 +176,14 @@
                     <table class="table table-striped table-responsiveness">
                         <thead>
                             <tr>
-                                <th>Number of users</th>
-                                <th>Transaction Value</th>
+                                <th>Availability Uptime</th>
+                                {{-- <th>Transaction Value</th> --}}
                                 <th>Number of Days</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{{$data['totalusers']}}</td>
+                                <td>99%</td>
                                 <td>{{$data['code']}} {{$data['totaltransactions']}}</td>
                                 <td>{{$data['totaldays']}} days</td>
                             </tr>
