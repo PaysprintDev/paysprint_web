@@ -157,6 +157,8 @@ trait Moex
         // $data['currencyToPay'] = env('APP_ENV') === 'local' ? 'PHP' : $data['currencyToPay'];
         // $data['currencySent'] = env('APP_ENV') === 'local' ? 'PHP' : $data['currencySent'];
 
+        $data['bankDeposit'] = 'FALSE';
+
         $getBranchId = $this->availableBranchList($data['receiverCountry']);
 
 
@@ -374,7 +376,7 @@ trait Moex
 
         $result = $this->moExPostCurl();
 
-        
+
 
         $doc->loadXML($result);
 

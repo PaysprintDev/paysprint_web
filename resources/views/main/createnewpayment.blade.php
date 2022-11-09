@@ -490,6 +490,8 @@
                                             </div>
                                             <div class="paymentType_data disp-0">
                                             </div>
+                                            <div class="remittance_company_data disp-0">
+                                            </div>
                                             <div class="information_data disp-0"></div>
 
                                             <br>
@@ -1543,6 +1545,7 @@
                         let paymentTypeInput = $('.paymentType_data');
                         let informationInput = $('.information_data');
                         let payoutAgentInput = $('.payoutAgent_data');
+                        let remittanceCompanyInput = $('.remittance_company_data');
                         let payoutAgentSelect = $('#payout_record');
 
                         compulsoryInput.addClass('disp-0');
@@ -1550,6 +1553,7 @@
                         paymentTypeInput.addClass('disp-0');
                         informationInput.addClass('disp-0');
                         payoutAgentInput.addClass('disp-0');
+                        remittanceCompanyInput.addClass('disp-0');
 
 
                         informationInput.html('');
@@ -1557,6 +1561,7 @@
                         mandatoryInput.html('');
                         paymentTypeInput.html('');
                         payoutAgentInput.html('');
+                        remittanceCompanyInput.html('');
                         payoutAgentSelect.html('');
 
                         if (data.length > 0){
@@ -1627,6 +1632,31 @@
                                     `);
                             }
 
+                            if(data[0].remittance_company !== undefined){
+
+
+                                if(data[0].remittance_company.length > 0){
+                                    let remittanceoptions = [];
+                                remittanceCompanyInput.removeClass('disp-0');
+
+                                $.each(data[0].remittance_company, function(v, k) {
+                                    remittanceoptions.push(`<option value="${k}">${k}</option>`);
+                                });
+
+                                remittanceCompanyInput.html(`<br><h4>Mode of Remittance</h4><hr><div class="form-group"> <label for="remittance">
+                                                <h6><span class="text-danger">* </span>Select Remittance Company</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <select class="form-control" name="remittance" id="remittance" required>
+                                                    ${remittanceoptions}
+                                                </select>
+                                            </div>
+                                        </div>`);
+
+
+                            }
+
+                            }
                             if(data[0].payoutAgent !== undefined){
 
 

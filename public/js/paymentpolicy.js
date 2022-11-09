@@ -20,6 +20,9 @@
             "id_Number",
             "country"
         ],
+        "remittance_company": [
+            "SWISS REMIT GMBH"
+        ],
         "remarks": "Changes of the beneficiary are not allowed, only corrections in its name"
 
     },
@@ -45,6 +48,10 @@
             "accountNumber"
         ],
         "compulsory_data": [],
+        "remittance_company": [
+            "TERRAPAY",
+            "GHANA COMMERCIAL BANK LTD"
+        ],
         "remarks": " Wallet deductions of 1.5% could be applied in the beneficiary wallet when cash out is made in destination country. Mobile number must match the network operator otherwise the transaction will be cancelled."
 
     }
