@@ -89,10 +89,17 @@ use App\Http\Controllers\AllCountries; ?>
                                 $now = time();
                                 $your_date = strtotime($expire);
                                 $datediff = $your_date - $now;
+
+                                $business = Auth::user()->businessname . '/' . Auth::user()->ref_code;
+
+
+                                $url = str_replace(' ', '%20', $business);
                                 @endphp
 
 
-                                @if (Auth::user()->payment_link_access == 1 && $datediff > 0)
+
+                                @if (Auth::user()->payment_link_access == 1 && Auth::user()->payment_link_approval == 1
+                                && $datediff > 0 )
                                 <!-- ShareThis BEGIN -->
                                 <p class="alert alert-primary text-white"><strong>Payment Link:</strong></p>
                                 <p class="text-success" style="font-weight: bold;">Link expires: <br>
@@ -107,10 +114,7 @@ use App\Http\Controllers\AllCountries; ?>
                                 <br>
                                 <br>
 
-                                @php
-                                $business = Auth::user()->businessname . '/' . Auth::user()->ref_code;
-                                $url = str_replace(' ', '%20', $business);
-                                @endphp
+
 
                                 <div class="sharethis-inline-share-buttons"
                                     data-url="{{ route('home') . '/merchant/' . $url }}">
@@ -387,10 +391,13 @@ use App\Http\Controllers\AllCountries; ?>
                                 </div>
 
                                 <center>
-                                    {!! QrCode::size(150)->generate(Auth::user()->businessname.' payment link '.route('home') . '/merchant/' . $url); !!}
+                                    {!! QrCode::size(150)->generate(Auth::user()->businessname.' payment link
+                                    '.route('home') . '/merchant/' . $url); !!}
                                 </center>
                                 <br>
-                                <a href="{{ asset('images/'.Auth::user()->businessname.'.svg') }}" download="" style="color: navy; font-weight: 700; text-align: left;">Download and print QRCode</a>
+                                <a href="{{ asset('images/'.Auth::user()->businessname.'.svg') }}" download=""
+                                    style="color: navy; font-weight: 700; text-align: left;">Download and print
+                                    QRCode</a>
 
 
                             </div>

@@ -41,7 +41,7 @@ trait AccountReport
         	$fxdebit=FxStatement::sum('debit');
 			$totalsum=$sum;
 			$totaltransact=$totalsum+$fxcredit-$fxdebit;
-			$totalmoneydone=$totaltransact*$rate;
+			$totalmoneydone=$totaltransact/$rate;
 			return number_format($totalmoneydone,2);
 		
 			

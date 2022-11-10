@@ -163,37 +163,21 @@ class PayoutAgentController extends Controller
 
             $thisclientInfo = ClientInfo::where('user_id', $thisuser->ref_code)->first();
 
-                $money=$thisuser->payment_link_money;
+            $money=$thisuser->payment_link_money;
 
-            if($thisuser->payment_link_approval === 0){
+            if($thisuser->payment_link_approval == '0' && isset($money)){
                  User::where('ref_code', $req->ref_code)->update(['payment_link_approval' => 1]);
-
-                $data = $payoutAgent->where('user_id', $req->ref_code)->first();
-
                 $message = 'Merchant Payment Link Successfully Activated ';
-            }else{
+            }
+            
+            if($thisuser->payment_link_approval == '1' && isset($money)){
                  User::where('ref_code', $req->ref_code)->update(['payment_link_approval' => 0]);
                 $data = [];
                 $message = 'Merchant Payment Link Successfully De-activated ';
+            }else{
+                $data = [];
+                $message = 'Cannot Approvate Merchant Link Due to Insuficient Balance';
             }
-
-            if ($thisuser->payment_link_approval === 1) {
-                // Delete
-                // $payoutAgent->where('user_id', $thisuser->ref_code)->delete();
-               
-            } else {
-
-                
-
-                User::where('ref_code', $req->ref_code)->update(['payout_agent' => 1]);
-
-                $data = $payoutAgent->where('user_id', $req->ref_code)->first();
-
-                $message = 'Successfully registered as a payout agent in ' . $thisuser->country;
-            }
-
-
-
             $status = 200;
         } catch (\Throwable $th) {
             $data = [];
