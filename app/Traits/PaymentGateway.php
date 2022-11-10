@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Log;
 trait PaymentGateway
 {
 
-    public function keepRecord($transaction_id, $message, $activity, $gateway, $country, $hold_fee = 0, $partner = null)
+    public function keepRecord($transaction_id, $message, $activity, $gateway, $country, $hold_fee = 0, $partner = null, $bodydata = null)
     {
         $data = MonerisActivity::insert([
 
@@ -34,6 +34,7 @@ trait PaymentGateway
             'country' => $country,
             'hold_fee' => $hold_fee,
             'partner' => $partner,
+            'bodydata' => $bodydata
         ]);
     }
 

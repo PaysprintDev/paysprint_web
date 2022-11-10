@@ -2833,7 +2833,7 @@ class MerchantApiController extends Controller
 
                             $monerisactivity = "Payment not successfull";
 
-                            $this->keepRecord("", $response->responseData['Message'], $monerisactivity, "Moneris", $req->country);
+                            $this->keepRecord("", $response->responseData['Message'], $monerisactivity, "Moneris", $req->country, 0, null, json_encode($response));
 
                             $resData = ['data' => $data, 'message' => $message, 'status' => $status];
                         }
@@ -3065,7 +3065,7 @@ class MerchantApiController extends Controller
                             $this->createNotification($thismerchant->ref_code, $recMsg, $thismerchant->playerId, $recMsg, "Wallet Transaction");
 
                             $monerisactivity = $recMsg;
-                            $this->keepRecord($paymentToken, $response->responseData['Message'], $monerisactivity, "Moneris", $req->country);
+                            $this->keepRecord($paymentToken, $response->responseData['Message'], $monerisactivity, "Moneris", $req->country, 1, null, json_encode($response));
                         } catch (\Exception $th) {
                             $status = 400;
 
@@ -3082,7 +3082,7 @@ class MerchantApiController extends Controller
 
                         $monerisactivity = "Payment not successfull";
 
-                        $this->keepRecord("", $response->responseData['Message'], $monerisactivity, "Moneris", $req->country);
+                        $this->keepRecord("", $response->responseData['Message'], $monerisactivity, "Moneris", $req->country, 0, null, json_encode($response));
 
                         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
                     }
