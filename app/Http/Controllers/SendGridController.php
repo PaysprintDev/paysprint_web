@@ -648,7 +648,9 @@ class SendGridController extends Controller
     public function productList(){
        try{
         
-        $products = StoreProducts::get();
+        $products = StoreProducts::inRandomOrder()->take(3)->get();
+        
+       
         if (count($products) > 0) {
             $businesses = ['businesses' => []];
            
@@ -657,7 +659,7 @@ class SendGridController extends Controller
                 $images = $product->image;
                 $details = strip_tags($product->description);
               
-                $productName= $product->ProductName;
+                $productName= $product->productName;
                 $industry = $product->category;
                 $user_id = $product->merchantId;
               
@@ -665,23 +667,31 @@ class SendGridController extends Controller
                 $data = [
                         
                         "productName"  => $productName,
+                        "sales" => $this->salesProduct(),
                         "images" => $images,
                         "industry" => $industry,
                         "details" => $details,
                         "url" =>  route('merchant business profile', $user_id),
+                
 
                 ];
-                //   dd($data);
+            
+                  
                 
                 $businesses['businesses'][] = $data;
-
-
-
-                    $this->userList($businesses);
+       
+                    
                 }
 
-
+              
+                
             }
+            // $businesses['sales']= $this->salesProduct();
+            
+                
+              
+          
+            $this->userList($businesses);
             
 
         }catch(\Throwable $th) {
@@ -690,24 +700,50 @@ class SendGridController extends Controller
     }
     public function userList(array $businesses)
     {
-        $user = User::take(3)->get();
+        $user = User::take(1)->get();
         // dd($user);
 
 
         for ($i = 0; $i < count($user); $i++) {
         
             // $receiver = $user[$i]['email'];
-            // $receiver = $user[$i]['olasunkanmimunirat@gmail.com'];
+           
               $receiver = 'olasunkanmimunirat@gmail.com';
             
-            $businesses['name'] = $user[$i]['name'];
+            // $businesses['name'] = $user[$i]['name'];
             // dd($businesses);
 
             $template_id = config('constants.sendgrid.productlist');
 
-            $response = $this->sendGridDynamicMail($receiver, $businesses, $template_id);
+             $response = $this->sendGridDynamicMail($receiver, $businesses, $template_id);
             // dd($response);
 
+        }
+    }
+
+    public function salesProduct()
+    {
+        $sales = StoreProducts::whereRaw('previousAmount > amount')->get();
+        // dd($sales);
+        foreach ($sales as $product) {
+            // Get each product...
+            $images = $product->image;
+            $details = strip_tags($product->description);
+          
+            $productName= $product->productName;
+            $industry = $product->category;
+            $user_id = $product->merchantId;
+            $data = [
+                        
+                "productName"  => $productName,
+                "images" => $images,
+                "industry" => $industry,
+                "details" => $details,
+                "url" =>  route('merchant business profile', $user_id),
+
+        ];
+
+        return $data;
         }
     }
 }

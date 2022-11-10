@@ -4627,7 +4627,7 @@ class HomeController extends Controller
         $id=Auth::id();
 
 
-        $validation=Validator::make($Req->all(),[
+        $validation=Validator::make($req->all(),[
             'bvn_number' => 'required'
         ]);
 
