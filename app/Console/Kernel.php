@@ -117,7 +117,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('migratetolevelone:run')->cron('0 0 * * 1');
         $schedule->command('weeklylimit:run')->cron('0 0 * * 0');
         $schedule->command('notificationtable:run')->cron('0 0 * * 2');
-        $schedule->command('mailqueue:run')->cron('*/1 * * * *');
+        $schedule->command('mailqueue:run')->everyTwoMinutes();
 
     }
 

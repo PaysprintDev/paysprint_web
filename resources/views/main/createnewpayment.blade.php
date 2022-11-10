@@ -103,15 +103,15 @@
                                     <input type="hidden" name="paymentToken" id="paymentToken" value="">
 
                                     <div class="form-group"> <label for="fname">
-                                            <h6>How do you want the receiver to get paid?</h6>
+                                            <h6>How do you want the beneficiary to get paid?</h6>
                                         </label>
                                         <div class="input-group">
 
                                             <select name="paymentMode" id="paymentMode" class="form-control">
                                                 <option value="">Select option</option>
-                                                <option value="PaySprint">Receiver to accept payment on mobile app (No
+                                                <option value="PaySprint">Beneficiary to accept payment on PaySprint mobile app (No
                                                     transfer Fee)</option>
-                                                <option value="Partner">Receiver get paid via dedicated partners
+                                                <option value="Partner">Beneficiary get paid via dedicated partners
                                                     (Transfer Fee applies)</option>
                                             </select>
 
@@ -212,7 +212,7 @@
 
 
                                     <div class="paywithpaysprint disp-0">
-                                        <h4>Receiver's Information</h4>
+                                        <h4>Beneficiary's Information</h4>
                                         <hr>
 
                                         <div class="form-group"> <label for="orgpayservice">
@@ -452,7 +452,7 @@
                                     </div>
 
                                     <div class="paywithpatners disp-0">
-                                        <h4>Receiver's Information</h4>
+                                        <h4>Beneficiary's Information</h4>
                                         <hr>
 
                                         <div class="form-group"> <label for="orgpayservice">
@@ -489,6 +489,8 @@
                                             <div class="payoutAgent_data disp-0">
                                             </div>
                                             <div class="paymentType_data disp-0">
+                                            </div>
+                                            <div class="remittance_company_data disp-0">
                                             </div>
                                             <div class="information_data disp-0"></div>
 
@@ -596,7 +598,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group"> <label for="netwmount">
-                                                <h6>Fee <small class="text-success"><b>(10% Payout Fee)</b></small></h6>
+                                                <h6>Fee <small class="text-success"><b>(1.5% Payout Fee)</b></small></h6>
                                             </label>
                                             <div class="input-group">
                                                 <input type="text" name="commissiondeduct" class="form-control"
@@ -1147,7 +1149,7 @@
                                     $('.commissionInfo').addClass('alert alert-success');
                                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                                    let commissionVal = Number(result.data) * 0.1;
+                                    let commissionVal = Number(result.data) * 0.015;
                                     let finalDeduct = Number(result.data) + commissionVal
 
                                     $('.commissionInfo').html(
@@ -1543,6 +1545,7 @@
                         let paymentTypeInput = $('.paymentType_data');
                         let informationInput = $('.information_data');
                         let payoutAgentInput = $('.payoutAgent_data');
+                        let remittanceCompanyInput = $('.remittance_company_data');
                         let payoutAgentSelect = $('#payout_record');
 
                         compulsoryInput.addClass('disp-0');
@@ -1550,6 +1553,7 @@
                         paymentTypeInput.addClass('disp-0');
                         informationInput.addClass('disp-0');
                         payoutAgentInput.addClass('disp-0');
+                        remittanceCompanyInput.addClass('disp-0');
 
 
                         informationInput.html('');
@@ -1557,6 +1561,7 @@
                         mandatoryInput.html('');
                         paymentTypeInput.html('');
                         payoutAgentInput.html('');
+                        remittanceCompanyInput.html('');
                         payoutAgentSelect.html('');
 
                         if (data.length > 0){
@@ -1627,6 +1632,31 @@
                                     `);
                             }
 
+                            if(data[0].remittance_company !== undefined){
+
+
+                                if(data[0].remittance_company.length > 0){
+                                    let remittanceoptions = [];
+                                remittanceCompanyInput.removeClass('disp-0');
+
+                                $.each(data[0].remittance_company, function(v, k) {
+                                    remittanceoptions.push(`<option value="${k}">${k}</option>`);
+                                });
+
+                                remittanceCompanyInput.html(`<br><h4>Mode of Remittance</h4><hr><div class="form-group"> <label for="remittance">
+                                                <h6><span class="text-danger">* </span>Select Remittance Company</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <select class="form-control" name="remittance" id="remittance" required>
+                                                    ${remittanceoptions}
+                                                </select>
+                                            </div>
+                                        </div>`);
+
+
+                            }
+
+                            }
                             if(data[0].payoutAgent !== undefined){
 
 

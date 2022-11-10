@@ -2562,6 +2562,7 @@ class MoexController extends Controller
             $setupController->message = "<p>Attached is the daily exchange rate from PaySprint today: ".date('d-m-Y').".</p><p>Best regards</p>";
             $setupController->file = $csv;
             $setupController->sendEmail($setupController->email, "Daily Transaction Report");
+            $setupController->sendEmail('duntanadebiyi@yahoo.com', "Daily Transaction Report");
 
             echo "Done";
         } catch (\Throwable $th) {

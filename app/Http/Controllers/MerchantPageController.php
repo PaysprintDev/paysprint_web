@@ -230,7 +230,7 @@ class MerchantPageController extends Controller
                 ]);
 
                 $this->mailListCategorize('',$req->customer_email,'','','','','');
-                }    
+                }
 
         return back()->with('msgs', "<div class='alert alert-success'>Review Request Sent Successfully</div>");
     }
