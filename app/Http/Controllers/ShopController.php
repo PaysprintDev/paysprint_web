@@ -72,8 +72,7 @@ class ShopController extends Controller
 
             $data = array(
                 'pages' => $shop . ' Shop',
-                'currencyCode' => $this->getCountryCode('Nigeria'),
-                // 'currencyCode' => $this->getCountryCode($thisuser->country),
+                'currencyCode' => env('APP_ENV') === 'local' ? $this->getCountryCode('Canada') : $this->getCountryCode($thisuser->country),
                 'continent' => $timezone[0],
                 'name' => $thisuser->businessname,
                 'refCode' => $thisuser->ref_code,
@@ -85,7 +84,7 @@ class ShopController extends Controller
             );
 
             // dd($data);
-            $views = env('APP_ENV') === 'local' ? 'main.shop.index2' : 'main.shop.index';
+            $views = env('APP_ENV') === 'local' ? 'main.shop.index2' : 'main.shop.index2';
 
             return view($views)->with(['data' => $data]);
         } else {

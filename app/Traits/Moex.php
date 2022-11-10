@@ -238,6 +238,7 @@ trait Moex
 
         $result = $this->moExPostCurl();
 
+
         $doc->loadXML($result);
 
         $TransactionId     = $doc->getElementsByTagName("TransactionId");
@@ -350,6 +351,7 @@ trait Moex
 
     public function availableBranchList($country)
     {
+
         $doc = new \DOMDocument('1.0', 'utf-8');
         $responseData = [];
 
@@ -373,6 +375,8 @@ trait Moex
 
         $result = $this->moExPostCurl();
 
+
+
         $doc->loadXML($result);
 
         $Id = $doc->getElementsByTagName("Id");
@@ -387,6 +391,8 @@ trait Moex
                 'description' => $description
             ];
         }
+
+
 
         return $responseData;
     }

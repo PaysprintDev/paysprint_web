@@ -2687,6 +2687,69 @@ C</div>
                 });
         }
 
+
+        function activatePaymentLink(ref_code) {
+        
+        let data = {
+        ref_code: ref_code
+        };
+        
+        var headers = {
+        'X-CSRF-TOKEN': "{{ csrf_token() }}",
+        };
+        
+        swal({
+        title: "Are you sure?",
+        text: "Click OK to proceed",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then(async (willDelete) => {
+        if (willDelete) {
+        
+        try {
+        
+        $('#btn' + ref_code).text('Please wait ...');
+        
+        
+        const config = {
+        method: 'POST',
+        url: "{{ URL('/api/v1/activatemerchantpaymentlink') }}",
+        headers,
+        data
+        }
+        
+        
+        const response = await axios(config);
+        
+        $('#btn' + ref_code).text('Activate Merchant Payment Link');
+        
+        
+        swal('Great', response.data.message, 'success');
+        
+        setTimeout(() => {
+        location.reload();
+        }, 1000);
+        
+        } catch (error) {
+        
+        $('#btn' + ref_code).text('Activate Merchant Payment Link');
+        
+        if (error.response) {
+        swal('Oops!', error.response.data.message, 'error');
+        } else {
+        swal('Oops!', error.message, 'error');
+        }
+        
+        }
+        
+        
+        
+        }
+        });
+        }
+
         function payCard(id) {
             var route = "{{ URL('Ajax/paycardwithdrawal') }}";
             var thisdata = {

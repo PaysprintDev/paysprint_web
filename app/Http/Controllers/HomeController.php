@@ -42,6 +42,8 @@ use App\HistoryReport;
 
 use App\ReferralClaim;
 
+use App\FxStatement;
+
 use App\ReferredUsers;
 
 use App\Traits\RpmApp;
@@ -118,6 +120,8 @@ use App\ServiceType as ServiceType;
 
 use App\Traits\MailChimpNewsLetter;
 
+use App\Traits\AccountReport;
+
 use Illuminate\Support\Facades\Log;
 
 use Illuminate\Support\Facades\Auth;
@@ -146,6 +150,7 @@ use App\OrganizationPay as OrganizationPay;
 use App\TransactionCost as TransactionCost;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\MaintenanceRequest as MaintenanceRequest;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -163,7 +168,7 @@ class HomeController extends Controller
     public $country;
     public $timezone;
 
-    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter, PaysprintPoint, PointsHistory, GenerateOtp, IDVCheck, MyEstore, AccountCheck;
+    use RpmApp, Trulioo, AccountNotify, PaystackPayment, ExpressPayment, SpecialInfo, Xwireless, PaymentGateway, MailChimpNewsLetter, PaysprintPoint, PointsHistory, GenerateOtp, IDVCheck, MyEstore, AccountCheck , AccountReport;
     /**
      * Create a new controller instance.
      *
@@ -247,11 +252,15 @@ class HomeController extends Controller
                 'continent' => $this->timezone[0],
                 'availablecountry' => $allcountry,
                 'country' => $country,
+                'totaltransactions' => $this->totalTransaction($country),
+                'code'=> $this->currencyCode($country),
+                'totalusers' => $this->noUsers($country),
+                'totaldays' => $this->totalDays(),
 
             ];
         }
 
-        // dd($data);
+        // dd($data['totaltransactions']);
 
 
 
@@ -268,6 +277,46 @@ class HomeController extends Controller
 
 
         return view('main.displaycountry', compact('posts'));
+    }
+
+    // public function totalTransactions($country)
+    // {
+    //     $fxcredit=FxStatement::sum('credit');
+    //     $fxdebit=FxStatement::sum('debit');
+    //     $addedAmount = Statement::where('country', $country)->where('report_status', 'Added to wallet')->sum('credit');
+    //     $receivedAmount = Statement::where('country', $country)->where('report_status', 'Money received')->sum('credit');
+    //     $debitedAmount = Statement::where('country', $country)->where('report_status', 'Withdraw from wallet')->sum('debit');
+    //     $monthlyAmount = Statement::where('country', $country)->where('report_status', 'Monthly fee')->sum('debit');
+    //     $sendInvoice = Statement::where('country', $country)->where('action', 'Invoice')->sum('credit');
+    //     $withdrawAmount = Statement::where('country', $country)->where('report_status', 'Withdraw from wallet')->sum('debit');
+    //      $credits = $addedAmount + $receivedAmount + $sendInvoice + $fxcredit + (- $debitedAmount - $monthlyAmount - $withdrawAmount-$fxdebit);
+    //     //  $total=round($credits,2);
+    //      return number_format($credits,2);
+
+    // }
+
+    public function noUsers($country)
+    {
+        $data=User::get();
+            return count($data);
+    }
+
+    public function totalDays()
+    {
+        $start=Carbon::today();
+        $now=Carbon::now()->format('Y-m-d');
+        $year=$start->startOfYear()->format('Y-m-d');
+        $end=$start->endOfYear()->format('Y-m-d');
+        $start_year=Carbon::createFromFormat('Y-m-d', $year);
+        $days=$start_year->diffInDays($now);
+        return $days;
+    }
+
+    public function currencyCode($country)
+    {
+       $data= AllCountries::where('name',$country)->first();
+        $code=$data->currencyCode;
+        return $code;
     }
 
     public function estores()
@@ -302,7 +351,11 @@ class HomeController extends Controller
         $this->page = 'Merchant';
         $data = [
             'availablecountry' => $allcountry,
-            'country' => $country
+            'country' => $country,
+            'totaltransactions' => $this->totalTransactions($country),
+            'code'=> $this->currencyCode($country),
+            'totalusers' => $this->noUsers($country),
+            'totaldays' => $this->totalDays(),
         ];
 
         return view('main.newpage.shade-pro.merchantindex')->with(['pages' => $this->page, 'data' => $data]);
@@ -315,7 +368,11 @@ class HomeController extends Controller
         $this->page = 'Merchant';
         $data = [
             'availablecountry' => $allcountry,
-            'country' => $country
+            'country' => $country,
+            // 'totaltransactions' => $this->totalTransactions($country),
+            'code'=> $this->currencyCode($country),
+            'totalusers' => $this->noUsers($country),
+            'totaldays' => $this->totalDays(),
         ];
 
         return view('main.newpage.shade-pro.merchanthome')->with(['pages' => $this->page, 'data' => $data]);

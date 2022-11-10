@@ -1157,7 +1157,7 @@
 
                     Pace.restart();
                     Pace.track(function() {
-                        setHeaders();
+                        authHeaders();
                         jQuery.ajax({
                             url: route,
                             method: 'post',

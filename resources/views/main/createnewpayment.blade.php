@@ -103,15 +103,15 @@
                                     <input type="hidden" name="paymentToken" id="paymentToken" value="">
 
                                     <div class="form-group"> <label for="fname">
-                                            <h6>How do you want the receiver to get paid?</h6>
+                                            <h6>How do you want the beneficiary to get paid?</h6>
                                         </label>
                                         <div class="input-group">
 
                                             <select name="paymentMode" id="paymentMode" class="form-control">
                                                 <option value="">Select option</option>
-                                                <option value="PaySprint">Receiver to accept payment on mobile app (No
+                                                <option value="PaySprint">Beneficiary to accept payment on PaySprint mobile app (No
                                                     transfer Fee)</option>
-                                                <option value="Partner">Receiver get paid via dedicated partners
+                                                <option value="Partner">Beneficiary get paid via dedicated partners
                                                     (Transfer Fee applies)</option>
                                             </select>
 
@@ -212,7 +212,7 @@
 
 
                                     <div class="paywithpaysprint disp-0">
-                                        <h4>Receiver's Information</h4>
+                                        <h4>Beneficiary's Information</h4>
                                         <hr>
 
                                         <div class="form-group"> <label for="orgpayservice">
@@ -452,7 +452,7 @@
                                     </div>
 
                                     <div class="paywithpatners disp-0">
-                                        <h4>Receiver's Information</h4>
+                                        <h4>Beneficiary's Information</h4>
                                         <hr>
 
                                         <div class="form-group"> <label for="orgpayservice">
@@ -487,7 +487,10 @@
                                             <div class="mandatory_data disp-0">
                                             </div>
                                             <div class="payoutAgent_data disp-0">
-
+                                            </div>
+                                            <div class="paymentType_data disp-0">
+                                            </div>
+                                            <div class="remittance_company_data disp-0">
                                             </div>
                                             <div class="information_data disp-0"></div>
 
@@ -595,7 +598,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group"> <label for="netwmount">
-                                                <h6>Fee <small class="text-success"><b>(FREE)</b></small></h6>
+                                                <h6>Fee <small class="text-success"><b>(1.5% Payout Fee)</b></small></h6>
                                             </label>
                                             <div class="input-group">
                                                 <input type="text" name="commissiondeduct" class="form-control"
@@ -1146,13 +1149,17 @@
                                     $('.commissionInfo').addClass('alert alert-success');
                                     $('.commissionInfo').removeClass('alert alert-danger');
 
+                                    let commissionVal = Number(result.data) * 0.015;
+                                    let finalDeduct = Number(result.data) + commissionVal
+
                                     $('.commissionInfo').html(
                                         "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
-                                        result.data.toFixed(2) + " will be deducted from your " + $(
+                                        finalDeduct.toFixed(2) + " will be deducted from your " + $(
                                             '#make_payment_method').val() + ".</span></li></li></ul>");
 
+
                                     $("#partner_amounttosend").val(result.data);
-                                    $("#partner_commissiondeduct").val(result.collection);
+                                    $("#partner_commissiondeduct").val(commissionVal);
 
                                     $("#partner_totalcharge").val($('#partner_conversionamount').val());
 
@@ -1166,15 +1173,18 @@
                                     $('.commissionInfo').addClass('alert alert-success');
                                     $('.commissionInfo').removeClass('alert alert-danger');
 
+                                    let commissionVal = Number(result.data) * 0.1;
+                                    let finalDeduct = Number(result.data) + commissionVal
+
                                     $('.commissionInfo').html(
                                         "<ul><li><span style='font-weight: bold;'>Kindly note that a total amount of: {{ $data['currencyCode']->currencySymbol }}" +
-                                        (+result.data + +result.collection).toFixed(2) +
+                                        finalDeduct.toFixed(2) +
                                         " will be deducted from your " + $('#make_payment_method')
                                         .val() + ".</span></li></li></ul>");
 
                                     $("#partner_amounttosend").val(result.data);
-                                    $("#partner_commissiondeduct").val(result.collection);
-                                    $("#partner_totalcharge").val((+result.data + +result.collection));
+                                    $("#partner_commissiondeduct").val(commissionVal);
+                                    $("#partner_totalcharge").val(finalDeduct);
 
                                     currencyConvert($('#partner_orgpayamount').val());
 
@@ -1532,20 +1542,26 @@
 
                         let compulsoryInput = $('.compulsory_data');
                         let mandatoryInput = $('.mandatory_data');
+                        let paymentTypeInput = $('.paymentType_data');
                         let informationInput = $('.information_data');
                         let payoutAgentInput = $('.payoutAgent_data');
+                        let remittanceCompanyInput = $('.remittance_company_data');
                         let payoutAgentSelect = $('#payout_record');
 
                         compulsoryInput.addClass('disp-0');
                         mandatoryInput.addClass('disp-0');
+                        paymentTypeInput.addClass('disp-0');
                         informationInput.addClass('disp-0');
                         payoutAgentInput.addClass('disp-0');
+                        remittanceCompanyInput.addClass('disp-0');
 
 
                         informationInput.html('');
                         compulsoryInput.html('');
                         mandatoryInput.html('');
+                        paymentTypeInput.html('');
                         payoutAgentInput.html('');
+                        remittanceCompanyInput.html('');
                         payoutAgentSelect.html('');
 
                         if (data.length > 0){
@@ -1601,6 +1617,46 @@
                                 }
                             }
 
+
+                            if(data[0].payment_type){
+                                paymentTypeInput.removeClass('disp-0');
+
+                                paymentTypeInput.html(`
+                                <br><h4>Payment Type</h4><hr>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <input type="text" name="payment_type" id="paymentType" value="${data[0].payment_type}"
+                                                    class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                    `);
+                            }
+
+                            if(data[0].remittance_company !== undefined){
+
+
+                                if(data[0].remittance_company.length > 0){
+                                    let remittanceoptions = [];
+                                remittanceCompanyInput.removeClass('disp-0');
+
+                                $.each(data[0].remittance_company, function(v, k) {
+                                    remittanceoptions.push(`<option value="${k}">${k}</option>`);
+                                });
+
+                                remittanceCompanyInput.html(`<br><h4>Mode of Remittance</h4><hr><div class="form-group"> <label for="remittance">
+                                                <h6><span class="text-danger">* </span>Select Remittance Company</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <select class="form-control" name="remittance" id="remittance" required>
+                                                    ${remittanceoptions}
+                                                </select>
+                                            </div>
+                                        </div>`);
+
+
+                            }
+
+                            }
                             if(data[0].payoutAgent !== undefined){
 
 

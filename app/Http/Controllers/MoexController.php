@@ -2539,7 +2539,7 @@ class MoexController extends Controller
 
 
             // CSV file name => date('d-m-Y') . '_report.xls';
-            $csv = date('d-m-Y') . '_report.xlsx';
+            $csv = date('d-m-Y') . '_report.xls';
 
             // File pointer in writable mode
             $file_pointer = fopen('../'.$csv, 'w');
@@ -2562,6 +2562,7 @@ class MoexController extends Controller
             $setupController->message = "<p>Attached is the daily exchange rate from PaySprint today: ".date('d-m-Y').".</p><p>Best regards</p>";
             $setupController->file = $csv;
             $setupController->sendEmail($setupController->email, "Daily Transaction Report");
+            $setupController->sendEmail('duntanadebiyi@yahoo.com', "Daily Transaction Report");
 
             echo "Done";
         } catch (\Throwable $th) {
@@ -2592,6 +2593,25 @@ class MoexController extends Controller
 
     public function paymentConfirmation ()
     {
+    }
+
+
+    public function moexPS($body)
+    {
+        try {
+
+            $data = $this->addTransactionToMoex($body);
+
+
+        } catch (\Throwable $th) {
+            $data = [
+                'error' => $th->getMessage()
+            ];
+        }
+
+
+            return $data;
+
     }
 
 

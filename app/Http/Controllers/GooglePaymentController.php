@@ -1054,32 +1054,25 @@ class GooglePaymentController extends Controller
             return $this->returnJSON($resData, $status);
         } else {
 
-            // Get User Info
-            $thisuser = User::where('api_token', $req->bearerToken())->first();
-
-            if ($thisuser->flagged === 1) {
-                $data = [];
-                $message = 'Hello ' . $thisuser->name . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact.';
-                $status = 400;
-            } else {
-
-                if (isset($req->paymentMode) && $req->paymentMode === "Partner") {
+            try {
 
 
+                // Get User Info
+                $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+                if ($thisuser->flagged === 1) {
                     $data = [];
-                $message = 'This feature is currently under maintenance. Please check back on Monday, 05/11/2022 09:00AM GMT';
-                $status = 400;
+                    $message = 'Hello ' . $thisuser->name . ', Access to the account is not currently available. Kindly contact the Admin using this link: https://paysprint.ca/contact.';
+                    $status = 400;
+                } else {
 
-                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                    if (isset($req->paymentMode) && $req->paymentMode === "Partner") {
 
-                return $this->returnJSON($resData, $status);
+                        $getCountry = AllCountries::where('name', $thisuser->country)->first();
+                        $transaction_id = "ps-" . date('dmY') . time();
 
-                    $validator = Validator::make($req->all(), [
-                            'fname' => 'required',
-                            'lname' => 'required',
-                            'email' => 'required',
+                        $validator = Validator::make($req->all(), [
                             'countryCode' => 'required',
-                            'phone' => 'required',
                             'country' => 'required',
                             'payment_method' => 'required',
                             'service' => 'required',
@@ -1097,7 +1090,6 @@ class GooglePaymentController extends Controller
 
                             if (isset($thisuser)) {
 
-
                                 // Do IDV
 
                                 $checking = $this->checkUsersPassAccount($thisuser->id);
@@ -1111,7 +1103,7 @@ class GooglePaymentController extends Controller
                                     $checkExist = User::where('email', $req->email)->first();
 
 
-                                    if(isset($req->paymentWallet) && $req->paymentWallet === "fx_wallet"){
+                                    if (isset($req->paymentWallet) && $req->paymentWallet === "fx_wallet") {
 
                                         // Get wallet balance for the selected wallet...
 
@@ -1121,18 +1113,17 @@ class GooglePaymentController extends Controller
 
 
                                         // Check for wallet Balance...
-                                        if ((float)$walletResult->wallet_balance < (float)$req->amount){
+                                        if ((float)$walletResult->wallet_balance < (float)$req->amount) {
 
-                                        $response = "Insufficient PaySprint FX Wallet balance";
-                                        $data = [];
-                                        $message = $response;
-                                        $status = 400;
+                                            $response = "Insufficient PaySprint FX Wallet balance";
+                                            $data = [];
+                                            $message = $response;
+                                            $status = 400;
 
 
-                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                                            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
-                                        return $this->returnJSON($resData, $status);
-
+                                            return $this->returnJSON($resData, $status);
                                         }
 
 
@@ -1153,24 +1144,7 @@ class GooglePaymentController extends Controller
                                                     return $this->returnJSON($resData, $status);
                                                 } else {
 
-                                                    $ref_code = mt_rand(00000, 99999);
 
-                                                    // Get all ref_codes
-                                                    $ref = User::all();
-
-                                                    if (count($ref) > 0) {
-                                                        foreach ($ref as $key => $value) {
-                                                            if ($value->ref_code == $ref_code) {
-                                                                $newRefcode = mt_rand(000000, 999999);
-                                                            } else {
-                                                                $newRefcode = $ref_code;
-                                                            }
-                                                        }
-                                                    } else {
-                                                        $newRefcode = $ref_code;
-                                                    }
-
-                                                    $newcustomer = AnonUsers::where('email', $req->email)->first();
 
 
                                                     $approve_commission = "No";
@@ -1182,13 +1156,64 @@ class GooglePaymentController extends Controller
 
                                                         // Get Country Currency code
 
-
                                                         // COnvert Currency for Wallet credit to receiver
                                                         $amount = $this->convertCurrencyRate($foreigncurrency->currencyCode, $walletResult->currencyCode, $req->amount);
                                                     } else {
                                                         $amount = $req->amount;
                                                     }
 
+                                                    $dob = $thisuser->yearOfBirth . '' . ($thisuser->monthOfBirth <= 9 ? "0" . $thisuser->monthOfBirth : $thisuser->monthOfBirth) . '' . ($thisuser->dayOfBirth <= 9 ? "0" . $thisuser->dayOfBirth : $thisuser->dayOfBirth);
+
+                                                    // Do MOEX MEAddTransaction....
+                                                    $moexProperties = array(
+                                                        'sender' => $thisuser->name,
+                                                        'senderName' => explode(' ', $thisuser->name)[0],
+                                                        'senderLastName' => explode(' ', $thisuser->name)[1],
+                                                        'senderAddress' => $thisuser->address,
+                                                        'senderCountry' => $getCountry->cca3,
+                                                        'senderIdDocumentNumber' => $req->compulsory_id_Number,
+                                                        'senderIdDocumentType' => 'DRL',
+                                                        'receiver' => $req->mandatory_surname,
+                                                        'phoneNumber' => $req->mandatory_phoneNumber,
+                                                        'receiverName' => $req->mandatory_fullname,
+                                                        'receiverLastName' => $req->mandatory_surname,
+                                                        'receiverCountry' => $foreigncurrency->cca3,
+                                                        'bankDeposit' => $req->card_type == "Bank Account" ? 'TRUE' : 'FALSE',
+                                                        'bankName' => $req->mandatory_bankName,
+                                                        'bankAddress' => $req->mandatory_bankName . ' ' . $thisuser->country,
+                                                        'bankAccount' => $req->mandatory_accountNumber,
+                                                        'branchCode' => '',
+                                                        'amountToPay' => $amount,
+                                                        'currencyToPay' => $foreigncurrency->currencyCode,
+                                                        'amountSent' => $req->totalcharge,
+                                                        'currencySent' => $getCountry->currencyCode,
+                                                        'originCountry' => $getCountry->cca3,
+                                                        'auxiliaryInfo' => [
+                                                            'SenderBirthDate' => $dob,
+                                                            'SenderBirthPlace' => "",
+                                                            'SenderBirthCountry' => $getCountry->cca3
+                                                        ],
+                                                        'reference' => $transaction_id
+                                                    );
+
+                                                    // Go to MOEX Endpoint....
+                                                    $moexControllerPs = new MoexController();
+
+                                                    $doMoex = $moexControllerPs->moexPS($moexProperties);
+
+
+                                                    if (array_key_exists('error', $doMoex)) {
+
+                                                        $data = [];
+                                                        $message = $doMoex['error'];
+                                                        $status = 400;
+
+                                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                                                        return $this->returnJSON($resData, $status);
+                                                    }
+
+
 
                                                     // Getting the payer
                                                     $userID = $thisuser->email;
@@ -1203,446 +1228,131 @@ class GooglePaymentController extends Controller
                                                         $service = $req->purpose;
                                                     }
 
-                                                        $statement_route = "wallet";
+                                                    $statement_route = "wallet";
 
 
-                                                        $wallet_balance = $walletResult->wallet_balance - $req->amount;
-                                                        $paymentToken = "es-wallet-" . date('dmY') . time();
-                                                        $paystatus = "Pending";
-                                                        $action = "Escrow Wallet debit";
-                                                        $requestReceive = 2;
+                                                    $wallet_balance = $walletResult->wallet_balance - $req->amount;
+                                                    $paymentToken = "es-wallet-" . date('dmY') . time();
+                                                    $paystatus = "Pending";
+                                                    $action = "Escrow Wallet debit";
+                                                    $requestReceive = 2;
 
 
-                                                        $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $newRefcode, 'user_id' => $userID, 'purpose' => $service, 'amount' => $foreigncurrency->currencyCode . ' ' . $req->amount, 'withdraws' => $foreigncurrency->currencyCode . ' ' . $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $amount, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $foreigncurrency->currencyCode . ' ' . $amount, 'request_receive' => $requestReceive]);
+                                                    $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $thisuser->ref_code, 'user_id' => $userID, 'purpose' => $service, 'amount' => $foreigncurrency->currencyCode . ' ' . $req->amount, 'withdraws' => $foreigncurrency->currencyCode . ' ' . $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $amount, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $foreigncurrency->currencyCode . ' ' . $amount, 'request_receive' => $requestReceive]);
 
-                                                        if ($insertPay == true) {
-
-
-                                                            EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $walletResult->currencyCode)->update(['wallet_balance' => $wallet_balance]);
+                                                    if ($insertPay == true) {
 
 
-                                                            // Create or update Other party account
-                                                            if (isset($newcustomer)) {
-
-                                                                $ref_code = $newcustomer->ref_code;
-                                                                // Update account
-                                                                $newwalletBal = $newcustomer->wallet_balance + $amount;
-                                                                AnonUsers::where('email', $newcustomer->email)->update(['wallet_balance' => $newwalletBal]);
-                                                            } else {
-                                                                $ref_code = $newRefcode;
-                                                                // Create account
-                                                                $newwalletBal = $amount;
-                                                                AnonUsers::insert(['code' => $req->countryCode, 'ref_code' => $newRefcode, 'name' => $req->fname . ' ' . $req->lname, 'email' => $req->email, 'telephone' => $req->phone, 'country' => $req->country, 'wallet_balance' => $newwalletBal, 'accountType' => $thisuser->accountType]);
-                                                            }
-
-
-                                                            $getInviteType = AnonUsers::where('email', $req->email)->first();
-                                                            // Send mail to both parties
-
-                                                            // Notification to Sender
-                                                            $this->name = $thisuser->name;
-                                                            // $this->email = "bambo@vimfile.com";
-
-                                                            $this->email = $thisuser->email;
-                                                            $this->subject = $walletResult->currencyCode . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
-
-                                                            $this->message = '<p>You have sent <strong>' . $walletResult->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->fname . ' ' . $req->lname . '. You now have <strong>' . $walletResult->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your '.$walletResult->currencyCode.' FX wallet account</p>';
-
-                                                            $sendMsg = 'You have sent ' . $walletResult->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->fname . ' ' . $req->lname . '. You now have ' . $walletResult->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your '.$walletResult->currencyCode.' FX wallet account';
-
-                                                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                                            if (isset($userPhone)) {
-
-                                                                $sendPhone = $thisuser->telephone;
-                                                            } else {
-                                                                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                                                            }
-
-
-                                                            $this->sendEmail($this->email, "Fund remittance");
-
-                                                            if ($thisuser->country == "Nigeria") {
-
-                                                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                                                $this->sendSms($sendMsg, $correctPhone);
-                                                            } else {
-                                                                $this->sendMessage($sendMsg, $sendPhone);
-                                                            }
+                                                        EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $walletResult->currencyCode)->update(['wallet_balance' => $wallet_balance]);
 
 
 
+                                                        // Notification to Sender
+                                                        $this->name = $thisuser->name;
+                                                        // $this->email = "bambo@vimfile.com";
 
+                                                        $this->email = $thisuser->email;
+                                                        $this->subject = $walletResult->currencyCode . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
 
-                                                            // Notification for receiver
-                                                            $this->name = $req->fname . ' ' . $req->lname;
-                                                            // $this->to = "bambo@vimfile.com";
-                                                            $this->to = $req->email;
-                                                            $this->subject = $thisuser->name . " has sent you " . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . " on PaySprint";
+                                                        $this->message = '<p>You have sent <strong>' . $walletResult->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->mandatory_fullname . '. Payout fee of <strong>' . $walletResult->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . '</strong> inclusive. You now have <strong>' . $walletResult->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your ' . $walletResult->currencyCode . ' FX wallet account</p>';
 
+                                                        $sendMsg = 'You have sent ' . $walletResult->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->mandatory_fullname . '. Payout fee of ' . $walletResult->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ' inclusive. You now have ' . $walletResult->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your ' . $walletResult->currencyCode . ' FX wallet account';
 
-                                                            if ($thisuser->accountType == "Individual" || $getInviteType->accountType == "Individual") {
-                                                                $route = route('register', 'user=' . $ref_code);
-                                                            } else {
-                                                                $route = route('AdminRegister', 'user=' . $ref_code);
-                                                            }
+                                                        $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
-                                                            $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. You now have <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($newwalletBal, 2) . '</strong> balance in your account</p><hr><p>To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE </p><p><a href="' . $route . '">' . $route . '</a></p>';
+                                                        if (isset($userPhone)) {
 
-                                                            $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. You now have ' . $foreigncurrency->currencyCode . ' ' . number_format($newwalletBal, 2) . ' balance in your account. To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE ' . $route;
-
-                                                            $recPhone = "+" . $req->countryCode . $req->phone;
-
-
-                                                            $this->sendEmail($this->to, "Fund remittance");
-
-
-
-                                                            if ($req->country == "Nigeria") {
-
-                                                                $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
-                                                                $this->sendSms($recMesg, $correctPhone);
-                                                            } else {
-                                                                $this->sendMessage($recMesg, $recPhone);
-                                                            }
-
-
-
-
-
-                                                            // Insert Statement
-                                                            $activity = $req->payment_method . " transfer of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " to " . $req->fname . ' ' . $req->lname . " for " . $service;
-                                                            $credit = 0;
-                                                            // $debit = $req->conversionamount + $req->commissiondeduct;
-                                                            $debit = $req->amount;
-                                                            $reference_code = $paymentToken;
-                                                            $balance = 0;
-                                                            $trans_date = date('Y-m-d');
-
-                                                            $regards = $ref_code;
-
-                                                            // Senders statement
-                                                            $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $paystatus, $action, $regards, 1, $statement_route, 'on', $thisuser->country);
-
-                                                            $fxCurrency->insFXStatement($walletResult->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $paystatus, $action, $regards, 1, $statement_route, 'on', $thisuser->country, 'confirmed');
-
-                                                            // Receiver Statement
-                                                            $this->insStatement($req->email, $reference_code, "Received " . $foreigncurrency->currencyCode . '' . $amount . " in wallet for " . $service . " from " . $thisuser->name, $amount, 0, $balance, $trans_date, $paystatus, "Wallet credit", $ref_code, 1, $statement_route, 'on', $req->country);
-
-
-
-                                                            $response = 'Money sent successfully';
-
-                                                            // $data = $insertPay;
-                                                            $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                                            $status = 200;
-                                                            $message = $response;
-
-
-                                                            $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
-
-                                                            $this->createNotification($ref_code, $recMesg);
-
-                                                            $this->updatePoints($thisuser->id, 'Send money');
-
-                                                            // Log::info("Congratulations!, ".$thisuser->name." ".$sendMsg);
-                                                            // Log::info("Congratulations!, ".$this->name." ".$recMesg);
-
-                                                            $this->slack("Congratulations!, " . $thisuser->name . " " . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                                                            $this->slack("Congratulations!, " . $this->name . " " . $recMesg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                                            $sendPhone = $thisuser->telephone;
                                                         } else {
-
-                                                            $response = 'Something went wrong';
-                                                            $data = [];
-                                                            $message = $response;
-                                                            $status = 400;
+                                                            $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
                                                         }
 
-                                                }
-                                            } else {
-                                                // Incorrect Transaction PIN
-                                                $response = 'Invalid transaction pin';
-                                                $data = [];
-                                                $message = $response;
-                                                $status = 400;
-                                            }
-                                        } else {
-                                            // Redirect to route to setup transaction Pin
-                                            $response = 'Kindly setup transaction pin in your profile settings';
-                                            $data = [];
-                                            $message = $response;
-                                            $status = 400;
-                                        }
 
+                                                        $this->sendEmail($this->email, "Fund remittance");
 
-                                    }
-                                    else{
-                                        if (isset($checkExist) == true) {
-                                        $response = 'This user already exist on PaySprint.';
-                                        $data = [];
-                                        $message = $response;
-                                        $status = 403;
+                                                        if ($thisuser->country == "Nigeria") {
 
-
-                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => URL('payment/sendmoney/' . $checkExist->ref_code . '?country=' . $thisuser->country)];
-
-                                        return $this->returnJSON($resData, $status);
-                                    } elseif (isset($imtCountry) && $imtCountry->imt == "false" && $req->country != $thisuser->country || isset($imtCountry) && $imtCountry->outbound == "false" && $req->country != $thisuser->country) {
-
-                                        $response = 'International money transfer is not yet available to ' . $imtCountry->name;
-                                        $data = [];
-                                        $message = $response;
-                                        $status = 403;
-
-                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => '#'];
-                                        return $this->returnJSON($resData, $status);
-                                    } elseif (($thisuser->wallet_balance - $minBal) <= $req->amount) {
-
-                                        $response = "Your minimum wallet balance is " . $thisuser->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
-                                        $data = [];
-                                        $message = $response;
-                                        $status = 403;
-
-
-                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-
-                                        return $this->returnJSON($resData, $status);
-                                    } else {
-
-                                        // Check Transaction PIN
-                                        if ($thisuser->transaction_pin != null) {
-
-                                            if (Hash::check($req->transaction_pin, $thisuser->transaction_pin)) {
-
-                                                if ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
-                                                    $response = 'You cannot send money at the moment because your account is still on review.';
-                                                    $data = [];
-                                                    $message = $response;
-                                                    $status = 403;
-
-
-                                                    $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-
-                                                    return $this->returnJSON($resData, $status);
-                                                } else {
-
-                                                    $ref_code = mt_rand(00000, 99999);
-
-                                                    // Get all ref_codes
-                                                    $ref = User::all();
-
-                                                    if (count($ref) > 0) {
-                                                        foreach ($ref as $key => $value) {
-                                                            if ($value->ref_code == $ref_code) {
-                                                                $newRefcode = mt_rand(000000, 999999);
-                                                            } else {
-                                                                $newRefcode = $ref_code;
-                                                            }
+                                                            $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                            $this->sendSms($sendMsg, $correctPhone);
+                                                        } else {
+                                                            $this->sendMessage($sendMsg, $sendPhone);
                                                         }
+
+
+
+
+
+                                                        // Notification for receiver
+                                                        $this->name = $req->mandatory_fullname;
+                                                        // $this->to = "bambo@vimfile.com";
+                                                        $this->to = $req->mandatory_emailAddress;
+                                                        $this->subject = $thisuser->name . " has sent you " . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . " on PaySprint";
+
+
+
+                                                        $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. Here is the transaction ID to claim your money <strong>' . $doMoex['transactionId'] . '</strong>. You can get paid at <strong>' . $req->remittance . '</strong> of your choice. Kindly have your means of identification match your identity to receive fund.</p>';
+
+                                                        $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. Here is the transaction ID to claim your money ' . $doMoex['transactionId'] . '. You can get paid at ' . $req->remittance . ' of your choice. Kindly have your means of identification match your identity to receive fund.';
+
+                                                        $recPhone = "+" . $req->countryCode . $req->phone;
+
+
+                                                        $this->sendEmail($this->to, "Fund remittance");
+
+
+
+                                                        if ($req->country == "Nigeria") {
+
+                                                            $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                                                            $this->sendSms($recMesg, $correctPhone);
+                                                        } else {
+                                                            $this->sendMessage($recMesg, $recPhone);
+                                                        }
+
+
+
+
+
+                                                        // Insert Statement
+                                                        $activity = $req->payment_method . " transfer of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " to " . $req->fname . ' ' . $req->lname . " for " . $service;
+                                                        $credit = 0;
+                                                        // $debit = $req->conversionamount + $req->commissiondeduct;
+                                                        $debit = $req->amount;
+                                                        $reference_code = $paymentToken;
+                                                        $balance = 0;
+                                                        $trans_date = date('Y-m-d');
+
+                                                        $regards = $thisuser->ref_code;
+
+                                                        // Senders statement
+                                                        $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $paystatus, $action, $regards, 1, $statement_route, 'on', $thisuser->country);
+
+                                                        $fxCurrency->insFXStatement($walletResult->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $paystatus, $action, $regards, 1, $statement_route, 'on', $thisuser->country, 'confirmed');
+
+
+
+                                                        $response = 'Money sent successfully';
+
+                                                        // $data = $insertPay;
+                                                        $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                        $status = 200;
+                                                        $message = $response;
+
+
+                                                        $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
+
+                                                        $this->updatePoints($thisuser->id, 'Send money');
+
+                                                        // Log::info("Congratulations!, ".$thisuser->name." ".$sendMsg);
+                                                        // Log::info("Congratulations!, ".$this->name." ".$recMesg);
+
+                                                        $this->slack("Congratulations!, " . $thisuser->name . " " . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
                                                     } else {
-                                                        $newRefcode = $ref_code;
-                                                    }
 
-                                                    $newcustomer = AnonUsers::where('email', $req->email)->first();
-
-
-                                                    $approve_commission = "No";
-
-                                                    $foreigncurrency = $this->getCountryCode($req->country);
-
-
-                                                    if ($thisuser->country != $req->country) {
-
-                                                        // Get Country Currency code
-
-
-                                                        // COnvert Currency for Wallet credit to receiver
-                                                        $amount = $this->convertCurrencyRate($foreigncurrency->currencyCode, $thisuser->currencyCode, $req->amount);
-                                                    } else {
-                                                        $amount = $req->amount;
-                                                    }
-
-
-                                                    // Getting the payer
-                                                    $userID = $thisuser->email;
-                                                    $payerID = $thisuser->ref_code;
-
-                                                    // $req->user_id is for the receiver::
-
-                                                    // Do Insert
-                                                    if ($req->service != "Others") {
-                                                        $service = $req->service;
-                                                    } else {
-                                                        $service = $req->purpose;
-                                                    }
-
-
-                                                    if ($req->amount > ($thisuser->wallet_balance - $minBal)) {
-                                                        $response = "Your minimum wallet balance is " . $thisuser->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                                                        $response = 'Something went wrong';
                                                         $data = [];
                                                         $message = $response;
                                                         $status = 400;
-                                                    } else {
-                                                        $statement_route = "wallet";
-
-
-                                                        $wallet_balance = $thisuser->wallet_balance - $req->amount;
-                                                        $withdrawal_per_day = $thisuser->withdrawal_per_day + $req->amount;
-                                                        $withdrawal_per_week = $thisuser->withdrawal_per_week + $withdrawal_per_day;
-                                                        $withdrawal_per_month = $thisuser->withdrawal_per_month + $withdrawal_per_week;
-                                                        $paymentToken = "wallet-" . date('dmY') . time();
-                                                        $paystatus = "Pending";
-                                                        $action = "Wallet debit";
-                                                        $requestReceive = 2;
-
-
-                                                        $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $newRefcode, 'user_id' => $userID, 'purpose' => $service, 'amount' => $foreigncurrency->currencyCode . ' ' . $req->amount, 'withdraws' => $foreigncurrency->currencyCode . ' ' . $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $amount, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $foreigncurrency->currencyCode . ' ' . $amount, 'request_receive' => $requestReceive]);
-
-                                                        if ($insertPay == true) {
-
-
-                                                            // Update Wallet
-                                                            User::where('api_token', $req->bearerToken())->update([
-                                                                'wallet_balance' => $wallet_balance,
-                                                                'withdrawal_per_day' => $withdrawal_per_day,
-                                                                'withdrawal_per_week' => $withdrawal_per_week,
-                                                                'withdrawal_per_month' => $withdrawal_per_month
-                                                            ]);
-
-
-                                                            // Create or update Other party account
-                                                            if (isset($newcustomer)) {
-
-                                                                $ref_code = $newcustomer->ref_code;
-                                                                // Update account
-                                                                $newwalletBal = $newcustomer->wallet_balance + $amount;
-                                                                AnonUsers::where('email', $newcustomer->email)->update(['wallet_balance' => $newwalletBal]);
-                                                            } else {
-                                                                $ref_code = $newRefcode;
-                                                                // Create account
-                                                                $newwalletBal = $amount;
-                                                                AnonUsers::insert(['code' => $req->countryCode, 'ref_code' => $newRefcode, 'name' => $req->fname . ' ' . $req->lname, 'email' => $req->email, 'telephone' => $req->phone, 'country' => $req->country, 'wallet_balance' => $newwalletBal, 'accountType' => $thisuser->accountType]);
-                                                            }
-
-
-                                                            $getInviteType = AnonUsers::where('email', $req->email)->first();
-                                                            // Send mail to both parties
-
-                                                            // Notification to Sender
-                                                            $this->name = $thisuser->name;
-                                                            // $this->email = "bambo@vimfile.com";
-                                                            $this->email = $thisuser->email;
-                                                            $this->subject = $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
-
-                                                            $this->message = '<p>You have sent <strong>' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->fname . ' ' . $req->lname . '. You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your account</p>';
-
-                                                            $sendMsg = 'You have sent ' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->fname . ' ' . $req->lname . '. You now have ' . $thisuser->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your account';
-
-                                                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                                            if (isset($userPhone)) {
-
-                                                                $sendPhone = $thisuser->telephone;
-                                                            } else {
-                                                                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                                                            }
-
-
-                                                            $this->sendEmail($this->email, "Fund remittance");
-
-                                                            if ($thisuser->country == "Nigeria") {
-
-                                                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                                                $this->sendSms($sendMsg, $correctPhone);
-                                                            } else {
-                                                                $this->sendMessage($sendMsg, $sendPhone);
-                                                            }
-
-
-
-
-
-                                                            // Notification for receiver
-                                                            $this->name = $req->fname . ' ' . $req->lname;
-                                                            // $this->to = "bambo@vimfile.com";
-                                                            $this->to = $req->email;
-                                                            $this->subject = $thisuser->name . " has sent you " . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . " on PaySprint";
-
-
-                                                            if ($thisuser->accountType == "Individual" || $getInviteType->accountType == "Individual") {
-                                                                $route = route('register', 'user=' . $ref_code);
-                                                            } else {
-                                                                $route = route('AdminRegister', 'user=' . $ref_code);
-                                                            }
-
-                                                            $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. You now have <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($newwalletBal, 2) . '</strong> balance in your account</p><hr><p>To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE </p><p><a href="' . $route . '">' . $route . '</a></p>';
-
-                                                            $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. You now have ' . $foreigncurrency->currencyCode . ' ' . number_format($newwalletBal, 2) . ' balance in your account. To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE ' . $route;
-
-                                                            $recPhone = "+" . $req->countryCode . $req->phone;
-
-
-                                                            $this->sendEmail($this->to, "Fund remittance");
-
-
-
-                                                            if ($req->country == "Nigeria") {
-
-                                                                $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
-                                                                $this->sendSms($recMesg, $correctPhone);
-                                                            } else {
-                                                                $this->sendMessage($recMesg, $recPhone);
-                                                            }
-
-
-
-
-
-                                                            // Insert Statement
-                                                            $activity = $req->payment_method . " transfer of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " to " . $req->fname . ' ' . $req->lname . " for " . $service;
-                                                            $credit = 0;
-                                                            // $debit = $req->conversionamount + $req->commissiondeduct;
-                                                            $debit = $req->amount;
-                                                            $reference_code = $paymentToken;
-                                                            $balance = 0;
-                                                            $trans_date = date('Y-m-d');
-
-                                                            $regards = $ref_code;
-
-                                                            // Senders statement
-                                                            $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $paystatus, $action, $regards, 1, $statement_route, 'on', $thisuser->country);
-
-                                                            // Receiver Statement
-                                                            $this->insStatement($req->email, $reference_code, "Received " . $foreigncurrency->currencyCode . '' . $amount . " in wallet for " . $service . " from " . $thisuser->name, $amount, 0, $balance, $trans_date, $paystatus, "Wallet credit", $ref_code, 1, $statement_route, 'on', $req->country);
-
-
-
-                                                            $response = 'Money sent successfully';
-
-                                                            // $data = $insertPay;
-                                                            $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                                            $status = 200;
-                                                            $message = $response;
-
-
-                                                            $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
-
-                                                            $this->createNotification($ref_code, $recMesg);
-
-                                                            $this->updatePoints($thisuser->id, 'Send money');
-
-                                                            // Log::info("Congratulations!, ".$thisuser->name." ".$sendMsg);
-                                                            // Log::info("Congratulations!, ".$this->name." ".$recMesg);
-
-                                                            $this->slack("Congratulations!, " . $thisuser->name . " " . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                                                            $this->slack("Congratulations!, " . $this->name . " " . $recMesg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                                                        } else {
-
-                                                            $response = 'Something went wrong';
-                                                            $data = [];
-                                                            $message = $response;
-                                                            $status = 400;
-                                                        }
                                                     }
                                                 }
                                             } else {
@@ -1659,307 +1369,295 @@ class GooglePaymentController extends Controller
                                             $message = $response;
                                             $status = 400;
                                         }
+                                    } else {
+
+                                        if (($thisuser->wallet_balance - $minBal) <= $req->totalcharge) {
+
+                                            $response = "Your minimum wallet balance is " . $thisuser->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                                            $data = [];
+                                            $message = $response;
+                                            $status = 403;
+
+
+                                            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                                            return $this->returnJSON($resData, $status);
+                                        } else {
+
+                                            // Check Transaction PIN
+                                            if ($thisuser->transaction_pin != null) {
+
+                                                if (Hash::check($req->transaction_pin, $thisuser->transaction_pin)) {
+
+                                                    if ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
+                                                        $response = 'You cannot send money at the moment because your account is still on review.';
+                                                        $data = [];
+                                                        $message = $response;
+                                                        $status = 403;
+
+
+                                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                                                        return $this->returnJSON($resData, $status);
+                                                    } else {
+
+
+                                                        $approve_commission = "No";
+
+                                                        $foreigncurrency = $this->getCountryCode($req->country);
+
+
+                                                        if ($thisuser->country != $req->country) {
+
+                                                            // Get Country Currency code
+
+                                                            // COnvert Currency for Wallet credit to receiver
+                                                            $amount = $this->convertCurrencyRate($foreigncurrency->currencyCode, $thisuser->currencyCode, $req->amount);
+                                                        } else {
+                                                            $amount = $req->amount;
+                                                        }
+
+
+                                                        // Getting the payer
+                                                        $userID = $thisuser->email;
+                                                        $payerID = $thisuser->ref_code;
+
+                                                        // $req->user_id is for the receiver::
+
+                                                        // Do Insert
+                                                        if ($req->service != "Others") {
+                                                            $service = $req->service;
+                                                        } else {
+                                                            $service = $req->purpose;
+                                                        }
+
+
+
+
+                                                        if ($req->totalcharge > ($thisuser->wallet_balance - $minBal)) {
+
+                                                            $response = "Your minimum wallet balance is " . $thisuser->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                                                            $data = [];
+                                                            $message = $response;
+                                                            $status = 400;
+                                                        } else {
+
+                                                            $dob = $thisuser->yearOfBirth . '' . ($thisuser->monthOfBirth <= 9 ? "0" . $thisuser->monthOfBirth : $thisuser->monthOfBirth) . '' . ($thisuser->dayOfBirth <= 9 ? "0" . $thisuser->dayOfBirth : $thisuser->dayOfBirth);
+
+
+
+
+                                                            // Do MOEX MEAddTransaction....
+                                                            $moexProperties = array(
+                                                                'sender' => $thisuser->name,
+                                                                'senderName' => explode(' ', $thisuser->name)[0],
+                                                                'senderLastName' => explode(' ', $thisuser->name)[1],
+                                                                'senderAddress' => $thisuser->address,
+                                                                'senderCountry' => $getCountry->cca3,
+                                                                'senderIdDocumentNumber' => $req->compulsory_id_Number,
+                                                                'senderIdDocumentType' => 'DRL',
+                                                                'receiver' => $req->mandatory_surname,
+                                                                'phoneNumber' => $req->mandatory_phoneNumber,
+                                                                'receiverName' => $req->mandatory_fullname,
+                                                                'receiverLastName' => $req->mandatory_surname,
+                                                                'receiverCountry' => $foreigncurrency->cca3,
+                                                                'bankDeposit' => $req->payment_type == "Bank Account" ? 'TRUE' : ($req->payment_type == "Instant" ? 'TRUE' : 'FALSE'),
+                                                                'bankName' => $req->mandatory_bankName,
+                                                                'bankAddress' => $req->mandatory_bankName . ' ' . $thisuser->country,
+                                                                'bankAccount' => $req->mandatory_accountNumber,
+                                                                'branchCode' => '',
+                                                                'amountToPay' => $amount,
+                                                                'currencyToPay' => $foreigncurrency->currencyCode,
+                                                                'amountSent' => $req->totalcharge,
+                                                                'currencySent' => $getCountry->currencyCode,
+                                                                'originCountry' => $getCountry->cca3,
+                                                                'auxiliaryInfo' => [
+                                                                    'SenderBirthDate' => $dob,
+                                                                    'SenderBirthPlace' => "",
+                                                                    'SenderBirthCountry' => $getCountry->cca3
+                                                                ],
+                                                                'reference' => $transaction_id
+                                                            );
+
+
+
+                                                            // Go to MOEX Endpoint....
+                                                            $moexControllerPs = new MoexController();
+
+                                                            $doMoex = $moexControllerPs->moexPS($moexProperties);
+
+                                                            if (array_key_exists('error', $doMoex)) {
+
+                                                                $data = [];
+                                                                $message = $doMoex['error'];
+                                                                $status = 400;
+
+                                                                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                                                                return $this->returnJSON($resData, $status);
+                                                            }
+
+
+                                                            $statement_route = "wallet";
+
+
+                                                            $wallet_balance = $thisuser->wallet_balance - $req->totalcharge;
+                                                            $withdrawal_per_day = $thisuser->withdrawal_per_day + $req->totalcharge;
+                                                            $withdrawal_per_week = $thisuser->withdrawal_per_week + $withdrawal_per_day;
+                                                            $withdrawal_per_month = $thisuser->withdrawal_per_month + $withdrawal_per_week;
+                                                            $paymentToken = "wallet-" . date('dmY') . time();
+                                                            $paystatus = "Pending";
+                                                            $action = "Wallet debit";
+                                                            $requestReceive = 2;
+
+
+                                                            $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $thisuser->ref_code, 'user_id' => $userID, 'purpose' => $service, 'amount' => $foreigncurrency->currencyCode . ' ' . $req->totalcharge, 'withdraws' => $foreigncurrency->currencyCode . ' ' . $req->totalcharge, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $amount, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $foreigncurrency->currencyCode . ' ' . $amount, 'request_receive' => $requestReceive]);
+
+                                                            if ($insertPay == true) {
+
+
+                                                                // Update Wallet
+                                                                User::where('api_token', $req->bearerToken())->update([
+                                                                    'wallet_balance' => $wallet_balance,
+                                                                    'withdrawal_per_day' => $withdrawal_per_day,
+                                                                    'withdrawal_per_week' => $withdrawal_per_week,
+                                                                    'withdrawal_per_month' => $withdrawal_per_month
+                                                                ]);
+
+
+                                                                // Send mail to both parties
+
+                                                                // Notification to Sender
+                                                                $this->name = $thisuser->name;
+                                                                // $this->email = "bambo@vimfile.com";
+                                                                $this->email = $thisuser->email;
+                                                                $this->subject = $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
+
+                                                                $this->message = '<p>You have sent <strong>' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->mandatory_fullname . '. Payout fee of <strong>' . $thisuser->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . '</strong> inclusive. You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your account</p>';
+
+                                                                $sendMsg = 'You have sent ' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->mandatory_fullname . ' Payout fee of ' . $thisuser->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ' inclusive. You now have ' . $thisuser->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your account';
+
+                                                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                                if (isset($userPhone)) {
+
+                                                                    $sendPhone = $thisuser->telephone;
+                                                                } else {
+                                                                    $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                                                }
+
+
+                                                                $this->sendEmail($this->email, "Fund remittance");
+
+                                                                if ($thisuser->country == "Nigeria") {
+
+                                                                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                                    $this->sendSms($sendMsg, $correctPhone);
+                                                                } else {
+                                                                    $this->sendMessage($sendMsg, $sendPhone);
+                                                                }
+
+
+
+
+
+                                                                // Notification for receiver
+                                                                $this->name = $req->mandatory_fullname;
+                                                                // $this->to = "bambo@vimfile.com";
+                                                                $this->to = $req->mandatory_emailAddress;
+                                                                $this->subject = $thisuser->name . " has sent you " . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . " on PaySprint";
+
+
+                                                                $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. Here is the transaction ID to claim your money <strong>' . $doMoex['transactionId'] . '</strong>. You can get paid at <strong>' . $req->remittance . '</strong> of your choice. Kindly have your means of identification match your identity to receive fund.</p>';
+
+                                                                $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. Here is the transaction ID to claim your money ' . $doMoex['transactionId'] . '. You can get paid at ' . $req->remittance . ' of your choice. Kindly have your means of identification match your identity to receive fund.';
+
+
+
+
+                                                                $recPhone = "+" . $req->countryCode . $req->phone;
+
+
+                                                                $this->sendEmail($this->to, "Fund remittance");
+
+
+
+                                                                if ($req->country == "Nigeria") {
+
+                                                                    $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                                                                    $this->sendSms($recMesg, $correctPhone);
+                                                                } else {
+                                                                    $this->sendMessage($recMesg, $recPhone);
+                                                                }
+
+
+
+
+
+                                                                // Insert Statement
+                                                                $activity = $req->payment_method . " transfer of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " to " . $req->fname . ' ' . $req->lname . " for " . $service;
+                                                                $credit = 0;
+                                                                // $debit = $req->conversionamount + $req->commissiondeduct;
+                                                                $debit = $req->amount;
+                                                                $reference_code = $paymentToken;
+                                                                $balance = 0;
+                                                                $trans_date = date('Y-m-d');
+
+                                                                $regards = $thisuser->ref_code;
+
+                                                                // Senders statement
+                                                                $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $paystatus, $action, $regards, 1, $statement_route, 'on', $thisuser->country);
+
+
+
+
+                                                                $response = 'Money sent successfully';
+
+                                                                // $data = $insertPay;
+                                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                                $status = 200;
+                                                                $message = $response;
+
+
+                                                                $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
+
+                                                                $this->updatePoints($thisuser->id, 'Send money');
+
+                                                                // Log::info("Congratulations!, ".$thisuser->name." ".$sendMsg);
+                                                                // Log::info("Congratulations!, ".$this->name." ".$recMesg);
+
+                                                                $this->slack("Congratulations!, " . $thisuser->name . " " . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                                            } else {
+
+                                                                $response = 'Something went wrong';
+                                                                $data = [];
+                                                                $message = $response;
+                                                                $status = 400;
+                                                            }
+                                                        }
+                                                    }
+                                                } else {
+                                                    // Incorrect Transaction PIN
+                                                    $response = 'Invalid transaction pin';
+                                                    $data = [];
+                                                    $message = $response;
+                                                    $status = 400;
+                                                }
+                                            } else {
+                                                // Redirect to route to setup transaction Pin
+                                                $response = 'Kindly setup transaction pin in your profile settings';
+                                                $data = [];
+                                                $message = $response;
+                                                $status = 400;
+                                            }
+                                        }
                                     }
-                                    }
-
-
-
                                 } else {
                                     $response = $checking["response"];
 
                                     $data = [];
                                     $message = $response;
                                     $status = 400;
-                                }
-                            } else {
-                                $response = 'Cannot find your account record, to continue payment.';
-
-                                $data = [];
-                                $message = $response;
-                                $status = 400;
-                            }
-                        } else {
-
-                            $error = implode(",", $validator->messages()->all());
-
-                            $data = [];
-                            $status = 400;
-                            $message = $error;
-                        }
-
-                } else {
-
-                    if (isset($req->mode) && $req->mode == "test") {
-
-                        // dd($req->all());
-
-                        $validator = Validator::make($req->all(), [
-                            'fname' => 'required',
-                            'lname' => 'required',
-                            'email' => 'required',
-                            'countryCode' => 'required',
-                            'phone' => 'required',
-                            'country' => 'required',
-                            'payment_method' => 'required',
-                            'service' => 'required',
-                            'amount' => 'required',
-                            'transaction_pin' => 'required',
-                        ]);
-
-
-                        if ($validator->passes()) {
-
-
-
-                            if (isset($thisuser)) {
-
-
-                                $minBal = $this->minimumWithdrawal($thisuser->country);
-
-
-                                // Check Anon user existence
-                                $checkExist = User::where('email', $req->email)->first();
-
-                                if (isset($checkExist) == true) {
-                                    $response = 'This user already exist on PaySprint.';
-                                    $data = [];
-                                    $message = $response;
-                                    $status = 403;
-
-
-                                    $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => URL('payment/sendmoney/' . $checkExist->ref_code . '?country=' . $thisuser->country)];
-
-                                    return $this->returnJSON($resData, $status);
-                                } elseif ($thisuser->country != $req->country) {
-                                    $response = 'International money transfer is not available at the moment';
-                                    $data = [];
-                                    $message = $response;
-                                    $status = 403;
-
-                                    $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => '#'];
-
-                                    return $this->returnJSON($resData, $status);
-                                } else {
-
-                                    if ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
-                                        $response = 'You cannot send money at the moment because your account is still on review.';
-                                        $data = [];
-                                        $message = $response;
-                                        $status = 403;
-
-
-                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-
-                                        return $this->returnJSON($resData, $status);
-                                    } elseif (($thisuser->wallet_balance - $minBal) <= $req->amount) {
-
-                                        $response = "Your minimum wallet balance is " . $thisuser->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
-                                        $data = [];
-                                        $message = $response;
-                                        $status = 403;
-
-
-                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-
-                                        return $this->returnJSON($resData, $status);
-                                    } else {
-
-                                        $ref_code = mt_rand(0000000, 9999999);
-
-                                        // Get all ref_codes
-                                        $ref = User::all();
-
-                                        if (count($ref) > 0) {
-                                            foreach ($ref as $key => $value) {
-                                                if ($value->ref_code == $ref_code) {
-                                                    $newRefcode = mt_rand(0000000, 9999999);
-                                                } else {
-                                                    $newRefcode = $ref_code;
-                                                }
-                                            }
-                                        } else {
-                                            $newRefcode = $ref_code;
-                                        }
-
-                                        $newcustomer = AnonUsers::where('email', $req->email)->first();
-
-
-                                        $approve_commission = "No";
-
-                                        $foreigncurrency = $this->getCountryCode($req->country);
-
-
-                                        if ($thisuser->country != $req->country) {
-
-                                            // Get Country Currency code
-
-
-                                            // COnvert Currency for Wallet credit to receiver
-                                            $amount = $this->convertCurrencyRate($foreigncurrency->currencyCode, $thisuser->currencyCode, $req->amount);
-                                        } else {
-                                            $amount = $req->amount;
-                                        }
-
-
-                                        // Getting the payer
-                                        $userID = $thisuser->email;
-                                        $payerID = $thisuser->ref_code;
-
-                                        // $req->user_id is for the receiver::
-
-                                        // Do Insert
-                                        if ($req->service != "Others") {
-                                            $service = $req->service;
-                                        } else {
-                                            $service = $req->purpose;
-                                        }
-
-
-                                        if ($req->amount > ($thisuser->wallet_balance - $minBal)) {
-                                            $response = "Your minimum wallet balance is " . $thisuser->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
-                                            $data = [];
-                                            $message = $response;
-                                            $status = 400;
-                                        } else {
-                                            $statement_route = "wallet";
-
-
-                                            $wallet_balance = $thisuser->wallet_balance - $req->amount;
-                                            $withdrawal_per_day = $thisuser->withdrawal_per_day + $req->amount;
-                                            $withdrawal_per_week = $thisuser->withdrawal_per_week + $withdrawal_per_day;
-                                            $withdrawal_per_month = $thisuser->withdrawal_per_month + $withdrawal_per_week;
-                                            $paymentToken = "wallet-" . date('dmY') . time();
-                                            $paystatus = "Pending";
-                                            $action = "Wallet debit";
-                                            $requestReceive = 2;
-
-
-                                            $insertPay = 1;
-
-                                            if ($insertPay == 1) {
-
-
-                                                // Update Wallet
-                                                // User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $wallet_balance]);
-
-
-                                                // Create or update Other party account
-                                                if (isset($newcustomer)) {
-
-                                                    $ref_code = $newcustomer->ref_code;
-                                                    // Update account
-                                                    $newwalletBal = $newcustomer->wallet_balance + $amount;
-                                                    // AnonUsers::where('email', $newcustomer->email)->update(['wallet_balance' => $newwalletBal]);
-                                                } else {
-                                                    $ref_code = $newRefcode;
-                                                    // Create account
-                                                    $newwalletBal = $amount;
-                                                    // AnonUsers::insert(['code' => $req->countryCode, 'ref_code' => $newRefcode, 'name' => $req->fname.' '.$req->lname, 'email' => $req->email, 'telephone' => $req->phone, 'country' => $req->country, 'wallet_balance' => $newwalletBal, 'accountType' => $thisuser->accountType]);
-                                                }
-
-
-                                                $getInviteType = AnonUsers::where('email', $req->email)->first();
-                                                // Send mail to both parties
-
-                                                // Notification to Sender
-                                                $this->name = $thisuser->name;
-                                                // $this->email = "bambo@vimfile.com";
-                                                $this->email = $thisuser->email;
-                                                $this->subject = $foreigncurrency->currencyCode . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
-
-                                                $this->message = '<p>You have sent <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->fname . ' ' . $req->lname . '. You now have <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your account</p>';
-
-                                                $sendMsg = 'You have sent ' . $foreigncurrency->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->fname . ' ' . $req->lname . '. You now have ' . $foreigncurrency->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your account';
-
-                                                $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                                if (isset($userPhone)) {
-
-                                                    $sendPhone = $thisuser->telephone;
-                                                } else {
-                                                    $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                                                }
-
-
-                                                // $this->sendEmail($this->email, "Fund remittance");
-
-                                                // $this->sendMessage($sendMsg, $sendPhone);
-
-
-
-                                                // Notification for receiver
-                                                $this->name = $req->fname . ' ' . $req->lname;
-                                                // $this->to = "bambo@vimfile.com";
-                                                $this->to = $req->email;
-                                                $this->subject = $thisuser->name . " has sent you " . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . " on PaySprint";
-
-
-                                                if ($thisuser->accountType == "Individual" || $getInviteType->accountType == "Individual") {
-                                                    $route = route('register', 'user=' . $ref_code);
-                                                } else {
-                                                    $route = route('AdminRegister', 'user=' . $ref_code);
-                                                }
-
-                                                $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. You now have <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($newwalletBal, 2) . '</strong> balance in your account</p><hr><p>To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE </p><p><a href="' . $route . '">' . $route . '</a></p>';
-
-                                                $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. You now have ' . $foreigncurrency->currencyCode . ' ' . number_format($newwalletBal, 2) . ' balance in your account. To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE ' . $route;
-                                                $recPhone = "+" . $req->countryCode . $req->phone;
-
-
-                                                // $this->sendEmail($this->to, "Fund remittance");
-
-                                                // $this->sendMessage($recMesg, $recPhone);
-
-
-
-
-
-                                                // Insert Statement
-                                                $activity = $req->payment_method . " transfer of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " to " . $req->fname . ' ' . $req->lname . " for " . $service;
-                                                $credit = 0;
-                                                // $debit = $req->conversionamount + $req->commissiondeduct;
-                                                $debit = $amount;
-                                                $reference_code = $paymentToken;
-                                                $balance = 0;
-                                                $trans_date = date('Y-m-d');
-
-                                                $regards = $ref_code;
-
-                                                // Senders statement
-                                                $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $paystatus, $action, $regards, 1, $statement_route, 'on', $thisuser->country);
-
-                                                // Receiver Statement
-                                                $this->insStatement($req->email, $reference_code, "Received " . $foreigncurrency->currencyCode . '' . $amount . " in wallet for " . $service . " from " . $thisuser->name, $amount, 0, $balance, $trans_date, $paystatus, "Wallet credit", $ref_code, 1, $statement_route, 'on', $req->country);
-
-
-
-                                                $response = 'Money sent successfully';
-
-                                                // $data = $insertPay;
-                                                $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                                $status = 200;
-                                                $message = $response;
-
-
-                                                // $this->createNotification($thisuser->ref_code, $sendMsg);
-
-                                                // $this->createNotification($ref_code, $recMesg);
-
-                                                // Log::info("Congratulations!, ".$thisuser->name." ".$sendMsg.". This is a test environment");
-                                                // Log::info("Congratulations!, ".$this->name." ".$recMesg.". This is a test environment");
-
-                                                $this->slack("Congratulations!, " . $thisuser->name . " " . $sendMsg . ". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-
-                                                $this->slack("Congratulations!, " . $this->name . " " . $recMesg . ". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                                            } else {
-
-                                                $response = 'Something went wrong';
-                                                $data = [];
-                                                $message = $response;
-                                                $status = 400;
-                                            }
-                                        }
-                                    }
                                 }
                             } else {
                                 $response = 'Cannot find your account record, to continue payment.';
@@ -1977,133 +1675,421 @@ class GooglePaymentController extends Controller
                             $message = $error;
                         }
                     } else {
-                        $validator = Validator::make($req->all(), [
-                            'fname' => 'required',
-                            'lname' => 'required',
-                            'email' => 'required',
-                            'countryCode' => 'required',
-                            'phone' => 'required',
-                            'country' => 'required',
-                            'payment_method' => 'required',
-                            'service' => 'required',
-                            'amount' => 'required',
-                            'transaction_pin' => 'required',
-                        ]);
+
+                        if (isset($req->mode) && $req->mode == "test") {
+
+                            // dd($req->all());
+
+                            $validator = Validator::make($req->all(), [
+                                'fname' => 'required',
+                                'lname' => 'required',
+                                'email' => 'required',
+                                'countryCode' => 'required',
+                                'phone' => 'required',
+                                'country' => 'required',
+                                'payment_method' => 'required',
+                                'service' => 'required',
+                                'amount' => 'required',
+                                'transaction_pin' => 'required',
+                            ]);
 
 
-                        if ($validator->passes()) {
-
-                            // Get User Info
-                            $thisuser = User::where('api_token', $req->bearerToken())->first();
-
-                            $imtCountry = AllCountries::where('name', $req->country)->first();
-
-                            if (isset($thisuser)) {
+                            if ($validator->passes()) {
 
 
-                                // Do IDV
 
-                                $checking = $this->checkUsersPassAccount($thisuser->id);
+                                if (isset($thisuser)) {
 
-
-                                if (in_array("send money", $checking['access'])) {
 
                                     $minBal = $this->minimumWithdrawal($thisuser->country);
+
 
                                     // Check Anon user existence
                                     $checkExist = User::where('email', $req->email)->first();
 
-                                    if(isset($req->paymentWallet) && $req->paymentWallet === "fx_wallet"){
-
-                                        // Get wallet balance for the selected wallet...
-
-                                        $fxCurrency = new CurrencyFxController();
-
-                                        $walletResult = $fxCurrency->getFxWalletsFromController($thisuser->id, $req->paymentFxWallet);
-
-
-                                        // Check for wallet Balance...
-                                        if ((float)$walletResult->wallet_balance < (float)$req->amount){
-
-                                        $response = "Insufficient PaySprint FX Wallet balance";
+                                    if (isset($checkExist) == true) {
+                                        $response = 'This user already exist on PaySprint.';
                                         $data = [];
                                         $message = $response;
-                                        $status = 400;
+                                        $status = 403;
 
 
-                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => URL('payment/sendmoney/' . $checkExist->ref_code . '?country=' . $thisuser->country)];
 
                                         return $this->returnJSON($resData, $status);
+                                    } elseif ($thisuser->country != $req->country) {
+                                        $response = 'International money transfer is not available at the moment';
+                                        $data = [];
+                                        $message = $response;
+                                        $status = 403;
 
-                                        }
+                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => '#'];
+
+                                        return $this->returnJSON($resData, $status);
+                                    } else {
+
+                                        if ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
+                                            $response = 'You cannot send money at the moment because your account is still on review.';
+                                            $data = [];
+                                            $message = $response;
+                                            $status = 403;
 
 
-                                        // Check Transaction PIN
-                                        if ($thisuser->transaction_pin != null) {
+                                            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
-                                            if (Hash::check($req->transaction_pin, $thisuser->transaction_pin)) {
+                                            return $this->returnJSON($resData, $status);
+                                        } elseif (($thisuser->wallet_balance - $minBal) <= $req->amount) {
 
-                                                if ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
-                                                    $response = 'You cannot send money at the moment because your account is still on review.';
-                                                    $data = [];
-                                                    $message = $response;
-                                                    $status = 403;
+                                            $response = "Your minimum wallet balance is " . $thisuser->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                                            $data = [];
+                                            $message = $response;
+                                            $status = 403;
 
 
-                                                    $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                                            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
-                                                    return $this->returnJSON($resData, $status);
-                                                } else {
+                                            return $this->returnJSON($resData, $status);
+                                        } else {
 
-                                                    $ref_code = mt_rand(00000, 99999);
+                                            $ref_code = mt_rand(0000000, 9999999);
 
-                                                    // Get all ref_codes
-                                                    $ref = User::all();
+                                            // Get all ref_codes
+                                            $ref = User::all();
 
-                                                    if (count($ref) > 0) {
-                                                        foreach ($ref as $key => $value) {
-                                                            if ($value->ref_code == $ref_code) {
-                                                                $newRefcode = mt_rand(000000, 999999);
-                                                            } else {
-                                                                $newRefcode = $ref_code;
-                                                            }
-                                                        }
+                                            if (count($ref) > 0) {
+                                                foreach ($ref as $key => $value) {
+                                                    if ($value->ref_code == $ref_code) {
+                                                        $newRefcode = mt_rand(0000000, 9999999);
                                                     } else {
                                                         $newRefcode = $ref_code;
                                                     }
+                                                }
+                                            } else {
+                                                $newRefcode = $ref_code;
+                                            }
 
-                                                    $newcustomer = AnonUsers::where('email', $req->email)->first();
-
-
-                                                    $approve_commission = "No";
-
-                                                    $foreigncurrency = $this->getCountryCode($req->country);
-
-
-                                                    if ($walletResult->country != $req->country) {
-
-                                                        // Get Country Currency code
+                                            $newcustomer = AnonUsers::where('email', $req->email)->first();
 
 
-                                                        // COnvert Currency for Wallet credit to receiver
-                                                        $amount = $this->convertCurrencyRate($foreigncurrency->currencyCode, $walletResult->currencyCode, $req->amount);
+                                            $approve_commission = "No";
+
+                                            $foreigncurrency = $this->getCountryCode($req->country);
+
+
+                                            if ($thisuser->country != $req->country) {
+
+                                                // Get Country Currency code
+
+
+                                                // COnvert Currency for Wallet credit to receiver
+                                                $amount = $this->convertCurrencyRate($foreigncurrency->currencyCode, $thisuser->currencyCode, $req->amount);
+                                            } else {
+                                                $amount = $req->amount;
+                                            }
+
+
+                                            // Getting the payer
+                                            $userID = $thisuser->email;
+                                            $payerID = $thisuser->ref_code;
+
+                                            // $req->user_id is for the receiver::
+
+                                            // Do Insert
+                                            if ($req->service != "Others") {
+                                                $service = $req->service;
+                                            } else {
+                                                $service = $req->purpose;
+                                            }
+
+
+                                            if ($req->amount > ($thisuser->wallet_balance - $minBal)) {
+                                                $response = "Your minimum wallet balance is " . $thisuser->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                                                $data = [];
+                                                $message = $response;
+                                                $status = 400;
+                                            } else {
+                                                $statement_route = "wallet";
+
+
+                                                $wallet_balance = $thisuser->wallet_balance - $req->amount;
+                                                $withdrawal_per_day = $thisuser->withdrawal_per_day + $req->amount;
+                                                $withdrawal_per_week = $thisuser->withdrawal_per_week + $withdrawal_per_day;
+                                                $withdrawal_per_month = $thisuser->withdrawal_per_month + $withdrawal_per_week;
+                                                $paymentToken = "wallet-" . date('dmY') . time();
+                                                $paystatus = "Pending";
+                                                $action = "Wallet debit";
+                                                $requestReceive = 2;
+
+
+                                                $insertPay = 1;
+
+                                                if ($insertPay == 1) {
+
+
+                                                    // Update Wallet
+                                                    // User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $wallet_balance]);
+
+
+                                                    // Create or update Other party account
+                                                    if (isset($newcustomer)) {
+
+                                                        $ref_code = $newcustomer->ref_code;
+                                                        // Update account
+                                                        $newwalletBal = $newcustomer->wallet_balance + $amount;
+                                                        // AnonUsers::where('email', $newcustomer->email)->update(['wallet_balance' => $newwalletBal]);
                                                     } else {
-                                                        $amount = $req->amount;
+                                                        $ref_code = $newRefcode;
+                                                        // Create account
+                                                        $newwalletBal = $amount;
+                                                        // AnonUsers::insert(['code' => $req->countryCode, 'ref_code' => $newRefcode, 'name' => $req->fname.' '.$req->lname, 'email' => $req->email, 'telephone' => $req->phone, 'country' => $req->country, 'wallet_balance' => $newwalletBal, 'accountType' => $thisuser->accountType]);
                                                     }
 
 
-                                                    // Getting the payer
-                                                    $userID = $thisuser->email;
-                                                    $payerID = $thisuser->ref_code;
+                                                    $getInviteType = AnonUsers::where('email', $req->email)->first();
+                                                    // Send mail to both parties
 
-                                                    // $req->user_id is for the receiver::
+                                                    // Notification to Sender
+                                                    $this->name = $thisuser->name;
+                                                    // $this->email = "bambo@vimfile.com";
+                                                    $this->email = $thisuser->email;
+                                                    $this->subject = $foreigncurrency->currencyCode . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
 
-                                                    // Do Insert
-                                                    if ($req->service != "Others") {
-                                                        $service = $req->service;
+                                                    $this->message = '<p>You have sent <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->fname . ' ' . $req->lname . '. You now have <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your account</p>';
+
+                                                    $sendMsg = 'You have sent ' . $foreigncurrency->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->fname . ' ' . $req->lname . '. You now have ' . $foreigncurrency->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your account';
+
+                                                    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                    if (isset($userPhone)) {
+
+                                                        $sendPhone = $thisuser->telephone;
                                                     } else {
-                                                        $service = $req->purpose;
+                                                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
                                                     }
+
+
+                                                    // $this->sendEmail($this->email, "Fund remittance");
+
+                                                    // $this->sendMessage($sendMsg, $sendPhone);
+
+
+
+                                                    // Notification for receiver
+                                                    $this->name = $req->fname . ' ' . $req->lname;
+                                                    // $this->to = "bambo@vimfile.com";
+                                                    $this->to = $req->email;
+                                                    $this->subject = $thisuser->name . " has sent you " . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . " on PaySprint";
+
+
+                                                    if ($thisuser->accountType == "Individual" || $getInviteType->accountType == "Individual") {
+                                                        $route = route('register', 'user=' . $ref_code);
+                                                    } else {
+                                                        $route = route('AdminRegister', 'user=' . $ref_code);
+                                                    }
+
+                                                    $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. You now have <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($newwalletBal, 2) . '</strong> balance in your account</p><hr><p>To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE </p><p><a href="' . $route . '">' . $route . '</a></p>';
+
+                                                    $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. You now have ' . $foreigncurrency->currencyCode . ' ' . number_format($newwalletBal, 2) . ' balance in your account. To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE ' . $route;
+                                                    $recPhone = "+" . $req->countryCode . $req->phone;
+
+
+                                                    // $this->sendEmail($this->to, "Fund remittance");
+
+                                                    // $this->sendMessage($recMesg, $recPhone);
+
+
+
+
+
+                                                    // Insert Statement
+                                                    $activity = $req->payment_method . " transfer of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " to " . $req->fname . ' ' . $req->lname . " for " . $service;
+                                                    $credit = 0;
+                                                    // $debit = $req->conversionamount + $req->commissiondeduct;
+                                                    $debit = $amount;
+                                                    $reference_code = $paymentToken;
+                                                    $balance = 0;
+                                                    $trans_date = date('Y-m-d');
+
+                                                    $regards = $ref_code;
+
+                                                    // Senders statement
+                                                    $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $paystatus, $action, $regards, 1, $statement_route, 'on', $thisuser->country);
+
+                                                    // Receiver Statement
+                                                    $this->insStatement($req->email, $reference_code, "Received " . $foreigncurrency->currencyCode . '' . $amount . " in wallet for " . $service . " from " . $thisuser->name, $amount, 0, $balance, $trans_date, $paystatus, "Wallet credit", $ref_code, 1, $statement_route, 'on', $req->country);
+
+
+
+                                                    $response = 'Money sent successfully';
+
+                                                    // $data = $insertPay;
+                                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                    $status = 200;
+                                                    $message = $response;
+
+
+                                                    // $this->createNotification($thisuser->ref_code, $sendMsg);
+
+                                                    // $this->createNotification($ref_code, $recMesg);
+
+                                                    // Log::info("Congratulations!, ".$thisuser->name." ".$sendMsg.". This is a test environment");
+                                                    // Log::info("Congratulations!, ".$this->name." ".$recMesg.". This is a test environment");
+
+                                                    $this->slack("Congratulations!, " . $thisuser->name . " " . $sendMsg . ". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+                                                    $this->slack("Congratulations!, " . $this->name . " " . $recMesg . ". This is a test environment", $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                                } else {
+
+                                                    $response = 'Something went wrong';
+                                                    $data = [];
+                                                    $message = $response;
+                                                    $status = 400;
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    $response = 'Cannot find your account record, to continue payment.';
+
+                                    $data = [];
+                                    $message = $response;
+                                    $status = 400;
+                                }
+                            } else {
+
+                                $error = implode(",", $validator->messages()->all());
+
+                                $data = [];
+                                $status = 400;
+                                $message = $error;
+                            }
+                        } else {
+                            $validator = Validator::make($req->all(), [
+                                'fname' => 'required',
+                                'lname' => 'required',
+                                'email' => 'required',
+                                'countryCode' => 'required',
+                                'phone' => 'required',
+                                'country' => 'required',
+                                'payment_method' => 'required',
+                                'service' => 'required',
+                                'amount' => 'required',
+                                'transaction_pin' => 'required',
+                            ]);
+
+
+                            if ($validator->passes()) {
+
+                                // Get User Info
+                                $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+                                $imtCountry = AllCountries::where('name', $req->country)->first();
+
+                                if (isset($thisuser)) {
+
+
+                                    // Do IDV
+
+                                    $checking = $this->checkUsersPassAccount($thisuser->id);
+
+
+                                    if (in_array("send money", $checking['access'])) {
+
+                                        $minBal = $this->minimumWithdrawal($thisuser->country);
+
+                                        // Check Anon user existence
+                                        $checkExist = User::where('email', $req->email)->first();
+
+                                        if (isset($req->paymentWallet) && $req->paymentWallet === "fx_wallet") {
+
+                                            // Get wallet balance for the selected wallet...
+
+                                            $fxCurrency = new CurrencyFxController();
+
+                                            $walletResult = $fxCurrency->getFxWalletsFromController($thisuser->id, $req->paymentFxWallet);
+
+
+                                            // Check for wallet Balance...
+                                            if ((float)$walletResult->wallet_balance < (float)$req->amount) {
+
+                                                $response = "Insufficient PaySprint FX Wallet balance";
+                                                $data = [];
+                                                $message = $response;
+                                                $status = 400;
+
+
+                                                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                                                return $this->returnJSON($resData, $status);
+                                            }
+
+
+                                            // Check Transaction PIN
+                                            if ($thisuser->transaction_pin != null) {
+
+                                                if (Hash::check($req->transaction_pin, $thisuser->transaction_pin)) {
+
+                                                    if ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
+                                                        $response = 'You cannot send money at the moment because your account is still on review.';
+                                                        $data = [];
+                                                        $message = $response;
+                                                        $status = 403;
+
+
+                                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                                                        return $this->returnJSON($resData, $status);
+                                                    } else {
+
+                                                        $ref_code = mt_rand(00000, 99999);
+
+                                                        // Get all ref_codes
+                                                        $ref = User::all();
+
+                                                        if (count($ref) > 0) {
+                                                            foreach ($ref as $key => $value) {
+                                                                if ($value->ref_code == $ref_code) {
+                                                                    $newRefcode = mt_rand(000000, 999999);
+                                                                } else {
+                                                                    $newRefcode = $ref_code;
+                                                                }
+                                                            }
+                                                        } else {
+                                                            $newRefcode = $ref_code;
+                                                        }
+
+                                                        $newcustomer = AnonUsers::where('email', $req->email)->first();
+
+
+                                                        $approve_commission = "No";
+
+                                                        $foreigncurrency = $this->getCountryCode($req->country);
+
+
+                                                        if ($walletResult->country != $req->country) {
+
+                                                            // Get Country Currency code
+
+
+                                                            // COnvert Currency for Wallet credit to receiver
+                                                            $amount = $this->convertCurrencyRate($foreigncurrency->currencyCode, $walletResult->currencyCode, $req->amount);
+                                                        } else {
+                                                            $amount = $req->amount;
+                                                        }
+
+
+                                                        // Getting the payer
+                                                        $userID = $thisuser->email;
+                                                        $payerID = $thisuser->ref_code;
+
+                                                        // $req->user_id is for the receiver::
+
+                                                        // Do Insert
+                                                        if ($req->service != "Others") {
+                                                            $service = $req->service;
+                                                        } else {
+                                                            $service = $req->purpose;
+                                                        }
 
                                                         $statement_route = "wallet";
 
@@ -2148,9 +2134,9 @@ class GooglePaymentController extends Controller
                                                             $this->email = $thisuser->email;
                                                             $this->subject = $walletResult->currencyCode . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
 
-                                                            $this->message = '<p>You have sent <strong>' . $walletResult->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->fname . ' ' . $req->lname . '. You now have <strong>' . $walletResult->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your '.$walletResult->currencyCode.' FX wallet account</p>';
+                                                            $this->message = '<p>You have sent <strong>' . $walletResult->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->fname . ' ' . $req->lname . '. You now have <strong>' . $walletResult->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your ' . $walletResult->currencyCode . ' FX wallet account</p>';
 
-                                                            $sendMsg = 'You have sent ' . $walletResult->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->fname . ' ' . $req->lname . '. You now have ' . $walletResult->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your '.$walletResult->currencyCode.' FX wallet account';
+                                                            $sendMsg = 'You have sent ' . $walletResult->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->fname . ' ' . $req->lname . '. You now have ' . $walletResult->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your ' . $walletResult->currencyCode . ' FX wallet account';
 
                                                             $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -2259,346 +2245,332 @@ class GooglePaymentController extends Controller
                                                             $message = $response;
                                                             $status = 400;
                                                         }
-
+                                                    }
+                                                } else {
+                                                    // Incorrect Transaction PIN
+                                                    $response = 'Invalid transaction pin';
+                                                    $data = [];
+                                                    $message = $response;
+                                                    $status = 400;
                                                 }
                                             } else {
-                                                // Incorrect Transaction PIN
-                                                $response = 'Invalid transaction pin';
+                                                // Redirect to route to setup transaction Pin
+                                                $response = 'Kindly setup transaction pin in your profile settings';
                                                 $data = [];
                                                 $message = $response;
                                                 $status = 400;
                                             }
                                         } else {
-                                            // Redirect to route to setup transaction Pin
-                                            $response = 'Kindly setup transaction pin in your profile settings';
-                                            $data = [];
-                                            $message = $response;
-                                            $status = 400;
-                                        }
+
+                                            if (isset($imtCountry) && $imtCountry->imt == "false" && $req->country != $thisuser->country || isset($imtCountry) && $imtCountry->outbound == "false" && $req->country != $thisuser->country) {
+
+                                                $response = 'International money transfer is not yet available to ' . $imtCountry->name;
+                                                $data = [];
+                                                $message = $response;
+                                                $status = 403;
+
+                                                $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => '#'];
+                                                return $this->returnJSON($resData, $status);
+                                            } elseif (($thisuser->wallet_balance - $minBal) <= $req->amount) {
+
+                                                $response = "Your minimum wallet balance is " . $thisuser->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                                                $data = [];
+                                                $message = $response;
+                                                $status = 403;
 
 
-                                    }
-                                    else{
+                                                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
-                                        if (isset($checkExist) == true) {
-                                        $response = 'This user already exist on PaySprint.';
-                                        $data = [];
-                                        $message = $response;
-                                        $status = 403;
+                                                return $this->returnJSON($resData, $status);
+                                            } else {
+                                                // Check Transaction PIN
+                                                if ($thisuser->transaction_pin != null) {
 
+                                                    if (Hash::check($req->transaction_pin, $thisuser->transaction_pin)) {
 
-                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => URL('payment/sendmoney/' . $checkExist->ref_code . '?country=' . $thisuser->country)];
-
-                                        return $this->returnJSON($resData, $status);
-                                    } elseif (isset($imtCountry) && $imtCountry->imt == "false" && $req->country != $thisuser->country || isset($imtCountry) && $imtCountry->outbound == "false" && $req->country != $thisuser->country) {
-
-                                        $response = 'International money transfer is not yet available to ' . $imtCountry->name;
-                                        $data = [];
-                                        $message = $response;
-                                        $status = 403;
-
-                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status, 'link' => '#'];
-                                        return $this->returnJSON($resData, $status);
-                                    } elseif (($thisuser->wallet_balance - $minBal) <= $req->amount) {
-
-                                        $response = "Your minimum wallet balance is " . $thisuser->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
-                                        $data = [];
-                                        $message = $response;
-                                        $status = 403;
+                                                        if ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
+                                                            $response = 'You cannot send money at the moment because your account is still on review.';
+                                                            $data = [];
+                                                            $message = $response;
+                                                            $status = 403;
 
 
-                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                                                            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
-                                        return $this->returnJSON($resData, $status);
-                                    } else {
-                                        // Check Transaction PIN
-                                        if ($thisuser->transaction_pin != null) {
+                                                            return $this->returnJSON($resData, $status);
+                                                        } else {
 
-                                            if (Hash::check($req->transaction_pin, $thisuser->transaction_pin)) {
+                                                            $ref_code = mt_rand(00000, 99999);
 
-                                                if ($thisuser->approval < 2 && $thisuser->accountLevel <= 2) {
-                                                    $response = 'You cannot send money at the moment because your account is still on review.';
-                                                    $data = [];
-                                                    $message = $response;
-                                                    $status = 403;
+                                                            // Get all ref_codes
+                                                            $ref = User::all();
 
-
-                                                    $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-
-                                                    return $this->returnJSON($resData, $status);
-                                                } else {
-
-                                                    $ref_code = mt_rand(00000, 99999);
-
-                                                    // Get all ref_codes
-                                                    $ref = User::all();
-
-                                                    if (count($ref) > 0) {
-                                                        foreach ($ref as $key => $value) {
-                                                            if ($value->ref_code == $ref_code) {
-                                                                $newRefcode = mt_rand(000000, 999999);
+                                                            if (count($ref) > 0) {
+                                                                foreach ($ref as $key => $value) {
+                                                                    if ($value->ref_code == $ref_code) {
+                                                                        $newRefcode = mt_rand(000000, 999999);
+                                                                    } else {
+                                                                        $newRefcode = $ref_code;
+                                                                    }
+                                                                }
                                                             } else {
                                                                 $newRefcode = $ref_code;
                                                             }
+
+                                                            $newcustomer = AnonUsers::where('email', $req->email)->first();
+
+
+                                                            $approve_commission = "No";
+
+                                                            $foreigncurrency = $this->getCountryCode($req->country);
+
+
+                                                            if ($thisuser->country != $req->country) {
+
+                                                                // Get Country Currency code
+
+
+                                                                // COnvert Currency for Wallet credit to receiver
+                                                                $amount = $this->convertCurrencyRate($foreigncurrency->currencyCode, $thisuser->currencyCode, $req->amount);
+                                                            } else {
+                                                                $amount = $req->amount;
+                                                            }
+
+
+                                                            // Getting the payer
+                                                            $userID = $thisuser->email;
+                                                            $payerID = $thisuser->ref_code;
+
+                                                            // $req->user_id is for the receiver::
+
+                                                            // Do Insert
+                                                            if ($req->service != "Others") {
+                                                                $service = $req->service;
+                                                            } else {
+                                                                $service = $req->purpose;
+                                                            }
+
+
+                                                            if ($req->amount > ($thisuser->wallet_balance - $minBal)) {
+                                                                $response = "Your minimum wallet balance is " . $thisuser->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                                                                $data = [];
+                                                                $message = $response;
+                                                                $status = 400;
+                                                            } else {
+                                                                $statement_route = "wallet";
+
+
+                                                                $wallet_balance = $thisuser->wallet_balance - $req->amount;
+                                                                $withdrawal_per_day = $thisuser->withdrawal_per_day + $req->amount;
+                                                                $withdrawal_per_week = $thisuser->withdrawal_per_week + $withdrawal_per_day;
+                                                                $withdrawal_per_month = $thisuser->withdrawal_per_month + $withdrawal_per_week;
+                                                                $paymentToken = "wallet-" . date('dmY') . time();
+                                                                $paystatus = "Pending";
+                                                                $action = "Wallet debit";
+                                                                $requestReceive = 2;
+
+
+                                                                $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $newRefcode, 'user_id' => $userID, 'purpose' => $service, 'amount' => $foreigncurrency->currencyCode . ' ' . $req->amount, 'withdraws' => $foreigncurrency->currencyCode . ' ' . $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $amount, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $foreigncurrency->currencyCode . ' ' . $amount, 'request_receive' => $requestReceive]);
+
+                                                                if ($insertPay == true) {
+
+
+                                                                    // Update Wallet
+                                                                    User::where('api_token', $req->bearerToken())->update([
+                                                                        'wallet_balance' => $wallet_balance,
+                                                                        'withdrawal_per_day' => $withdrawal_per_day,
+                                                                        'withdrawal_per_week' => $withdrawal_per_week,
+                                                                        'withdrawal_per_month' => $withdrawal_per_month
+                                                                    ]);
+
+
+                                                                    // Create or update Other party account
+                                                                    if (isset($newcustomer)) {
+
+                                                                        $ref_code = $newcustomer->ref_code;
+                                                                        // Update account
+                                                                        $newwalletBal = $newcustomer->wallet_balance + $amount;
+                                                                        AnonUsers::where('email', $newcustomer->email)->update(['wallet_balance' => $newwalletBal]);
+                                                                    } else {
+                                                                        $ref_code = $newRefcode;
+                                                                        // Create account
+                                                                        $newwalletBal = $amount;
+                                                                        AnonUsers::insert(['code' => $req->countryCode, 'ref_code' => $newRefcode, 'name' => $req->fname . ' ' . $req->lname, 'email' => $req->email, 'telephone' => $req->phone, 'country' => $req->country, 'wallet_balance' => $newwalletBal, 'accountType' => $thisuser->accountType]);
+                                                                    }
+
+
+                                                                    $getInviteType = AnonUsers::where('email', $req->email)->first();
+                                                                    // Send mail to both parties
+
+                                                                    // Notification to Sender
+                                                                    $this->name = $thisuser->name;
+                                                                    // $this->email = "bambo@vimfile.com";
+                                                                    $this->email = $thisuser->email;
+                                                                    $this->subject = $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
+
+                                                                    $this->message = '<p>You have sent <strong>' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->fname . ' ' . $req->lname . '. You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your account</p>';
+
+                                                                    $sendMsg = 'You have sent ' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->fname . ' ' . $req->lname . '. You now have ' . $thisuser->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your account';
+
+                                                                    $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                                                                    if (isset($userPhone)) {
+
+                                                                        $sendPhone = $thisuser->telephone;
+                                                                    } else {
+                                                                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                                                                    }
+
+
+                                                                    $this->sendEmail($this->email, "Fund remittance");
+
+                                                                    if ($thisuser->country == "Nigeria") {
+
+                                                                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                                                                        $this->sendSms($sendMsg, $correctPhone);
+                                                                    } else {
+                                                                        $this->sendMessage($sendMsg, $sendPhone);
+                                                                    }
+
+
+
+
+
+                                                                    // Notification for receiver
+                                                                    $this->name = $req->fname . ' ' . $req->lname;
+                                                                    // $this->to = "bambo@vimfile.com";
+                                                                    $this->to = $req->email;
+                                                                    $this->subject = $thisuser->name . " has sent you " . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . " on PaySprint";
+
+
+                                                                    if ($thisuser->accountType == "Individual" || $getInviteType->accountType == "Individual") {
+                                                                        $route = route('register', 'user=' . $ref_code);
+                                                                    } else {
+                                                                        $route = route('AdminRegister', 'user=' . $ref_code);
+                                                                    }
+
+                                                                    $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. You now have <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($newwalletBal, 2) . '</strong> balance in your account</p><hr><p>To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE </p><p><a href="' . $route . '">' . $route . '</a></p>';
+
+                                                                    $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. You now have ' . $foreigncurrency->currencyCode . ' ' . number_format($newwalletBal, 2) . ' balance in your account. To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE ' . $route;
+
+                                                                    $recPhone = "+" . $req->countryCode . $req->phone;
+
+
+                                                                    $this->sendEmail($this->to, "Fund remittance");
+
+
+
+                                                                    if ($req->country == "Nigeria") {
+
+                                                                        $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
+                                                                        $this->sendSms($recMesg, $correctPhone);
+                                                                    } else {
+                                                                        $this->sendMessage($recMesg, $recPhone);
+                                                                    }
+
+
+
+
+
+                                                                    // Insert Statement
+                                                                    $activity = $req->payment_method . " transfer of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " to " . $req->fname . ' ' . $req->lname . " for " . $service;
+                                                                    $credit = 0;
+                                                                    // $debit = $req->conversionamount + $req->commissiondeduct;
+                                                                    $debit = $req->amount;
+                                                                    $reference_code = $paymentToken;
+                                                                    $balance = 0;
+                                                                    $trans_date = date('Y-m-d');
+
+                                                                    $regards = $ref_code;
+
+                                                                    // Senders statement
+                                                                    $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $paystatus, $action, $regards, 1, $statement_route, 'on', $thisuser->country);
+
+                                                                    // Receiver Statement
+                                                                    $this->insStatement($req->email, $reference_code, "Received " . $foreigncurrency->currencyCode . '' . $amount . " in wallet for " . $service . " from " . $thisuser->name, $amount, 0, $balance, $trans_date, $paystatus, "Wallet credit", $ref_code, 1, $statement_route, 'on', $req->country);
+
+
+
+                                                                    $response = 'Money sent successfully';
+
+                                                                    // $data = $insertPay;
+                                                                    $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
+                                                                    $status = 200;
+                                                                    $message = $response;
+
+
+                                                                    $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
+
+                                                                    $this->createNotification($ref_code, $recMesg);
+
+                                                                    $this->updatePoints($thisuser->id, 'Send money');
+
+                                                                    // Log::info("Congratulations!, ".$thisuser->name." ".$sendMsg);
+                                                                    // Log::info("Congratulations!, ".$this->name." ".$recMesg);
+
+                                                                    $this->slack("Congratulations!, " . $thisuser->name . " " . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                                                    $this->slack("Congratulations!, " . $this->name . " " . $recMesg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+                                                                } else {
+
+                                                                    $response = 'Something went wrong';
+                                                                    $data = [];
+                                                                    $message = $response;
+                                                                    $status = 400;
+                                                                }
+                                                            }
                                                         }
                                                     } else {
-                                                        $newRefcode = $ref_code;
-                                                    }
-
-                                                    $newcustomer = AnonUsers::where('email', $req->email)->first();
-
-
-                                                    $approve_commission = "No";
-
-                                                    $foreigncurrency = $this->getCountryCode($req->country);
-
-
-                                                    if ($thisuser->country != $req->country) {
-
-                                                        // Get Country Currency code
-
-
-                                                        // COnvert Currency for Wallet credit to receiver
-                                                        $amount = $this->convertCurrencyRate($foreigncurrency->currencyCode, $thisuser->currencyCode, $req->amount);
-                                                    } else {
-                                                        $amount = $req->amount;
-                                                    }
-
-
-                                                    // Getting the payer
-                                                    $userID = $thisuser->email;
-                                                    $payerID = $thisuser->ref_code;
-
-                                                    // $req->user_id is for the receiver::
-
-                                                    // Do Insert
-                                                    if ($req->service != "Others") {
-                                                        $service = $req->service;
-                                                    } else {
-                                                        $service = $req->purpose;
-                                                    }
-
-
-                                                    if ($req->amount > ($thisuser->wallet_balance - $minBal)) {
-                                                        $response = "Your minimum wallet balance is " . $thisuser->currencyCode . ' ' . number_format($minBal, 2) . ". Please add money to continue transaction";
+                                                        // Incorrect Transaction PIN
+                                                        $response = 'Invalid transaction pin';
                                                         $data = [];
                                                         $message = $response;
                                                         $status = 400;
-                                                    } else {
-                                                        $statement_route = "wallet";
-
-
-                                                        $wallet_balance = $thisuser->wallet_balance - $req->amount;
-                                                        $withdrawal_per_day = $thisuser->withdrawal_per_day + $req->amount;
-                                                        $withdrawal_per_week = $thisuser->withdrawal_per_week + $withdrawal_per_day;
-                                                        $withdrawal_per_month = $thisuser->withdrawal_per_month + $withdrawal_per_week;
-                                                        $paymentToken = "wallet-" . date('dmY') . time();
-                                                        $paystatus = "Pending";
-                                                        $action = "Wallet debit";
-                                                        $requestReceive = 2;
-
-
-                                                        $insertPay = OrganizationPay::insert(['transactionid' => $paymentToken, 'coy_id' => $newRefcode, 'user_id' => $userID, 'purpose' => $service, 'amount' => $foreigncurrency->currencyCode . ' ' . $req->amount, 'withdraws' => $foreigncurrency->currencyCode . ' ' . $req->amount, 'state' => 1, 'payer_id' => $payerID, 'amount_to_send' => $amount, 'commission' => $req->commissiondeduct, 'approve_commission' => $approve_commission, 'amountindollars' => $foreigncurrency->currencyCode . ' ' . $amount, 'request_receive' => $requestReceive]);
-
-                                                        if ($insertPay == true) {
-
-
-                                                            // Update Wallet
-                                                            User::where('api_token', $req->bearerToken())->update([
-                                                                'wallet_balance' => $wallet_balance,
-                                                                'withdrawal_per_day' => $withdrawal_per_day,
-                                                                'withdrawal_per_week' => $withdrawal_per_week,
-                                                                'withdrawal_per_month' => $withdrawal_per_month
-                                                            ]);
-
-
-                                                            // Create or update Other party account
-                                                            if (isset($newcustomer)) {
-
-                                                                $ref_code = $newcustomer->ref_code;
-                                                                // Update account
-                                                                $newwalletBal = $newcustomer->wallet_balance + $amount;
-                                                                AnonUsers::where('email', $newcustomer->email)->update(['wallet_balance' => $newwalletBal]);
-                                                            } else {
-                                                                $ref_code = $newRefcode;
-                                                                // Create account
-                                                                $newwalletBal = $amount;
-                                                                AnonUsers::insert(['code' => $req->countryCode, 'ref_code' => $newRefcode, 'name' => $req->fname . ' ' . $req->lname, 'email' => $req->email, 'telephone' => $req->phone, 'country' => $req->country, 'wallet_balance' => $newwalletBal, 'accountType' => $thisuser->accountType]);
-                                                            }
-
-
-                                                            $getInviteType = AnonUsers::where('email', $req->email)->first();
-                                                            // Send mail to both parties
-
-                                                            // Notification to Sender
-                                                            $this->name = $thisuser->name;
-                                                            // $this->email = "bambo@vimfile.com";
-                                                            $this->email = $thisuser->email;
-                                                            $this->subject = $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
-
-                                                            $this->message = '<p>You have sent <strong>' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->fname . ' ' . $req->lname . '. You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your account</p>';
-
-                                                            $sendMsg = 'You have sent ' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->fname . ' ' . $req->lname . '. You now have ' . $thisuser->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your account';
-
-                                                            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                                                            if (isset($userPhone)) {
-
-                                                                $sendPhone = $thisuser->telephone;
-                                                            } else {
-                                                                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                                                            }
-
-
-                                                            $this->sendEmail($this->email, "Fund remittance");
-
-                                                            if ($thisuser->country == "Nigeria") {
-
-                                                                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                                                                $this->sendSms($sendMsg, $correctPhone);
-                                                            } else {
-                                                                $this->sendMessage($sendMsg, $sendPhone);
-                                                            }
-
-
-
-
-
-                                                            // Notification for receiver
-                                                            $this->name = $req->fname . ' ' . $req->lname;
-                                                            // $this->to = "bambo@vimfile.com";
-                                                            $this->to = $req->email;
-                                                            $this->subject = $thisuser->name . " has sent you " . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . " on PaySprint";
-
-
-                                                            if ($thisuser->accountType == "Individual" || $getInviteType->accountType == "Individual") {
-                                                                $route = route('register', 'user=' . $ref_code);
-                                                            } else {
-                                                                $route = route('AdminRegister', 'user=' . $ref_code);
-                                                            }
-
-                                                            $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. You now have <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($newwalletBal, 2) . '</strong> balance in your account</p><hr><p>To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE </p><p><a href="' . $route . '">' . $route . '</a></p>';
-
-                                                            $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. You now have ' . $foreigncurrency->currencyCode . ' ' . number_format($newwalletBal, 2) . ' balance in your account. To access your funds, please download PaySprint App on Google Play Store or App Store or Sign up for FREE ' . $route;
-
-                                                            $recPhone = "+" . $req->countryCode . $req->phone;
-
-
-                                                            $this->sendEmail($this->to, "Fund remittance");
-
-
-
-                                                            if ($req->country == "Nigeria") {
-
-                                                                $correctPhone = preg_replace("/[^0-9]/", "", $recPhone);
-                                                                $this->sendSms($recMesg, $correctPhone);
-                                                            } else {
-                                                                $this->sendMessage($recMesg, $recPhone);
-                                                            }
-
-
-
-
-
-                                                            // Insert Statement
-                                                            $activity = $req->payment_method . " transfer of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " to " . $req->fname . ' ' . $req->lname . " for " . $service;
-                                                            $credit = 0;
-                                                            // $debit = $req->conversionamount + $req->commissiondeduct;
-                                                            $debit = $req->amount;
-                                                            $reference_code = $paymentToken;
-                                                            $balance = 0;
-                                                            $trans_date = date('Y-m-d');
-
-                                                            $regards = $ref_code;
-
-                                                            // Senders statement
-                                                            $this->insStatement($userID, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $paystatus, $action, $regards, 1, $statement_route, 'on', $thisuser->country);
-
-                                                            // Receiver Statement
-                                                            $this->insStatement($req->email, $reference_code, "Received " . $foreigncurrency->currencyCode . '' . $amount . " in wallet for " . $service . " from " . $thisuser->name, $amount, 0, $balance, $trans_date, $paystatus, "Wallet credit", $ref_code, 1, $statement_route, 'on', $req->country);
-
-
-
-                                                            $response = 'Money sent successfully';
-
-                                                            // $data = $insertPay;
-                                                            $data = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('api_token', $req->bearerToken())->first();
-                                                            $status = 200;
-                                                            $message = $response;
-
-
-                                                            $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
-
-                                                            $this->createNotification($ref_code, $recMesg);
-
-                                                            $this->updatePoints($thisuser->id, 'Send money');
-
-                                                            // Log::info("Congratulations!, ".$thisuser->name." ".$sendMsg);
-                                                            // Log::info("Congratulations!, ".$this->name." ".$recMesg);
-
-                                                            $this->slack("Congratulations!, " . $thisuser->name . " " . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                                                            $this->slack("Congratulations!, " . $this->name . " " . $recMesg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
-                                                        } else {
-
-                                                            $response = 'Something went wrong';
-                                                            $data = [];
-                                                            $message = $response;
-                                                            $status = 400;
-                                                        }
                                                     }
+                                                } else {
+                                                    // Redirect to route to setup transaction Pin
+                                                    $response = 'Kindly setup transaction pin in your profile settings';
+                                                    $data = [];
+                                                    $message = $response;
+                                                    $status = 400;
                                                 }
-                                            } else {
-                                                // Incorrect Transaction PIN
-                                                $response = 'Invalid transaction pin';
-                                                $data = [];
-                                                $message = $response;
-                                                $status = 400;
                                             }
-                                        } else {
-                                            // Redirect to route to setup transaction Pin
-                                            $response = 'Kindly setup transaction pin in your profile settings';
-                                            $data = [];
-                                            $message = $response;
-                                            $status = 400;
                                         }
-                                    }
+                                    } else {
+                                        $response = $checking["response"];
 
+                                        $data = [];
+                                        $message = $response;
+                                        $status = 400;
                                     }
-
                                 } else {
-                                    $response = $checking["response"];
+                                    $response = 'Cannot find your account record, to continue payment.';
 
                                     $data = [];
                                     $message = $response;
                                     $status = 400;
                                 }
                             } else {
-                                $response = 'Cannot find your account record, to continue payment.';
+
+                                $error = implode(",", $validator->messages()->all());
 
                                 $data = [];
-                                $message = $response;
                                 $status = 400;
+                                $message = $error;
                             }
-                        } else {
-
-                            $error = implode(",", $validator->messages()->all());
-
-                            $data = [];
-                            $status = 400;
-                            $message = $error;
                         }
                     }
                 }
+            } catch (\Throwable $th) {
+
+                $data = [];
+                $status = 400;
+                $message = $th->getMessage();
             }
 
 
 
-
-
-
-
-
             $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
 
             return $this->returnJSON($resData, $status);
         }
