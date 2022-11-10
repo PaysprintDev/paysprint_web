@@ -103,15 +103,15 @@
                                     <input type="hidden" name="paymentToken" id="paymentToken" value="">
 
                                     <div class="form-group"> <label for="fname">
-                                            <h6>How do you want the receiver to get paid?</h6>
+                                            <h6>How do you want the beneficiary to get paid?</h6>
                                         </label>
                                         <div class="input-group">
 
                                             <select name="paymentMode" id="paymentMode" class="form-control">
                                                 <option value="">Select option</option>
-                                                <option value="PaySprint">Receiver to accept payment on mobile app (No
+                                                <option value="PaySprint">Beneficiary to accept payment on PaySprint mobile app (No
                                                     transfer Fee)</option>
-                                                <option value="Partner">Receiver get paid via dedicated partners
+                                                <option value="Partner">Beneficiary get paid via dedicated partners
                                                     (Transfer Fee applies)</option>
                                             </select>
 
@@ -212,7 +212,7 @@
 
 
                                     <div class="paywithpaysprint disp-0">
-                                        <h4>Receiver's Information</h4>
+                                        <h4>Beneficiary's Information</h4>
                                         <hr>
 
                                         <div class="form-group"> <label for="orgpayservice">
@@ -452,7 +452,7 @@
                                     </div>
 
                                     <div class="paywithpatners disp-0">
-                                        <h4>Receiver's Information</h4>
+                                        <h4>Beneficiary's Information</h4>
                                         <hr>
 
                                         <div class="form-group"> <label for="orgpayservice">
@@ -598,7 +598,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group"> <label for="netwmount">
-                                                <h6>Fee <small class="text-success"><b>(10% Payout Fee)</b></small></h6>
+                                                <h6>Fee <small class="text-success"><b>(1.5% Payout Fee)</b></small></h6>
                                             </label>
                                             <div class="input-group">
                                                 <input type="text" name="commissiondeduct" class="form-control"
