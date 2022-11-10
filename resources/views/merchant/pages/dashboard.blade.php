@@ -366,7 +366,8 @@ use App\Http\Controllers\AllCountries; ?>
                             </div>
                         </div>
 
-                        @if (Auth::user()->payment_link_access == 1 && $datediff > 0)
+                        @if (Auth::user()->payment_link_access == 1 && Auth::user()->payment_link_approval == 1
+                        && $datediff > 0)
                         <div class="card income-card card-secondary">
                             <div class="card-body text-center">
                                 <div class="round-box">
