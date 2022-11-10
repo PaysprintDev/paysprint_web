@@ -329,13 +329,13 @@
 
                                     <td>
                                         @if ($datainfo['users']->payment_link_approval == 0)
-                                        <button class="btn btn-success" id="btn{{ $datainfo['users']->ref_code }}"
+                                        <button class="btn btn-success" id="btns{{ $datainfo['users']->ref_code }}"
                                             onclick="activatePaymentLink('{{ $datainfo['users']->ref_code }}')">Activate
                                             Merchant Payment Link</button>
 
                                         @else
 
-                                        <button class="btn btn-danger" id="btn{{ $datainfo['users']->ref_code }}"
+                                        <button class="btn btn-danger" id="btns{{ $datainfo['users']->ref_code }}"
                                             onclick="activatePaymentLink('{{ $datainfo['users']->ref_code }}')">Deactivate
                                             Merchant Payment Link</button>
                                         @endif
