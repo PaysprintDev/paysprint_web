@@ -37,147 +37,78 @@
 
 
               <table class="table table-bordered table-striped">
-                
+
                 <tbody>
-                  @if($data['transaction']->status == true)
 
-                      <tr>
-                        <td>ID</td>
-                        <td class="mainText" colspan="2">{{ $data['transaction']->data->id }}</td>
+
+                    <tr>
+                        <td>TRANSACTION ID</td>
+                        <td class="mainText" colspan="2" style="font-weight: bold;">{{ $data['transaction']->transaction_id }}</td>
                       </tr>
-                      <tr>
-                        <td>DOMAIN</td>
-                        <td class="mainText" colspan="2">{{ $data['transaction']->data->domain }}</td>
+                    <tr>
+                        <td>MESSAGE</td>
+                        <td class="mainText" colspan="2" style="font-weight: bold;">{{ $data['transaction']->message }}</td>
                       </tr>
-                      <tr>
-                        <td>REFERENCE</td>
-                        <td class="mainText" colspan="2">{{ $data['transaction']->data->reference }}</td>
+                    <tr>
+                        <td>ACTIVITY</td>
+                        <td class="mainText" colspan="2" style="font-weight: bold;">{{ $data['transaction']->activity }}</td>
                       </tr>
-                      <tr>
-                        <td>AMOUNT</td>
-                        <td class="mainText" colspan="2">{{ $data['transaction']->data->currency.''.number_format($data['transaction']->data->amount / 100, 2) }}</td>
+                    <tr>
+                        <td>GATEWAY</td>
+                        <td class="mainText" colspan="2" style="font-weight: bold;">{{ $data['transaction']->gateway }}</td>
                       </tr>
-                      <tr>
-                        <td>PAID AT</td>
-                        <td class="mainText" colspan="2">{{ $data['transaction']->data->paid_at }}</td>
-                      </tr>
-                      <tr>
-                        <td>CREATED AT</td>
-                        <td class="mainText" colspan="2">{{ $data['transaction']->data->created_at }}</td>
-                      </tr>
-                      <tr>
-                        <td>CHANNEL</td>
-                        <td class="mainText" colspan="2">{{ $data['transaction']->data->channel }}</td>
-                      </tr>
-                      <tr>
-                        <td>IP ADDRESS</td>
-                        <td class="mainText" colspan="2">{{ $data['transaction']->data->ip_address }}</td>
+                    <tr>
+                        <td>COUNTRY</td>
+                        <td class="mainText" colspan="2" style="font-weight: bold;">{{ $data['transaction']->country }}</td>
                       </tr>
 
-                      @if (isset($data['transaction']->data->metadata) && $data['transaction']->data->metadata != "")
-                          <tr>
-                            <td>META DATA</td>
-                            @foreach ($data['transaction']->data->metadata->custom_fields as $customData)
-
-                                <td class="mainText">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            {!! strtoupper($customData->display_name).": <br>".$customData->value !!}
-                                        </div>
-                                    </div>
-                                </td>
-                                
-                            @endforeach
-                          </tr>
-
-                          <tr>
-                            <td>REFERRER</td>
-                            <td class="mainText" colspan="2">{{ $data['transaction']->data->metadata->referrer }}</td>
-                          </tr>
-                      @endif
-                      
+                  @if($data['transaction']->bodydata !== null)
 
 
-                          
-                          @if (isset($data['transaction']->data->log) && $data['transaction']->data->log != "")
-                            <tr>
-                              <td>LOG DATA</td>
-                              @foreach ($data['transaction']->data->log->history as $historyData)
+                  @php
+                      $newData = json_decode($data['transaction']->bodydata, true);
+                  @endphp
 
-                                  <td class="mainText">
-                                      <div class="row">
-                                          <div class="col-md-12">
-                                              {!! strtoupper($historyData->type).": <br>".$historyData->message !!}
-                                          </div>
-                                      </div>
-                                  </td>
-                                  
-                              @endforeach
-                          </tr>
-                        @endif
 
-                          <tr>
-                            <td>CARD AUTHORIZATION</td>
-                            <td class="mainText" colspan="2">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        AUTHORIZATION CODE: {{ $data['transaction']->data->authorization->authorization_code }}
-                                    </div>
-                                    <div class="col-md-12">
-                                        BIN: {{ $data['transaction']->data->authorization->bin }}
-                                    </div>
-                                    <div class="col-md-12">
-                                        LAST 4 DIGIT: {{ $data['transaction']->data->authorization->last4 }}
-                                    </div>
-                                    <div class="col-md-12">
-                                        EXP. MONTH: {{ $data['transaction']->data->authorization->exp_month }}
-                                    </div>
-                                    <div class="col-md-12">
-                                        EXP. YEAR: {{ $data['transaction']->data->authorization->exp_year }}
-                                    </div>
-                                    <div class="col-md-12">
-                                        CHANNEL: {{ $data['transaction']->data->authorization->channel }}
-                                    </div>
-                                    <div class="col-md-12">
-                                        COUNTRY CODE: {{ $data['transaction']->data->authorization->country_code }}
-                                    </div>
-                                    <div class="col-md-12">
-                                        BRAND: {{ $data['transaction']->data->authorization->brand }}
-                                    </div>
-                                    <div class="col-md-12">
-                                        ACCOUNT NAME: {{ $data['transaction']->data->authorization->account_name }}
-                                    </div>
+                      <tr>
+                        <td>RESPONSE CODE</td>
+                        <td class="mainText" colspan="2" style="font-weight: bold;">{{ $newData['responseCode'] }}</td>
+                      </tr>
+                      <tr>
+                        <td>RESPONSE MESSAGE</td>
+                        <td class="mainText" colspan="2" style="font-weight: bold;">{{ $newData['responseMessage'] }}</td>
+                      </tr>
 
-                                    @if (isset($data['transaction']->data->authorization->receiver_bank_account_number))
-                                        <div class="col-md-12">
-                                          ACCOUNT NUMBER: {{ $data['transaction']->data->authorization->receiver_bank_account_number }}
-                                      </div>
-                                    @endif
+                      <tr>
+                        <td>DATA AMOUNT</td>
+                        <td class="mainText" colspan="2" style="font-weight: bold;">{{ $newData['data']['currency'].''.number_format($newData['data']['amount'] , 2) }}</td>
+                      </tr>
+                      <tr>
+                        <td>PAYMENT TYPE</td>
+                        <td class="mainText" colspan="2" style="font-weight: bold;">{{ $newData['data']['paymentType'] }}</td>
+                      </tr>
+                      <tr>
+                        <td>STATUS</td>
+                        <td class="mainText" colspan="2" style="font-weight: bold;">{{ $newData['data']['status'] }}</td>
+                      </tr>
+                      <tr>
+                        <td>IS SUCCESSFUL</td>
+                        <td class="mainText" colspan="2" style="font-weight: bold;">{{ $newData['data']['isSuccessful'] === true ? 'TRUE' : 'FALSE' }}</td>
+                      </tr>
+                      <tr>
+                        <td>GATEWAY RESPONSE</td>
+                        <td class="mainText" colspan="2" style="font-weight: bold;">{{ $newData['data']['gatewayResponse'] }}</td>
+                      </tr>
 
-                                    @if (isset($data['transaction']->data->authorization->receiver_bank))
-                                      <div class="col-md-12">
-                                          BANK NAME: {{ $data['transaction']->data->authorization->receiver_bank }}
-                                      </div>
-                                    @endif
-                                </div>
-                            </td>
-                          </tr>
-                          
-
-                      
-
-                      <br><br>
-
-                                
 
                   @else
                     <tr>
-                      <td>No record found</td>
+                      <td colspan="2" style="color: red; font-weight: bold;" align="center">No gateway response retrieved for this transaction</td>
                     </tr>
 
                   @endif
-                  
-                  
+
+
                 </tbody>
               </table>
 

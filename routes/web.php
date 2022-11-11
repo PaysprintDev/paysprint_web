@@ -212,6 +212,12 @@ Route::get('monthlylimit', 'CheckSetupController@monthlyLimit');
 
 
 
+// Rerun Express Controller
+Route::get('rerunepscallback', 'ExpressController@rerunExpressCallBack')->name('eps rerun');
+Route::get('reruneps', 'ExpressController@index')->name('rerun eps transaction');
+
+
+
 
 // SET OTP REQUEST
 Route::post('otpstore', ['uses' => 'OtpController@store', 'as' => 'otp.store']);

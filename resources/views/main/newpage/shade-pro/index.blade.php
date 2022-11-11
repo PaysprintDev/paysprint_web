@@ -184,7 +184,7 @@
                         <tbody>
                             <tr>
                                 <td>99%</td>
-                                <td>{{$data['code']}} {{$data['totaltransactions']}}</td>
+                                {{-- <td>{{$data['code']}} {{$data['totaltransactions']}}</td> --}}
                                 <td>{{$data['totaldays']}} days</td>
                             </tr>
                         </tbody>

@@ -2710,7 +2710,7 @@ C</div>
         
         try {
         
-        $('#btn' + ref_code).text('Please wait ...');
+        $('#btns' + ref_code).text('Please wait ...');
         
         
         const config = {
@@ -2723,7 +2723,7 @@ C</div>
         
         const response = await axios(config);
         
-        $('#btn' + ref_code).text('Activate Merchant Payment Link');
+        $('#btns' + ref_code).text('Activate Merchant Payment Link');
         
         
         swal('Great', response.data.message, 'success');
@@ -2734,7 +2734,7 @@ C</div>
         
         } catch (error) {
         
-        $('#btn' + ref_code).text('Activate Merchant Payment Link');
+        $('#btns' + ref_code).text('Activate Merchant Payment Link');
         
         if (error.response) {
         swal('Oops!', error.response.data.message, 'error');
