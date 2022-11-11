@@ -1403,6 +1403,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 
 
 	Route::post('paychargeback', ['uses' => 'MonerisController@paymentChargeBack', 'as' => 'Ajaxpaychargeback']);
+	Route::post('reversecrossborder', ['uses' => 'MonerisController@reverseCrossBorder', 'as' => 'reverseCrossBorder']);
 	Route::post('releasefeeback', ['uses' => 'MonerisController@paymentReleaseFeeBack', 'as' => 'Ajaxreleasefeeback']);
 
 

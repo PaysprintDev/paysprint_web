@@ -7572,6 +7572,202 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
         return $this->returnJSON($resData, $status);
     }
 
+    public function reverseCrossBorder(Request $req)
+    {
+   
+        try {
+            // Get Transaction Info
+            $transaction=CrossBorder::where('transaction_id',$req->transactionid)->first();
+          
+            
+            $country=$transaction->country;
+
+ 
+            
+      
+            $paymentmethod=$transaction->select_wallet;
+
+              
+
+            if($paymentmethod == 'FX Wallet'){
+
+             $data=FxStatement::where('reference_code',$req->transactionid)->first();
+             
+             
+            
+              $border = CrossBorder::where('transaction_id', $data->reference_code)->first();
+              
+             
+                $escrow=EscrowAccount::where('escrow_id',$data->user_id)->first();
+
+              
+                         
+              $thisuser=User::where('id',$escrow->user_id)->first();
+
+               
+               
+                $currentbalance=$escrow->wallet_balance;
+             
+                $amount=$data->debit;
+                $newamount=$currentbalance + $amount;
+
+        
+                
+            EscrowAccount::where('escrow_id',$data->user_id)->update([
+                        'wallet_balance' => $newamount
+                    ]);
+            CrossBorder::where('transaction_id',$req->transactionid)->delete();
+            FxStatement::where('reference_code',$req->transactionid)->delete();
+
+            //statement savings
+            $activity = "Reversal of " . $thisuser->currencyCode . '' . number_format($amount, 2) . " (Reversal amount of " . $thisuser->currencyCode . '' . number_format($amount, 2) . " for cross border payment.";
+
+            $credit = $amount;
+            $debit = 0;
+            $reference_code = $data->reference_code;
+            $balance = $newamount;
+            $trans_date = date('Y-m-d');
+            $thistatus = "Reversal";
+            $action = "Cross-Border Reversal";
+            $regards = $thisuser->ref_code;
+            $statement_route = "wallet";
+
+            // Senders statement
+            $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
+
+
+            // MonerisActivity::where('transaction_id', $req->reference_code)->update(['reversal_state' => 1]);
+
+
+            $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The reversal of ' . $thisuser->currencyCode . ' ' . number_format($amount, 2) . ' to your PaySprint Fx Wallet has been processed. You have ' . $thisuser->currencyCode . ' ' . number_format($newamount, 2) . ' balance in your account';
+
+
+
+            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+            if (isset($userPhone)) {
+
+                $sendPhone = $thisuser->telephone;
+            } else {
+                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+            }
+
+
+            $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
+
+            if ($thisuser->country == "Nigeria") {
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                $this->sendSms($sendMsg, $correctPhone);
+            } else {
+                $this->sendMessage($sendMsg, $sendPhone);
+            }
+
+
+
+            // Log::info("Reversal successfull! ".strtoupper($thisuser->name)." ".$sendMsg);
+
+            $this->slack("Reversal successfull! " . strtoupper($thisuser->name) . " " . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+
+            $message = "Reversal successfully completed";
+            $status = 200;
+
+            $resData = ['data' => $thisuser, 'message' => $message, 'status' => $status];
+
+
+        return $this->returnJSON($resData, $status);
+                
+            }elseif($paymentmethod == 'Wallet'){
+
+            $data=Statement::where('reference_code',$req->transactionid)->first();
+            dd($data);
+
+                 
+            $escrow = CrossBorder::where('transaction_id', $data->reference_code)->first();
+            
+             $thisuser=User::where('ref_code',$escrow->ref_code)->first();
+               
+             
+                     $currentbalance=$thisuser->wallet_balance;
+                    $amount=$data->debit;
+                        $newamount=$currentbalance+$amount;
+                     User::where('ref_code',$escrow->ref_code)->update([
+                        'wallet_balance' => $newamount
+                    ]);
+          
+          
+            CrossBorder::where('transaction_id',$data->reference_code)->delete();
+            Statement::where('reference_code',$req->transactionid)->delete();
+             //statement savings
+            $activity = "Reversal of " . $thisuser->currencyCode . '' . number_format($amount, 2) . " (Reversal amount of " . $thisuser->currencyCode . '' . number_format($amount, 2) . " for cross border payment.";
+                   
+            $credit = $amount;
+            $debit = 0;
+            $reference_code = $data->reference_code;
+            $balance = $newamount;
+            $trans_date = date('Y-m-d');
+            $thistatus = "Reversal";
+            $action = "Cross-Border Reversal";
+            $regards = $thisuser->ref_code;
+            $statement_route = "wallet";
+
+            // Senders statement
+            $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
+
+
+            // MonerisActivity::where('transaction_id', $req->reference_code)->update(['reversal_state' => 1]);
+
+
+            $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The reversal of ' . $thisuser->currencyCode . ' ' . number_format($amount, 2) . ' to your PaySprint Wallet has been processed. You have ' . $thisuser->currencyCode . ' ' . number_format($newamount, 2) . ' balance in your account';
+
+
+
+            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+            if (isset($userPhone)) {
+
+                $sendPhone = $thisuser->telephone;
+            } else {
+                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+            }
+
+
+            $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
+
+            if ($thisuser->country == "Nigeria") {
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                $this->sendSms($sendMsg, $correctPhone);
+            } else {
+                $this->sendMessage($sendMsg, $sendPhone);
+            }
+
+
+
+            // Log::info("Reversal successfull! ".strtoupper($thisuser->name)." ".$sendMsg);
+
+            $this->slack("Reversal successfull! " . strtoupper($thisuser->name) . " " . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+
+            $message = "Reversal successfully completed";
+            $status = 200;
+
+            $resData = ['data' => $thisuser, 'message' => $message, 'status' => $status];
+
+
+        return $this->returnJSON($resData, $status);
+            }
+        } catch (\Throwable $th) {
+            $message = $th->getMessage();
+            $status = 400;
+            $thisuser = [];
+        }
+
+
+        
+    }
+
     //softdelete for transaction
     public function deleteTransaction(Request $req)
     {
