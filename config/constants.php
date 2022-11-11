@@ -21,6 +21,7 @@ return [
         'merchantusername' => "d-81278b52677249ffbe56aa18dbdfc8ad",
         'requestreview' => "d-82b84623f45a425abf3f4c8052d02a76",
         'productlist' => "d-170c383925bf41dc923dd19e282c98b5",
+        'sales' => "d-5e8ec5856cf543d0b3ca4e97f620327d",
     ],
     'marketplace' => [
         'baseurl' => 'https://api.sendgrid.com/v3',
