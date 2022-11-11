@@ -341,7 +341,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                         $this->createNotification($thisuser->ref_code, "Payment successfully made for " . $req->service . " to " . $client->business_name, $thisuser->playerId, "Payment successfully made for " . $req->service . " to " . $client->business_name, "Wallet Transaction");
 
                         $monerisactivity = "Payment successfully made for " . $req->service . " to " . $client->business_name . " by " . $thisuser->name;
-                        $this->keepRecord($mpgResponse->responseData['ReceiptId'], $mpgResponse->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0);
+                        $this->keepRecord($mpgResponse->responseData['ReceiptId'], $mpgResponse->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0, null, json_encode($mpgResponse));
                     } else {
                         $resData = ['res' => 'Something went wrong', 'message' => 'info', 'title' => 'Oops!'];
 
@@ -367,7 +367,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
             $action = 'error';
 
             $monerisactivity = "Payment error for " . $req->service . " to " . $client->business_name . " by " . $thisuser->name;
-            $this->keepRecord("", $mpgResponse->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0);
+            $this->keepRecord("", $mpgResponse->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0, null, json_encode($mpgResponse));
         }
 
         // return $this->returnJSON($resData, 200);
@@ -3278,6 +3278,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     public function expressBusinessCallback(Request $req)
     {
 
+        $thisuser = User::where('ref_code', $req->ref_code)->first();
 
 
         try {
@@ -3287,8 +3288,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
             if ($response->responseCode == "00") {
 
-                // Get merchant info
-                $thisuser = User::where('ref_code', $req->ref_code)->first();
+
 
                 if (isset($thisuser)) {
                     $gateway = "Express Payment Solution";
@@ -3367,7 +3367,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                     $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Transaction");
 
-                    $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, 1);
+                    $this->keepRecord($referenced_code, $message, "Success", $gateway, $thisuser->country, 1, null, json_encode($response));
 
                     $this->updatePoints($thisuser->id, 'Add money');
 
@@ -3387,6 +3387,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     $action = 'error';
                 }
             } else {
+
+                // Store record to database...
+                $this->keepRecord($req->paymentToken, $response->responseMessage, "Failed", "Express Payment Solution", $thisuser->country, 1, null, json_encode($response));
 
                 $data = false;
                 $message = $response->responseMessage;
@@ -3765,7 +3768,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                             $monerisactivity = $thisuser->name . ' ' . $sendMsg;
-                            $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1));
+                            $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1),null,json_encode($response));
 
 
                             $currencyFX = new MonthlySubController();
@@ -3781,7 +3784,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                             $this->slack('Oops!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                             $monerisactivity = $thisuser->name . ' ' . $message;
-                            $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0);
+                            $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0, null, json_encode($response));
                         }
                     }
                 } else {
@@ -5371,7 +5374,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                         $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                         $monerisactivity = $thisuser->name . ' ' . $sendMsg;
-                                        $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1));
+                                        $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1), null, json_encode($response));
 
 
                                         $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $req->currencyCode . ' ' . number_format($repayAmount, 2) . "</p><p>Status: Successful</p>";
@@ -5387,7 +5390,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                         $this->slack('Oops!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                         $monerisactivity = $thisuser->name . ' ' . $message;
-                                        $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0);
+                                        $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0, null, json_encode($response));
                                     }
                                 }
                             } elseif ($thisuser->country == "Nigeria") {
@@ -5507,7 +5510,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $this->slack('Congratulations!, ' . $thisuser->name . ' ' . $sendMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                     $monerisactivity = $thisuser->name . ' ' . $sendMsg;
-                                    $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1));
+                                    $this->keepRecord($reference_code, $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, ($thisuser->auto_credit == 1 ? 0 : 1), null, json_encode($response));
 
                                     $adminMessage = "<p>Transaction ID: " . $reference_code . "</p><p>Name: " . $thisuser->name . "</p><p>Account Number: " . $thisuser->ref_code . "</p><p>Country: " . $thisuser->country . "</p><p>Date: " . date('d/m/Y h:i:a') . "</p><p>Amount: " . $req->currencyCode . ' ' . number_format($repayAmount, 2) . "</p><p>Status: Successful</p>";
 
@@ -5526,7 +5529,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                     $this->slack('Oops!, ' . $thisuser->name . ' ' . $message, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
 
                                     $monerisactivity = $thisuser->name . ' ' . $message;
-                                    $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0);
+                                    $this->keepRecord("", $response->responseData['Message'], $monerisactivity, 'moneris', $thisuser->country, 0, null, json_encode($response));
                                 }
                             }
                         }
@@ -9206,6 +9209,8 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     public function expressCallback(Request $req)
     {
 
+        $thisuser = User::where('api_token', $req->api_token)->first();
+
         try {
             // Verify Payment ...
             $getVerification = $this->getVerification($req->paymentToken);
@@ -9222,7 +9227,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 }
 
 
-                $thisuser = User::where('api_token', $req->api_token)->first();
+
 
                 // Log::info($thisuser->name." wants to add ".$req->currencyCode." ".$req->amount." to their wallet.");
 
@@ -9410,6 +9415,10 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                 $this->notifyAdmin($gateway . " inflow", $adminMessage);
             } else {
+
+                // Store record to database...
+                $this->keepRecord($req->paymentToken, $getVerification->responseMessage, "Failed", "Express Payment Solution", $thisuser->country, 1, null, json_encode($getVerification));
+
                 $data = [];
                 $message = "Payment not received | " . $getVerification->responseMessage;
                 $status = 400;
@@ -9437,12 +9446,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     {
 
         // dd($req->all());
+        $thisuser = User::where('api_token', $req->api_token)->first();
 
         try {
-            // Verify Payment ...
-            //  $getVerification = $this->getVerification($req->paymentToken);
-
-            // dd($getVerification);
 
             if ($req->status == "COMPLETED") {
                 // Insert Payment Record
@@ -9454,7 +9460,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 }
 
 
-                $thisuser = User::where('api_token', $req->api_token)->first();
+
 
                 // Log::info($thisuser->name." wants to add ".$req->currencyCode." ".$req->amount." to their wallet.");
 

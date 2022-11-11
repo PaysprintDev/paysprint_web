@@ -205,17 +205,19 @@
                                         class="fa fa-circle-o text-red"></i> PayStack</a></li>
                             <li title="Paypal"><a href="{{ route('gateway activity', 'gateway=PayPal') }}"><i
                                         class="fa fa-circle-o text-red"></i> Paypal</a></li>
-                            <li title="Paypal"><a
+                            <li title="Express Payment Solution"><a
                                     href="{{ route('gateway activity', 'gateway=Express Payment Solution') }}"><i
                                         class="fa fa-circle-o text-red"></i> Express</a></li>
                             <li title="Stripe"><a href="{{ route('gateway activity', 'gateway=Stripe') }}"><i
                                         class="fa fa-circle-o text-red"></i> Stripe</a></li>
-                            <li title="Stripe"><a href="{{ route('gateway activity', 'gateway=Dusupay') }}"><i
+                            <li title="Dusupay"><a href="{{ route('gateway activity', 'gateway=Dusupay') }}"><i
                                         class="fa fa-circle-o text-red"></i> Dusupay</a></li>
-                            <li title="Stripe"><a href="{{ route('gateway activity', 'gateway=Flutterwave') }}"><i
+                            <li title="Flutterwave"><a href="{{ route('gateway activity', 'gateway=Flutterwave') }}"><i
                                         class="fa fa-circle-o text-red"></i> Flutterwave</a></li>
-                            <li title="Stripe"><a href="{{ route('gateway activity', 'gateway=Partner') }}"><i
+                            <li title="Partners"><a href="{{ route('gateway activity', 'gateway=Partner') }}"><i
                                         class="fa fa-circle-o text-red"></i> Partners</a></li>
+                            <li title="EXPRESS PAY RERUN"><a href="{{ route('rerun eps transaction') }}" target="_blank"><i
+                                        class="fa fa-circle-o text-red"></i> EXPRESS PAY RERUN</a></li>
 
                         </ul>
                     </li>
@@ -595,7 +597,7 @@
             </li>
             @endif
 
-            @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only')
+            @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access to Level 1 and 2 only')
             <li class="treeview">
                 <a href="#">
                     <i class="far fa-handshake"></i>
@@ -609,7 +611,7 @@
                                 class="fa fa-circle-o text-red"></i>Wallet Debit</a>
                     </li>
                     <li title="Wallet Credit"><a href="{{ route('wallet account credit')}}"><i
-                                class="fa fa-circle-o text-red"></i>WalletCredit</a></li>
+                                class="fa fa-circle-o text-red"></i>Wallet Credit</a></li>
 
                 </ul>
             </li>
@@ -717,8 +719,7 @@
             @endif
             @endif
 
-            @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access
-            to Level 1 and 2 only')
+            @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access to Level 1 and 2 only')
 
             <li class="treeview">
                 <a href="#">

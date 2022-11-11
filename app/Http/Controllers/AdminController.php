@@ -4049,14 +4049,14 @@ class AdminController extends Controller
 
     public function deleteGovtid(Request $req)
     {
-    
+
        User::where('id',$req->user_id)->update([
         'nin_front' => '',
         'nin_back' => ''
        ]);
 
        return back()->with("msg","<div class='alert alert-success'>Government Issued ID Removed Successfully</div>");
-       
+
     }
 
     public function deleteLicense(Request $req)
@@ -4088,7 +4088,7 @@ class AdminController extends Controller
        User::where('id',$req->user_id)->update([
         'incorporation_doc_front' => '',
         'incorporation_doc_back' => '',
-        
+
        ]);
 
        return back()->with("msg","<div class='alert alert-success'>Document Removed Successfully</div>");
@@ -4373,7 +4373,7 @@ class AdminController extends Controller
             $getxPay = $this->getxpayTrans();
             $allusers = $this->allUsersOverride();
 
-            
+
 
 
             return view('admin.allusersoverride')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers]);
@@ -4407,7 +4407,7 @@ class AdminController extends Controller
 
 
         if($attributes->country == 'Argentina' || $attributes->country == 'Brazil' || $attributes->country == 'Chile' || $attributes->country == 'Mexico' || $attributes->country == 'Peru' || $attributes->country == 'United States'){
-            
+
         }
 
         dd($attributes['name']);
@@ -6993,13 +6993,23 @@ class AdminController extends Controller
             $allusers = $this->allUsers();
 
             $data = array(
-                'transaction' => $this->verifyTransaction($id)
+                // 'transaction' => $this->verifyTransaction($id) // This is deprecated and works for PayStack
+                'transaction' => $this->viewTransactionDetails($id)
             );
+
 
             return view('admin.pages.transactiondetails')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
         }
+    }
+
+
+    public function viewTransactionDetails($id)
+    {
+        $data = MonerisActivity::where('transaction_id', $id)->first();
+
+        return $data;
     }
 
 
@@ -12611,7 +12621,7 @@ class AdminController extends Controller
 
     public function crossBorderBeneficiaryDetail(Request $req, $id)
     {
-       
+
 
         if ($req->session()->has('username') == true) {
             // dd(Session::all());
@@ -19968,7 +19978,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
     public function ajaxAccessToUsePaysprintFx(Request $req)
     {
-       
+
         $check = AllCountries::where('id', $req->country_id)->first();
 
         if (isset($check)) {
@@ -20418,7 +20428,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
 
         $data = User::where([['accountLevel', '=', 2], ['approval', '=', 0], ['bvn_verification', '=', 0], ['account_check', '=', 0]])->orderBy('created_at', 'DESC')->get();
 
-       
+
 
         return $data;
     }

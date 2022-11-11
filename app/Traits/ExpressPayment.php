@@ -80,7 +80,6 @@ trait ExpressPayment
         }
     }
 
-
     public function getCommissionData($amount, $billerCode, $country)
     {
 
@@ -145,7 +144,6 @@ trait ExpressPayment
         return $data;
     }
 
-
     public function getLookUp($billerCode, $accountNumber)
     {
         $this->Base_Url = env('EXPRESS_PAY_ENDPOINT_URL') . '/lookup';
@@ -179,7 +177,6 @@ trait ExpressPayment
     public function getVerification($paymentToken)
     {
 
-
         try {
 
             $this->Base_Url = (env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_URL_DEV') : env('EPXRESS_PAYMENT_URL_PROD')) . 'api/Payments/VerifyPayment';
@@ -192,8 +189,36 @@ trait ExpressPayment
 
 
             $data = $this->doPayPost();
+
+
             return $data;
         } catch (\Throwable $th) {
+
+            $data = $this->newVerification($paymentToken);
+
+
+            return $data;
+        }
+    }
+
+
+    // New Verification query...
+    public function newVerification($paymentToken){
+        try {
+
+            $this->Base_Url = (env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_NEW_URL_DEV') : env('EPXRESS_PAYMENT_NEW_URL_PROD')) . 'v1/payments/query';
+
+
+            $this->curlPost = json_encode([
+                'transactionId' => $paymentToken,
+            ]);
+
+
+            $data = $this->doPayPost();
+
+            return $data;
+        } catch (\Throwable $th) {
+
 
             return [];
         }
@@ -282,9 +307,6 @@ trait ExpressPayment
             }
         }
     }
-
-
-
 
     public function checkAccount($data, $bearerToken)
     {
@@ -398,7 +420,6 @@ trait ExpressPayment
 
         return $response;
     }
-
 
     // Generate Hash for Payment
 
@@ -530,7 +551,6 @@ trait ExpressPayment
         return json_decode($response);
     }
 
-
     public function doPayPost()
     {
 
@@ -560,8 +580,6 @@ trait ExpressPayment
 
         return json_decode($response);
     }
-
-
 
     public function payBillCurrencyConvert($billerCurrency, $myCurrency, $amount, $route = null)
     {
@@ -654,7 +672,6 @@ trait ExpressPayment
 
         return $amountConvert;
     }
-
 
     public function minimumWithBal($country)
     {
