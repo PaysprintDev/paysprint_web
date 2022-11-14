@@ -98,7 +98,8 @@ use App\Http\Controllers\AllCountries; ?>
 
 
 
-                                @if (Auth::user()->payment_link_access == 1 && Auth::user()->payment_link_approval == 1
+                                @if (Auth::user()->plan == 'classic' && Auth::user()->payment_link_access == 1 &&
+                                Auth::user()->payment_link_approval == 1
                                 && $datediff > 0 )
                                 <!-- ShareThis BEGIN -->
                                 <p class="alert alert-primary text-white"><strong>Payment Link:</strong></p>
@@ -366,7 +367,8 @@ use App\Http\Controllers\AllCountries; ?>
                             </div>
                         </div>
 
-                        @if (Auth::user()->payment_link_access == 1 && Auth::user()->payment_link_approval == 1
+                        @if (Auth::user()->plan =='classic' && Auth::user()->payment_link_access == 1 &&
+                        Auth::user()->payment_link_approval == 1
                         && $datediff > 0)
                         <div class="card income-card card-secondary">
                             <div class="card-body text-center">

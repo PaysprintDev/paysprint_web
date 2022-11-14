@@ -76,6 +76,8 @@ use App\Imports\SurveyImport;
 
 use App\Imports\MerchantImport;
 
+use App\Imports\VerifiedImport;
+
 use App\Traits\AccountNotify;
 
 use App\Traits\PointsHistory;
@@ -114,6 +116,8 @@ use App\CrossBorder as CrossBorder;
 use App\ImportExcel as ImportExcel;
 
 use App\UnverifiedMerchant;
+
+use App\VerifiedMerchant;
 
 use App\ServiceType as ServiceType;
 
@@ -13674,6 +13678,19 @@ class AdminController extends Controller
         ]);
 
         $data = Excel::import(new MerchantImport(), $req->file('unverified_docs'));
+
+
+        return back()->with("msg", "<div class='alert alert-success'> Imported Successfully</div>");
+    }
+
+    //uploading the verified merchants into database
+    public function uploadVerifiedMerchants(Request $req)
+    {
+        $validation = $req->validate([
+            'verified_docs' => 'required'
+        ]);
+
+        $data = Excel::import(new VerifiedImport(), $req->file('verified_docs'));
 
 
         return back()->with("msg", "<div class='alert alert-success'> Imported Successfully</div>");

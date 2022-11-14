@@ -59,7 +59,8 @@ class Kernel extends ConsoleKernel
         Commands\UpdateStatementCountry::class,
         Commands\UserArchive::class,
         Commands\VirtualAccountTopUp::class,
-        Commands\WeeklyLimit::class
+        Commands\WeeklyLimit::class,
+        Commands\MailToVerifiedMerchant::class
         // Commands\DailyMetricsTask::class,
         // Commands\TestPSMoex::class,
     ];
@@ -118,6 +119,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('weeklylimit:run')->cron('0 0 * * 0');
         $schedule->command('notificationtable:run')->cron('0 0 * * 2');
         $schedule->command('mailqueue:run')->everyTwoMinutes();
+        $schedule->command('mailtoverfiedmerchants:run')->monthly();
 
     }
 

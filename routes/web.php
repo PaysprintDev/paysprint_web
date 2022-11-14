@@ -1194,6 +1194,7 @@ Route::post('exporttoPdf', ['uses' => 'HomeController@exportToPdf', 'as' => 'exp
 Route::get('/promopage', ['uses' => 'AdminController@promoPage', 'as' => 'promo page']);
 Route::post('/uploadpromousers', ['uses' => 'AdminController@uploadPromoUsers', 'as' => 'upload promo users']);
 Route::post('/uploadunverifiedmerchants', ['uses' => 'AdminController@uploadUnverifiedMerchants', 'as' => 'upload unverified merchants']);
+Route::post('/uploadverifiedmerchants', ['uses' => 'AdminController@uploadVerifiedMerchants', 'as' => 'upload verified merchants']);
 Route::get('/promousers', ['uses' => 'AdminController@promoUsers', 'as' => 'promo users']);
 Route::get('/promoreport', ['uses' => 'AdminController@promoReport', 'as' => 'promo report']);
 Route::post('/topup', ['uses' => 'AdminController@topUpWallet', 'as' => 'top up']);
@@ -1321,6 +1322,7 @@ Route::prefix('Admin/estore')->group(function () {
 	Route::post('/activate/{id}', ['uses' => 'StoreController@activateStore', 'as' => 'activate store']);
 	Route::get('/activatestore', ['uses' => 'StoreController@activateEstore', 'as' => 'activate e-store']);
 	Route::get('/unverifiedmerchants', ['uses' => 'StoreController@unverifiedMerchants', 'as' => 'unverified merchants']);
+	Route::get('/verifiedmerchants', ['uses' => 'StoreController@verifiedMerchants', 'as' => 'verified merchants']);
 	Route::get('marketplace', ['uses' => 'StoreController@newMarketplacePost', 'as' => 'new marketplace post']);
 	Route::post('createnews', ['uses' => 'AdminController@createMarketplaceNews', 'as' => 'create marketplace news']);
 	Route::get('/marketplacenews', ['uses' => 'StoreController@FetchMarketplaceNews', 'as' => 'marketplacenews']);

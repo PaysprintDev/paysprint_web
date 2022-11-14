@@ -168,11 +168,10 @@ class PayoutAgentController extends Controller
             if($thisuser->payment_link_approval == '0'){
                  User::where('ref_code', $req->ref_code)->update(['payment_link_approval' => 1]);
                 $message = 'Merchant Payment Link Successfully Activated ';
-            }
-            
-            if($thisuser->payment_link_approval == '1'){
+              
+            }else{
                  User::where('ref_code', $req->ref_code)->update(['payment_link_approval' => 0]);
-                $message = 'Merchant Payment Link Successfully De-activated ';
+                $message = 'Merchant Payment Link Successfully De-activated ';  
             }
             
             // else{
@@ -186,13 +185,13 @@ class PayoutAgentController extends Controller
             $message = $th->getMessage();
 
             $status = 400;
+          
         }
+   $resData = ['message' => $message, 'status' => $status];
+ return $this->returnJSON($resData, $status);
 
 
-        $resData = ['message' => $message, 'status' => $status];
-
-
-        return $this->returnJSON($resData, $status);
+       
     }
 
 
