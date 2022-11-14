@@ -94,10 +94,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('mailtovirtualaccount:run')->cron('0 8 * * 4');
         $schedule->command('matchedusersmove:run')->cron('0 0 * * *');
         $schedule->command('monthlylimit:run')->cron('0 0 1 * *');
-        $schedule->command('monthlytransaction:run')->cron('0 7 28 * *');
+        $schedule->command('monthlytransaction:run')->lastDayOfMonth('13:00');
         $schedule->command('moveindustry:run')->cron('0 0,12 * * *');
         $schedule->command('movekybcompleted:run')->cron('0 0,12 * * *');
-        $schedule->command('nonmonthlytransaction:run')->cron('0 12 28 * *');
+        $schedule->command('nonmonthlytransaction:run')->lastDayOfMonth('15:00');
         $schedule->command('notificationperiod:run')->cron('*/5 * * * *');
         $schedule->command('numberofwithdrawals:run')->cron('0 0 1 * *');
         $schedule->command('numberofwithdrawalsformerchant:run')->cron('0 0 * * 1');

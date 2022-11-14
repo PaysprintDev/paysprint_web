@@ -18,8 +18,12 @@ class CreateLogFXTransfersTable extends Migration
             $table->string('user_id');
             $table->string('currency');
             $table->string('status');
+            $table->string('amount');
+            $table->string('currency_account_to');
+            $table->string('currency_account_from');
             $table->timestamps();
         });
+
     }
 
     /**

@@ -1846,9 +1846,14 @@ class CurrencyFxController extends Controller
 
                         if(isset($checkLog)){
 
-                            //Convert Money
-                            $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode, 'transferfx') * 0.5;
+                            $thisconvert = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode, 'transferfx');
 
+                            //Convert Money
+                            $getconvertion = $thisconvert * 0.5;
+
+                            $getLog = LogFXTransfer::where('user_id', $thisuser->id)->where('currency', $changeCurrency)->first();
+
+                            LogFXTransfer::where('user_id', $thisuser->id)->where('currency', $changeCurrency)->update(['amount' => ($getLog->amount + $getconvertion), 'currency_account_to' => $toWallet->currencyCode, 'currency_account_from' => $fromWallet->currencyCode]);
                         }
                         else{
 
@@ -1857,7 +1862,7 @@ class CurrencyFxController extends Controller
                             //Convert Money
                             $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode, 'transferfx');
 
-                            LogFXTransfer::updateOrInsert(['user_id' => $thisuser->id, 'currency' => $changeCurrency],['currency' => $changeCurrency, 'status' => '1']);
+                            LogFXTransfer::updateOrInsert(['user_id' => $thisuser->id, 'currency' => $changeCurrency],['currency' => $changeCurrency, 'status' => '1', 'amount' => '0', 'currency_account_to' => $toWallet->currencyCode, 'currency_account_from' => $fromWallet->currencyCode]);
                         }
 
                             // Mark down here ...
