@@ -19,11 +19,12 @@ class CountryFlagController extends Controller
         foreach ($countries as $country){
 
             $baseurl= "https://countryflagsapi.com/png/".$country->code;
-
-            AllCountries::where('id',$country->id)->update([
+            
+          AllCountries::where('id',$country->id)->update([
                 'logo' => $baseurl
             ]);
         }
+        // dd($baseurl);
 
 
 

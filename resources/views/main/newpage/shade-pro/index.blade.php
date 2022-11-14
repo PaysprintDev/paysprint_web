@@ -422,7 +422,7 @@
 <!-- end of download App -->
 
 <!-- Available countries -->
-<div class="container mt-8 mb-5">
+<div class="container mt-8 mb-5 disp-0">
     <div class="row justify-content-center align-items-center">
         <div class="">
             <h2 class="title gr-text-4 mb-8">Money Transfer from {{($data['country'])}} to

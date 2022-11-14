@@ -407,7 +407,11 @@ class MerchantPageController extends Controller
                 'payment_link_expiry' => date('Y-m-d H:i:s', strtotime($today . '+ 1 day'))
             ]);
 
-                 $business = Auth::user()->businessname . '/' . Auth::user()->ref_code;
+
+            // Send Link and QRCode...
+
+
+            $business = Auth::user()->businessname . '/' . Auth::user()->ref_code;
             $url = str_replace(' ', '%20', $business);
 
             QrCode::size(300)->generate(route('home') . '/merchant/' . $url, public_path('../../images/'.Auth::user()->businessname.'.svg') );
