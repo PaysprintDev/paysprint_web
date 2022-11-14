@@ -470,6 +470,19 @@
                                         </tr>
 
 
+                                        <tr>
+                                            <td colspan="2">
+                                                <h3 style="font-weight: bold;">ACCOUNT ACCESS</h3>
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>Currency FX</td>
+                                            <td>
+                                                <a href="{{ route('paysprint currency exchange', 'access=super&email='.$getthisuser->email) }}" target="_blank" class="btn btn-danger">Access FX Dashboard</a>
+                                            </td>
+                                        </tr>
 
 
 

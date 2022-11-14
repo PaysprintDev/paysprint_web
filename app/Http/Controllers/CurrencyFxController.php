@@ -7,8 +7,9 @@ use App\MakeBid;
 use App\FxPayment;
 use App\Statement;
 use App\ClientInfo;
-use App\CrossBorder;
+use App\UserClosed;
 
+use App\CrossBorder;
 use App\FxStatement;
 use App\ImportExcel;
 use App\MarketPlace;
@@ -53,7 +54,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -65,49 +66,62 @@ class CurrencyFxController extends Controller
     public function index(Request $req)
     {
 
-        if ($req->session()->has('email') == false) {
-            if (Auth::check() == false) {
-                return redirect()->route('login');
+        if ($req->access === 'super') {
+
+            $user = User::where('email', $req->email)->first();
+
+            if(isset($user)){
+
+                $req->session()->put(['fx_email' => $req->email]);
+
+                Auth::login($user);
             }
+            else{
+                return back()->with('error', 'Oops!, Sorry, I can not accessed closed users FX dashboard.');
+            }
+
         } else {
+            if ($req->session()->has('email') == false) {
+                if (Auth::check() == false) {
+                    return redirect()->route('login');
+                }
+            } else {
 
 
 
-            $user = User::where('email', session('email'))->first();
+                $user = User::where('email', session('email'))->first();
 
-            Auth::login($user);
+                Auth::login($user);
+            }
+
+            if (Auth::user()->plan != 'classic') {
+                return redirect()->back();
+            }
+
+            $client = $this->getMyClientInfo(Auth::user()->ref_code);
+
+
+            if (isset($client) && $client->accountMode == "test") {
+
+                return redirect()->route('dashboard')->with('error', 'You are in test mode');
+            }
+
+            // Check if User has a forex account
+            $checkUser = User::where('id', Auth::id())->first()->forexAccount;
+
+
+            if (count($checkUser) <= 0) {
+                // Create Escrow Account
+                EscrowAccount::insert(['user_id' => Auth::id(), 'escrow_id' => 'ES_' . uniqid() . '_' . strtoupper(date('D')), 'currencyCode' => Auth::user()->currencyCode, 'currencySymbol' => Auth::user()->currencySymbol, 'wallet_balance' => "0.00", 'country' => Auth::user()->country, 'active' => "true"]);
+            }
+
+
+            $checker = $this->checkImt(Auth::user()->country);
+
+            if ($checker == "false") {
+                return back()->with('error', 'This feature is not yet available for your country');
+            }
         }
-
-        if (Auth::user()->plan != 'classic') {
-            return redirect()->back();
-        }
-
-        $client = $this->getMyClientInfo(Auth::user()->ref_code);
-
-
-        if(isset($client) && $client->accountMode == "test"){
-
-            return redirect()->route('dashboard')->with('error', 'You are in test mode');
-        }
-
-        // Check if User has a forex account
-        $checkUser = User::where('id', Auth::id())->first()->forexAccount;
-
-
-        if (count($checkUser) <= 0) {
-            // Create Escrow Account
-            EscrowAccount::insert(['user_id' => Auth::id(), 'escrow_id' => 'ES_' . uniqid() . '_' . strtoupper(date('D')), 'currencyCode' => Auth::user()->currencyCode, 'currencySymbol' => Auth::user()->currencySymbol, 'wallet_balance' => "0.00", 'country' => Auth::user()->country, 'active' => "true"]);
-        }
-
-
-        $checker = $this->checkImt(Auth::user()->country);
-
-        if($checker == "false"){
-            return back()->with('error', 'This feature is not yet available for your country');
-        }
-
-
-
 
         return view('currencyexchange.index');
     }
@@ -115,6 +129,25 @@ class CurrencyFxController extends Controller
     // Create FX Wallet
     public function createWallet(Request $req)
     {
+
+        if($req->session()->has('role') === true){
+
+
+            $user = User::where('email', session('fx_email'))->first();
+
+            if(isset($user)){
+
+
+                Auth::login($user);
+            }
+            else{
+                return back()->with('error', 'Oops!, Sorry, I can not accessed closed users FX dashboard.');
+            }
+
+        }
+        else
+        {
+
         if ($req->session()->has('email') == false) {
             if (Auth::check() == false) {
                 return redirect()->route('login');
@@ -134,8 +167,10 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
+        }
+
         }
 
         return view('currencyexchange.createwallet')->with(['pages' => 'Create FX Wallet', 'data' => $data]);
@@ -164,7 +199,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -193,7 +228,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -223,7 +258,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -245,7 +280,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -270,7 +305,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -278,7 +313,7 @@ class CurrencyFxController extends Controller
     }
 
 
-        // Get My Client Info
+    // Get My Client Info
     public function getMyClientInfo($ref_code)
     {
         $data = ClientInfo::where('user_id', $ref_code)->first();
@@ -303,7 +338,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -326,7 +361,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -349,7 +384,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -371,7 +406,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -383,7 +418,25 @@ class CurrencyFxController extends Controller
 
     public function transactionHistory(Request $req)
     {
-        if ($req->session()->has('email') == false) {
+
+
+        if($req->session()->has('role') === true){
+
+
+            $user = User::where('email', session('fx_email'))->first();
+
+            if(isset($user)){
+
+
+                Auth::login($user);
+            }
+            else{
+                return back()->with('error', 'Oops!, Sorry, I can not accessed closed users FX dashboard.');
+            }
+
+        }
+        else{
+            if ($req->session()->has('email') == false) {
             if (Auth::check() == false) {
                 return redirect()->route('login');
             }
@@ -396,9 +449,12 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
+        }
+
+
 
 
         return view('currencyexchange.transactionhistory');
@@ -420,7 +476,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -443,7 +499,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -466,7 +522,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -489,7 +545,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -512,7 +568,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -534,7 +590,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -557,7 +613,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -588,7 +644,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -619,7 +675,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -643,7 +699,7 @@ class CurrencyFxController extends Controller
 
         $client = $this->getMyClientInfo(Auth::user()->ref_code);
 
-        if(isset($client) && $client->accountMode == "test"){
+        if (isset($client) && $client->accountMode == "test") {
 
             return redirect()->route('dashboard')->with('error', 'You are in test mode');
         }
@@ -657,7 +713,7 @@ class CurrencyFxController extends Controller
 
         $checker = $this->checkImt(Auth::user()->country);
 
-        if($checker == "false"){
+        if ($checker == "false") {
             return back()->with('error', 'This feature is not yet available for your country');
         }
 
@@ -686,24 +742,26 @@ class CurrencyFxController extends Controller
     }
 
 
-    public function getCrossBorderBeneficiaries(){
+    public function getCrossBorderBeneficiaries()
+    {
         $data = $this->getBeneficiaries();
 
-            $message = 'success';
-            $status = 200;
+        $message = 'success';
+        $status = 200;
 
-         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
     }
 
-    public function paysprintAccountDetails(){
-         $data = $this->getPSAccountDetails();
+    public function paysprintAccountDetails()
+    {
+        $data = $this->getPSAccountDetails();
 
-            $message = 'success';
-            $status = 200;
+        $message = 'success';
+        $status = 200;
 
-         $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
         return $this->returnJSON($resData, $status);
     }
@@ -796,26 +854,26 @@ class CurrencyFxController extends Controller
 
 
 
-                    // Check if User has a forex account
-        $checkUser = User::where('id', $thisuser->id)->first()->forexAccount;
+            // Check if User has a forex account
+            $checkUser = User::where('id', $thisuser->id)->first()->forexAccount;
 
 
 
-        if (count($checkUser) <= 0) {
-            // Create Escrow Account
-            EscrowAccount::insert(['user_id' => $thisuser->id, 'escrow_id' => 'ES_' . uniqid() . '_' . strtoupper(date('D')), 'currencyCode' => $thisuser->currencyCode, 'currencySymbol' => $thisuser->currencySymbol, 'wallet_balance' => "0.00", 'country' => $thisuser->country, 'active' => "true"]);
-        }
+            if (count($checkUser) <= 0) {
+                // Create Escrow Account
+                EscrowAccount::insert(['user_id' => $thisuser->id, 'escrow_id' => 'ES_' . uniqid() . '_' . strtoupper(date('D')), 'currencyCode' => $thisuser->currencyCode, 'currencySymbol' => $thisuser->currencySymbol, 'wallet_balance' => "0.00", 'country' => $thisuser->country, 'active' => "true"]);
+            }
 
 
-        $checker = $this->checkImt($thisuser->country);
+            $checker = $this->checkImt($thisuser->country);
 
-        if($checker == "false"){
-            $data = [];
-            $message = 'This feature is not yet available for your country';
-            $status = 400;
-            $resData = ['data' => $data, 'message' => $message, 'status' => $status];
-            return $this->returnJSON($resData, $status);
-        }
+            if ($checker == "false") {
+                $data = [];
+                $message = 'This feature is not yet available for your country';
+                $status = 400;
+                $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                return $this->returnJSON($resData, $status);
+            }
 
 
             if (isset($req->country)) {
@@ -880,12 +938,11 @@ class CurrencyFxController extends Controller
     }
 
 
-        public function getFxWalletsFromController(Int $userid, String $escrowId)
+    public function getFxWalletsFromController(Int $userid, String $escrowId)
     {
-            $getmywallet = EscrowAccount::where('user_id', $userid)->where('escrow_id', $escrowId)->first();
+        $getmywallet = EscrowAccount::where('user_id', $userid)->where('escrow_id', $escrowId)->first();
 
-            return $getmywallet;
-
+        return $getmywallet;
     }
 
     // Create New Wallet
@@ -946,7 +1003,10 @@ class CurrencyFxController extends Controller
 
                         $this->createNotification(
                             $thisuser->ref_code,
-                            "Hello " . strtoupper($thisuser->name) . $message . ".", $thisuser->playerId, $message, "New FX Wallet Created"
+                            "Hello " . strtoupper($thisuser->name) . $message . ".",
+                            $thisuser->playerId,
+                            $message,
+                            "New FX Wallet Created"
                         );
 
                         $this->slack("New FX Account of " . $allcountry->currencyCode . " created by :=> " . $thisuser->name, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
@@ -1082,7 +1142,7 @@ class CurrencyFxController extends Controller
 
 
                                     // Log Activities here
-                                    $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg,"Escrow Wallet Debit");
+                                    $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Escrow Wallet Debit");
 
 
 
@@ -1147,118 +1207,117 @@ class CurrencyFxController extends Controller
                 $your_date = strtotime($expiry);
                 $datediff = $your_date - $now;
 
-                if($datediff <= 0){
+                if ($datediff <= 0) {
 
-                $thisuser = User::where('id', $value->user_id)->first();
+                    $thisuser = User::where('id', $value->user_id)->first();
 
-                $getescrow = EscrowAccount::where('currencyCode', $value->sell_currencyCode)->where('user_id', $value->user_id)->first();
+                    $getescrow = EscrowAccount::where('currencyCode', $value->sell_currencyCode)->where('user_id', $value->user_id)->first();
 
-                $walletBal = $getescrow->wallet_balance;
+                    $walletBal = $getescrow->wallet_balance;
 
-                // Credit Wallet
-                $creditWallet = $walletBal + $value->sell;
-
-
-                EscrowAccount::where('user_id', $value->user_id)->where('currencyCode', $value->sell_currencyCode)->update(['wallet_balance' => $creditWallet]);
+                    // Credit Wallet
+                    $creditWallet = $walletBal + $value->sell;
 
 
-                // Escrow Wallet Statement
-
-                $transaction_id = "es-wallet-" . date('dmY') . time();
-
-                // Insert Escrow Statement
-                $activity = "Wallet deposit of " . $thisuser->currencyCode . " " . number_format($value->sell, 2) . " for a bid has been refunded back to your (".$thisuser->currencyCode.") wallet on PaySprint FX";
-                $credit = $value->sell;
-                $debit = 0;
-                $reference_code = $transaction_id;
-                $balance = 0;
-                $trans_date = date('Y-m-d');
-                $status = "Delivered";
-                $action = "Wallet credit";
-                $regards = $thisuser->ref_code;
-
-                $statement_route = "wallet";
+                    EscrowAccount::where('user_id', $value->user_id)->where('currencyCode', $value->sell_currencyCode)->update(['wallet_balance' => $creditWallet]);
 
 
-                // Senders Escrow statement
-                $this->insFXStatement($getescrow->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, "confirmed");
+                    // Escrow Wallet Statement
+
+                    $transaction_id = "es-wallet-" . date('dmY') . time();
+
+                    // Insert Escrow Statement
+                    $activity = "Wallet deposit of " . $thisuser->currencyCode . " " . number_format($value->sell, 2) . " for a bid has been refunded back to your (" . $thisuser->currencyCode . ") wallet on PaySprint FX";
+                    $credit = $value->sell;
+                    $debit = 0;
+                    $reference_code = $transaction_id;
+                    $balance = 0;
+                    $trans_date = date('Y-m-d');
+                    $status = "Delivered";
+                    $action = "Wallet credit";
+                    $regards = $thisuser->ref_code;
+
+                    $statement_route = "wallet";
+
+
+                    // Senders Escrow statement
+                    $this->insFXStatement($getescrow->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, "confirmed");
 
 
 
 
-                // This works even if bid is accepted but still pending...
+                    // This works even if bid is accepted but still pending...
 
-                $getBids = MakeBid::where('order_id', $value->order_id)->get();
+                    $getBids = MakeBid::where('order_id', $value->order_id)->get();
 
-                if (count($getBids) > 0) {
+                    if (count($getBids) > 0) {
 
-                    foreach ($getBids as $marketItem) {
+                        foreach ($getBids as $marketItem) {
 
-                        // Return Bidding Fee
+                            // Return Bidding Fee
 
-                        $bidderAccount = EscrowAccount::where('user_id', $marketItem->buyer_id)->where('currencyCode', $value->buy_currencyCode)->first();
+                            $bidderAccount = EscrowAccount::where('user_id', $marketItem->buyer_id)->where('currencyCode', $value->buy_currencyCode)->first();
 
-                        $offeramount = $bidderAccount->wallet_balance + $marketItem->offer_amount;
-                        $escrowBal = $bidderAccount->escrow_balance - $marketItem->offer_amount;
+                            $offeramount = $bidderAccount->wallet_balance + $marketItem->offer_amount;
+                            $escrowBal = $bidderAccount->escrow_balance - $marketItem->offer_amount;
 
-                        EscrowAccount::where('user_id', $marketItem->buyer_id)->where('currencyCode', $value->buy_currencyCode)->update(['wallet_balance' => $offeramount, 'escrow_balance' => $escrowBal]);
+                            EscrowAccount::where('user_id', $marketItem->buyer_id)->where('currencyCode', $value->buy_currencyCode)->update(['wallet_balance' => $offeramount, 'escrow_balance' => $escrowBal]);
 
-                        $getbidders = User::where('id', $marketItem->buyer_id)->first();
+                            $getbidders = User::where('id', $marketItem->buyer_id)->first();
 
-                        // Do notification
-                        $transaction_id2 = "es-wallet-" . date('dmY') . time();
+                            // Do notification
+                            $transaction_id2 = "es-wallet-" . date('dmY') . time();
 
-                        $activity2 = "Reversal of " . $value->buy_currencyCode . '' . number_format($marketItem->offer_amount, 2) . " to your FX Wallet ";
-                        $credit2 = $marketItem->offer_amount;
-                        $debit2 = 0;
-                        $reference_code2 = $transaction_id2;
-                        $balance2 = 0;
-                        $trans_date2 = date('Y-m-d');
-                        $status2 = "Delivered";
-                        $action2 = "Escrow Wallet credit";
-                        $regards2 = $getbidders->ref_code;
-                        $statement_route2 = "escrow wallet";
+                            $activity2 = "Reversal of " . $value->buy_currencyCode . '' . number_format($marketItem->offer_amount, 2) . " to your FX Wallet ";
+                            $credit2 = $marketItem->offer_amount;
+                            $debit2 = 0;
+                            $reference_code2 = $transaction_id2;
+                            $balance2 = 0;
+                            $trans_date2 = date('Y-m-d');
+                            $status2 = "Delivered";
+                            $action2 = "Escrow Wallet credit";
+                            $regards2 = $getbidders->ref_code;
+                            $statement_route2 = "escrow wallet";
 
 
-                        $this->insFXStatement($bidderAccount->escrow_id, $reference_code2, $activity2, $credit2, $debit2, $balance2, $trans_date2, $status2, $action2, $regards2, 1, $statement_route2, 'on', $bidderAccount->country, 'confirmed');
+                            $this->insFXStatement($bidderAccount->escrow_id, $reference_code2, $activity2, $credit2, $debit2, $balance2, $trans_date2, $status2, $action2, $regards2, 1, $statement_route2, 'on', $bidderAccount->country, 'confirmed');
+                        }
                     }
+
+
+                    $getWallet = EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $value->sell_currencyCode)->first();
+
+
+                    $sendMsg = "Hi " . $thisuser->name . ", A " . $activity . "is successfully sent. Your new wallet balance is " . $getWallet->currencyCode . ' ' . number_format($getWallet->wallet_balance, 2) . ".";
+
+                    $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                    if (isset($usergetPhone)) {
+
+                        $sendPhone = $thisuser->telephone;
+                    } else {
+                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                    }
+
+                    if ($thisuser->country == "Nigeria") {
+
+                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                        $this->sendSms($sendMsg, $correctPhone);
+                    } else {
+                        $this->sendMessage($sendMsg, $sendPhone);
+                    }
+
+
+                    MarketPlace::where('order_id', $value->order_id)->where('user_id', $value->user_id)->where('status', 'Bid Pending')->delete();
+
+
+
+                    Log::info("Currency exchange transaction of " . $getWallet->currencyCode . " " . number_format($value->sell, 2) . " by " . $thisuser->name . " returned back to wallet");
+
+                    $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $sendMsg, $thisuser->playerId, $sendMsg, "Escrow Wallet Credit");
+
+                    echo "Done for " . $expiry . "<hr>";
                 }
-
-
-                $getWallet = EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $value->sell_currencyCode)->first();
-
-
-                $sendMsg = "Hi " . $thisuser->name . ", A " . $activity . "is successfully sent. Your new wallet balance is " . $getWallet->currencyCode . ' ' . number_format($getWallet->wallet_balance, 2) . ".";
-
-                $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
-
-                if (isset($usergetPhone)) {
-
-                    $sendPhone = $thisuser->telephone;
-                } else {
-                    $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
-                }
-
-                if ($thisuser->country == "Nigeria") {
-
-                    $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
-                    $this->sendSms($sendMsg, $correctPhone);
-                } else {
-                    $this->sendMessage($sendMsg, $sendPhone);
-                }
-
-
-                MarketPlace::where('order_id', $value->order_id)->where('user_id', $value->user_id)->where('status', 'Bid Pending')->delete();
-
-
-
-                Log::info("Currency exchange transaction of " . $getWallet->currencyCode . " " . number_format($value->sell, 2) . " by " . $thisuser->name . " returned back to wallet");
-
-                $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $sendMsg, $thisuser->playerId, $sendMsg, "Escrow Wallet Credit");
-
-                echo "Done for ".$expiry."<hr>";
-                }
-
             }
 
             echo "Finally done";
@@ -1839,12 +1898,12 @@ class CurrencyFxController extends Controller
                             return $this->returnJSON($resData, $status);
                         }
 
-                        $changeCurrency = $req->fx_wallet_from.''.$req->fx_wallet_to;
+                        $changeCurrency = $req->fx_wallet_from . '' . $req->fx_wallet_to;
 
                         // Check if transfer already initiated...
                         $checkLog = LogFXTransfer::where('user_id', $thisuser->id)->where('currency', $changeCurrency)->first();
 
-                        if(isset($checkLog)){
+                        if (isset($checkLog)) {
 
                             $thisconvert = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode, 'transferfx');
 
@@ -1854,21 +1913,20 @@ class CurrencyFxController extends Controller
                             $getLog = LogFXTransfer::where('user_id', $thisuser->id)->where('currency', $changeCurrency)->first();
 
                             LogFXTransfer::where('user_id', $thisuser->id)->where('currency', $changeCurrency)->update(['amount' => ($getLog->amount + $getconvertion), 'currency_account_to' => $toWallet->currencyCode, 'currency_account_from' => $fromWallet->currencyCode]);
-                        }
-                        else{
+                        } else {
 
-                            $changeCurrency = $req->fx_wallet_to.''.$req->fx_wallet_from;
+                            $changeCurrency = $req->fx_wallet_to . '' . $req->fx_wallet_from;
                             // Proceed...
                             //Convert Money
                             $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode, 'transferfx');
 
-                            LogFXTransfer::updateOrInsert(['user_id' => $thisuser->id, 'currency' => $changeCurrency],['currency' => $changeCurrency, 'status' => '1', 'amount' => '0', 'currency_account_to' => $toWallet->currencyCode, 'currency_account_from' => $fromWallet->currencyCode]);
+                            LogFXTransfer::updateOrInsert(['user_id' => $thisuser->id, 'currency' => $changeCurrency], ['currency' => $changeCurrency, 'status' => '1', 'amount' => '0', 'currency_account_to' => $toWallet->currencyCode, 'currency_account_from' => $fromWallet->currencyCode]);
                         }
 
-                            // Mark down here ...
+                        // Mark down here ...
 
-                            // $convamount = ($getconvertion * $req->amount) / $markValue;
-                            $convamount = ($getconvertion * $req->amount);
+                        // $convamount = ($getconvertion * $req->amount) / $markValue;
+                        $convamount = ($getconvertion * $req->amount);
 
 
                         // Update Wallet Statements
@@ -2478,7 +2536,7 @@ class CurrencyFxController extends Controller
                     $marketPlace = MarketPlace::where('order_id', $value->order_id)->first();
                     $thisbids = MakeBid::where('owner_id', $thisuser->id)->where('order_id', $value->order_id)->count();
 
-                    if(isset($marketPlace->sell_currencyCode)){
+                    if (isset($marketPlace->sell_currencyCode)) {
                         $value['sell_currencyCode'] = $marketPlace->sell_currencyCode;
                         $value['buy_currencyCode'] = $marketPlace->buy_currencyCode;
                         $value['count'] = $thisbids;
@@ -2486,7 +2544,6 @@ class CurrencyFxController extends Controller
 
                         $newData[] = $value;
                     }
-
                 }
 
 
@@ -2577,15 +2634,15 @@ class CurrencyFxController extends Controller
     }
 
 
-    public function checkImt($country){
+    public function checkImt($country)
+    {
         $imtCountry = AllCountries::where('name', $country)->first();
 
-        if($imtCountry->outbound == "true" || $imtCountry->imt == "true" ){
+        if ($imtCountry->outbound == "true" || $imtCountry->imt == "true") {
             return "true";
         }
 
-        if($imtCountry->fx == 'true')
-        {
+        if ($imtCountry->fx == 'true') {
             return "true";
         }
 
