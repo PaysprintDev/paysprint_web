@@ -160,17 +160,21 @@ trait Moex
 
         $getBranchId = $this->availableBranchList($data['receiverCountry']);
 
+        if (isset($getBranchId['description'])) {
+            if ($getBranchId['description'] !== "") {
 
-        if ($getBranchId['description'] !== "") {
+                $responseData = [
+                    'error' => $getBranchId['description']
+                ];
 
-            $responseData = [
-                'error' => $getBranchId['description']
-            ];
-
-            return $responseData;
+                return $responseData;
+            } else {
+                $data['paymentBranchId'] = $getBranchId['branchId'];
+            }
         } else {
-            $data['paymentBranchId'] = $getBranchId['branchId'];
+            $data['paymentBranchId'] = "";
         }
+
 
 
 
