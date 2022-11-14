@@ -2,27 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\AllCountries;
-use App\CrossBorder;
-use App\MarketPlace;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-
 use App\User;
-use App\EscrowAccount;
+use App\MakeBid;
 use App\FxPayment;
+use App\Statement;
+use App\ClientInfo;
+use App\CrossBorder;
+
 use App\FxStatement;
 use App\ImportExcel;
-use App\InvoiceCommission;
-use App\ClientInfo;
-use App\MakeBid;
-use App\Statement;
-use App\Traits\Xwireless;
+use App\MarketPlace;
 use App\Traits\MyFX;
+use App\AllCountries;
+use App\EscrowAccount;
+use App\LogFXTransfer;
+use App\Traits\Xwireless;
+use App\InvoiceCommission;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class CurrencyFxController extends Controller
 {
@@ -1838,41 +1839,32 @@ class CurrencyFxController extends Controller
                             return $this->returnJSON($resData, $status);
                         }
 
-                        $markuppercent = $this->markupPercentage();
+                        $changeCurrency = $req->fx_wallet_from.''.$req->fx_wallet_to;
 
-                        $markValue = (1 + ($markuppercent[0]->percentage / 100));
+                        // Check if transfer already initiated...
+                        $checkLog = LogFXTransfer::where('user_id', $thisuser->id)->where('currency', $changeCurrency)->first();
 
+                        if(isset($checkLog)){
 
-                        // if ($toWallet->currencyCode == 'USD' || $toWallet->currencyCode == 'EUR' || $toWallet->currencyCode == 'GBP') {
-                        //     //Convert Money
-                        //     $getconvertion = $this->getOfficialConversionRate($toWallet->currencyCode, $fromWallet->currencyCode);
+                            //Convert Money
+                            $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode, 'transferfx') * 0.5;
 
-                        //     // Mark up here ...
+                        }
+                        else{
 
-                        //     $convamount = $markValue * ($req->amount / $getconvertion);
-                        // } else {
-                        //     //Convert Money
-                        //     $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
-
-                        //     // Mark down here ...
-
-                        //     $convamount = ($getconvertion * $req->amount) / $markValue;
-                        // }
-
-                        //Convert Money
+                            $changeCurrency = $req->fx_wallet_to.''.$req->fx_wallet_from;
+                            // Proceed...
+                            //Convert Money
                             $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode, 'transferfx');
+
+                            LogFXTransfer::updateOrInsert(['user_id' => $thisuser->id, 'currency' => $changeCurrency],['currency' => $changeCurrency, 'status' => '1']);
+                        }
 
                             // Mark down here ...
 
                             // $convamount = ($getconvertion * $req->amount) / $markValue;
                             $convamount = ($getconvertion * $req->amount);
 
-
-
-                        //Convert Money
-                        // $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
-
-                        // $convamount = $getconvertion * $req->amount;
 
                         // Update Wallet Statements
                         $fromwalletBalance = $fromWallet->wallet_balance - $req->amount;

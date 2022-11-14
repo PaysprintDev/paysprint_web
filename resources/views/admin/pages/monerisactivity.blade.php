@@ -136,10 +136,23 @@
                                                 @endif
                                                 <td>
                                                     @if ($data->reversal_state == 0)
+
+                                                        @if ($data->hold_fee == 0)
+
                                                         <a type="button" class="btn btn-danger" href="javascript:void(0)"
                                                             onclick="reverseFee('{{ $data->transaction_id }}')">Reverse
                                                             <img src="https://img.icons8.com/office/20/000000/spinner-frame-4.png"
                                                                 class="fa fa-spin spin{{ $data->transaction_id }} disp-0"></a>
+
+
+                                                                @else
+
+                                                                <a type="button" class="btn btn-danger" href="javascript:void(0)" style="cursor: not-allowed" disabled>Reverse
+                                                            <img src="https://img.icons8.com/office/20/000000/spinner-frame-4.png"
+                                                                class="fa fa-spin spin{{ $data->transaction_id }} disp-0"></a>
+
+                                                        @endif
+
                                                     @else
                                                         <a type="button" class="btn btn-info" href="javascript:void(0)"
                                                             style="cursor: not-allowed">Reversed</a>

@@ -407,10 +407,11 @@ class MerchantPageController extends Controller
 
             // Send Link and QRCode...
 
+
             $business = Auth::user()->businessname . '/' . Auth::user()->ref_code;
             $url = str_replace(' ', '%20', $business);
 
-            QrCode::size(300)->generate(route('home') . '/merchant/' . $url, public_path('images/'.Auth::user()->businessname.'.svg') );
+            QrCode::size(300)->generate(route('home') . '/merchant/' . $url, public_path('../../images/'.Auth::user()->businessname.'.svg') );
 
             $message = 'Link generated successfully';
             $status = 'success';
