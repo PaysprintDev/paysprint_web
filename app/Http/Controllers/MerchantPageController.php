@@ -404,16 +404,23 @@ class MerchantPageController extends Controller
                 'payment_link_expiry' => date('Y-m-d H:i:s', strtotime($today . '+ 1 day'))
             ]);
 
-
-            // Send Link and QRCode...
-
-            $business = Auth::user()->businessname . '/' . Auth::user()->ref_code;
+            
+            if( Auth::user()->payment_link_approval == 1){
+                 $business = Auth::user()->businessname . '/' . Auth::user()->ref_code;
             $url = str_replace(' ', '%20', $business);
 
-            QrCode::size(300)->generate(route('home') . '/merchant/' . $url, public_path('images/'.Auth::user()->businessname.'.svg') );
+            QrCode::size(300)->generate(route('home') . '/merchant/' . $url, public_path('../../images/'.Auth::user()->businessname.'.svg') );
 
             $message = 'Link generated successfully';
             $status = 'success';
+            }else{
+            $message = 'Link Cannot be Generated. Kindly Payup Required Merchant Fee';
+            $status = 'error';
+            }
+
+            // Send Link and QRCode...
+
+           
         } catch (\Throwable $th) {
             $message = $th->getMessage();
             $status = 'error';
