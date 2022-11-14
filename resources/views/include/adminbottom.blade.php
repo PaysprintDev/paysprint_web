@@ -4526,6 +4526,67 @@ C</div>
 
         }
 
+        function reverseCrossBorder(transactionid) {
+        
+        var route = "{{ URL('Ajax/reversecrossborder') }}";
+        
+        var thisdata;
+        var button = $(".spins" + transactionid);
+        
+        
+        swal({
+        title: "Are you sure?",
+        text: 'Please be sure before you proceed!',
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        })
+        .then((willDelete) => {
+        if (willDelete) {
+        thisdata = {
+        transactionid: transactionid,
+        };
+        setHeaders();
+        jQuery.ajax({
+        url: route,
+        method: 'post',
+        data: thisdata,
+        dataType: 'JSON',
+        beforeSend: function() {
+        button.text("Please wait...");
+        },
+        success: function(result) {
+        button.text('Reverse Payment');
+        
+        if (result.message == "success") {
+        // Route to another page
+        swal(result.title, result.res, result.message);
+        setTimeout(function() {
+        location.reload();
+        }, 2000);
+        } else {
+        swal(result.title, result.res, result.message);
+        }
+        
+        
+        },
+        error: function(err) {
+        
+        button.text('Reverse Payment');
+        swal("Oops", err.responseJSON.message, "error");
+        
+        
+        }
+        
+        });
+        
+        } else {
+        swal('', 'Cancelled', 'info');
+        }
+        });
+        
+        }
+
 
 
         function notifyForm(email) {
