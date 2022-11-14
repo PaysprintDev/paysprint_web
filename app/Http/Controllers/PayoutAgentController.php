@@ -165,19 +165,20 @@ class PayoutAgentController extends Controller
 
             $money=$thisuser->payment_link_money;
 
-            if($thisuser->payment_link_approval == '0' && isset($money)){
+            if($thisuser->payment_link_approval == '0'){
                  User::where('ref_code', $req->ref_code)->update(['payment_link_approval' => 1]);
                 $message = 'Merchant Payment Link Successfully Activated ';
             }
             
-            if($thisuser->payment_link_approval == '1' && isset($money)){
+            if($thisuser->payment_link_approval == '1'){
                  User::where('ref_code', $req->ref_code)->update(['payment_link_approval' => 0]);
-                $data = [];
                 $message = 'Merchant Payment Link Successfully De-activated ';
-            }else{
-                $data = [];
-                $message = 'Cannot Approvate Merchant Link Due to Insuficient Balance';
             }
+            
+            // else{
+            //     $data = [];
+            //     $message = 'Cannot Approvate Merchant Link Due to Insuficient Balance';
+            // }
             $status = 200;
         } catch (\Throwable $th) {
             $data = [];
@@ -188,7 +189,7 @@ class PayoutAgentController extends Controller
         }
 
 
-        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+        $resData = ['message' => $message, 'status' => $status];
 
 
         return $this->returnJSON($resData, $status);

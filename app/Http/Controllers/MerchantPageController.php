@@ -396,6 +396,9 @@ class MerchantPageController extends Controller
     public function requestPaymentLink(Request $req)
     {
         try {
+            
+
+            if(Auth::user()->plan == 'classic' &&  Auth::user()->payment_link_approval == 1 && Auth::user()->payment_link_access == 1){
 
             $today = date('Y-m-d H:i:s');
 
@@ -404,8 +407,6 @@ class MerchantPageController extends Controller
                 'payment_link_expiry' => date('Y-m-d H:i:s', strtotime($today . '+ 1 day'))
             ]);
 
-            
-            if( Auth::user()->payment_link_approval == 1){
                  $business = Auth::user()->businessname . '/' . Auth::user()->ref_code;
             $url = str_replace(' ', '%20', $business);
 
@@ -413,10 +414,19 @@ class MerchantPageController extends Controller
 
             $message = 'Link generated successfully';
             $status = 'success';
+            }elseif (Auth::user()->plan == 'classic' &&  Auth::user()->payment_link_approval == 0 && Auth::user()->payment_link_access == 1) {
+
+            $message = 'Displaying QR code to receive Face-to-Face payments from Customers and Sharing Payments link to receive payments from remote customers are sensitive processes. You will need to request for activation by sending Request for Activation email to:  info@paysprint.ca. The activation would be available within 1 business day. Thanks for your understanding.';
+
+            $status = 'success';
+
             }else{
-            $message = 'Link Cannot be Generated. Kindly Payup Required Merchant Fee';
+                $message = ' Please upgrade your plan to access this feature.';
+
             $status = 'error';
+
             }
+            
 
             // Send Link and QRCode...
 
