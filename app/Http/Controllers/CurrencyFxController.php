@@ -1785,6 +1785,7 @@ class CurrencyFxController extends Controller
                     //Convert Money
                     $getconvertion = $this->getOfficialConversionRate($fromWallet->currencyCode, $toWallet->currencyCode);
 
+
                     // Mark down here ...
 
                     // $convInfo = ($getconvertion * $req->amount) / $markValue;
@@ -1796,6 +1797,7 @@ class CurrencyFxController extends Controller
                         'toCurrency' => $toWallet->currencyCode,
                         'rate' => $getconvertion
                     ];
+
 
                     $data = $respData;
                     $message = 'success';
