@@ -537,8 +537,6 @@ class Controller extends BaseController
             }
 
 
-
-
             $convRate = $actualRate * 95 / 100;
 
 

@@ -1754,16 +1754,16 @@ class CurrencyFxController extends Controller
 
                 if (isset($fromWallet)) {
 
-                    if ($fromWallet->wallet_balance < $req->amount) {
+                    // if ($fromWallet->wallet_balance < $req->amount) {
 
-                        $data = [];
-                        $message = 'Insufficient wallet balance';
-                        $status = 400;
+                    //     $data = [];
+                    //     $message = 'Insufficient wallet balance';
+                    //     $status = 400;
 
-                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+                    //     $resData = ['data' => $data, 'message' => $message, 'status' => $status];
 
-                        return $this->returnJSON($resData, $status);
-                    }
+                    //     return $this->returnJSON($resData, $status);
+                    // }
 
 
                     // if ($toWallet->currencyCode == 'USD' || $toWallet->currencyCode == 'EUR' || $toWallet->currencyCode == 'GBP') {
