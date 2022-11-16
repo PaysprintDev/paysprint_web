@@ -14,23 +14,18 @@ trait VertoFx
    
 	public function getFxRate($codea,$codeb)
 	{
-		 $this->datazoobaseUrl = config("constants.vetofx.baseurl")."/orders/v2.1/fx?currencyFrom=$codea&currencyTo=$codeb";
+		 $this->vetobaseUrl = config("constants.vetofx.baseurl")."/orders/v2.1/fx?currencyFrom=$codea&currencyTo=$codeb";
 
         $result = $this->getFxRateCurl();
 
         return $result;
-
 	}
-
-   
 
 
     // CURL Option...
-
     public function getFxRateCurl()
     {
        
-
 $curl = curl_init();
 
 curl_setopt_array($curl, array(

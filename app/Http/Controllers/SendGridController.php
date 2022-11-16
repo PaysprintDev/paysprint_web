@@ -411,8 +411,6 @@ class SendGridController extends Controller
 
                     $template_id = config('constants.marketplace.claimsbusiness');
 
-
-
                     $response = $this->marketplaceDynamicMail($receiver, $data, $template_id);
 
                   
