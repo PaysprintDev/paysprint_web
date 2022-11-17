@@ -482,20 +482,20 @@ trait Moex
         $getBranchId = $this->MEGetActiveBranchesMoEX($data['receiverCountry']);
 
 
-        if(isset($getBranchId['error'])){
+        if (isset($getBranchId['error'])) {
             $responseData = [
-                    'error' => $getBranchId['error']
-                ];
+                'error' => $getBranchId['error']
+            ];
 
-                return $responseData;
-        }
-        else{
+            return $responseData;
+        } else {
             $data['paymentBranchId'] = $getBranchId['Id'];
         }
 
 
 
         $clientSoap = new \SoapClient($login->url_wsdl);
+
 
         $BranchesMoex = $clientSoap->__soapCall("MEAddTransaction", [
             "Login" => $login,
@@ -544,6 +544,7 @@ trait Moex
             "AuxiliaryInfo" => json_encode($data['auxiliaryInfo'])
         ]);
 
+
         if ($BranchesMoex['return'] === 0) {
             $responseData = $BranchesMoex;
             // $BranchesMoex['description'] = $BranchesMoex;
@@ -554,13 +555,11 @@ trait Moex
         }
 
 
-         return $responseData;
-
-
+        return $responseData;
     }
 
 
-        // Alternative Integration...
+    // Alternative Integration...
 
     public function paysprintMoex()
     {
