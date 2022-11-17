@@ -22,6 +22,7 @@ use App\StoreOrders;
 use App\StorePickup;
 use App\UpgradePlan;
 use App\AllCountries;
+use App\SecurityDepositStatement;
 use App\User as User;
 
 use App\ClaimedPoints;
@@ -256,6 +257,22 @@ class MerchantPageController extends Controller
             ];
 
         return view('merchant.pages.marketplacereviews')->with(['data' => $data]);
+    }
+
+    public function securityHistory()
+    {
+          $id = Auth::id();
+
+         $details= User::where('id',$id)->first();
+
+         $email=$details->email;
+
+        $data =
+            [
+                'history' => SecurityDepositStatement::where('user_id', $email)->orderBy('created_at', 'DESC')->get(),
+            ];
+
+        return view('merchant.pages.securityhistory')->with(['data' => $data]);
     }
 
 

@@ -432,10 +432,12 @@ use App\Http\Controllers\AllCountries; ?>
 
                                 </a>
                                 <hr>
-                                <h5>{{ Auth::user()->currencySymbol.''.number_format(Auth::user()->overdraft_balance, 2)
+                                <h5 style="font-size:15px;">{{
+                                    Auth::user()->currencySymbol.''.number_format(Auth::user()->security_deposit_balance,
+                                    2)
                                     }}</h5>
                                 <p>Security Deposit Balance</p>
-                                <a href="#" style="color:red">View History</a>
+                                <a href="{{route('security History')}}" style="color:red">View History</a>
 
 
 

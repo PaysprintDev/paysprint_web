@@ -12536,8 +12536,6 @@ class AdminController extends Controller
 
         
 
-
-
         User::where('id', $req->user_id)->update([
             'security_deposit_balance' => $newsecuritybalance,
             'wallet_balance' => $newuserbalance

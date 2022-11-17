@@ -262,6 +262,8 @@ Route::get('/referred', ['uses' => 'HomeController@referredDetails', 'as' => 're
 
 Route::get('/viewreviews', ['uses' => 'MerchantPageController@viewReviews', 'as' => 'view reviews']);
 
+Route::get('/securityhistory', ['uses' => 'MerchantPageController@securityHistory', 'as' => 'security History']);
+
 Route::post('/merchantreply', ['uses' => 'MerchantPageController@merchantReply', 'as' => 'merchant reply']);
 
 Route::get('/viewreply/{id}', ['uses' => 'MerchantPageController@viewmarketReplies', 'as' => 'view replies']);
