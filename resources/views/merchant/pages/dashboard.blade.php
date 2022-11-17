@@ -59,14 +59,16 @@ use App\Http\Controllers\AllCountries; ?>
                                 <div class="round-box">
                                     <p style="font-size: 30px;">{{ Auth::user()->currencySymbol }}</p>
                                 </div>
-                                <h5>{{ number_format(Auth::user()->wallet_balance, 4) }}</h5>
+                                <h5>{{ number_format(Auth::user()->wallet_balance, 2) }}</h5>
                                 <p>Wallet Balance</p>
 
                                 <hr>
 
-                                <h5>{{ Auth::user()->currencySymbol.''.number_format(Auth::user()->overdraft_balance, 4)
+                                <h5>{{ Auth::user()->currencySymbol.''.number_format(Auth::user()->overdraft_balance, 2)
                                     }}</h5>
                                 <p>Overdraft Balance</p>
+
+
 
                                 &nbsp;
 
@@ -429,6 +431,11 @@ use App\Http\Controllers\AllCountries; ?>
                                     &nbsp;
 
                                 </a>
+                                <hr>
+                                <h5>{{ Auth::user()->currencySymbol.''.number_format(Auth::user()->overdraft_balance, 2)
+                                    }}</h5>
+                                <p>Security Deposit Balance</p>
+                                <a href="#" style="color:red">View History</a>
 
 
 

@@ -216,8 +216,8 @@
                                         class="fa fa-circle-o text-red"></i> Flutterwave</a></li>
                             <li title="Partners"><a href="{{ route('gateway activity', 'gateway=Partner') }}"><i
                                         class="fa fa-circle-o text-red"></i> Partners</a></li>
-                            <li title="EXPRESS PAY RERUN"><a href="{{ route('rerun eps transaction') }}" target="_blank"><i
-                                        class="fa fa-circle-o text-red"></i> EXPRESS PAY RERUN</a></li>
+                            <li title="EXPRESS PAY RERUN"><a href="{{ route('rerun eps transaction') }}"
+                                    target="_blank"><i class="fa fa-circle-o text-red"></i> EXPRESS PAY RERUN</a></li>
 
                         </ul>
                     </li>
@@ -597,7 +597,8 @@
             </li>
             @endif
 
-            @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access to Level 1 and 2 only')
+            @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access
+            to Level 1 and 2 only')
             <li class="treeview">
                 <a href="#">
                     <i class="far fa-handshake"></i>
@@ -719,7 +720,8 @@
             @endif
             @endif
 
-            @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access to Level 1 and 2 only')
+            @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access
+            to Level 1 and 2 only')
 
             <li class="treeview">
                 <a href="#">

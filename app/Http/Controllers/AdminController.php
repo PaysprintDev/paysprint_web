@@ -11248,6 +11248,13 @@ class AdminController extends Controller
         return $data;
     }
 
+    //get security deposit balance
+    public function getSecurityDepositBalance($id)
+    {
+         $data = User::where('id', $id)->first();
+        return $data->security_deposit_balance;
+    }
+
     public function userWalletBalance()
     {
         $data = User::select('id', 'name', 'email', 'ref_code')->orderBy('created_at', 'DESC')->get();
@@ -12501,6 +12508,102 @@ class AdminController extends Controller
 
     }
 
+    public function submitSecurityWalletCredit(Request $req)
+    {
+        $validation = $req->validate([
+            'user_id' => 'required',
+            'customer_name' => 'required',
+            'account_number' => 'required',
+            'email' => 'required',
+            'credit_amount' => 'required',
+            'credit_reason' => 'required'
+        ]);
+
+        $user = $this->getSecurityDepositBalance($req->user_id);
+        $userdetails= $this->getUserBalance($req->user_id);
+       
+
+        $reason = $req->credit_reason;
+        $securitywalletbalance = $user;
+        $walletbalance= $userdetails->wallet_balance;
+        
+
+
+        $newsecuritybalance = $securitywalletbalance + $req->credit_amount;
+        $newuserbalance=$walletbalance-$req->credit_amount;
+
+        
+
+
+
+        User::where('id', $req->user_id)->update([
+            'security_deposit_balance' => $newsecuritybalance,
+            'wallet_balance' => $newuserbalance
+        ]);
+
+
+
+        // Send Mail...
+
+
+
+        // Send SMS
+
+        $message = 'Hi'.$userdetails->name.', a credit transaction of   '.$userdetails->currencyCode . ' ' . number_format($req->credit_amount, 2) .  ' has been  added to your security deposit wallet for '.$reason.'. Your security deposit balance is ' . $userdetails->currencyCode . ' ' . $newsecuritybalance . '. Thanks for Choosing PaySprint.';
+
+        $this->name = $userdetails->name;
+        // $this->email = "youngskima@gmail.com";
+        $this->to = $userdetails->email;
+        $this->subject = "PaySprint Security Deposit Wallet Credit for " . $reason;
+
+        $this->message = $message;
+
+
+        $this->sendEmail($this->to, "Security Deposit Wallet Credit");
+        $this->createNotification($userdetails->ref_code, $message, $userdetails->playerId, $message, "Security Deposit Wallet Credit");
+        $activity = 'Wallet credit of ' . $user->currencyCode . '' . $req->credit_amount . ' to  Security Deposit Wallet for ' . $reason;
+        $credit = $req->credit_amount;
+        $debit = 0;
+        $reference_number = "wallet-" . date('dmY') . time();
+        $balance = 0;
+        $trans_date = date('Y-m-d');
+        $status = "Delivered";
+        $action = "Security Wallet Credit";
+        $regards = $userdetails->ref_code;
+        $statement_route = "wallet";
+
+        // Senders statement
+        $this->insStatement($userdetails->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $userdetails->country, 0);
+
+         $this->insStatement($userdetails->email, $reference_number, $activity, 0, $req->credit_amount, $balance, $trans_date, $status, "Wallet Debit", $regards, 1, $statement_route, $userdetails->country, 0);
+
+
+
+        $usersPhone = User::where('email', $userdetails->email)->where('telephone', 'LIKE', '%+%')->first();
+
+
+        if (isset($usersPhone)) {
+
+            $recipients = $userdetails->telephone;
+        } else {
+            $recipients = "+" . $user->code . $userdetails->telephone;
+        }
+
+
+
+        if ($userdetails->country == "Nigeria") {
+
+            $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+            $this->sendSms($message, $correctPhone);
+        } else {
+            $this->sendMessage($message, $recipients);
+        }
+
+
+
+        return redirect()->route('wallet account credit')->with("msg", "<div class='alert alert-success'>Security Deposit Wallet Credited Successfully</div>");
+    }
     public function cashAdvanceList(Request $req)
     {
 
