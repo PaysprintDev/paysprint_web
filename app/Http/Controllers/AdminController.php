@@ -25,6 +25,8 @@ use App\InvestorPost;
 
 use App\SpecialPromo;
 
+use App\SecurityDepositStatement;
+
 use App\SurveyReport;
 
 use App\User as User;
@@ -12541,41 +12543,37 @@ class AdminController extends Controller
             'wallet_balance' => $newuserbalance
         ]);
 
-
-
         // Send Mail...
 
-
-
         // Send SMS
-
-        $message = 'Hi'.$userdetails->name.', a credit transaction of   '.$userdetails->currencyCode . ' ' . number_format($req->credit_amount, 2) .  ' has been  added to your security deposit wallet for '.$reason.'. Your security deposit balance is ' . $userdetails->currencyCode . ' ' . $newsecuritybalance . '. Thanks for Choosing PaySprint.';
+        $message = 'Hi'.$userdetails->name.', a debit transaction of   '.$userdetails->currencyCode . ' ' . number_format($req->credit_amount, 2) .  ' has been deducted from your wallet to your security deposit wallet for '.$reason.'. Your  balance is ' . $userdetails->currencyCode . ' ' . $newuserbalance . '. Thanks for Choosing PaySprint.';
 
         $this->name = $userdetails->name;
         // $this->email = "youngskima@gmail.com";
         $this->to = $userdetails->email;
-        $this->subject = "PaySprint Security Deposit Wallet Credit for " . $reason;
+        $this->subject = "PaySprint Wallet Debit for " . $reason;
 
         $this->message = $message;
 
 
-        $this->sendEmail($this->to, "Security Deposit Wallet Credit");
-        $this->createNotification($userdetails->ref_code, $message, $userdetails->playerId, $message, "Security Deposit Wallet Credit");
-        $activity = 'Wallet credit of ' . $user->currencyCode . '' . $req->credit_amount . ' to  Security Deposit Wallet for ' . $reason;
-        $credit = $req->credit_amount;
-        $debit = 0;
+        $this->sendEmail($this->to, " Wallet Debit");
+        $this->createNotification($userdetails->ref_code, $message, $userdetails->playerId, $message, " Wallet Debit");
+        $activity = 'Wallet debit of ' . $userdetails->currencyCode . '' . $req->credit_amount . ' to  Security Deposit Wallet for ' . $reason;
+        $credit = 0;
+        $debit = $req->credit_amount;
         $reference_number = "wallet-" . date('dmY') . time();
         $balance = 0;
         $trans_date = date('Y-m-d');
         $status = "Delivered";
-        $action = "Security Wallet Credit";
+        $action = "Wallet Debit";
         $regards = $userdetails->ref_code;
         $statement_route = "wallet";
 
         // Senders statement
         $this->insStatement($userdetails->email, $reference_number, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $userdetails->country, 0);
 
-         $this->insStatement($userdetails->email, $reference_number, $activity, 0, $req->credit_amount, $balance, $trans_date, $status, "Wallet Debit", $regards, 1, $statement_route, $userdetails->country, 0);
+        //insert into security deposit statement
+         $this->securityDepositStatement($userdetails->email, $reference_number, 'Wallet credit of ' . $userdetails->currencyCode . '' . $req->credit_amount . ' to  Security Deposit Wallet for ' . $reason, $req->credit_amount,0, $balance,$status, "Security Wallet Credit", $regards, "Security Wallet",$userdetails->country,$trans_date);
 
 
 
@@ -12586,7 +12584,7 @@ class AdminController extends Controller
 
             $recipients = $userdetails->telephone;
         } else {
-            $recipients = "+" . $user->code . $userdetails->telephone;
+            $recipients = "+" . $userdetails->code . $userdetails->telephone;
         }
 
 
@@ -12603,6 +12601,7 @@ class AdminController extends Controller
 
 
         return redirect()->route('wallet account credit')->with("msg", "<div class='alert alert-success'>Security Deposit Wallet Credited Successfully</div>");
+
     }
     public function cashAdvanceList(Request $req)
     {
@@ -20412,10 +20411,17 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'country' => $country]);
     }
 
+   
+
 
     public function insStatementRoute($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit, $country)
     {
         Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'auto_deposit' => $auto_deposit, 'country' => $country]);
+    }
+
+     public function securityDepositStatement($email, $reference_code, $activity, $credit, $debit, $balance,$status, $action, $regards,$statement_route,$country,$trans_date)
+    {
+        SecurityDepositStatement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'statement_route' => $statement_route, 'country' => $country]);
     }
 
     public function serviceType($name)
