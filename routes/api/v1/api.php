@@ -407,7 +407,8 @@ Route::prefix('/v1')->group(function () {
 
         Route::get('/fxtransactionhistory', ['uses' => 'CurrencyFxController@fxTransactionHistory', 'as' => 'get transaction history']);
 
-
+        // Withdraw from FX...
+        Route::post('/withdrawfx', ['uses' => 'CurrencyFxController@withdrawFromFXFund', 'as' => 'withdraw from fx to main wallet']);
 
         // Shop
         Route::post('/shop/product/addtowishlist', ['uses' => 'ShopController@addToWishList', 'as' => 'add to wish list']);

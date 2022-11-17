@@ -2071,6 +2071,158 @@ class CurrencyFxController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
+    public function withdrawFromFXFund(Request $req)
+    {
+
+
+        try {
+          $thisuser = User::where('api_token', $req->bearerToken())->first();
+
+          $monerisAction = new MonerisController();
+
+          if(isset($thisuser)){
+
+            $getWallet = EscrowAccount::where('escrow_id', $req->fx_wallet)->where('user_id', $thisuser->id)->first();
+
+            if(isset($getWallet)){
+
+                // Check if the currency is corresponding to primary wallet...
+                if($getWallet->currencyCode === $thisuser->currencyCode){
+
+                    // Check if sufficient credit
+
+
+                    if($req->fx_amount <= 0){
+                        $data = [];
+                        $message = 'Please provide a valid amount';
+                        $status = 400;
+
+                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                        return $this->returnJSON($resData, $status);
+                    }
+
+                    if($getWallet->wallet_balance < $req->fx_amount){
+                        $data = [];
+                        $message = 'Insufficient fx wallet balance';
+                        $status = 400;
+
+                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                        return $this->returnJSON($resData, $status);
+                    }
+
+                    // Make Movement, then debit and credit respective wallet..
+                    $fromwalletBalance = $getWallet->wallet_balance - $req->fx_amount;
+                    $walletBalance = $thisuser->wallet_balance + $req->fx_amount;
+
+                    EscrowAccount::where('escrow_id', $req->fx_wallet)->where('user_id', $thisuser->id)->update(['wallet_balance' => $fromwalletBalance]);
+                    // Generate Statement and Notification
+                    $transaction_id = "es-wallet-" . date('dmY') . time();
+
+                    $activity = "Withdraw " . $getWallet->currencyCode . '' . number_format($req->fx_amount, 2) . " from " . $getWallet->currencyCode . " wallet to your primary" . $getWallet->currencyCode . " wallet";
+                    $credit = 0;
+                    $debit = $req->fx_amount;
+                    $reference_code = $transaction_id;
+                    $balance = 0;
+                    $trans_date = date('Y-m-d');
+                    $status = "Delivered";
+                    $action = "Escrow Wallet debit";
+                    $regards = $thisuser->ref_code;
+                    $statement_route = "escrow wallet";
+
+                    $this->insFXStatement($getWallet->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $thisuser->country, 'confirmed');
+
+
+
+                    // Credit Main Wallet...
+                    User::where('api_token', $req->bearerToken())->update(['wallet_balance' => $walletBalance]);
+
+                    $transaction_id = "wallet-" . date('dmY') . time();
+
+                    $activity = "Received " . $thisuser->currencyCode . '' . number_format($req->fx_amount, 2) . " to Wallet from " . $getWallet->currencyCode . " FX wallet account.";
+                    $credit = $req->fx_amount;
+                    $debit = 0;
+                    $reference_code = $transaction_id;
+                    $balance = 0;
+                    $trans_date = date('Y-m-d');
+                    $status = "Delivered";
+                    $action = "Wallet credit";
+                    $regards = $thisuser->ref_code;
+                    $statement_route = "wallet";
+
+                    $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, $thisuser->country);
+
+
+                    $sendMsg = "Hi " . $thisuser->name . ", You have " . $activity . " Your current wallet balance is " . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . ".";
+
+                    $usergetPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+                    if (isset($usergetPhone)) {
+
+                        $sendPhone = $thisuser->telephone;
+                    } else {
+                        $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+                    }
+
+                    if ($thisuser->country == "Nigeria") {
+
+                        $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                        $this->sendSms($sendMsg, $correctPhone);
+                    } else {
+                        $this->sendMessage($sendMsg, $sendPhone);
+                    }
+
+
+                    $monerisAction->name = $thisuser->name;
+                    $monerisAction->email = $thisuser->email;
+                    $monerisAction->subject = "Received fund to your PaySprint wallet";
+
+                    $monerisAction->message = '<p>You have successfully transferred <strong>' . $getWallet->currencyCode . ' ' . number_format($req->fx_amount, 2) . '</strong> from your FX wallet to your main wallet. You have <strong>' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . '</strong> in your PaySprint Wallet account.</p><p>Thanks PaySprint Team.</p>';
+
+                    $monerisAction->sendEmail($monerisAction->email, "Fund remittance");
+
+
+                    // Log Activities here
+                    $this->createNotification($thisuser->ref_code, $sendMsg, $thisuser->playerId, $sendMsg, "Wallet Credit");
+
+
+                    $data = User::where('api_token', $req->bearerToken())->first();
+                    $message = 'Transfer completed successfully';
+                    $status = 200;
+
+                }
+                else{
+                    $data = [];
+                    $message = 'You can only withdraw from your '.$thisuser->currencyCode.' wallet. Please move money from your '.$getWallet->currencyCode.' to your '.$thisuser->currencyCode.' wallet';
+                    $status = 400;
+                }
+
+            }
+            else{
+                $data = [];
+                $message = 'We cannot locate this wallet. Please try again!';
+                $status = 400;
+            }
+
+          }
+           else {
+                $data = [];
+                $message = 'Invalid Authorization token. Kindly login and try again';
+                $status = 400;
+            }
+
+        } catch (\Throwable $th) {
+            $data = [];
+            $message = $th->getMessage();
+            $status = 400;
+        }
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+    }
+
 
     // Fund FX Wallet
     public function fundFXWallet(Request $req)

@@ -128,8 +128,23 @@
 
                                         </div>
                                     </div>
+                                    <div class="form-group"> <label for="fx_wallet">
+                                            <h6>Transfer To Primary Wallet </h6>
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-append"> <span class="input-group-text text-muted">
+                                                    <img src="https://img.icons8.com/cotton/20/000000/money--v4.png" />
+                                                </span> </div>
+                                            <select name="pry_wallet" id="pry_wallet" class="form-control" required>
+                                                    <option value="{{ Auth::user()->wallet_balance }}">
+                                                        {{ 'Main Wallet Balance: ' . Auth::user()->currencySymbol . Auth::user()->wallet_balance }}
+                                                    </option>
+                                            </select>
 
-                                    <div class="form-group"> <label for="fx_wallet_payout_method">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group disp-0"> <label for="fx_wallet_payout_method">
                                             <h6>Payout Method</h6>
                                         </label>
                                         <div class="input-group">
@@ -155,7 +170,7 @@
                                         </div>
                                     </div>
 
-                                    <div>
+                                    <div class="disp-0">
                                         <div class="form-group">
 
                                             <div class="input-group">
@@ -203,7 +218,7 @@
 
                                             <div class="col-md-12 mb-3">
                                                 <button type="button" onclick="handShake('withdrawFx')"
-                                                    class="btn btn-primary btn-block cardSubmit" disabled style="cursor: not-allowed">Process Withdrawal</button>
+                                                    class="btn btn-primary btn-block cardSubmit">Process Withdrawal</button>
                                             </div>
 
                                         </div>
