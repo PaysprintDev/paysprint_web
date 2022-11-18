@@ -343,8 +343,6 @@
 
                 $('.moexResponse').removeClass('disp-0');
 
-                console.log(response.data.data);
-
                 if(response.data.data.length === 0){
                     $('.moexResponse').removeClass('alert alert-info');
                         $('.moexResponse').addClass('alert alert-danger');
@@ -358,11 +356,11 @@
                             <li><b>Transaction ID:</b> ${response.data.data.transactionId}</li>
                             <li><b>Name:</b> ${response.data.data.sender}</li>
                             <li><b>Bank Deposit:</b> ${response.data.data.bankDeposit}</li>
-                            <li><b>Amount Sent:</b> ${response.data.data.currencySent+' '+Number(response.data.data.amountSent).toFixed(4)}</li>
+                            <li><b>Amount Sent:</b> ${response.data.data.currencyToPay+' '+Number(response.data.data.amountToPay).toFixed(4)}</li>
                         </ul>
                     `);
 
-                    $('#transfer_amount').val(Number(response.data.data.amountSent).toFixed(4));
+                    $('#transfer_amount').val(Number(response.data.data.amountToPay).toFixed(4));
 
                 }
 

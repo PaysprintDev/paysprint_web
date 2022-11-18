@@ -14,11 +14,7 @@
             "accountNumber"
         ],
         "compulsory_data": [
-            "surname",
-            "fullname",
-            "address",
-            "id_Number",
-            "country"
+            "id_Number"
         ],
         "remittance_company": [
             "SWISS REMIT GMBH"
@@ -96,11 +92,7 @@
             "accountNumber"
         ],
         "compulsory_data": [
-            "surname",
-            "fullname",
-            "address",
-            "id_Number",
-            "country"
+            "id_Number"
         ],
         "remittance_company": [
             "JUBA EXPRESS"
@@ -119,11 +111,7 @@
             "phoneNumber"
         ],
         "compulsory_data": [
-            "surname",
-            "fullname",
-            "address",
-            "id_Number",
-            "country"
+            "id_Number"
         ],
         "remittance_company": [
             "INTEL EXPRESS EURO"
@@ -150,11 +138,7 @@
             "fiscalCode"
         ],
         "compulsory_data": [
-            "surname",
-            "fullname",
-            "address",
-            "id_Number",
-            "country"
+            "id_Number"
         ],
         "remittance_company": [
             "ITRANSFER"
@@ -175,11 +159,7 @@
             "accountNumber"
         ],
         "compulsory_data": [
-            "surname",
-            "fullname",
-            "address",
-            "id_Number",
-            "country"
+            "id_Number"
         ],
         "remittance_company": [
             "MONEY EXCHANGE"
@@ -200,11 +180,7 @@
             "accountNumber"
         ],
         "compulsory_data": [
-            "surname",
-            "fullname",
-            "address",
-            "id_Number",
-            "country"
+            "id_Number"
         ],
         "remittance_company": [
             "MONEY EXCHANGE"
@@ -223,11 +199,7 @@
             "phoneNumber"
         ],
         "compulsory_data": [
-            "surname",
-            "fullname",
-            "address",
-            "id_Number",
-            "country"
+            "id_Number"
         ],
         "remittance_company": [
             "MONEY EXCHANGE"

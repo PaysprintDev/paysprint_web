@@ -24,6 +24,8 @@ use App\Classes\CofInfo;
 
 use App\Classes\MCPRate;
 
+use App\MoexTransaction;
+
 use App\Traits\IDVCheck;
 
 use App\Classes\axIt106s;
@@ -45,7 +47,6 @@ use App\Classes\mpgRecur;
 use App\Classes\vsCorpai;
 
 use App\Classes\vsCorpas;
-
 use App\Classes\vsPurcha;
 use App\Classes\vsPurchl;
 use App\Traits\Xwireless;
@@ -79,6 +80,7 @@ use App\Classes\mpgConvFeeInfo;
 use App\Classes\mpgTransaction;
 use App\Classes\MpiTransaction;
 use App\Statement as Statement;
+use App\Traits\SecurityChecker;
 use App\Classes\riskTransaction;
 use App\ClientInfo as ClientInfo;
 use App\ReceivePay as ReceivePay;
@@ -91,15 +93,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Epaywithdraw as Epaywithdraw;
+
 use App\SetupBilling as SetupBilling;
 use App\Classes\mpgSessionAccountInfo;
-
 use App\PaycaWithdraw as PaycaWithdraw;
 use App\Classes\mpgAttributeAccountInfo;
 use App\InvoicePayment as InvoicePayment;
 use Illuminate\Support\Facades\Validator;
 use App\OrganizationPay as OrganizationPay;
-use App\Traits\SecurityChecker;
 
 class GooglePaymentController extends Controller
 {
@@ -1214,6 +1215,9 @@ class GooglePaymentController extends Controller
                                                     }
 
 
+                                                    MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex)]);
+
+
 
                                                     // Getting the payer
                                                     $userID = $thisuser->email;
@@ -1233,7 +1237,7 @@ class GooglePaymentController extends Controller
 
                                                     $wallet_balance = $walletResult->wallet_balance - $req->amount;
                                                     $paymentToken = "es-wallet-" . date('dmY') . time();
-                                                    $paystatus = "Pending";
+                                                    $paystatus = "Delivered";
                                                     $action = "Escrow Wallet debit";
                                                     $requestReceive = 2;
 
@@ -1498,6 +1502,9 @@ class GooglePaymentController extends Controller
                                                             }
 
 
+                                                            MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex)]);
+
+
                                                             $statement_route = "wallet";
 
 
@@ -1506,7 +1513,7 @@ class GooglePaymentController extends Controller
                                                             $withdrawal_per_week = $thisuser->withdrawal_per_week + $withdrawal_per_day;
                                                             $withdrawal_per_month = $thisuser->withdrawal_per_month + $withdrawal_per_week;
                                                             $paymentToken = "wallet-" . date('dmY') . time();
-                                                            $paystatus = "Pending";
+                                                            $paystatus = "Delivered";
                                                             $action = "Wallet debit";
                                                             $requestReceive = 2;
 
@@ -1595,7 +1602,7 @@ class GooglePaymentController extends Controller
 
 
                                                                 // Insert Statement
-                                                                $activity = $req->payment_method . " transfer of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " to " . $req->fname . ' ' . $req->lname . " for " . $service;
+                                                                $activity = $req->payment_method . " transfer of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " to " . $req->mandatory_fullname . " for " . $service;
                                                                 $credit = 0;
                                                                 // $debit = $req->conversionamount + $req->commissiondeduct;
                                                                 $debit = $req->amount;
@@ -2096,7 +2103,7 @@ class GooglePaymentController extends Controller
 
                                                         $wallet_balance = $walletResult->wallet_balance - $req->amount;
                                                         $paymentToken = "es-wallet-" . date('dmY') . time();
-                                                        $paystatus = "Pending";
+                                                        $paystatus = "Delivered";
                                                         $action = "Escrow Wallet debit";
                                                         $requestReceive = 2;
 
