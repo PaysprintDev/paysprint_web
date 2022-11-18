@@ -180,7 +180,8 @@
 													</div>
 
 													<div class="modal-body">
-														<form action="{{route('submit wallet debit')}}" method="post">
+														<form action="{{route('submit security wallet debit')}}"
+															method="post">
 															@csrf
 															<div class="col-md-12">
 																<div class="form-group">
@@ -212,7 +213,8 @@
 																<p style="color:red">{{$data['details']->country}}</p>
 															</div>
 															<div class="col-md-6">
-																<p style="font-weight:bold"><u>Wallet Balance:</u></p>
+																<p style="font-weight:bold"><u>Security Wallet
+																		Balance:</u></p>
 																<p style="color:red">
 																	{{$data['details']->security_deposit_balance}}</p>
 															</div>
