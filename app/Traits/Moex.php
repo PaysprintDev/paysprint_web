@@ -259,15 +259,17 @@ trait Moex
             "IdCountry" => $IdCountry
         ]);
 
+
         if ($BranchesMoex['return'] === 0) {
             $responseData = [
-                'Id' => $IdCountry === "NGA" ? $BranchesMoex['branches'][1]->Id : $BranchesMoex['branches'][0]->Id
+                'Id' => env('APP_ENV') === 'local' ? ($IdCountry === "NGA" ? $BranchesMoex['branches'][1]->Id : $BranchesMoex['branches'][0]->Id) : $BranchesMoex['branches'][0]->Id
             ];
         } else {
             $responseData = [
                 'error' => $BranchesMoex['error']->Description
             ];
         }
+
 
 
 
@@ -345,6 +347,9 @@ trait Moex
         ]);
 
 
+
+
+
         if ($BranchesMoex['return'] === 0) {
             $responseData = $BranchesMoex;
         } else {
@@ -352,6 +357,8 @@ trait Moex
                 'error' => $BranchesMoex['error']->Description
             ];
         }
+
+
 
 
         return $responseData;
