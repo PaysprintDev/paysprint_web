@@ -1066,6 +1066,7 @@ Route::prefix('Admin/')->group(function () {
 	Route::post('submitwalletdebit', ['uses' => 'AdminController@submitWalletDebit', 'as' => 'submit wallet debit']);
 	Route::post('submitwalletcredit', ['uses' => 'AdminController@submitWalletCredit', 'as' => 'submit wallet credit']);
 	Route::post('submitsecuritywalletcredit', ['uses' => 'AdminController@submitSecurityWalletCredit', 'as' => 'submit security wallet credit']);
+	Route::post('submitsecuritywalletdebit', ['uses' => 'AdminController@submitSecurityWalletDebit', 'as' => 'submit security wallet debit']);
 	Route::get('cashadvancelist', ['uses' => 'AdminController@cashAdvanceList', 'as' => 'cash advance list']);
 	Route::get('crossborderlist', ['uses' => 'AdminController@crossBorderList', 'as' => 'cross border list']);
 	Route::get('viewbeneficiarydetail/{id}', ['uses' => 'AdminController@crossBorderBeneficiaryDetail', 'as' => 'view beneficiary detail']);

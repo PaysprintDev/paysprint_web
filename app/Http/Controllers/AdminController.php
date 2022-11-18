@@ -12601,6 +12601,122 @@ class AdminController extends Controller
         return redirect()->route('wallet account credit')->with("msg", "<div class='alert alert-success'>Security Deposit Wallet Credited Successfully</div>");
 
     }
+
+    public function submitSecurityWalletDebit(Request $req)
+    {
+        
+         $validation = $req->validate([
+            'user_id' => 'required',
+            'customer_name' => 'required',
+            'account_number' => 'required',
+            'email' => 'required',
+            'debit_amount' => 'required',
+            'debit_reason' => 'required'
+        ]);
+
+        $user = $this->getSecurityDepositBalance($req->user_id);
+        
+        $reason=$req->debit_reason;
+
+        $securitywalletbalance = $user - $req->debit_amount;
+
+        User::where('id',$req->user_id)->update([
+            'security_deposit_balance' => $securitywalletbalance
+        ]);
+
+         $currencyFX = new CurrencyFxController();
+
+          $receiverMail = env('APP_ENV') === 'local' ? 'adenugaadebambo41@gmail.com' : 'securitydeposit@paysprint.ca';
+
+            $thisuser = User::where('email', $receiverMail)->first();
+
+            $sender=User::where('id',$req->user_id)->first();
+
+            $allcountry = AllCountries::where('name', $sender->country)->first();
+
+            // Check Escrow wallet
+            $checkAccount = EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $allcountry->currencyCode)->first();
+               
+            // Create New Wallet
+            if (!$checkAccount) {
+                // Create the wallet
+                $escrowID = 'ES_' . uniqid() . '_' . strtoupper(date('D'));
+                // Check if ID exists
+                $checkExists = EscrowAccount::where('escrow_id', $escrowID)->first();
+
+                if (isset($checkExists)) {
+                    $escrowID = 'ES_' . uniqid() . '_' . strtoupper(date('D'));
+                }
+
+                $query = [
+                    'user_id' => $thisuser->id,
+                    'escrow_id' => $escrowID,
+                    'currencyCode' => $allcountry->currencyCode,
+                    'currencySymbol' => $allcountry->currencySymbol,
+                    'wallet_balance' => "0.00",
+                    'country' => $sender->country,
+                    'active' => "false"
+                ];
+
+                EscrowAccount::insert($query);
+            }
+
+
+                        // Fund Wallet
+
+            $myaccount = EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $allcountry->currencyCode)->first();
+
+
+            $transaction_id = "es-wallet-" . date('dmY') . time();
+
+            $activity = "Added " . $myaccount->currencyCode . '' . number_format($req->debit_amount, 2) . " security deposit chargeback from {$sender->name}, with {$sender->accountType} account to your FX Wallet.";
+            $credit = $req->debit_amount;
+            $debit = 0;
+            $reference_code = $transaction_id;
+            $balance = 0;
+            $trans_date = date('Y-m-d');
+            $status = "Delivered";
+            $action = "Escrow Wallet credit";
+            $regards = $thisuser->ref_code;
+            $statement_route = "escrow wallet";
+
+            $fxBalance = $myaccount->wallet_balance + $req->debit_amount;
+
+            EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $allcountry->currencyCode)->update(['wallet_balance' => $fxBalance]);
+
+            $currencyFX->insFXStatement($myaccount->escrow_id, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $myaccount->country, 'confirmed');
+
+            $this->securityDepositStatement($sender->email, $reference_code, 'Wallet debit of ' . $sender->currencyCode . '' . $req->debit_amount . ' to  Fx Escrow Wallet for ' . $reason, 0,$req->debit_amount, $balance,$status, "Security Wallet Debit", $regards, "Security Wallet",$sender->country,$trans_date);
+
+            $message = "Hi " . $thisuser->name . ", You have " . $activity . " Your current fx wallet balance on {$myaccount->currencyCode} is " . $myaccount->currencyCode . ' ' . number_format($fxBalance, 2) . ".";
+
+            $usersPhone = User::where('email', $sender->email)->where('telephone', 'LIKE', '%+%')->first();
+
+
+        if (isset($usersPhone)) {
+
+            $recipients = $sender->telephone;
+        } else {
+            $recipients = "+" . $sender->code . $sender->telephone;
+        }
+
+
+        if ($sender->country == "Nigeria") {
+
+            $correctPhone = preg_replace("/[^0-9]/", "", $recipients);
+
+            $this->sendSms($message, $correctPhone);
+        } else {
+            $this->sendMessage($message, $recipients);
+        }
+
+
+
+        return redirect()->route('wallet debit')->with("msg", "<div class='alert alert-success'>Security Deposit Wallet Debited Successfully</div>");
+
+    }
+
+    
     public function cashAdvanceList(Request $req)
     {
 
