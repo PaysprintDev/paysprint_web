@@ -230,7 +230,7 @@ trait Moex
 
 
         $getRate["1"] =  [
-            'Correspondent' => 'Currency Rates',
+            'Correspondent' => 'PaySprint Inc.',
             'Country' => 'Canada',
             'Currency' => 'CAD',
             'cadRate' => (float)$sellingRate,
