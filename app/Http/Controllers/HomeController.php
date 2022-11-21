@@ -176,7 +176,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'ajaxgetlinkCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage','merchantUseCase','merchantHome', 'storeAskedQuestions', 'expressResponseback', 'displayCountry', 'displayCountryMerchant', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts']]);
+        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'ajaxgetlinkCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage','merchantUseCase','merchantHome', 'storeAskedQuestions', 'expressResponseback', 'displayCountry', 'displayCountryMerchant', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts', 'rentalManagementAdminviewfacility']]);
 
         $location = $this->myLocation();
 
@@ -3068,6 +3068,47 @@ class HomeController extends Controller
 
         return view('main.rentalmanagementadminfacility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
+    public function rentalManagementAdminviewfacility(Request $req)
+    {
+
+       
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Rental Property Management for Property Owner';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0],
+                    'facility' => $this->getMyFacility(Auth::user()->email)
+                );
+            } else {
+                // $this->page = 'Rental Property Management for Property Owner';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+
+            $this->page = 'Rental Property Management for Property Owner';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+            $data = array(
+                'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                'continent' => $this->timezone[0],
+                'facility' => $this->getMyFacility(Auth::user()->email)
+            );
+        }
+
+
+        return view('main.adminfacilities')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
 
 
     public function rentalManagementAdmineditconsultant(Request $req, $id)
@@ -3496,7 +3537,7 @@ class HomeController extends Controller
 
     public function rentalManagementAdminviewconsultant(Request $req)
     {
-
+        
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
                 $this->page = 'Rental Property Maintenance for Property Owner';
@@ -3528,11 +3569,11 @@ class HomeController extends Controller
                 'continent' => $this->timezone[0]
             );
         }
-
+       
         // Get Organization & Business
         $providers = $this->providersCheck($this->email);
 
-        return view('main.adminproviders')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'providers' => $providers]);
+        return view('main.adminproviders')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'providers' => $providers,'data' => $data]);
     }
 
 
