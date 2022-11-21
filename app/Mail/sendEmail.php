@@ -91,15 +91,16 @@ class sendEmail extends Mailable implements ShouldQueue
                         ->with('maildata', $this->mail)->delay(Carbon::now()->addMinutes(5));
                 }
             }
+            elseif ($this->mail->purpose == "Generate Invoice") {
+        return $this->subject($this->mail->subject)->view('mails.invoicegenerate')
+                    ->with('maildata', $this->mail)->delay(Carbon::now()->addMinutes(5));
+            }
             elseif($this->mail->purpose){
                 return $this->subject($this->mailData->subject)
                         ->view('mails.securitycheck')
                         ->with('mailData', $this->mailData)->delay(Carbon::now()->addMinutes(5));
             }
-             elseif ($this->mail->purpose) {
-                return $this->subject($this->mail->purpose)->view('mails.invoicegenerate')
-                    ->with('maildata', $this->mail)->delay(Carbon::now()->addMinutes(5));
-            }
+
         } catch (\Throwable $th) {
             Log::error('Error: ' . $th->getMessage() . ' | ' . $this->mail->purpose);
         }

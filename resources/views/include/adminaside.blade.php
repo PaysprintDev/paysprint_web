@@ -292,7 +292,7 @@
             </li>
             @endif
 
-            @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only')
+            @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access to Level 1 and 2 only')
             <li>
                 <a href="{{ route('business report') }}">
                     <i class="fa fa-book"></i>

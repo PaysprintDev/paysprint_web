@@ -213,9 +213,10 @@ trait Moex
         $markuppercent = $this->markupPercentage();
 
         $markValue = (1 + ($markuppercent[0]->percentage / 100));
+        $buymarkValue = (1 + ($markuppercent[1]->percentage / 100));
 
         $sellingRate = $dataRate[0]->official * $markValue;
-        $buyingRate = $dataRate[0]->official * 0.95;
+        $buyingRate = $dataRate[0]->official * $buymarkValue;
 
 
         $getRate["0"] =  [
@@ -234,7 +235,7 @@ trait Moex
             'Country' => 'Canada',
             'Currency' => 'CAD',
             'cadRate' => (float)$sellingRate,
-            'usdRate' => (float)($buyingRate * $markValue),
+            'usdRate' => (float)($buyingRate),
             'active' => 'Yes'
         ];
 

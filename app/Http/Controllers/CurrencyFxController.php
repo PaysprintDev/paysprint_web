@@ -130,7 +130,7 @@ class CurrencyFxController extends Controller
     public function createWallet(Request $req)
     {
 
-        if($req->session()->has('role') === true){
+        if($req->session()->has('role') === true && session('role') !== 'Merchant'){
 
 
             $user = User::where('email', session('fx_email'))->first();
@@ -420,7 +420,7 @@ class CurrencyFxController extends Controller
     {
 
 
-        if($req->session()->has('role') === true){
+        if($req->session()->has('role') === true && session('role') !== 'Merchant'){
 
 
             $user = User::where('email', session('fx_email'))->first();
@@ -1880,6 +1880,19 @@ class CurrencyFxController extends Controller
                 if (Hash::check($req->transaction_pin, $thisuser->transaction_pin)) {
 
                     // Check balance in the fromWallet
+
+                    if($req->fx_wallet_from === $req->fx_wallet_to)
+                    {
+                        $data = [];
+                        $message = 'You cannot tranfer between same wallets. Please try another request!';
+                        $status = 400;
+
+                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+                        return $this->returnJSON($resData, $status);
+                    }
+
+
 
                     $fromWallet = EscrowAccount::where('escrow_id', $req->fx_wallet_from)->where('user_id', $thisuser->id)->first();
 

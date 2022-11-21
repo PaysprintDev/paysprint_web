@@ -2,6 +2,7 @@
     {
         "country": "Nigeria",
         "currency": "NGN",
+        "min_amount": 5000,
         "max_amount": 2000000,
         "payment_type": "Bank Account",
         "notification": "SMS",
@@ -25,6 +26,7 @@
     {
         "country": "Ghana",
         "currency": "GHC",
+        "min_amount": 150,
         "max_amount": 7000,
         "payment_type": "Instant",
         "payoutAgent": [
@@ -54,6 +56,7 @@
     {
         "country": "Kenya",
         "currency": "KES",
+        "min_amount": 1300,
         "max_amount": 63000,
         "payment_type": "Instant",
         "payoutAgent": [
@@ -80,6 +83,7 @@
     {
         "country": "South Africa",
         "currency": "ZAR",
+        "min_amount": 200,
         "max_amount": 9000,
         "payment_type": "Bank Account",
         "mandatory_data": [
@@ -102,6 +106,7 @@
     {
         "country": "Turkey",
         "currency": "TRY",
+        "min_amount": 190,
         "max_amount": 9600,
         "payment_type": "Cash Payment",
         "mandatory_data": [
@@ -121,6 +126,7 @@
     {
         "country": "Italy",
         "currency": "EUR",
+        "min_amount": 10,
         "max_amount": 1999,
         "payment_type": "Instant",
         "payoutAgent": [
@@ -148,6 +154,7 @@
     {
         "country": "Spain",
         "currency": "EUR",
+        "min_amount": 10,
         "max_amount": 3000,
         "payment_type": "Cash Payment",
         "mandatory_data": [
@@ -169,6 +176,7 @@
     {
         "country": "Belgium",
         "currency": "EUR",
+        "min_amount": 10,
         "max_amount": 3000,
         "payment_type": "Cash Payment",
         "mandatory_data": [
@@ -190,6 +198,7 @@
     {
         "country": "Switzerland",
         "currency": "CHF",
+        "min_amount": 10,
         "max_amount": 4500,
         "payment_type": "Instant Payment",
         "mandatory_data": [

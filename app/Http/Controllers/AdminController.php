@@ -2184,8 +2184,7 @@ class AdminController extends Controller
     public function saveMarkup(Request $req)
     {
 
-        MarkUp::where('percentage', '!=', null)->update(['percentage' => $req->percentage]);
-
+        MarkUp::updateOrCreate(['rateOption'=> $req->rateOption], ['percentage' => $req->percentage, 'rateOption'=> $req->rateOption]);
 
         return redirect()->back()->with('success', 'Successfully created!');
     }
@@ -11727,6 +11726,10 @@ class AdminController extends Controller
         $update = ImportExcel::where('id', $req->id)->update(['transaction_date' => $req->transaction_date, 'payee_ref_no' => $req->payee_ref_no, 'name' => $req->name, 'description' => $req->description, 'amount' => $req->amount, 'remaining_balance' => $req->remaining_balance, 'payment_due_date' => $req->payment_due_date, 'payee_email' => $req->payee_email, 'service' => $req->service, 'installpay' => $req->installpay, 'installlimit' => $req->installlimit, 'recurring' => $req->recurring, 'reminder' => $req->reminder, 'created_at' => date('Y-m-d H:i:s', strtotime($req->created_at))]);
 
 
+        //TODO: Send Mail Here.for Updated Invoice..
+
+
+
         if ($update ==  1) {
             $message = 'Updated Successfully';
             $status = 'success';
@@ -12523,18 +12526,18 @@ class AdminController extends Controller
 
         $user = $this->getSecurityDepositBalance($req->user_id);
         $userdetails= $this->getUserBalance($req->user_id);
-       
+
 
         $reason = $req->credit_reason;
         $securitywalletbalance = $user;
         $walletbalance= $userdetails->wallet_balance;
-        
+
 
 
         $newsecuritybalance = $securitywalletbalance + $req->credit_amount;
         $newuserbalance=$walletbalance-$req->credit_amount;
 
-        
+
 
         User::where('id', $req->user_id)->update([
             'security_deposit_balance' => $newsecuritybalance,
@@ -12604,7 +12607,7 @@ class AdminController extends Controller
 
     public function submitSecurityWalletDebit(Request $req)
     {
-        
+
          $validation = $req->validate([
             'user_id' => 'required',
             'customer_name' => 'required',
@@ -12615,7 +12618,7 @@ class AdminController extends Controller
         ]);
 
         $user = $this->getSecurityDepositBalance($req->user_id);
-        
+
         $reason=$req->debit_reason;
 
         $securitywalletbalance = $user - $req->debit_amount;
@@ -12636,7 +12639,7 @@ class AdminController extends Controller
 
             // Check Escrow wallet
             $checkAccount = EscrowAccount::where('user_id', $thisuser->id)->where('currencyCode', $allcountry->currencyCode)->first();
-               
+
             // Create New Wallet
             if (!$checkAccount) {
                 // Create the wallet
@@ -12716,7 +12719,7 @@ class AdminController extends Controller
 
     }
 
-    
+
     public function cashAdvanceList(Request $req)
     {
 
@@ -20525,7 +20528,7 @@ is against our Anti Money Laundering (AML) Policy.</p><p>In order to remove the 
         Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'country' => $country]);
     }
 
-   
+
 
 
     public function insStatementRoute($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit, $country)

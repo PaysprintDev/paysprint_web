@@ -86,7 +86,7 @@ class Aside extends Component {
 		// Do Axios
 
 		try {
-			/** 
+			/**
 			 * Calculate PaySprint Rate On Handle Change with Default Rate
 			 * Then if desiredRate < or > PaySprint Rate
 			 * Add charges note to the response and update state
@@ -296,6 +296,23 @@ class Aside extends Component {
 								</div>
 							</div>
 
+                            <div className="p-4 px-lg-12 border-bottom border-gray-200">
+                                <h6 className="font-weight-semibold mb-3">Offer Expiration</h6>
+
+                                <div className="d-flex muze-skins customizer-controls">
+                                    <div className="mb-4 mb-xl-10" style={{ width: '100%' }}>
+                                        <input
+                                            type="date"
+                                            name="expiryDate"
+                                            value={this.state.expiryDate}
+                                            onChange={this.handleChange}
+                                            id="expiryDate"
+                                            className="form-control form-control-xl"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
 							<div className="p-4 px-lg-12 border-bottom border-gray-200">
 								{/* <h6 className="font-weight-semibold mb-3">Your Desired Rate</h6> */}
 								<h6 className="font-weight-semibold mb-3">PaySprint Rate</h6>
@@ -366,22 +383,7 @@ class Aside extends Component {
 								</p>
 							</div>
 
-							<div className="p-4 px-lg-12 border-bottom border-gray-200">
-								<h6 className="font-weight-semibold mb-3">Offer Expiration</h6>
 
-								<div className="d-flex muze-skins customizer-controls">
-									<div className="mb-4 mb-xl-10" style={{ width: '100%' }}>
-										<input
-											type="date"
-											name="expiryDate"
-											value={this.state.expiryDate}
-											onChange={this.handleChange}
-											id="expiryDate"
-											className="form-control form-control-xl"
-										/>
-									</div>
-								</div>
-							</div>
 
 							<input
 								type="submit"
@@ -399,8 +401,8 @@ class Aside extends Component {
 								</a>
 							</div>
 							<div className="col-6 d-grid">
-								<a href="#" className="btn btn-xl btn-primary" id="CustomizerPreview">
-									Submit
+								<a type='button' href="#" className="btn btn-xl btn-primary" id="CustomizerPreview" onClick={this.handleSubmitOffer}>
+                                    Submit
 								</a>
 							</div>
 						</div>

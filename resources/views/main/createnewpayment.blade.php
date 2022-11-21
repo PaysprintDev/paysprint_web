@@ -1691,6 +1691,10 @@
                                     <table class="table table-responsive table-striped">
                                     <tbody>
                                         <tr>
+                                            <td>Min. Amount</td>
+                                            <td><strong>${data[0].currency+' '+data[0].min_amount.toFixed(2)}</strong></td>
+                                        </tr>
+                                        <tr>
                                             <td>Max. Amount</td>
                                             <td><strong>${data[0].currency+' '+data[0].max_amount.toFixed(2)}</strong></td>
                                         </tr>
