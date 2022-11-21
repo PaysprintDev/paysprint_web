@@ -59,14 +59,16 @@ use App\Http\Controllers\AllCountries; ?>
                                 <div class="round-box">
                                     <p style="font-size: 30px;">{{ Auth::user()->currencySymbol }}</p>
                                 </div>
-                                <h5>{{ number_format(Auth::user()->wallet_balance, 4) }}</h5>
+                                <h5>{{ number_format(Auth::user()->wallet_balance, 2) }}</h5>
                                 <p>Wallet Balance</p>
 
                                 <hr>
 
-                                <h5>{{ Auth::user()->currencySymbol.''.number_format(Auth::user()->overdraft_balance, 4)
+                                <h5>{{ Auth::user()->currencySymbol.''.number_format(Auth::user()->overdraft_balance, 2)
                                     }}</h5>
                                 <p>Overdraft Balance</p>
+
+
 
                                 &nbsp;
 
@@ -98,7 +100,8 @@ use App\Http\Controllers\AllCountries; ?>
 
 
 
-                                @if (Auth::user()->payment_link_access == 1 && Auth::user()->payment_link_approval == 1
+                                @if (Auth::user()->plan == 'classic' && Auth::user()->payment_link_access == 1 &&
+                                Auth::user()->payment_link_approval == 1
                                 && $datediff > 0 )
                                 <!-- ShareThis BEGIN -->
                                 <p class="alert alert-primary text-white"><strong>Payment Link:</strong></p>
@@ -125,12 +128,26 @@ use App\Http\Controllers\AllCountries; ?>
 
                                 @else
                                 <!-- ShareThis BEGIN -->
-                                <p class="alert alert-danger text-white" style="cursor: pointer"
+                                @if(Auth::user()->plan == 'classic' && Auth::user()->payment_link_access == 1 &&
+                                Auth::user()->payment_link_approval == 1
+                                && $datediff > 0)
+                                <p class="alert alert-danger text-white" style="cursor: pointer; font-size:10px"
                                     onclick="getMyPaymentLink('{{ Auth::user()->id }}')">
-                                    <strong>Generate
-                                        Payment Link:</strong>
+                                    <strong>Generate QR Code/Payments Link:</strong>
                                 </p>
 
+                                @elseif(Auth::user()->plan == 'classic' && Auth::user()->payment_link_approval == 0 &&
+                                Auth::user()->payment_link_access == 1)
+                                <p class="alert alert-danger text-white" style="cursor: pointer; font-size:10px"
+                                    onclick="getMyPaymentLink2('{{ Auth::user()->id }}')">
+                                    <strong>Generate QR Code/Payments Link:</strong>
+                                </p>
+                                @else
+                                <p class="alert alert-danger text-white" style="cursor: pointer; font-size:10px"
+                                    onclick="getMyPaymentLink3('{{ Auth::user()->id }}')">
+                                    <strong>Generate QR Code/Payments Link:</strong>
+                                </p>
+                                @endif
 
 
 
@@ -139,6 +156,14 @@ use App\Http\Controllers\AllCountries; ?>
                                 <!-- Button trigger modal -->
                                 <button type="button" class="btn btn-primary disp-0" data-bs-toggle="modal"
                                     data-bs-target="#exampleModal" id="paymentLinkModal{{ Auth::user()->id }}">
+                                    Launch demo modal
+                                </button>
+                                <button type="button" class="btn btn-primary disp-0" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal2" id="paymentLinkModal2{{ Auth::user()->id }}">
+                                    Launch demo modal
+                                </button>
+                                <button type="button" class="btn btn-primary disp-0" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal3" id="paymentLinkModal3{{ Auth::user()->id }}">
                                     Launch demo modal
                                 </button>
 
@@ -192,6 +217,67 @@ use App\Http\Controllers\AllCountries; ?>
                                                     data-bs-dismiss="modal">Close</button>
                                                 <button type="button" class="btn btn-success" id="acceptLinkBtn"
                                                     onclick="acceptLinkTerms()">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal fade" id="exampleModal2" tabindex="-1"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Important Notice</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body" style="text-align: left">
+                                                <p>
+                                                    Displaying QR code to receive Face-to-Face payments from Customers
+                                                    and Sharing Payments link to receive payments from
+                                                    remote customers are sensitive processes.
+                                                </p>
+                                                <p>
+                                                    You will need to request for activation by sending Request for
+                                                    Activation
+                                                    email to: info@paysprint.ca.
+                                                </p>
+                                                <p>
+                                                    The activation would be available within 1 business day. Thanks for
+                                                    your understanding.
+                                                </p>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <a href="mailto:info@paysprint.ca" class="btn btn-success">Send
+                                                    Email</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal fade" id="exampleModal3" tabindex="-1"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Important Notice</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body" style="text-align: left">
+                                                <p>
+                                                    Please upgrade your plan to access this feature.
+                                                </p>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger"
+                                                    data-bs-dismiss="modal">Close</button>
+                                                <button onclick="changeMyPlan('changeplan')" class="btn btn-success"
+                                                    type="button">Upgrade Account</button>
                                             </div>
                                         </div>
                                     </div>
@@ -345,6 +431,13 @@ use App\Http\Controllers\AllCountries; ?>
                                     &nbsp;
 
                                 </a>
+                                <hr>
+                                <h5 style="font-size:15px;">{{
+                                    Auth::user()->currencySymbol.''.number_format(Auth::user()->security_deposit_balance,
+                                    2)
+                                    }}</h5>
+                                <p>Security Deposit Balance</p>
+                                <a href="{{route('security History')}}" style="color:red">View History</a>
 
 
 
@@ -366,7 +459,8 @@ use App\Http\Controllers\AllCountries; ?>
                             </div>
                         </div>
 
-                        @if (Auth::user()->payment_link_access == 1 && Auth::user()->payment_link_approval == 1
+                        @if (Auth::user()->plan =='classic' && Auth::user()->payment_link_access == 1 &&
+                        Auth::user()->payment_link_approval == 1
                         && $datediff > 0)
                         <div class="card income-card card-secondary">
                             <div class="card-body text-center">

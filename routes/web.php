@@ -262,6 +262,8 @@ Route::get('/referred', ['uses' => 'HomeController@referredDetails', 'as' => 're
 
 Route::get('/viewreviews', ['uses' => 'MerchantPageController@viewReviews', 'as' => 'view reviews']);
 
+Route::get('/securityhistory', ['uses' => 'MerchantPageController@securityHistory', 'as' => 'security History']);
+
 Route::post('/merchantreply', ['uses' => 'MerchantPageController@merchantReply', 'as' => 'merchant reply']);
 
 Route::get('/viewreply/{id}', ['uses' => 'MerchantPageController@viewmarketReplies', 'as' => 'view replies']);
@@ -1063,6 +1065,8 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('walletaccountcredit', ['uses' => 'AdminController@walletAccountCredit', 'as' => 'wallet account credit']);
 	Route::post('submitwalletdebit', ['uses' => 'AdminController@submitWalletDebit', 'as' => 'submit wallet debit']);
 	Route::post('submitwalletcredit', ['uses' => 'AdminController@submitWalletCredit', 'as' => 'submit wallet credit']);
+	Route::post('submitsecuritywalletcredit', ['uses' => 'AdminController@submitSecurityWalletCredit', 'as' => 'submit security wallet credit']);
+	Route::post('submitsecuritywalletdebit', ['uses' => 'AdminController@submitSecurityWalletDebit', 'as' => 'submit security wallet debit']);
 	Route::get('cashadvancelist', ['uses' => 'AdminController@cashAdvanceList', 'as' => 'cash advance list']);
 	Route::get('crossborderlist', ['uses' => 'AdminController@crossBorderList', 'as' => 'cross border list']);
 	Route::get('viewbeneficiarydetail/{id}', ['uses' => 'AdminController@crossBorderBeneficiaryDetail', 'as' => 'view beneficiary detail']);
@@ -1194,6 +1198,7 @@ Route::post('exporttoPdf', ['uses' => 'HomeController@exportToPdf', 'as' => 'exp
 Route::get('/promopage', ['uses' => 'AdminController@promoPage', 'as' => 'promo page']);
 Route::post('/uploadpromousers', ['uses' => 'AdminController@uploadPromoUsers', 'as' => 'upload promo users']);
 Route::post('/uploadunverifiedmerchants', ['uses' => 'AdminController@uploadUnverifiedMerchants', 'as' => 'upload unverified merchants']);
+Route::post('/uploadverifiedmerchants', ['uses' => 'AdminController@uploadVerifiedMerchants', 'as' => 'upload verified merchants']);
 Route::get('/promousers', ['uses' => 'AdminController@promoUsers', 'as' => 'promo users']);
 Route::get('/promoreport', ['uses' => 'AdminController@promoReport', 'as' => 'promo report']);
 Route::post('/topup', ['uses' => 'AdminController@topUpWallet', 'as' => 'top up']);
@@ -1321,6 +1326,7 @@ Route::prefix('Admin/estore')->group(function () {
 	Route::post('/activate/{id}', ['uses' => 'StoreController@activateStore', 'as' => 'activate store']);
 	Route::get('/activatestore', ['uses' => 'StoreController@activateEstore', 'as' => 'activate e-store']);
 	Route::get('/unverifiedmerchants', ['uses' => 'StoreController@unverifiedMerchants', 'as' => 'unverified merchants']);
+	Route::get('/verifiedmerchants', ['uses' => 'StoreController@verifiedMerchants', 'as' => 'verified merchants']);
 	Route::get('marketplace', ['uses' => 'StoreController@newMarketplacePost', 'as' => 'new marketplace post']);
 	Route::post('createnews', ['uses' => 'AdminController@createMarketplaceNews', 'as' => 'create marketplace news']);
 	Route::get('/marketplacenews', ['uses' => 'StoreController@FetchMarketplaceNews', 'as' => 'marketplacenews']);
@@ -1410,6 +1416,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 
 
 	Route::post('paychargeback', ['uses' => 'MonerisController@paymentChargeBack', 'as' => 'Ajaxpaychargeback']);
+	Route::post('reversecrossborder', ['uses' => 'MonerisController@reverseCrossBorder', 'as' => 'reverseCrossBorder']);
 	Route::post('releasefeeback', ['uses' => 'MonerisController@paymentReleaseFeeBack', 'as' => 'Ajaxreleasefeeback']);
 
 

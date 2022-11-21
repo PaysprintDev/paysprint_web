@@ -149,6 +149,12 @@
                                     </div>
 
 
+                                    <div class="form-group">
+                                        <div class="alert alert-danger sendingdanger disp-0"></div>
+                                    </div>
+
+
+
                                     <div class="form-group"> <label for="amount">
                                             <h6>Amount</h6>
                                         </label>
@@ -280,6 +286,8 @@
 
                 $(".cardSubmit").attr("disabled", true);
 
+
+
                 if ($('#fx_wallet_from').val() != "") {
                     // Do Ajax
                     const fromWallet = $('#fx_wallet_from').val();
@@ -333,6 +341,7 @@
 
 
                                     });
+
 
                                     currencyConvert();
 
@@ -454,6 +463,7 @@
 
                 $('.sendingInfo').html("");
 
+
                 var amount = $('#amount').val();
                 const fromWallet = $('#fx_wallet_from').val();
                 const toWallet = $('#fx_wallet_to').val();
@@ -487,12 +497,14 @@
 
                         success: function(result) {
 
-
+                            console.log(result.data);
 
                             if (result.status == 200) {
                                 $('.sendingInfo').html(
                                     `<strong>Amount to be transferred to your ${result.data.toCurrency} wallet is : ${result.data.toCurrency} ${parseFloat(result.data.convamount).toFixed(4)}</strong>`
                                 );
+
+
 
                                 currencyConvert();
 
@@ -532,6 +544,10 @@
                 var someCurr = $('#fx_wallet_to option:selected').text();
                 var localto = someCurr.split("| Currency ");
                 $('#toCurrency').text(localto[1]);
+
+                $('.sendingdanger').html('');
+                                $('.sendingdanger').addClass('disp-0');
+
 
 
                 var today = new Date();
@@ -591,12 +607,18 @@
 
                             $('#convertedAmount').text((newConv).toFixed(4));
 
+                            $('.sendingdanger').removeClass('disp-0');
+                            $('.sendingdanger').html(`Transfer back between <strong>${localto[1]} - ${localfrom[1]}</strong> will attract a <strong>50%</strong> penalty charge after transfer of <strong>${localfrom[1]} - ${localto[1]}</strong> on first attempt.`);
+
 
                             // Put Exchange rate
                             $('#rateToday').html("<span class='text-danger'><strong>" + parseFloat(amount).toFixed(
                                     2) + "" + localfrom[1] + " = " +
                                 todayRate.toFixed(4) + '' + localto[1] + "</strong></span>");
                         } else {
+
+                            $('.sendingdanger').html('');
+                            $('.sendingdanger').addClass('disp-0');
 
                             $('.sendingInfo').addClass('alert-danger');
                             $('.sendingInfo').removeClass('alert-info');

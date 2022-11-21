@@ -62,7 +62,7 @@
 										<th>Account Number</th>
 										<th>Name</th>
 										<th>Email</th>
-										<th>Action</th>
+										<th colspan="2">Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -78,7 +78,13 @@
 												Debit Wallet
 											</button>
 										</td>
-										<!-- Modal -->
+										<td>
+											<button type="button" class="btn btn-success" data-toggle="modal"
+												data-target="#exampleModal2{{$data['details']->id}}">
+												Security Wallet Debit
+											</button>
+										</td>
+										<!-- Wallet Debit Modal -->
 										<div class="modal fade" id="exampleModal{{$data['details']->id}}" tabindex="-1"
 											role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 											<div class="modal-dialog" role="document">
@@ -159,6 +165,91 @@
 												</div>
 											</div>
 										</div>
+										<!-- Securoty Wallet Debit Modal -->
+										<div class="modal fade" id="exampleModal2{{$data['details']->id}}" tabindex="-1"
+											role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+											<div class="modal-dialog" role="document">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="exampleModalLabel">Security Wallet
+															Debit</h5>
+														<button type="button" class="close" data-dismiss="modal"
+															aria-label="Close">
+															<span aria-hidden="true">&times;</span>
+														</button>
+													</div>
+
+													<div class="modal-body">
+														<form action="{{route('submit security wallet debit')}}"
+															method="post">
+															@csrf
+															<div class="col-md-12">
+																<div class="form-group">
+																	<label>Customer Name</label>
+																	<input type="text" name="customer_name"
+																		class="form-control"
+																		value="{{$data['details']->name}}">
+																</div>
+															</div>
+
+															<div class="col-md-12">
+																<div class="form-group">
+																	<label>Account Number</label>
+																	<input type="text" name="account_number"
+																		class="form-control"
+																		value="{{$data['details']->ref_code}}">
+																</div>
+															</div>
+
+															<div class="col-md-12">
+																<div class="form-group">
+																	<label>Email</label>
+																	<input type="text" name="email" class="form-control"
+																		value="{{$data['details']->email}}">
+																</div>
+															</div>
+															<div class="col-md-6">
+																<p style="font-weight:bold"><u>Country:</u></p>
+																<p style="color:red">{{$data['details']->country}}</p>
+															</div>
+															<div class="col-md-6">
+																<p style="font-weight:bold"><u>Security Wallet
+																		Balance:</u></p>
+																<p style="color:red">
+																	{{$data['details']->security_deposit_balance}}</p>
+															</div>
+
+															<div class="col-md-12 mt-4 mb-3">
+																<div class="form-group">
+																	<label>Amount to Debit</label>
+																	<input type="text" name="debit_amount"
+																		class="form-control"
+																		placeholder="Enter amount to Debit Merchant">
+																</div>
+															</div>
+															<div class="col-md-12 mt-4 mb-3">
+																<div class="form-group">
+																	<label>Reasons for Wallet Debit</label>
+																	<input type="text" name="debit_reason"
+																		class="form-control"
+																		placeholder="Please enter reason for security wallet debit">
+																</div>
+															</div>
+															<input type="hidden" name="user_id"
+																value="{{$data['details']->id}}">
+
+
+													</div>
+													<div class="modal-footer mt-4">
+														<button type="reset" class="btn btn-danger"
+															data-dismiss="modal">Close</button>
+														<button type="submit" class="btn btn-primary">Submit</button>
+													</div>
+													</form>
+												</div>
+											</div>
+										</div>
+
 									</tr>
 								</tbody>
 							</table>

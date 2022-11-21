@@ -339,48 +339,56 @@ class Controller extends BaseController
                 if ($currencyA === $currencyB) {
                     $actualRate = $convRateA / $convRateB;
                 } elseif ($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD') {
-                    $actualRate = ($convRateA / $convRateB) * $markValue;
+
+                    if ($result->quotes->$currencyA < 5) {
+                        $actualRate = ($convRateA / $convRateB) / $markValue;
+                    } else {
+                        $actualRate = ($convRateA / $convRateB) * $markValue;
+                    }
                 } else {
                     $actualRate = $convRateA / $convRateB;
                 }
             } elseif ($request->method === 'buying') {
 
                 if ($currencyA !== 'USDUSD') {
-                $convRateA = ($result->quotes->$currencyA * 0.95) * $markValue;
-            } else {
-                $convRateA = 1;
-            }
+                    $convRateA = ($result->quotes->$currencyA * 0.95) * $markValue;
+                } else {
+                    $convRateA = 1;
+                }
 
 
-            if ($currencyB !== 'USDUSD') {
-                $convRateB = ($result->quotes->$currencyB * 0.95) * $markValue;
-            } else {
-                $convRateB = 1;
-            }
+                if ($currencyB !== 'USDUSD') {
+                    $convRateB = ($result->quotes->$currencyB * 0.95) * $markValue;
+                } else {
+                    $convRateB = 1;
+                }
 
                 if ($currencyA === $currencyB) {
                     $actualRate = $convRateA / $convRateB;
                 } elseif ($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD') {
-                    $actualRate = ($convRateA / $convRateB) * $markValue;
+                    if ($result->quotes->$currencyA < 5) {
+                        $actualRate = (($convRateA / $convRateB) / $markValue) * 0.95;
+                    } else {
+                        $actualRate = (($convRateA / $convRateB) * $markValue) * 0.95;
+                    }
                 } else {
                     $actualRate = $convRateA / $convRateB;
                 }
             } else {
 
 
-
                 if ($currencyA === $currencyB) {
                     $actualRate = $convRateA / $convRateB;
                 } elseif ($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD') {
-                    $actualRate = ($convRateA / $convRateB) * $markValue;
+                    if ($result->quotes->$currencyA < 5) {
+                        $actualRate = ($convRateA / $convRateB) / $markValue;
+                    } else {
+                        $actualRate = ($convRateA / $convRateB) * $markValue;
+                    }
                 } else {
                     $actualRate = $convRateA / $convRateB;
                 }
             }
-
-
-
-
 
 
 
@@ -467,34 +475,48 @@ class Controller extends BaseController
             // This amount is in dollars
 
 
-            if ($currencyA !== 'USDUSD') {
-                if ($result->quotes->$currencyA > 1) {
+            // if ($currencyA !== 'USDUSD') {
+            //     if ($result->quotes->$currencyA > 1) {
 
-                    // $convRateA = $result->quotes->$currencyA / $markValue;
-                    $convRateA = $result->quotes->$currencyA;
-                } elseif ($result->quotes->$currencyA < 1) {
-                    // $convRateA = $result->quotes->$currencyA * $markdownValue;
-                    $convRateA = $result->quotes->$currencyA;
-                } else {
-                    $convRateA = $result->quotes->$currencyA;
-                }
+            //         // $convRateA = $result->quotes->$currencyA / $markValue;
+            //         $convRateA = $result->quotes->$currencyA;
+            //     } elseif ($result->quotes->$currencyA < 1) {
+            //         // $convRateA = $result->quotes->$currencyA * $markdownValue;
+            //         $convRateA = $result->quotes->$currencyA;
+            //     } else {
+            //         $convRateA = $result->quotes->$currencyA;
+            //     }
+            // } else {
+            //     $convRateA = 1;
+            // }
+
+
+            if ($currencyA !== 'USDUSD') {
+                $convRateA = $result->quotes->$currencyA * $markValue;
             } else {
                 $convRateA = 1;
             }
 
 
 
-            if ($currencyB !== 'USDUSD') {
-                if ($result->quotes->$currencyB > 1) {
+            // if ($currencyB !== 'USDUSD') {
+            //     if ($result->quotes->$currencyB > 1) {
 
-                    // $convRateB = $result->quotes->$currencyB / $markValue;
-                    $convRateB = $result->quotes->$currencyB;
-                } elseif ($result->quotes->$currencyB < 1) {
-                    // $convRateB = $result->quotes->$currencyB * $markdownValue;
-                    $convRateB = $result->quotes->$currencyB;
-                } else {
-                    $convRateB = $result->quotes->$currencyB;
-                }
+            //         // $convRateB = $result->quotes->$currencyB / $markValue;
+            //         $convRateB = $result->quotes->$currencyB;
+            //     } elseif ($result->quotes->$currencyB < 1) {
+            //         // $convRateB = $result->quotes->$currencyB * $markdownValue;
+            //         $convRateB = $result->quotes->$currencyB;
+            //     } else {
+            //         $convRateB = $result->quotes->$currencyB;
+            //     }
+            // } else {
+            //     $convRateB = 1;
+            // }
+
+
+            if ($currencyB !== 'USDUSD') {
+                $convRateB = $result->quotes->$currencyB * $markValue;
             } else {
                 $convRateB = 1;
             }
@@ -503,9 +525,15 @@ class Controller extends BaseController
             if ($currencyA === $currencyB) {
                 $actualRate = $convRateA / $convRateB;
             } elseif ($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD') {
-                $actualRate = ($convRateA / $convRateB) * $markValue;
+
+                if ($result->quotes->$currencyA < 5) {
+                        $actualRate = ($convRateA / $convRateB) / $markValue;
+                    } else {
+                        $actualRate = ($convRateA / $convRateB) * $markValue;
+                    }
+
             } else {
-                $actualRate = ($convRateA / $convRateB) * $markValue;
+                $actualRate = $convRateA / $convRateB;
             }
 
 

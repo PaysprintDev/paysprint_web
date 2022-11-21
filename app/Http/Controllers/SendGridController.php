@@ -14,6 +14,8 @@ use App\ReferralClaim;
 
 use App\UnverifiedMerchant;
 
+use App\VerifiedMerchant;
+
 use App\TransactionCost;
 use App\FlutterwaveModel;
 use App\Traits\SendgridMail;
@@ -390,7 +392,7 @@ class SendGridController extends Controller
         try {
 
 
-            $thisuser = UnverifiedMerchant::inRandomOrder()->take(100)->get();
+            $thisuser = VerifiedMerchant::get();
 
             // dd($thisuser);
 
@@ -408,8 +410,6 @@ class SendGridController extends Controller
                     ];
 
                     $template_id = config('constants.marketplace.claimsbusiness');
-
-
 
                     $response = $this->marketplaceDynamicMail($receiver, $data, $template_id);
 
