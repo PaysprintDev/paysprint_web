@@ -320,7 +320,7 @@ class InvoiceController extends Controller
 
                         $this->subject = 'You have an invoice ' . $req->single_invoiceno . ' from  ' . $this->clientname . ' on PaySprint';
 
-                        $this->sendEmail($this->to, $this->subject);
+                        $this->sendEmail($this->to, "Generate Invoice");
 
                         $this->updatePoints($thisuser->id, 'Create and send invoice');
 
@@ -507,7 +507,7 @@ class InvoiceController extends Controller
 
                         $this->subject = 'You have an invoice ' . $req->single_invoiceno . ' from  ' . $this->clientname . ' on PaySprint';
 
-                        $this->sendEmail($this->to, $this->subject);
+                        $this->sendEmail($this->to, "Generate Invoice");
 
                         // Send SMS
                         $sendMsg = "Hello " . $this->name . ", " . $this->subject . ". Click on the link below or copy link to browser to pay Invoice. " . $generated_link;
@@ -750,7 +750,7 @@ class InvoiceController extends Controller
 
                                     $this->subject = 'You have an invoice ' . $this->invoice_no . ' from  ' . $this->clientname . ' on PaySprint';
 
-                                    $this->sendEmail($this->to, $this->subject);
+                                    $this->sendEmail($this->to, "Generate Invoice");
 
                                     // Log::info("Bulk Invoice prepared by ".$this->clientname);
 
@@ -833,7 +833,7 @@ class InvoiceController extends Controller
         $objDemo = new \stdClass();
         $objDemo->purpose = $purpose;
 
-        if ($purpose == $this->subject) {
+        if ($purpose == "Generate Invoice") {
 
             $objDemo->name = $this->name;
             $objDemo->email = $this->to;
