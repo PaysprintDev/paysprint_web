@@ -15,6 +15,7 @@
             "accountNumber"
         ],
         "compulsory_data": [
+            "id_Type",
             "id_Number"
         ],
         "remittance_company": [
@@ -96,6 +97,7 @@
             "accountNumber"
         ],
         "compulsory_data": [
+            "id_Type",
             "id_Number"
         ],
         "remittance_company": [
@@ -116,6 +118,7 @@
             "phoneNumber"
         ],
         "compulsory_data": [
+            "id_Type",
             "id_Number"
         ],
         "remittance_company": [
@@ -144,6 +147,7 @@
             "fiscalCode"
         ],
         "compulsory_data": [
+            "id_Type",
             "id_Number"
         ],
         "remittance_company": [
@@ -166,6 +170,7 @@
             "accountNumber"
         ],
         "compulsory_data": [
+            "id_Type",
             "id_Number"
         ],
         "remittance_company": [
@@ -188,6 +193,7 @@
             "accountNumber"
         ],
         "compulsory_data": [
+            "id_Type",
             "id_Number"
         ],
         "remittance_company": [
@@ -208,6 +214,7 @@
             "phoneNumber"
         ],
         "compulsory_data": [
+            "id_Type",
             "id_Number"
         ],
         "remittance_company": [
@@ -231,6 +238,7 @@
             "accountNumber"
         ],
         "compulsory_data": [
+            "id_Type",
             "id_Number"
         ],
         "remittance_company": [
