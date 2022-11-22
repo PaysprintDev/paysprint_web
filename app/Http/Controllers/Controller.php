@@ -281,12 +281,9 @@ class Controller extends BaseController
     {
 
         $request = Request();
-
-
         // Get Markup
         $markuppercent = $this->markupPercentage();
 
-        $markValue = (1 + ($markuppercent[0]->percentage / 100));
 
         $currencyA = "USD" . $foreign;
         $currencyB = "USD" . $localcountry;
@@ -316,6 +313,18 @@ class Controller extends BaseController
         $result = json_decode($response);
 
         if ($result->success == true) {
+
+            if (isset($request->method)) {
+
+                if ($request->method === 'selling') {
+                    $markValue = (1 + ($markuppercent[0]->percentage / 100));
+                } else {
+                    $markValue = (1 + ($markuppercent[1]->percentage / 100));
+                }
+            } else {
+                $markValue = (1 + ($markuppercent[1]->percentage / 100));
+            }
+
 
 
             if ($currencyA !== 'USDUSD') {
@@ -351,14 +360,14 @@ class Controller extends BaseController
             } elseif ($request->method === 'buying') {
 
                 if ($currencyA !== 'USDUSD') {
-                    $convRateA = ($result->quotes->$currencyA * 0.95) * $markValue;
+                    $convRateA = $result->quotes->$currencyA * $markValue;
                 } else {
                     $convRateA = 1;
                 }
 
 
                 if ($currencyB !== 'USDUSD') {
-                    $convRateB = ($result->quotes->$currencyB * 0.95) * $markValue;
+                    $convRateB = $result->quotes->$currencyB * $markValue;
                 } else {
                     $convRateB = 1;
                 }
@@ -367,9 +376,9 @@ class Controller extends BaseController
                     $actualRate = $convRateA / $convRateB;
                 } elseif ($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD') {
                     if ($result->quotes->$currencyA < 5) {
-                        $actualRate = (($convRateA / $convRateB) / $markValue) * 0.95;
+                        $actualRate = ($convRateA / $convRateB) / $markValue;
                     } else {
-                        $actualRate = (($convRateA / $convRateB) * $markValue) * 0.95;
+                        $actualRate = ($convRateA / $convRateB) * $markValue;
                     }
                 } else {
                     $actualRate = $convRateA / $convRateB;
@@ -391,9 +400,7 @@ class Controller extends BaseController
             }
 
 
-
-
-            $convRate = $actualRate * 95 / 100;
+            $convRate = $actualRate * $markValue;
 
             $this->calculateBufferedTransaction($actualRate, $convRate, $route);
         } else {
@@ -527,11 +534,10 @@ class Controller extends BaseController
             } elseif ($currencyA !== 'USDUSD' && $currencyB !== 'USDUSD') {
 
                 if ($result->quotes->$currencyA < 5) {
-                        $actualRate = ($convRateA / $convRateB) / $markValue;
-                    } else {
-                        $actualRate = ($convRateA / $convRateB) * $markValue;
-                    }
-
+                    $actualRate = ($convRateA / $convRateB) / $markValue;
+                } else {
+                    $actualRate = ($convRateA / $convRateB) * $markValue;
+                }
             } else {
                 $actualRate = $convRateA / $convRateB;
             }
