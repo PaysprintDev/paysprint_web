@@ -249,7 +249,7 @@
 
                                     <div class="beneficiary_details disp-0">
                                         <div class="form-group"> <label for="account_name">
-                                                <h6>Beneficiary Account Name</h6>
+                                                <h6>Beneficiary Business Name</h6>
                                             </label>
                                             <div class="input-group">
                                                 <div class="input-group-append"> <span
@@ -258,6 +258,19 @@
                                                             src="https://img.icons8.com/material-outlined/20/000000/guest-male.png" />
                                                     </span> </div> <input type="text" name="account_name"
                                                     id="account_name" class="form-control" value="">
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group"> <label for="account_email">
+                                                <h6>Beneficiary Email Address</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <div class="input-group-append"> <span
+                                                        class="input-group-text text-muted">
+                                                        <img
+                                                            src="https://img.icons8.com/material-outlined/20/000000/guest-male.png" />
+                                                    </span> </div> <input type="text" name="account_email"
+                                                    id="account_email" class="form-control" value="">
 
                                             </div>
                                         </div>

@@ -84,6 +84,7 @@
                         <th>Cum. Balance</th>
                         <th>Trading Balance (%)</th>
                         <th>Trading Balance (%) Cum.</th>
+                        <th>Adj. Buy Rate</th>
                         <th>Adj. Sell Rate</th>
                         <th>Action</th>
                     </tr>
@@ -155,6 +156,7 @@
                         <td>{{ number_format($balance, 2) }}</td>
                         <td>{{ number_format($tradingBalance, 2) }}%</td>
                         <td>{{ number_format($tradingBalance, 2) }}%</td>
+                        <td>35%</td>
                         <td>65%</td>
                         <td>
                             <a type="button" class="btn btn-primary" href="{{ route('fx report by country', 'country='.$item->country.'&month='.Request::get('month').'&currency='.$currencyCode) }}">View details</a>
