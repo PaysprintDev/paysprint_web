@@ -1083,6 +1083,10 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('activityperday', ['uses' => 'AdminController@platformActivityPerDay', 'as' => 'activity per day']);
 
 	Route::get('generatespecialinfoactivity', ['uses' => 'AdminController@generateSpecialInfoActivity', 'as' => 'generate special information activity']);
+	Route::get('loginfx', ['uses' => 'AdminController@loginVertoFx', 'as' => 'login verto fx']);
+	Route::get('getfxpage', ['uses' => 'AdminController@getFxPage', 'as' => 'get fx rate']);
+	Route::post('submitloginfx', ['uses' => 'AdminController@submitLoginVertoFx', 'as' => 'submit login verto fx']);
+	Route::post('submitfxrate', ['uses' => 'AdminController@submitFxRate', 'as' => 'submit fx rate']);
 
 
 	// Create support agents

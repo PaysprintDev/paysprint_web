@@ -100,6 +100,8 @@ use App\Statement as Statement;
 
 use App\Traits\PaystackPayment;
 
+use App\Traits\VertoFx;
+
 use App\CardIssuer as CardIssuer;
 use App\ClientInfo as ClientInfo;
 use App\Createpost as Createpost;
@@ -203,7 +205,7 @@ class AdminController extends Controller
     public $infomessage;
     public $customer_id;
 
-    use Trulioo, AccountNotify, SpecialInfo, PaystackPayment, FlagPayment, PaymentGateway, Xwireless, MailChimpNewsLetter, PaysprintPoint, PointsClaim, PointsHistory, DusuPay,  MyFX, GenerateOtp, UserManagement;
+    use Trulioo, AccountNotify, SpecialInfo, PaystackPayment, FlagPayment, PaymentGateway, Xwireless, MailChimpNewsLetter, PaysprintPoint, PointsClaim, PointsHistory, DusuPay,  MyFX, GenerateOtp, UserManagement, VertoFx;
 
 
     public function index(Request $req)
@@ -7538,6 +7540,179 @@ class AdminController extends Controller
             return redirect()->route('AdminLogin');
         }
     }
+
+    public function loginVertoFx(Request $req)
+    {
+         if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing" || session('role') == "Customer Success") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'activity' => $this->specialInformationData(),
+                'apiKey' => config("constants.vetofx.apikey"),
+                'clientid' => config("constants.vetofx.clientid")
+            );
+
+
+
+            return view('admin.vertofx.login')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+    public function getFxPage(Request $req)
+    {
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing" || session('role') == "Customer Success") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'country' => AllCountries::get()
+            );
+
+
+
+            return view('admin.vertofx.fxrate')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+    public function submitLoginVertoFx()
+    {
+        $data= $this->sendVertoFx();
+
+        if(isset($data->success)){
+            return back()->with(["msg" => "<div class='alert alert-success'>Login Successfully</div>", 'data' => $data->token]);
+            // return $data->token;
+           }else{
+              return back()->with("msg","<div class='alert alert-danger'>$data->message</div>");
+            // return $data->message;
+           }
+
+    }
+
+    public function submitFxRate(Request $req)
+    {
+    
+              $login=$this->sendVertoFx();
+                 $token=$login->token;
+                $response=$this->getFxRate($req->currency_from,$req->currency_to,$token);
+
+                 if(isset($response->success))
+             {
+            $country=AllCountries::where('currencyCode',$req->currency_from)->first();
+            $to=AllCountries::where('currencyCode',$req->currency_to)->first();
+            $dataRate=[
+                'rate' => $response->rate,
+                'currency_from' => $country->name,
+                'currency_to' => $to->name,
+                'vfx_token' => $response->vfx_token,
+                // 'country' => AllCountries::get()
+            ];
+
+            $data=[
+                'country' => AllCountries::get(),
+            ];
+
+            return redirect()->route('get fx rate')->with(['data' => $data, 'datarate' => $dataRate]);
+        } else {
+            return back()->with("msg","<div class='alert alert-danger'>$response->message</div>");
+        } 
+    }
+
+
+    public function sendVertoFx()
+    {
+        $id=config("constants.vetofx.clientid");
+        $apikey= config("constants.vetofx.apikey");
+        $mode='apiKey';
+
+           $data=$this->FxLogin($id, $apikey, $mode);
+           
+           return $data;
+
+    }
+    
 
 
     public function createSupportAgent(Request $req)
