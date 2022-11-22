@@ -61,7 +61,7 @@
     }
 
     .hero-imgs {
-        top: -15.456rem;
+        top: -1.456rem;
     }
 </style>
 

@@ -27,7 +27,7 @@
                 </div>
                 <div class="col-md-5 our_skill_inner">
                     <div class="single_skill">
-                        <h3>Rental Property Management</h3>
+                        <h3>Cross Border Payment Made Easy</h3>
                         <div class="progress">
                             <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                 {{-- <div class="progress_parcent"><span class="counter2">98</span>%</div> --}}
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <div class="single_skill">
-                        <h3>Property Tax</h3>
+                        <h3>No fee-Digital Wallet</h3>
                         <div class="progress">
                             <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                 {{-- <div class="progress_parcent"><span class="counter2">96</span>%</div> --}}
@@ -43,29 +43,14 @@
                         </div>
                     </div>
                     <div class="single_skill">
-                        <h3>Utility Bill</h3>
+                        <h3>Mobile App, Web Application</h3>
                         <div class="progress">
                             <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                 {{-- <div class="progress_parcent"><span class="counter2">80</span>%</div> --}}
                             </div>
                         </div>
                     </div>
-                    <div class="single_skill">
-                        <h3>Parking Tickets</h3>
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                                {{-- <div class="progress_parcent"><span class="counter2">78</span>%</div> --}}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="single_skill disp-0">
-                        <h3>Event Ticketing</h3>
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                                {{-- <div class="progress_parcent"><span class="counter2">76</span>%</div> --}}
-                            </div>
-                        </div>
-                    </div>
+                
 
                 </div>
             </div>

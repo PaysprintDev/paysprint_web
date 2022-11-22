@@ -601,6 +601,12 @@ Route::get('rentalmanagement/admin/consultant', ['uses' => 'HomeController@renta
 
 Route::get('rentalmanagement/admin/consultant/edit/{id}', ['uses' => 'HomeController@rentalManagementAdmineditconsultant', 'as' => 'editconsultant']);
 
+Route::get('rentalmanagement/admin/viewfacility/edit/{id}', ['uses' => 'HomeController@rentalManagementAdmineditfacility', 'as' => 'editfacility']);
+
+Route::post('rentalmanagement/admin/viewfacility/update/{id}', ['uses' => 'HomeController@rentalManagementAdminupdatefacility', 'as' => 'updatefacility']);
+
+Route::post('rentalmanagement/admin/viewfacility/delete', ['uses' => 'HomeController@rentalManagementAdmindeletefacility', 'as' => 'deletefacility']);
+
 Route::get('rentalmanagement/admin/viewfacility', ['uses' => 'HomeController@rentalManagementAdminviewfacility', 'as' => 'viewfacility']);
 
 Route::get('rentalmanagement/admin/viewconsultant', ['uses' => 'HomeController@rentalManagementAdminviewconsultant', 'as' => 'viewconsultant']);

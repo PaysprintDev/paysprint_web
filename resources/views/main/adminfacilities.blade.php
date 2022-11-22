@@ -78,7 +78,7 @@
                             <div class="subtittle">
                                 <h2>Facilities</h2>
                             </div>
-
+                            {!! session('msg')!!}
                             <div class="table table-responsive">
                             <input type="search" name="search" id="search_field" class="form-control" placeholder="Search by name, address, specialty, phone">
                                 <br>
@@ -88,7 +88,7 @@
                                         <td>#</td>
                                         <td>Bulilding Type</td>
                                         <td>Bulilding Location</td>
-                                        <td>Contact Peron</td>
+                                        <td>Contact Person</td>
                                         <td>Phone Number</td>
                                         {{-- <td>Image</td> --}}
                                         <td style="text-align: center">Action</td>
@@ -107,12 +107,12 @@
                                             <td>{{ $item->buildinginformation_phone }}</td>
                                             {{-- <td>{{ $item->building_image }}</td> --}}
                                             <td align="center">
-                                                <form action="{{ route('consultantdelete') }}" method="post" id="delete_consultant">
+                                                <form action="{{ route('deletefacility') }}" method="Post" id="delete_consultant">
                                                     @csrf
                                                     <input type="hidden" name="id" value="{{ $item->id }}">
                                                 </form>
 
-                                                <i class="fa fa-edit" style="color: navy; font-weight: bold; cursor: pointer;" title="edit details" onclick="location.href='/rentalmanagement/admin/facility/edit/{{ $item->id }}'"></i>
+                                                <i class="fa fa-edit" style="color: navy; font-weight: bold; cursor: pointer;" title="edit details" onclick="location.href='/rentalmanagement/admin/viewfacility/edit/{{$item->id}}'"></i>
 
                                                 <i class="fa fa-trash" style="color: red; font-weight: bold; cursor: pointer;" title="delete request" onclick="makeDel('delete_consultant')"></i>
 
