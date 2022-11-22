@@ -1106,6 +1106,16 @@ class GooglePaymentController extends Controller
 
                                     if (isset($req->paymentWallet) && $req->paymentWallet === "fx_wallet") {
 
+                                        // Temporary update
+                                        $data = [];
+                                        $message = 'Payment with FX is currently not available';
+                                        $status = 400;
+
+                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+
+                                        return $this->returnJSON($resData, $status);
+
                                         // Get wallet balance for the selected wallet...
 
                                         $fxCurrency = new CurrencyFxController();

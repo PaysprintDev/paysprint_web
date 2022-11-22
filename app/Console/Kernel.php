@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
         Commands\ApprovedUsersMove::class,
         Commands\AutoDepositOff::class,
         Commands\BvnListUpdate::class,
-        Commands\ChargeFee::class,
+    Commands\ChargeFee::class,
         Commands\CheckTelephone::class,
         Commands\CronToConsumers::class,
         Commands\CronToMerchant::class,
