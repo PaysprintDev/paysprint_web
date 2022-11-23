@@ -215,8 +215,10 @@ trait Moex
         $markValue = (1 + ($markuppercent[0]->percentage / 100));
         $buymarkValue = (1 + ($markuppercent[1]->percentage / 100));
 
-        $sellingRate = $dataRate[0]->official * $markValue;
-        $buyingRate = $dataRate[0]->official * $buymarkValue;
+        $sellingRate = $dataRate[0]->official + 0.05;
+        $buyingRate = $dataRate[0]->official  - 0.05;
+        // $sellingRate = $dataRate[0]->official * $markValue;
+        // $buyingRate = $dataRate[0]->official * $buymarkValue;
 
 
         $getRate["0"] =  [
@@ -267,9 +269,10 @@ trait Moex
             ];
         } else {
             $responseData = [
-                'error' => $BranchesMoex['error']->Description
+                'error' => $BranchesMoex['error']
             ];
         }
+
 
 
 

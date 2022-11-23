@@ -57,6 +57,8 @@
                   </select>
                 </div>
 
+                <input type="hidden" name="currency" value="{{ Request::get('currency') }}">
+
             </div>
               <br>
               <div class="row">
@@ -124,8 +126,8 @@
 
 
                         @php
-                            $sendSupply = $moneyReceived;
-                            $receiveDemand = $withdrawMoney;
+                            $sendSupply = $item->credit;
+                            $receiveDemand = $item->debit;
                             $balance = $sendSupply - $receiveDemand;
 
                             if($sendSupply == 0 || $balance == 0){

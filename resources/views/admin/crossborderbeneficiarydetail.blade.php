@@ -50,6 +50,11 @@
                                 </tr>
 
                                 <tr>
+                                    <td>Email Address:</td>
+                                    <td style="font-weight: bold;">{{ $data['beneficiary']->account_email }}</td>
+                                </tr>
+
+                                <tr>
                                     <td>Account Number:</td>
                                     <td style="font-weight: bold;">{{ $data['beneficiary']->account_number }}</td>
                                 </tr>

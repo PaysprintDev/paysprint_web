@@ -81,11 +81,11 @@
                             <div class="subtittle">
                                 <h2>Edit Facility</h2>
                             </div>
-
+                            {!! session('msg') !!}
                             {{-- {{dd($facilityinfo)}} --}}
                             {{-- {{dd(2345)}} --}}
 
-                            <form method="POST" action="{{ route('editfacility', $facilityinfo[0]->id) }}" enctype="multipart/form-data">
+                            <form method="POST" action="{{ route('updatefacility', $facilityinfo[0]->id) }}" enctype="multipart/form-data">
 
                                 @csrf
     
@@ -798,7 +798,7 @@
                                 <div class="billingIns">
                                     <label for="buildinginformation_name">Type of Building <span class="importantfield">*</span></label>
 
-                                    <input type="text" name="buildinginformation_phone" id="buildinginformation_phone" class="form-control billinginput_box" placeholder="Telephone*" value="{{ $facilityinfo[0]->building_type }}" required>
+                                    <input type="text" name="building_type" id="buildinginformation_phone" class="form-control billinginput_box" placeholder="Type of Building*" value="{{ $facilityinfo[0]->building_type }}" required>
 
                                     {{-- <select name="building_type" id="building_type" class="form-control billinginput_box"  required>
                                         <option value="">Select an option</option>

@@ -2514,6 +2514,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                         // Create Beneficiary
                                         $beneficiary = CrossBorderBeneficiary::create([
                                             'account_name' => $req->account_name,
+                                            'account_email' => $req->account_email,
                                             'account_number' => $req->account_number,
                                             'bank_name' => $req->bank_name,
                                             'sort_code' => $req->sort_code,
@@ -7577,45 +7578,45 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
     public function reverseCrossBorder(Request $req)
     {
-   
+
         try {
             // Get Transaction Info
             $transaction=CrossBorder::where('transaction_id',$req->transactionid)->first();
-          
-            
+
+
             $country=$transaction->country;
 
- 
-            
-      
+
+
+
             $paymentmethod=$transaction->select_wallet;
 
-              
+
 
             if($paymentmethod == 'FX Wallet'){
 
              $data=FxStatement::where('reference_code',$req->transactionid)->first();
-             
-             
-            
+
+
+
               $border = CrossBorder::where('transaction_id', $data->reference_code)->first();
-              
-             
+
+
                 $escrow=EscrowAccount::where('escrow_id',$data->user_id)->first();
 
-              
-                         
+
+
               $thisuser=User::where('id',$escrow->user_id)->first();
 
-               
-               
+
+
                 $currentbalance=$escrow->wallet_balance;
-             
+
                 $amount=$data->debit;
                 $newamount=$currentbalance + $amount;
 
-        
-                
+
+
             EscrowAccount::where('escrow_id',$data->user_id)->update([
                         'wallet_balance' => $newamount
                     ]);
@@ -7680,31 +7681,31 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
         return $this->returnJSON($resData, $status);
-                
+
             }elseif($paymentmethod == 'Wallet'){
 
             $data=Statement::where('reference_code',$req->transactionid)->first();
             dd($data);
 
-                 
+
             $escrow = CrossBorder::where('transaction_id', $data->reference_code)->first();
-            
+
              $thisuser=User::where('ref_code',$escrow->ref_code)->first();
-               
-             
+
+
                      $currentbalance=$thisuser->wallet_balance;
                     $amount=$data->debit;
                         $newamount=$currentbalance+$amount;
                      User::where('ref_code',$escrow->ref_code)->update([
                         'wallet_balance' => $newamount
                     ]);
-          
-          
+
+
             CrossBorder::where('transaction_id',$data->reference_code)->delete();
             Statement::where('reference_code',$req->transactionid)->delete();
              //statement savings
             $activity = "Reversal of " . $thisuser->currencyCode . '' . number_format($amount, 2) . " (Reversal amount of " . $thisuser->currencyCode . '' . number_format($amount, 2) . " for cross border payment.";
-                   
+
             $credit = $amount;
             $debit = 0;
             $reference_code = $data->reference_code;
@@ -7765,10 +7766,15 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
             $message = $th->getMessage();
             $status = 400;
             $thisuser = [];
+
+            $resData = ['data' => $thisuser, 'message' => $message, 'status' => $status];
+
+
+        return $this->returnJSON($resData, $status);
         }
 
 
-        
+
     }
 
     //softdelete for transaction

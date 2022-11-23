@@ -176,7 +176,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'ajaxgetlinkCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage','merchantUseCase','merchantHome', 'storeAskedQuestions', 'expressResponseback', 'displayCountry', 'displayCountryMerchant', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts']]);
+        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'ajaxgetlinkCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage','merchantUseCase','merchantHome', 'storeAskedQuestions', 'expressResponseback', 'displayCountry', 'displayCountryMerchant', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts', 'rentalManagementAdminviewfacility']]);
 
         $location = $this->myLocation();
 
@@ -3068,6 +3068,159 @@ class HomeController extends Controller
 
         return view('main.rentalmanagementadminfacility')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
     }
+    public function rentalManagementAdminviewfacility(Request $req)
+    {
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Rental Property Management for Property Owner';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0],
+                    'facility' => $this->getMyFacility(Auth::user()->email)
+                );
+            } else {
+                // $this->page = 'Rental Property Management for Property Owner';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+
+            $this->page = 'Rental Property Management for Property Owner';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+            $data = array(
+                'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                'continent' => $this->timezone[0],
+                'facility' => $this->getMyFacility(Auth::user()->email)
+            );
+        }
+
+
+        return view('main.adminfacilities')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data]);
+    }
+
+    public function rentalManagementAdmineditfacility(Request $req, $id)
+    {
+
+        if ($req->session()->has('email') == false) {
+            if (Auth::check() == true) {
+                $this->page = 'Rental Property Management for Property Owner';
+                $this->name = Auth::user()->name;
+                $this->email = Auth::user()->email;
+                $data = array(
+                    'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                    'continent' => $this->timezone[0],
+                    'facility' => $this->getMyFacility(Auth::user()->email)
+                );
+            } else {
+                // $this->page = 'Rental Property Management for Property Owner';
+                // $this->name = '';
+                // $data = [];
+
+                return redirect()->route('login');
+            }
+        } else {
+
+            $user = User::where('email', session('email'))->first();
+
+            Auth::login($user);
+
+            $this->page = 'Rental Property Management for Property Owner';
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+            $data = array(
+                'getfiveNotifications' => $this->getfiveUserNotifications(Auth::user()->ref_code),
+                'continent' => $this->timezone[0],
+                'facility' => $this->getMyFacility(Auth::user()->email)
+            );
+        }
+
+        $facilityinfo = $this->facilityInfo($id);
+        return view('main.rentalmanagementadmineditfacilities')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'data' => $data, 'facilityinfo' =>  $facilityinfo]);
+    }
+
+    public function rentalManagementAdminupdatefacility(Request $req, $id)
+    {
+        $validation=Validator::make($req->all(),[
+           "owner_name" =>"required",
+           "owner_phone" => "required",
+           "owner_street_number" => "required",
+           "owner_street_name" => "required",
+           "owner_city" => "required",
+           "owner_zipcode" => "required",
+           "owner_state" => "required",
+           "owner_country" => "required",
+           "owner_email" => "required",
+           "agent_name" => "required",
+           "agent_phone" => "required",
+           "agent_street_number" => "required",
+           "agent_street_name" => "required",
+           "agent_city" => "required",
+           "agent_zipcode" => "required",
+           "agent_state" => "required",
+           "buildinglocation_state" => "required",
+           "agent_email" => "required",
+           "buildinglocation_street_number" => "required",
+           "buildinglocation_street_name" => "required",
+           "buildinglocation_city" => "required",
+           "buildinglocation_zipcode" => "required",
+           "buildinglocation_state" => "required",
+           "buildinglocation_state" => "required",
+           "buildinginformation_name" => "required",
+           "buildinginformation_phone" => "required",
+           "building_type" => "required"
+
+        ]);
+        $building = Building::where('id',$id)->update([
+            "owner_name" =>$req->owner_name,
+            "owner_phone" =>$req->owner_phone,
+            "owner_street_number" => $req->owner_street_number,
+            "owner_street_name" => $req->owner_street_name,
+            "owner_city" => $req->owner_city,
+            "owner_zipcode" => $req->owner_zipcode,
+            "owner_state" => $req->owner_state,
+            "owner_country" => $req->owner_country,
+            "owner_email" => $req->owner_email,
+            "agent_name" => $req->agent_name,
+            "agent_phone" =>$req->agent_phone,
+            "agent_street_number" => $req->agent_street_number,
+            "agent_street_name" => $req->agent_street_name,
+            "agent_city" => $req->agent_city,
+            "agent_zipcode" => $req->agent_zipcode,
+            "agent_state" => $req->agent_state,
+            "buildinglocation_state" =>$req->buildinglocation_state,
+            "agent_email" => $req->agent_email,
+            "buildinglocation_street_number" =>$req->buildinglocation_street_number,
+            "buildinglocation_street_name" => $req->buildinglocation_street_name,
+            "buildinglocation_city" => $req->buildinglocation_city,
+            "buildinglocation_zipcode" =>$req->buildinglocation_zipcode,
+            "buildinglocation_state" => $req->buildinglocation_state,
+            "buildinginformation_name" => $req->buildinginformation_name,
+            "buildinginformation_phone" => $req->buildinginformation_phone,
+            "building_type" => $req->building_type,
+        ]);
+
+        return redirect()->route('viewfacility')->with("msg", "<div class='alert alert-success'>Facility updated Successfully</div>");
+
+    }
+
+    public function rentalManagementAdmindeletefacility(Request $req)
+    {
+        // dd($req->all());
+        $id=$req->id;
+        $building = Building::where('id',$id)->delete();
+
+        return back()->with("msg", "<div class='alert alert-success'>Facility Deleted Successfully</div>");
+    }
 
 
     public function rentalManagementAdmineditconsultant(Request $req, $id)
@@ -3496,7 +3649,7 @@ class HomeController extends Controller
 
     public function rentalManagementAdminviewconsultant(Request $req)
     {
-
+        
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
                 $this->page = 'Rental Property Maintenance for Property Owner';
@@ -3528,11 +3681,11 @@ class HomeController extends Controller
                 'continent' => $this->timezone[0]
             );
         }
-
+       
         // Get Organization & Business
         $providers = $this->providersCheck($this->email);
 
-        return view('main.adminproviders')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'providers' => $providers]);
+        return view('main.adminproviders')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'providers' => $providers,'data' => $data]);
     }
 
 
