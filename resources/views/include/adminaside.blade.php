@@ -94,10 +94,12 @@
                             </li>
                             <li><a href="{{ route('get fx rate') }}"><i class="fa fa-circle-o"></i> Get Fx Rate</a>
                             </li>
-                            <li><a href="{{ route('special information activity') }}"><i class="fa fa-circle-o"></i>
-                                    View All</a>
+                            <li><a href="{{ route('get fx trade page') }}"><i class="fa fa-circle-o"></i>
+                                    Create Fx Trade</a>
                             </li>
-
+                            <li><a href="{{ route('get beneficiary page') }}"><i class="fa fa-circle-o"></i>
+                                    Create Beneficiaries</a>
+                            </li>
                         </ul>
                     </li>
 
@@ -314,7 +316,8 @@
             </li>
             @endif
 
-            @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access to Level 1 and 2 only')
+            @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access
+            to Level 1 and 2 only')
             <li>
                 <a href="{{ route('business report') }}">
                     <i class="fa fa-book"></i>

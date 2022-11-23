@@ -6,11 +6,11 @@
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
 		<h1>
-			Get Fx Rate
+			Get Beneficiary Page
 		</h1>
 		<ol class="breadcrumb">
 			<li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-			<li class="active">Get Fx Rate</li>
+			<li class="active">Get Beneficiary Page</li>
 		</ol>
 	</section>
 
@@ -27,14 +27,29 @@
 					@csrf
 					<div class="box-body">
 						<div class="form-group has-success">
-							<label class="control-label" for="inputSuccess">Select Currency From</label>
-							<select name="currency_from" class="form-control">
-								@foreach ( $data['country'] as $allcountry)
-								<option value="{{$allcountry->currencyCode}}">{{$allcountry->name}}</option>
-								@endforeach
-							</select>
+							<label class="control-label" for="inputSuccess">Beneficiary First Name</label>
+							<input type="text" name="beneficiaryFirstName" class="form-control">
 						</div>
 
+						<div class="form-group has-success">
+							<label class="control-label" for="inputSuccess">Beneficiary Last Name</label>
+							<input type="text" name="beneficiaryLastName" class="form-control">
+						</div>
+
+						<div class="form-group has-success">
+							<label class="control-label" for="inputSuccess">Beneficiary Company Name</label>
+							<input type="text" name="beneficiaryCompanyName" class="form-control">
+						</div>
+
+						<div class="form-group has-success">
+							<label class="control-label" for="inputSuccess">National ID</label>
+							<input type="text" name="nationalId" class="form-control">
+						</div>
+
+						<div class="form-group has-success">
+							<label class="control-label" for="inputSuccess">Account Number</label>
+							<input type="text" name="accountNumber" class="form-control">
+						</div>
 
 						<div class="form-group has-success">
 							<label class="control-label" for="inputSuccess">Select Currency To</label>
@@ -46,10 +61,10 @@
 						</div>
 
 					</div>
-					<!-- /.box-body -->
 
 					<div class="box-footer">
-						<button type="submit" class="btn btn-primary btn-block">GET FX RATE</button>
+						<button type="submit" class="btn btn-primary btn-block">CREATE BENEFICIARY</button>
+
 				</form>
 				{{-- List Categories --}}
 				<hr>

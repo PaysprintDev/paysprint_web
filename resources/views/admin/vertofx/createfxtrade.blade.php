@@ -23,7 +23,7 @@
 			<div class="box-body">
 
 				{{-- Provide Form --}}
-				<form role="form" action="{{route('submit fx rate')}}" method="POST">
+				<form role="form" action="{{route('create fx trade')}}" method="POST">
 					@csrf
 					<div class="box-body">
 						<div class="form-group has-success">
@@ -45,11 +45,18 @@
 							</select>
 						</div>
 
+						<div class="form-group has-success">
+							<label class="control-label" for="inputSuccess">Amount</label>
+							<input type="text" name="amount" class="form-control">
+						</div>
+
+						<input type="hidden" name="side" value="SELL">
+
 					</div>
 					<!-- /.box-body -->
 
 					<div class="box-footer">
-						<button type="submit" class="btn btn-primary btn-block">GET FX RATE</button>
+						<button type="submit" class="btn btn-primary btn-block">CREATE FX TRADE</button>
 				</form>
 				{{-- List Categories --}}
 				<hr>

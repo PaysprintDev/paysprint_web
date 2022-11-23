@@ -37,6 +37,22 @@ trait VertoFx
         return $result;
 	}
 
+  public function createFxTrade($token,$amount,$side,$reference)
+  {
+    $this->vetobaseUrl = config("constants.vetofx.baseurl")."/orders/v2.1/fx";
+
+    $this->vertofield=json_encode([
+      'vfx_token' => $token,
+      'side' => $side,
+      'amount' => $amount,
+      'clientReference' => $reference
+     ]);
+
+     $data=$this->vertofxLogin();
+
+     return $data;
+  }
+
 
     // CURL Option...
     public function getFxRateCurl($token)
@@ -71,7 +87,7 @@ curl_close($curl);
     $curl = curl_init();
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://api-v3-sandbox.vertofx.com/users/login',
+  CURLOPT_URL => $this->vetobaseUrl,
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => '',
   CURLOPT_MAXREDIRS => 10,
