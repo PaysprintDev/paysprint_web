@@ -15,6 +15,7 @@
             "accountNumber"
         ],
         "compulsory_data": [
+            "id_Type",
             "id_Number"
         ],
         "remittance_company": [
@@ -96,6 +97,7 @@
             "accountNumber"
         ],
         "compulsory_data": [
+            "id_Type",
             "id_Number"
         ],
         "remittance_company": [
@@ -116,6 +118,7 @@
             "phoneNumber"
         ],
         "compulsory_data": [
+            "id_Type",
             "id_Number"
         ],
         "remittance_company": [
@@ -144,6 +147,7 @@
             "fiscalCode"
         ],
         "compulsory_data": [
+            "id_Type",
             "id_Number"
         ],
         "remittance_company": [
@@ -166,6 +170,7 @@
             "accountNumber"
         ],
         "compulsory_data": [
+            "id_Type",
             "id_Number"
         ],
         "remittance_company": [
@@ -188,6 +193,7 @@
             "accountNumber"
         ],
         "compulsory_data": [
+            "id_Type",
             "id_Number"
         ],
         "remittance_company": [
@@ -208,10 +214,35 @@
             "phoneNumber"
         ],
         "compulsory_data": [
+            "id_Type",
             "id_Number"
         ],
         "remittance_company": [
             "MONEY EXCHANGE"
+        ],
+        "remarks": "Beneficiary´s data must be exactly the same as beneficiary´s Identity card."
+    },
+    {
+        "country": "Canada",
+        "currency": "CAN",
+        "min_amount": 0,
+        "max_amount": 5000,
+        "payment_type": "Bank Deposit",
+        "notification": "SMS/Email",
+        "mandatory_data": [
+            "surname",
+            "fullname",
+            "emailAddress",
+            "phoneNumber",
+            "bankName",
+            "accountNumber"
+        ],
+        "compulsory_data": [
+            "id_Type",
+            "id_Number"
+        ],
+        "remittance_company": [
+            "PAYSPRINT INC."
         ],
         "remarks": "Beneficiary´s data must be exactly the same as beneficiary´s Identity card."
     }

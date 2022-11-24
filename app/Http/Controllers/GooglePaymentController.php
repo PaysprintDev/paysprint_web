@@ -1106,6 +1106,16 @@ class GooglePaymentController extends Controller
 
                                     if (isset($req->paymentWallet) && $req->paymentWallet === "fx_wallet") {
 
+                                        // Temporary update
+                                        $data = [];
+                                        $message = 'Payment with FX is currently not available';
+                                        $status = 400;
+
+                                        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+
+                                        return $this->returnJSON($resData, $status);
+
                                         // Get wallet balance for the selected wallet...
 
                                         $fxCurrency = new CurrencyFxController();
@@ -1173,7 +1183,7 @@ class GooglePaymentController extends Controller
                                                         'senderAddress' => $thisuser->address,
                                                         'senderCountry' => $getCountry->cca3,
                                                         'senderIdDocumentNumber' => $req->compulsory_id_Number,
-                                                        'senderIdDocumentType' => 'DRL',
+                                                        'senderIdDocumentType' => $req->compulsory_id_Type,
                                                         'receiver' => $req->mandatory_surname,
                                                         'phoneNumber' => $req->mandatory_phoneNumber,
                                                         'receiverName' => $req->mandatory_fullname,
@@ -1459,7 +1469,7 @@ class GooglePaymentController extends Controller
                                                                 'senderAddress' => $thisuser->address,
                                                                 'senderCountry' => $getCountry->cca3,
                                                                 'senderIdDocumentNumber' => $req->compulsory_id_Number,
-                                                                'senderIdDocumentType' => 'DRL',
+                                                                'senderIdDocumentType' => $req->compulsory_id_Type,
                                                                 'receiver' => $req->mandatory_surname,
                                                                 'phoneNumber' => $req->mandatory_phoneNumber,
                                                                 'receiverName' => $req->mandatory_fullname,

@@ -60,6 +60,7 @@
                                     <th>Payment Method</th>
                                     <th>Invoice file</th>
                                     <th>Status</th>
+                                    <th>Date</th>
                                     <th colspan="2">Action</th>
                                 </tr>
                             </thead>
@@ -110,6 +111,7 @@
                                     <td style="font-weight: bold;">
                                         {{ $crossborder->status == false ? 'Pending' : 'Processed' }}
                                     </td>
+                                    <td>{{ date('d/m/Y h:i a', strtotime($crossborder->created_at)) }}</td>
                                     <td>
                                         <button class="btn btn-primary btn-block spin{{ $crossborder->transaction_id }}"
                                             onclick="acceptCrossBorder('{{ $crossborder->transaction_id }}')">Process
