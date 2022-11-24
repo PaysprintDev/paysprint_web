@@ -23,7 +23,7 @@
 			<div class="box-body">
 
 				{{-- Provide Form --}}
-				<form role="form" action="{{route('submit fx rate')}}" method="POST">
+				<form role="form" action="{{route('submit beneficiary')}}" method="POST">
 					@csrf
 					<div class="box-body">
 						<div class="form-group has-success">
@@ -52,15 +52,17 @@
 						</div>
 
 						<div class="form-group has-success">
-							<label class="control-label" for="inputSuccess">Select Currency To</label>
-							<select name="currency_to" class="form-control">
+							<label class="control-label" for="inputSuccess">Select Country</label>
+							<select name="country" class="form-control">
 								@foreach ( $data['country'] as $allcountry)
-								<option value="{{$allcountry->currencyCode}}">{{$allcountry->name}}</option>
+								<option value="{{$allcountry->name}}">{{$allcountry->name}}</option>
 								@endforeach
 							</select>
 						</div>
 
 					</div>
+
+					<input type="hidden" name="beneficiaryEntityType" value="company">
 
 					<div class="box-footer">
 						<button type="submit" class="btn btn-primary btn-block">CREATE BENEFICIARY</button>

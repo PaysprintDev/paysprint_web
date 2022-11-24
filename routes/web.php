@@ -1096,6 +1096,8 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('getFxtradepage', ['uses' => 'AdminController@getFxTradePage', 'as' => 'get fx trade page']);
 	Route::post('createfxtrade', ['uses' => 'AdminController@createFxTrade', 'as' => 'create fx trade']);
 	Route::get('getbeneficiarypage', ['uses' => 'AdminController@getBeneficaryPage', 'as' => 'get beneficiary page']);
+	Route::post('submitbeneficiary', ['uses' => 'AdminController@submitBeneficiary', 'as' => 'submit beneficiary']);
+	Route::get('getbeneficiarylist', ['uses' => 'AdminController@getBeneficaryList', 'as' => 'get beneficiary list']);
 
 
 

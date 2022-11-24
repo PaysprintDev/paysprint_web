@@ -100,6 +100,9 @@
                             <li><a href="{{ route('get beneficiary page') }}"><i class="fa fa-circle-o"></i>
                                     Create Beneficiaries</a>
                             </li>
+                            <li><a href="{{ route('get beneficiary list') }}"><i class="fa fa-circle-o"></i>
+                                    Get Beneficiary List</a>
+                            </li>
                         </ul>
                     </li>
 

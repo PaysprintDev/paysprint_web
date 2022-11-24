@@ -7770,6 +7770,105 @@ class AdminController extends Controller
         }
     }
 
+    public function submitBeneficiary(Request $req)
+    {
+        // dd($req->all());
+         $data= $this->sendVertoFx();
+
+        $Dbcountry=AllCountries::where('name',$req->country)->first();
+          if(isset($data->success)){
+                $token=$data->token;
+                $firstname=$req->beneficiaryFirstName;
+                $lastname=$req->beneficiaryLastName;
+                $companyname=$req->beneficiaryCompanyName;
+                $nationalid=$req->nationalId;
+                $accountno=$req->accountNumber;
+                $country=$req->country;
+                $entity=$req->beneficiaryEntityType;
+                $currency=$Dbcountry->currencyCode;
+                $countrycode=$Dbcountry->code;
+                $reference='Paysprint-Vetofx'.rand(0,10000);
+
+                // dd($reference);
+
+                $data=$this->createBeneficiary($token,$entity,$firstname,$lastname,$companyname,$currency,$countrycode,$accountno,$nationalid,$country,$reference);
+
+                if(isset($data->success)){
+                    return back()->with("msg","<div class='alert alert-success'>Beneficiary Created Successfully</div>");
+                }else{
+                     return back()->with("msg","<div class='alert alert-danger'>$data->message</div>");
+                }
+
+           }else{
+              return back()->with("msg","<div class='alert alert-danger'>$data->message</div>");
+           }
+
+    }
+
+    public function getBeneficaryList(Request $req)
+    {
+         if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing" || session('role') == "Customer Success") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data= $this->sendVertoFx();
+
+            $token=$data->token;
+
+            $response=$this->getBeneficiaryList();
+
+            // dd($response);
+
+            if(isset($response->success)){
+                $list=$response->data;
+            }
+
+
+            return view('admin.vertofx.beneficiarylist')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'list' => $list]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
     public function createFxTrade(Request $req)
     {
       
