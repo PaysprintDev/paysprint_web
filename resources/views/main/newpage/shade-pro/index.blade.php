@@ -177,14 +177,14 @@
                         <thead>
                             <tr>
                                 <th>Availability Uptime</th>
-                                {{-- <th>Transaction Value</th> --}}
+                                <th>Transaction Value</th>
                                 <th>Number of Days</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>99%</td>
-                                {{-- <td>{{$data['code']}} {{$data['totaltransactions']}}</td> --}}
+                                <td>{{$data['code']}} {{$data['totaltransactions']}}</td>
                                 <td>{{$data['totaldays']}} days</td>
                             </tr>
                         </tbody>
