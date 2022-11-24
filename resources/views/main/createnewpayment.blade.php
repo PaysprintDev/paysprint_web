@@ -486,6 +486,8 @@
                                             </div>
                                             <div class="mandatory_data disp-0">
                                             </div>
+                                            <div class="bank_data disp-0">
+                                            </div>
                                             <div class="payoutAgent_data disp-0">
                                             </div>
                                             <div class="paymentType_data disp-0">
@@ -645,7 +647,6 @@
                                         <div class="card-footer">
 
 
-
                                             <div class="row">
                                                 <div class="col-md-12 withCardGoogle disp-0">
                                                     <center>
@@ -726,6 +727,9 @@
                 }
 
             });
+
+
+
 
             $('#orgpayservice').change(function() {
                 if ($('#orgpayservice').val() == "Others") {
@@ -1538,10 +1542,14 @@
                     const result = await axios(config);
 
                     if (result.status === 200) {
+
+                        getBankingDetails(country);
+
                         let data = filterPaymentPolicy(country, result.data);
 
                         let compulsoryInput = $('.compulsory_data');
                         let mandatoryInput = $('.mandatory_data');
+
                         let paymentTypeInput = $('.paymentType_data');
                         let informationInput = $('.information_data');
                         let payoutAgentInput = $('.payoutAgent_data');
@@ -1760,6 +1768,78 @@
 
 
                 return response;
+            }
+
+
+            const getBankingDetails = async (country) => {
+                let bankInput = $('.bank_data');
+                try {
+
+                    bankInput.removeClass('disp-0');
+                    bankInput.html('<h6 class="text-info">Checking for additional information...</h6>');
+
+                    const headers = {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    }
+
+                    let route = "{{ URL('/api/v1/getadditionallist') }}";
+
+                    const config = {
+                        method: 'post',
+                        url: route,
+                        data: {
+                            name: country
+                        },
+                        headers
+                    }
+
+                    const result = await axios(config);
+
+                    if(result.status === 200){
+
+                        if(result.data.data.length > 0){
+
+
+                                let options = [];
+                                bankInput.removeClass('disp-0');
+
+                                $.each(result.data.data, function(v, k) {
+                                    options.push(`<option value="${k.Code+'__'+k.Name}">${k.Name}</option>`);
+                                });
+
+                                bankInput.html(`<br><h4>Receiver's Bank Information</h4><hr><div class="form-group"> <label for="bank_code">
+                                                <h6><span class="text-danger">* </span>Select Bank</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <select class="form-control bank_code" name="bank_code" id="bank_code" required>
+                                                    ${options}
+                                                </select>
+                                            </div>
+                                        </div><div class="form-group"> <label for="banking_account_number">
+                                                <h6><span class="text-danger">* </span>Account Number</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" name="banking_account_number" id="bank_account_number" value=""
+                                                    class="form-control">
+
+                                                    <input name="branchCode" value="${result.data.branchCode}" type="hidden">
+                                            </div>
+                                        </div>`);
+
+                            }
+
+                    }
+                    else{
+                        bankInput.addClass('disp-0');
+                        bankInput.html('');
+                    }
+
+
+                } catch (error) {
+                    bankInput.addClass('disp-0');
+                    bankInput.html('');
+                    console.error(error.message);
+                }
             }
 
 

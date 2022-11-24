@@ -1190,10 +1190,10 @@ class GooglePaymentController extends Controller
                                                         'receiverLastName' => $req->mandatory_surname,
                                                         'receiverCountry' => $foreigncurrency->cca3,
                                                         'bankDeposit' => $req->card_type == "Bank Account" ? 'TRUE' : 'FALSE',
-                                                        'bankName' => $req->mandatory_bankName,
-                                                        'bankAddress' => $req->mandatory_bankName . ' ' . $thisuser->country,
-                                                        'bankAccount' => $req->mandatory_accountNumber,
-                                                        'branchCode' => '',
+                                                        'bankName' => isset($req->bank_code) ? explode("__", $req->bank_code)[1] : $req->mandatory_bankName,
+                                                        'bankAddress' => isset($req->bank_code) ? explode("__", $req->bank_code)[0] : $req->mandatory_bankName . ' ' . $thisuser->country,
+                                                        'bankAccount' => isset($req->banking_account_number) ? : $req->mandatory_accountNumber,
+                                                        'branchCode' => isset($req->branchCode) ? $req->branchCode : '',
                                                         'amountToPay' => $amount,
                                                         'currencyToPay' => $foreigncurrency->currencyCode,
                                                         'amountSent' => $req->totalcharge,
@@ -1225,7 +1225,7 @@ class GooglePaymentController extends Controller
                                                     }
 
 
-                                                    MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex)]);
+                                                    MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $amount, 'currency' => $thisuser->currencyCode, 'status' => 'pending']);
 
 
 
@@ -1476,10 +1476,10 @@ class GooglePaymentController extends Controller
                                                                 'receiverLastName' => $req->mandatory_surname,
                                                                 'receiverCountry' => $foreigncurrency->cca3,
                                                                 'bankDeposit' => $req->payment_type == "Bank Account" ? 'TRUE' : ($req->payment_type == "Instant" ? 'TRUE' : 'FALSE'),
-                                                                'bankName' => $req->mandatory_bankName,
-                                                                'bankAddress' => $req->mandatory_bankName . ' ' . $thisuser->country,
-                                                                'bankAccount' => $req->mandatory_accountNumber,
-                                                                'branchCode' => '',
+                                                                'bankName' => isset($req->bank_code) ? explode("__", $req->bank_code)[1] : $req->mandatory_bankName,
+                                                                'bankAddress' => isset($req->bank_code) ? explode("__", $req->bank_code)[0] : $req->mandatory_bankName . ' ' . $thisuser->country,
+                                                                'bankAccount' => isset($req->banking_account_number) ? : $req->mandatory_accountNumber,
+                                                                'branchCode' => isset($req->branchCode) ? $req->branchCode : '',
                                                                 'amountToPay' => $amount,
                                                                 'currencyToPay' => $foreigncurrency->currencyCode,
                                                                 'amountSent' => $req->totalcharge,
@@ -1512,7 +1512,7 @@ class GooglePaymentController extends Controller
                                                             }
 
 
-                                                            MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex)]);
+                                                            MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $amount, 'currency' => $thisuser->currencyCode, 'status' => 'pending']);
 
 
                                                             $statement_route = "wallet";

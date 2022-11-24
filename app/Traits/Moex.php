@@ -215,8 +215,8 @@ trait Moex
         $markValue = (1 + ($markuppercent[0]->percentage / 100));
         $buymarkValue = (1 + ($markuppercent[1]->percentage / 100));
 
-        $sellingRate = $dataRate[0]->official + 0.05;
-        $buyingRate = $dataRate[0]->official  - 0.05;
+        $sellingRate = $dataRate[0]->official - 0.05;
+        $buyingRate = $dataRate[0]->official  + 0.05;
         // $sellingRate = $dataRate[0]->official * $markValue;
         // $buyingRate = $dataRate[0]->official * $buymarkValue;
 
@@ -225,9 +225,8 @@ trait Moex
             '0' => 'Correspondent',
             '1' => 'Country',
             '2' => 'Currency',
-            '3' => 'CAD Rate',
-            '4' => 'USD Rate',
-            '5' => 'Active',
+            '3' => 'USD Rate',
+            '4' => 'Active',
         ];
 
 
@@ -236,7 +235,6 @@ trait Moex
             'Correspondent' => 'PaySprint Inc.',
             'Country' => 'Canada',
             'Currency' => 'CAD',
-            'cadRate' => (float)$sellingRate,
             'usdRate' => (float)($buyingRate),
             'active' => 'Yes'
         ];
@@ -250,14 +248,14 @@ trait Moex
 
 
 
-    public function MEGetActiveBranchesMoEX($IdCountry)
+    public function MEGetActiveExtBranchesMoEx($IdCountry)
     {
 
         $login = $this->twsAuthConfig();
 
         $clientSoap = new \SoapClient($login->url_wsdl);
 
-        $BranchesMoex = $clientSoap->__soapCall("MEGetActiveBranchesMoEX", [
+        $BranchesMoex = $clientSoap->__soapCall("MEGetActiveExtBranchesMoEx", [
             "Login" => $login,
             "IdCountry" => $IdCountry
         ]);
@@ -265,7 +263,12 @@ trait Moex
 
         if ($BranchesMoex['return'] === 0) {
             $responseData = [
-                'Id' => env('APP_ENV') === 'local' ? ($IdCountry === "NGA" ? $BranchesMoex['branches'][1]->Id : $BranchesMoex['branches'][0]->Id) : $BranchesMoex['branches'][0]->Id
+                'Id' => env('APP_ENV') === 'local' ? ($IdCountry === "NGA" ? $BranchesMoex['branches'][1]->Id : $BranchesMoex['branches'][0]->Id) : $BranchesMoex['branches'][0]->Id,
+                'Address' => env('APP_ENV') === 'local' ? ($IdCountry === "NGA" ? $BranchesMoex['branches'][1]->Address : $BranchesMoex['branches'][0]->Address) : $BranchesMoex['branches'][0]->Address,
+                'AllowBankDeposit' => env('APP_ENV') === 'local' ? ($IdCountry === "NGA" ? $BranchesMoex['branches'][1]->AllowBankDeposit : $BranchesMoex['branches'][0]->AllowBankDeposit) : $BranchesMoex['branches'][0]->AllowBankDeposit,
+                'Phone' => env('APP_ENV') === 'local' ? ($IdCountry === "NGA" ? $BranchesMoex['branches'][1]->Phone : $BranchesMoex['branches'][0]->Phone) : $BranchesMoex['branches'][0]->Phone,
+                'CityId' => env('APP_ENV') === 'local' ? ($IdCountry === "NGA" ? $BranchesMoex['branches'][1]->CityId : $BranchesMoex['branches'][0]->CityId) : $BranchesMoex['branches'][0]->CityId,
+                'CityName' => env('APP_ENV') === 'local' ? ($IdCountry === "NGA" ? $BranchesMoex['branches'][1]->CityName : $BranchesMoex['branches'][0]->CityName) : $BranchesMoex['branches'][0]->CityName
             ];
         } else {
             $responseData = [
@@ -274,16 +277,42 @@ trait Moex
         }
 
 
-
-
-
         return $responseData;
     }
 
-    public function MEAddTransaction($data)
+
+    public function MEGetAdditionalList($IdCountry, $IdBranch)
     {
         $login = $this->twsAuthConfig();
-        $getBranchId = $this->MEGetActiveBranchesMoEX($data['receiverCountry']);
+
+        $clientSoap = new \SoapClient($login->url_wsdl);
+
+        $BranchesMoex = $clientSoap->__soapCall("MEGetAdditionalList", [
+            "Login" => $login,
+            "IdCountry" => $IdCountry,
+            "IdBranch" => $IdBranch
+        ]);
+
+
+        if ($BranchesMoex['return'] === 0) {
+            $responseData = $BranchesMoex['AddList'];
+        } else {
+            $responseData = [
+                'error' => $BranchesMoex['error']
+            ];
+        }
+
+        return $responseData;
+
+    }
+
+
+    public function MEAddTransaction($data)
+    {
+
+
+        $login = $this->twsAuthConfig();
+        $getBranchId = $this->MEGetActiveExtBranchesMoEx($data['receiverCountry']);
 
 
         if (isset($getBranchId['error'])) {
@@ -329,7 +358,7 @@ trait Moex
             "ReceiverIdDocumentNumber" => "",
             "ReceiverIdDocumentType" => "",
             "ReceiverReference" => "",
-            "BankDeposit" => $data['bankDeposit'],
+            "BankDeposit" => isset($getBranchId['AllowBankDeposit']) ? $getBranchId['AllowBankDeposit'] : $data['bankDeposit'],
             "BankName" => $data['bankName'],
             "BankAddress" => $data['bankAddress'],
             "BankAccount" => $data['bankAccount'],
@@ -382,7 +411,7 @@ trait Moex
 
 
 
-        $BranchesMoex = $clientSoap->__soapCall("MEGetActiveBranchesMoEX", [
+        $BranchesMoex = $clientSoap->__soapCall("MEGetActiveExtBranchesMoEx", [
             "Login" => $login,
             "IdCountry" => $IdCountry
         ]);

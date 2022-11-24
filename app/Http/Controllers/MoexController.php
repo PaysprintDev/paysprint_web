@@ -2538,6 +2538,7 @@ class MoexController extends Controller
             // into an associative array
             $jsonans = json_decode($jsondata, true);
 
+
             // CSV file name => date('d-m-Y') . '_report.xls';
             $csv = date('d-m-Y') . '_report.xls';
 
@@ -2559,7 +2560,7 @@ class MoexController extends Controller
             $setupController->name = "Money Exchange";
             $setupController->email = env('APP_ENV') === 'local' ? "adenugaadebambo41@gmail.com" : "tasas@moneyexchange.es";
             $setupController->subject = "Daily Exchange Rate - " . date('d-m-Y');
-            $setupController->message = "<p>Below is the daily exchange rate from PaySprint today.</p><h3>DAILY EXCHANGE RATE - TODAY ".date('d-m-Y')."</h3><hr><p>".$jsonans[0][0]." - <strong>".$jsonans[1]['Correspondent']."</strong></p><p>".$jsonans[0][1]." - <strong>".$jsonans[1]['Country']."</strong></p><p>".$jsonans[0][2]." - <strong>".$jsonans[1]['Currency']."</strong></p><p>".$jsonans[0][3]." - <strong>".$jsonans[1]['cadRate']."</strong></p><p>".$jsonans[0][4]." - <strong>".$jsonans[1]['usdRate']."</strong></p><p>".$jsonans[0][5]." - <strong>".$jsonans[1]['active']."</strong></p><p>Also find attached</p><p>Best regards</p>";
+            $setupController->message = "<p>Below is the daily exchange rate from PaySprint today.</p><h3>DAILY EXCHANGE RATE - TODAY ".date('d-m-Y')."</h3><hr><p>".$jsonans[0][0]." - <strong>".$jsonans[1]['Correspondent']."</strong></p><p>".$jsonans[0][1]." - <strong>".$jsonans[1]['Country']."</strong></p><p>".$jsonans[0][2]." - <strong>".$jsonans[1]['Currency']."</strong></p><p>".$jsonans[0][3]." - <strong>".$jsonans[1]['usdRate']."</strong></p><p>".$jsonans[0][4]." - <strong>".$jsonans[1]['active']."</strong></p><p>Also find attached</p><p>Best regards</p>";
             $setupController->file = $csv;
             $setupController->sendEmail($setupController->email, "Daily Transaction Report");
             $setupController->sendEmail('duntanadebiyi@yahoo.com', "Daily Transaction Report");
@@ -2613,6 +2614,49 @@ class MoexController extends Controller
 
             return $data;
 
+    }
+
+
+    public function getAdditionalList(Request $req)
+    {
+        try {
+
+            $country = AllCountries::where('name', $req->name)->first();
+
+            $data = $this->MEGetActiveExtBranchesMoEx($country->cca3);
+
+            if(isset($data['Id'])){
+
+
+                $result = $this->MEGetAdditionalList($country->cca3, $data['Id']);
+
+
+                if(isset($result['error'])){
+                    $status = 400;
+                    $resData = ['data' => [], 'message' => $result['error']->Description, 'status' => $status];
+                }
+                else{
+            
+                    $status = 200;
+                    $resData = ['data' => $result, 'message' => 'Success', 'status' => $status, 'branchCode' => $data['Id']];
+                }
+
+                
+            }
+            else{
+
+                $status = 400;
+                $resData = ['data' => [], 'message' => $data['error'], 'status' => $status];
+            }
+
+        } catch (\Throwable $th) {
+            $status = 400;
+            $resData = ['data' => [], 'message' => $th->getMessage(), 'status' => $status];
+        }
+
+
+
+        return $this->returnJSON($resData, $status);
     }
 
 

@@ -48,6 +48,11 @@ Route::prefix('/v1')->group(function () {
     Route::get('totallikes/{id}',  ['uses' => 'MarketplaceController@totallikesCount'])->name('total likes');
 
 
+
+    // MOEX Fetch Info
+    Route::post('getadditionallist',  ['uses' => 'MoexController@getAdditionalList'])->name('get additional list');
+
+
     Route::post('confirmtransaction',  ['uses' => 'MoexController@confirmThisTransactionId'])->name('confirm this transaction');
 
 

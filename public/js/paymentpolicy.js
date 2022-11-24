@@ -10,9 +10,7 @@
             "surname",
             "fullname",
             "emailAddress",
-            "phoneNumber",
-            "bankName",
-            "accountNumber"
+            "phoneNumber"
         ],
         "compulsory_data": [
             "id_Type",
@@ -44,6 +42,7 @@
             "phoneNumber",
             "idDocument",
             "bankName",
+            "bankSortCode",
             "accountNumber"
         ],
         "compulsory_data": [],
@@ -71,9 +70,7 @@
             "fullname",
             "emailAddress",
             "phoneNumber",
-            "idDocument",
-            "bankName",
-            "accountNumber"
+            "idDocument"
         ],
         "compulsory_data": [],
         "remittance_company": [
@@ -93,6 +90,7 @@
             "emailAddress",
             "phoneNumber",
             "bankName",
+            "bankSortCode",
             "bankBranchAddress",
             "accountNumber"
         ],
@@ -142,6 +140,7 @@
             "emailAddress",
             "phoneNumber",
             "bankName",
+            "bankSortCode",
             "ibanCode",
             "accountNumber",
             "fiscalCode"
@@ -167,6 +166,7 @@
             "emailAddress",
             "phoneNumber",
             "bankName",
+            "bankSortCode",
             "accountNumber"
         ],
         "compulsory_data": [
@@ -190,6 +190,7 @@
             "emailAddress",
             "phoneNumber",
             "bankName",
+            "bankSortCode",
             "accountNumber"
         ],
         "compulsory_data": [
@@ -235,6 +236,7 @@
             "emailAddress",
             "phoneNumber",
             "bankName",
+            "bankSortCode",
             "accountNumber"
         ],
         "compulsory_data": [
