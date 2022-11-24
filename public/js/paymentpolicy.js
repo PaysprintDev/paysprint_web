@@ -6,6 +6,7 @@
         "max_amount": 2000000,
         "payment_type": "Bank Account",
         "notification": "SMS",
+        "terms_of_payment": "Bank deposit: 24 hrs",
         "mandatory_data": [
             "surname",
             "fullname",
@@ -28,6 +29,7 @@
         "min_amount": 150,
         "max_amount": 7000,
         "payment_type": "Instant",
+        "terms_of_payment": "Bank deposit: 24 hrs",
         "payoutAgent": [
             "Airtel",
             "Airteltigo",
@@ -59,6 +61,7 @@
         "min_amount": 1300,
         "max_amount": 63000,
         "payment_type": "Instant",
+        "terms_of_payment": "Bank deposit: 24 hrs",
         "payoutAgent": [
             "Airtel",
             "Equitel",
@@ -84,6 +87,7 @@
         "min_amount": 200,
         "max_amount": 9000,
         "payment_type": "Bank Account",
+        "terms_of_payment": "Bank deposit: 24 hrs",
         "mandatory_data": [
             "surname",
             "fullname",
@@ -109,6 +113,7 @@
         "min_amount": 190,
         "max_amount": 9600,
         "payment_type": "Cash Payment",
+        "terms_of_payment": "Cash Payment: 2 hrs",
         "mandatory_data": [
             "surname",
             "fullname",
@@ -130,6 +135,7 @@
         "min_amount": 10,
         "max_amount": 1999,
         "payment_type": "Instant",
+        "terms_of_payment": "Bank deposit: 24 hrs",
         "payoutAgent": [
             "Card Payment: POSTEPAY",
             "Payment through Deposit: POSTEPAY EVOLUTION"
@@ -160,6 +166,7 @@
         "min_amount": 10,
         "max_amount": 3000,
         "payment_type": "Cash Payment",
+        "terms_of_payment": "Bank deposit: One or two working days",
         "mandatory_data": [
             "surname",
             "fullname",
@@ -184,6 +191,7 @@
         "min_amount": 10,
         "max_amount": 3000,
         "payment_type": "Cash Payment",
+        "terms_of_payment": "Bank deposit: One or two working days",
         "mandatory_data": [
             "surname",
             "fullname",
@@ -208,6 +216,7 @@
         "min_amount": 10,
         "max_amount": 4500,
         "payment_type": "Instant Payment",
+        "terms_of_payment": "Bank deposit: 24 hrs",
         "mandatory_data": [
             "surname",
             "fullname",
@@ -220,31 +229,6 @@
         ],
         "remittance_company": [
             "MONEY EXCHANGE"
-        ],
-        "remarks": "Beneficiary´s data must be exactly the same as beneficiary´s Identity card."
-    },
-    {
-        "country": "Canada",
-        "currency": "CAN",
-        "min_amount": 0,
-        "max_amount": 5000,
-        "payment_type": "Bank Deposit",
-        "notification": "SMS/Email",
-        "mandatory_data": [
-            "surname",
-            "fullname",
-            "emailAddress",
-            "phoneNumber",
-            "bankName",
-            "bankSortCode",
-            "accountNumber"
-        ],
-        "compulsory_data": [
-            "id_Type",
-            "id_Number"
-        ],
-        "remittance_company": [
-            "PAYSPRINT INC."
         ],
         "remarks": "Beneficiary´s data must be exactly the same as beneficiary´s Identity card."
     }

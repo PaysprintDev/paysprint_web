@@ -57,12 +57,12 @@
     <div class="container py-5">
         <!-- For demo purpose -->
         <div class="row mb-4">
-            <div class="col-lg-6 mx-auto text-center">
+            <div class="col-lg-8 mx-auto text-center">
                 <h1 class="display-4">Send Money to Non-PaySprint User</h1>
             </div>
         </div> <!-- End -->
         <div class="row">
-            <div class="col-lg-6 mx-auto">
+            <div class="col-lg-8 mx-auto">
                 <div class="card ">
                     <div class="card-header">
                         <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
@@ -1713,6 +1713,10 @@
                                         <tr>
                                             <td>Payment Type</td>
                                             <td><strong>${data[0].payment_type !== undefined ? data[0].payment_type : '-'}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Service and Terms of Payment</td>
+                                            <td><strong>${data[0].terms_of_payment !== undefined ? data[0].terms_of_payment : '-'}</strong></td>
                                         </tr>
                                         <tr>
                                             <td>Remark</td>
