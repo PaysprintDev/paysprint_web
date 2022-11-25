@@ -7,6 +7,10 @@
         "payment_type": "Bank Account",
         "notification": "SMS",
         "terms_of_payment": "Bank deposit: 24 hrs",
+        "gender": [
+            "M",
+            "F"
+        ],
         "mandatory_data": [
             "surname",
             "fullname",
@@ -30,6 +34,10 @@
         "max_amount": 7000,
         "payment_type": "Instant",
         "terms_of_payment": "Bank deposit: 24 hrs",
+        "gender": [
+            "M",
+            "F"
+        ],
         "payoutAgent": [
             "Airtel",
             "Airteltigo",
@@ -62,6 +70,10 @@
         "max_amount": 63000,
         "payment_type": "Instant",
         "terms_of_payment": "Bank deposit: 24 hrs",
+        "gender": [
+            "M",
+            "F"
+        ],
         "payoutAgent": [
             "Airtel",
             "Equitel",
@@ -88,6 +100,10 @@
         "max_amount": 9000,
         "payment_type": "Bank Account",
         "terms_of_payment": "Bank deposit: 24 hrs",
+        "gender": [
+            "M",
+            "F"
+        ],
         "mandatory_data": [
             "surname",
             "fullname",
@@ -114,6 +130,10 @@
         "max_amount": 9600,
         "payment_type": "Cash Payment",
         "terms_of_payment": "Cash Payment: 2 hrs",
+        "gender": [
+            "M",
+            "F"
+        ],
         "mandatory_data": [
             "surname",
             "fullname",
@@ -136,6 +156,10 @@
         "max_amount": 1999,
         "payment_type": "Instant",
         "terms_of_payment": "Bank deposit: 24 hrs",
+        "gender": [
+            "M",
+            "F"
+        ],
         "payoutAgent": [
             "Card Payment: POSTEPAY",
             "Payment through Deposit: POSTEPAY EVOLUTION"
@@ -167,6 +191,10 @@
         "max_amount": 3000,
         "payment_type": "Cash Payment",
         "terms_of_payment": "Bank deposit: One or two working days",
+        "gender": [
+            "M",
+            "F"
+        ],
         "mandatory_data": [
             "surname",
             "fullname",
@@ -192,6 +220,10 @@
         "max_amount": 3000,
         "payment_type": "Cash Payment",
         "terms_of_payment": "Bank deposit: One or two working days",
+        "gender": [
+            "M",
+            "F"
+        ],
         "mandatory_data": [
             "surname",
             "fullname",
@@ -217,6 +249,10 @@
         "max_amount": 4500,
         "payment_type": "Instant Payment",
         "terms_of_payment": "Bank deposit: 24 hrs",
+        "gender": [
+            "M",
+            "F"
+        ],
         "mandatory_data": [
             "surname",
             "fullname",

@@ -484,6 +484,8 @@
 
                                             <div class="compulsory_data disp-0">
                                             </div>
+                                            <div class="gender_data disp-0">
+                                            </div>
                                             <div class="mandatory_data disp-0">
                                             </div>
                                             <div class="bank_data disp-0">
@@ -1548,6 +1550,7 @@
                         let data = filterPaymentPolicy(country, result.data);
 
                         let compulsoryInput = $('.compulsory_data');
+                        let genderInput = $('.gender_data');
                         let mandatoryInput = $('.mandatory_data');
 
                         let paymentTypeInput = $('.paymentType_data');
@@ -1557,6 +1560,7 @@
                         let payoutAgentSelect = $('#payout_record');
 
                         compulsoryInput.addClass('disp-0');
+                        genderInput.addClass('disp-0');
                         mandatoryInput.addClass('disp-0');
                         paymentTypeInput.addClass('disp-0');
                         informationInput.addClass('disp-0');
@@ -1566,6 +1570,7 @@
 
                         informationInput.html('');
                         compulsoryInput.html('');
+                        genderInput.html('');
                         mandatoryInput.html('');
                         paymentTypeInput.html('');
                         payoutAgentInput.html('');
@@ -1601,6 +1606,27 @@
 
 
                             }
+
+                            if(data[0].gender.length > 0){
+                                    let options = [];
+                                    genderInput.removeClass('disp-0');
+
+                                    $.each(data[0].gender, function(v, k) {
+                                        options.push(`<option value="${k}">${k === 'M' ? 'Male' : 'Female'}</option>`);
+                                    });
+
+                                    genderInput.html(`<br><h4>Gender</h4><hr><div class="form-group"> <label for="gender">
+                                                <h6><span class="text-danger">* </span>Select gender</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <select class="form-control" name="gender" id="gender" required>
+                                                    ${options}
+                                                </select>
+                                            </div>
+                                        </div>`);
+
+
+                                }
 
                             if(data[0].mandatory_data.length > 0){
                                 mandatoryInput.removeClass('disp-0');
@@ -1670,13 +1696,13 @@
 
                                 if(data[0].payoutAgent.length > 0){
                                     let options = [];
-                                payoutAgentInput.removeClass('disp-0');
+                                    payoutAgentInput.removeClass('disp-0');
 
-                                $.each(data[0].payoutAgent, function(v, k) {
-                                    options.push(`<option value="${k}">${k}</option>`);
-                                });
+                                    $.each(data[0].payoutAgent, function(v, k) {
+                                        options.push(`<option value="${k}">${k}</option>`);
+                                    });
 
-                                payoutAgentInput.html(`<br><h4>Payout Information</h4><hr><div class="form-group"> <label for="payout_agent">
+                                    payoutAgentInput.html(`<br><h4>Payout Information</h4><hr><div class="form-group"> <label for="payout_agent">
                                                 <h6><span class="text-danger">* </span>Select Payout</h6>
                                             </label>
                                             <div class="input-group">
@@ -1687,7 +1713,7 @@
                                         </div>`);
 
 
-                            }
+                                }
 
                             }
 

@@ -1192,7 +1192,7 @@ class GooglePaymentController extends Controller
                                                         'bankDeposit' => $req->card_type == "Bank Account" ? 'TRUE' : 'FALSE',
                                                         'bankName' => isset($req->bank_code) ? explode("__", $req->bank_code)[1] : $req->mandatory_bankName,
                                                         'bankAddress' => isset($req->bank_code) ? explode("__", $req->bank_code)[0] : $req->mandatory_bankName . ' ' . $thisuser->country,
-                                                        'bankAccount' => isset($req->banking_account_number) ? : $req->mandatory_accountNumber,
+                                                        'bankAccount' => isset($req->banking_account_number) ? $req->banking_account_number : $req->mandatory_accountNumber,
                                                         'branchCode' => isset($req->branchCode) ? $req->branchCode : '',
                                                         'amountToPay' => $amount,
                                                         'currencyToPay' => $foreigncurrency->currencyCode,
@@ -1202,7 +1202,8 @@ class GooglePaymentController extends Controller
                                                         'auxiliaryInfo' => [
                                                             'SenderBirthDate' => $dob,
                                                             'SenderBirthPlace' => "",
-                                                            'SenderBirthCountry' => $getCountry->cca3
+                                                            'SenderBirthCountry' => $getCountry->cca3,
+                                                            'SenderGender' => $req->gender
                                                         ],
                                                         'reference' => $transaction_id
                                                     );
@@ -1478,7 +1479,7 @@ class GooglePaymentController extends Controller
                                                                 'bankDeposit' => $req->payment_type == "Bank Account" ? 'TRUE' : ($req->payment_type == "Instant" ? 'TRUE' : 'FALSE'),
                                                                 'bankName' => isset($req->bank_code) ? explode("__", $req->bank_code)[1] : $req->mandatory_bankName,
                                                                 'bankAddress' => isset($req->bank_code) ? explode("__", $req->bank_code)[0] : $req->mandatory_bankName . ' ' . $thisuser->country,
-                                                                'bankAccount' => isset($req->banking_account_number) ? : $req->mandatory_accountNumber,
+                                                                'bankAccount' => isset($req->banking_account_number) ? $req->banking_account_number : $req->mandatory_accountNumber,
                                                                 'branchCode' => isset($req->branchCode) ? $req->branchCode : '',
                                                                 'amountToPay' => $amount,
                                                                 'currencyToPay' => $foreigncurrency->currencyCode,
@@ -1488,7 +1489,8 @@ class GooglePaymentController extends Controller
                                                                 'auxiliaryInfo' => [
                                                                     'SenderBirthDate' => $dob,
                                                                     'SenderBirthPlace' => "",
-                                                                    'SenderBirthCountry' => $getCountry->cca3
+                                                                    'SenderBirthCountry' => $getCountry->cca3,
+                                                                    'SenderGender' => $req->gender
                                                                 ],
                                                                 'reference' => $transaction_id
                                                             );

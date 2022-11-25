@@ -385,10 +385,12 @@ trait Moex
 
         if ($BranchesMoex['return'] === 0) {
             $responseData = $BranchesMoex;
+            $this->doSlack(json_encode($BranchesMoex), $room = "moex-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
         } else {
             $responseData = [
                 'error' => $BranchesMoex['error']->Description
             ];
+            $this->doSlack($BranchesMoex['error']->Description, $room = "moex-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
         }
 
 
@@ -494,5 +496,25 @@ trait Moex
         curl_close($curl);
 
         return json_decode($response);
+    }
+
+        public function doSlack($message, $room = "success-logs", $icon = ":longbox:", $webhook)
+    {
+        $room = ($room) ? $room : "success-logs";
+        $data = "payload=" . json_encode(array(
+            "channel"       =>  "#{$room}",
+            "text"          =>  $message,
+            "icon_emoji"    =>  $icon
+        ));
+
+        // You can get your webhook endpoint from your Slack settings
+        $ch = curl_init($webhook);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        return $result;
     }
 }
