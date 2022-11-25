@@ -107,12 +107,11 @@ trait Moex
         $response = $this->MEAddTransaction($data);
 
 
-        if($response['error']->Description !== ""){
+        if ($response['error']->Description !== "") {
             $responseData = [
                 'error' => $response['error']->Description
             ];
-        }
-        else{
+        } else {
             $responseData = [
                 'transactionId' => $response['output']->TransactionId,
                 'transactionDate' => $response['output']->TransactionDate,
@@ -303,7 +302,6 @@ trait Moex
         }
 
         return $responseData;
-
     }
 
 
@@ -332,49 +330,49 @@ trait Moex
         $BranchesMoex = $clientSoap->__soapCall("MEAddTransaction", [
             "Login" => $login,
             "TWStransaction" => [
-            "TransactionId" => "",
-            "TransactionDate" => date('Y-m-d h:i:s'),
-            "SenderId" => "",
-            "Sender" => $data['sender'],
-            "SenderName" => $data['senderName'],
-            "SenderLastName" => $data['senderLastName'],
-            "SenderLastName2" => "",
-            "SenderAddress" => $data['senderAddress'],
-            "SenderCity" => "",
-            "SenderCountry" => $data['senderCountry'],
-            "SenderIdDocumentNumber" => $data['senderIdDocumentNumber'],
-            "SenderIdDocumentType" => $data['senderIdDocumentType'],
-            "SenderReference" => "",
-            "ReceiverId" => "",
-            "Receiver" => $data['receiver'],
-            "ReceiverName" => $data['receiverName'],
-            "ReceiverLastName" => $data['receiverLastName'],
-            "ReceiverLastName2" => "",
-            "ReceiverAddress" => "",
-            "ReceiverCity" => "",
-            "ReceiverCountry" => $data['receiverCountry'],
-            "ReceiverPhone" => $data['phoneNumber'],
-            "ReceiverPhone2" => "",
-            "ReceiverIdDocumentNumber" => "",
-            "ReceiverIdDocumentType" => "",
-            "ReceiverReference" => "",
-            "BankDeposit" => isset($getBranchId['AllowBankDeposit']) ? $getBranchId['AllowBankDeposit'] : $data['bankDeposit'],
-            "BankName" => $data['bankName'],
-            "BankAddress" => $data['bankAddress'],
-            "BankAccount" => $data['bankAccount'],
-            "AmountToPay" => $data['amountToPay'],
-            "CurrencyToPay" => $data['currencyToPay'],
-            "AmountSent" => $data['amountSent'],
-            "CurrencySent" => $data['currencySent'],
-            "SenderMessage" => "",
-            "PaymentBranchId" => $data['paymentBranchId'],
-            "PaymentBranchName" => "",
-            "PaymentBranchAddress" => "",
-            "PaymentBranchPhone" => "",
-            "PaymentBranchAuxId" => $data['branchCode'],
-            "OriginCountry" => $data['originCountry'],
-            "Reference" => $data['reference'],
-            "AuxiliaryInfo" => json_encode($data['auxiliaryInfo'])
+                "TransactionId" => "",
+                "TransactionDate" => date('Y-m-d h:i:s'),
+                "SenderId" => "",
+                "Sender" => $data['sender'],
+                "SenderName" => $data['senderName'],
+                "SenderLastName" => $data['senderLastName'],
+                "SenderLastName2" => "",
+                "SenderAddress" => $data['senderAddress'],
+                "SenderCity" => "",
+                "SenderCountry" => $data['senderCountry'],
+                "SenderIdDocumentNumber" => $data['senderIdDocumentNumber'],
+                "SenderIdDocumentType" => $data['senderIdDocumentType'],
+                "SenderReference" => "",
+                "ReceiverId" => "",
+                "Receiver" => $data['receiver'],
+                "ReceiverName" => $data['receiverName'],
+                "ReceiverLastName" => $data['receiverLastName'],
+                "ReceiverLastName2" => "",
+                "ReceiverAddress" => "",
+                "ReceiverCity" => "",
+                "ReceiverCountry" => $data['receiverCountry'],
+                "ReceiverPhone" => $data['phoneNumber'],
+                "ReceiverPhone2" => "",
+                "ReceiverIdDocumentNumber" => "",
+                "ReceiverIdDocumentType" => "",
+                "ReceiverReference" => "",
+                "BankDeposit" => isset($getBranchId['AllowBankDeposit']) ? $getBranchId['AllowBankDeposit'] : $data['bankDeposit'],
+                "BankName" => $data['bankName'],
+                "BankAddress" => $data['bankAddress'],
+                "BankAccount" => $data['bankAccount'],
+                "AmountToPay" => $data['amountToPay'],
+                "CurrencyToPay" => $data['currencyToPay'],
+                "AmountSent" => $data['amountSent'],
+                "CurrencySent" => $data['currencySent'],
+                "SenderMessage" => "",
+                "PaymentBranchId" => $data['paymentBranchId'],
+                "PaymentBranchName" => "",
+                "PaymentBranchAddress" => "",
+                "PaymentBranchPhone" => "",
+                "PaymentBranchAuxId" => $data['branchCode'],
+                "OriginCountry" => $data['originCountry'],
+                "Reference" => $data['reference'],
+                "AuxiliaryInfo" => json_encode($data['auxiliaryInfo'])
             ],
 
         ]);
@@ -395,39 +393,6 @@ trait Moex
 
 
 
-
-        return $responseData;
-    }
-
-
-    // Alternative Integration...
-
-    public function paysprintMoex()
-    {
-        $login = $this->twsAuthConfig();
-
-
-        $IdCountry = 'NGA';
-
-        $clientSoap = new \SoapClient($login->url_wsdl);
-
-
-
-        $BranchesMoex = $clientSoap->__soapCall("MEGetActiveExtBranchesMoEx", [
-            "Login" => $login,
-            "IdCountry" => $IdCountry
-        ]);
-
-
-
-        if ($BranchesMoex['return'] === 0) {
-            $responseData = $BranchesMoex;
-        } else {
-            $description = $BranchesMoex['error']->Description;
-            $responseData = [
-                'error' => $description
-            ];
-        }
 
         return $responseData;
     }
@@ -498,7 +463,7 @@ trait Moex
         return json_decode($response);
     }
 
-        public function doSlack($message, $room = "success-logs", $icon = ":longbox:", $webhook)
+    public function doSlack($message, $room = "success-logs", $icon = ":longbox:", $webhook)
     {
         $room = ($room) ? $room : "success-logs";
         $data = "payload=" . json_encode(array(
