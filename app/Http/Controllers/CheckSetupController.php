@@ -1138,6 +1138,69 @@ your PaySprint Account.You need to provide the outstanding information and compl
 
     // Reverse Money
 
+
+    public function reverseBackFund($id, $amount, $reason)
+    {
+
+        $thisuser = User::where('id', $id)->first();
+
+        if (isset($thisuser)) {
+
+            $transaction_id = "wallet-" . date('dmY') . time();
+
+            $activity = "Reversal of " . $thisuser->currencyCode . '' . number_format($amount, 2) . " has been processed back to wallet. Reason: ".$reason;
+            $credit = $amount;
+            $debit = 0;
+            $reference_code = $transaction_id;
+            $balance = 0;
+            $trans_date = date('Y-m-d');
+            $transstatus = "Delivered";
+            $action = "Wallet credit";
+            $regards = $thisuser->ref_code;
+            $statement_route = "wallet";
+
+            $walletBalance = $thisuser->wallet_balance + $amount;
+
+            User::where('email', $thisuser->email)->update([
+                'wallet_balance' => $walletBalance
+            ]);
+
+
+            // Senders statement
+            $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country);
+
+            $this->getfeeTransaction($reference_code, $thisuser->ref_code, $amount, 0.00, $amount);
+
+            $sendMerchantMsg = 'Reversal of ' . $thisuser->currencyCode . ' ' . number_format($amount, 2) . '  has been processed back to wallet. Reason: '.$reason.'. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your PaySprint Wallet.';
+
+            $this->createNotification($thisuser->ref_code, $sendMerchantMsg, $thisuser->playerId, $sendMerchantMsg, "Wallet credit");
+
+
+            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+            if (isset($userPhone)) {
+
+                $sendPhone = $thisuser->telephone;
+            } else {
+                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+            }
+
+            if ($thisuser->country == "Nigeria") {
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                $this->sendSms($sendMerchantMsg, $correctPhone);
+            } else {
+                $this->sendMessage($sendMerchantMsg, $sendPhone);
+            }
+
+            $this->slack($sendMerchantMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+            echo $sendMerchantMsg;
+        } else {
+            // Do nothing
+        }
+    }
+
     public function reverseFund()
     {
         // Create Statement And Credit EXBC account holder

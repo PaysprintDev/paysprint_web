@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Traits\Moex;
 use App\AllCountries;
 use App\Classes\TWSauth;
@@ -2598,14 +2599,20 @@ class MoexController extends Controller
     {
         try {
 
+            $checkSetup = new CheckSetupController();
+
             $getTransaction = $this->getNotProcessedMoexTransactions();
 
             foreach ($getTransaction as $item) {
 
+
                 if($item->status == 'initiated' || $item->status == 'pending'){
                 $transactions = json_decode($item->transaction);
 
+
                 $data = $this->checkTransactionStatus($transactions->transactionId);
+
+
 
                     // Update Status...
                     if($data['transaction']->TransactionStatus === "PAG"){
@@ -2615,22 +2622,22 @@ class MoexController extends Controller
                             MoexTransaction::where('id', $item->id)->update(['status' => 'pending', 'transactionMessage' => 'Available for pay']);
                         }
                         elseif($data['transaction']->TransactionStatus === "ANU"){
-
                             // Refund back to users wallet and mail...
-
                             MoexTransaction::where('id', $item->id)->update(['status' => 'cancelled', 'transactionMessage' => 'Cancelled transaction']);
+
+                            $checkSetup->reverseBackFund($item->user_id, $data['transaction']->AmountToPay, 'Cancelled transaction');
                         }
                         elseif($data['transaction']->TransactionStatus === "DEV" || $data['transaction']->TransactionStatus === "DVO"){
-
                             // Refund back to users wallet and mail...
-
                             MoexTransaction::where('id', $item->id)->update(['status' => 'reversed', 'transactionMessage' => 'Transaction returned to sender']);
+
+                            $checkSetup->reverseBackFund($item->user_id, $data['transaction']->AmountToPay, 'Transaction returned to sender');
                         }
                         else{
-
                             // Refund back to users wallet and mail...
-
                             MoexTransaction::where('id', $item->id)->update(['status' => 'Transaction with problem']);
+
+                            $checkSetup->reverseBackFund($item->user_id, $data['transaction']->AmountToPay, 'Transaction with problem');
                         }
                 }
 
