@@ -6,9 +6,10 @@ use SoapClient;
 
 use App\AllCountries;
 use App\Classes\TWSauth;
+use App\MoexTransaction;
 use App\ConversionCountry;
-use function GuzzleHttp\json_decode;
 use App\Traits\PaymentGateway;
+use function GuzzleHttp\json_decode;
 
 trait Moex
 {
@@ -461,6 +462,23 @@ trait Moex
         curl_close($curl);
 
         return json_decode($response);
+    }
+
+
+    // Get Moex Transactions...
+    public function getMoexTransactions()
+    {
+        $data = MoexTransaction::orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+
+    public function checkTransactionStatus($transactionId)
+    {
+        $data = $this->MEGetTransactionMoEx($transactionId);
+
+        return $data;
     }
 
     public function doSlack($message, $room = "success-logs", $icon = ":longbox:", $webhook)

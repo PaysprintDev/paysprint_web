@@ -2595,6 +2595,34 @@ class MoexController extends Controller
 
     public function paymentConfirmation ()
     {
+        try {
+
+            $getTransaction = $this->getMoexTransactions();
+
+            foreach ($getTransaction as $item) {
+
+                if($item->status == 'initiated' || $item->status == 'pending'){
+                                    $transactions = json_decode($item->transaction);
+
+                $data = $this->checkTransactionStatus($transactions->transactionId);
+
+
+                dd($data);
+                }
+
+
+
+            }
+
+
+        } catch (\Throwable $th) {
+            $data = [
+                'error' => $th->getMessage()
+            ];
+        }
+
+
+            return $data;
     }
 
 
@@ -2617,6 +2645,7 @@ class MoexController extends Controller
     }
 
 
+
     public function getAdditionalList(Request $req)
     {
         try {
@@ -2636,12 +2665,12 @@ class MoexController extends Controller
                     $resData = ['data' => [], 'message' => $result['error']->Description, 'status' => $status];
                 }
                 else{
-            
+
                     $status = 200;
                     $resData = ['data' => $result, 'message' => 'Success', 'status' => $status, 'branchCode' => $data['Id']];
                 }
 
-                
+
             }
             else{
 

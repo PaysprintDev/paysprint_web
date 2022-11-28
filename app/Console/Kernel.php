@@ -17,11 +17,12 @@ class Kernel extends ConsoleKernel
         Commands\ApprovedUsersMove::class,
         Commands\AutoDepositOff::class,
         Commands\BvnListUpdate::class,
-    Commands\ChargeFee::class,
+        Commands\ChargeFee::class,
         Commands\CheckTelephone::class,
         Commands\CronToConsumers::class,
         Commands\CronToMerchant::class,
         Commands\DailyExchange::class,
+        Commands\MoexTransactionCheck::class,
         Commands\DailyLimit::class,
         Commands\DocPendingList::class,
         Commands\ExbcCardRequest::class,
@@ -119,6 +120,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('weeklylimit:run')->cron('0 0 * * 0');
         $schedule->command('notificationtable:run')->cron('0 0 * * 2');
         $schedule->command('mailqueue:run')->everyTwoMinutes();
+        $schedule->command('moextransactioncheck:run')->everyTwoMinutes();
         $schedule->command('mailtoverfiedmerchants:run')->monthly();
 
     }

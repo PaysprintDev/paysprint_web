@@ -51,6 +51,8 @@ use App\Mail\sendEmail;
 
 use App\Traits\Trulioo;
 
+use App\Traits\Moex;
+
 use App\InvestorRelation;
 
 use App\ReferralGenerate;
@@ -205,7 +207,7 @@ class AdminController extends Controller
     public $infomessage;
     public $customer_id;
 
-    use Trulioo, AccountNotify, SpecialInfo, PaystackPayment, FlagPayment, PaymentGateway, Xwireless, MailChimpNewsLetter, PaysprintPoint, PointsClaim, PointsHistory, DusuPay,  MyFX, GenerateOtp, UserManagement, VertoFx;
+    use Trulioo, AccountNotify, SpecialInfo, PaystackPayment, FlagPayment, PaymentGateway, Xwireless, MailChimpNewsLetter, PaysprintPoint, PointsClaim, PointsHistory, DusuPay,  MyFX, GenerateOtp, UserManagement, VertoFx, Moex;
 
 
     public function index(Request $req)
@@ -222,8 +224,6 @@ class AdminController extends Controller
             return redirect()->route('store dashboard');
         } else {
             if ($req->session()->has('username') == true) {
-
-
 
 
                 if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing" || session('role') == "Customer Success") {
@@ -302,8 +302,8 @@ class AdminController extends Controller
                     'crossborder' => $this->getCrossBorderCount(),
                     'paiduserscount' => $this->getPaidUsersCount(),
                     'freeuserscount' => $this->getFreeUsersCount(),
-                    'transfer' => $this->electronicTransfers()
-
+                    'transfer' => $this->electronicTransfers(),
+                    'moextranx' => $this->getMoexTransactions()
                 );
 
 
@@ -7871,7 +7871,7 @@ class AdminController extends Controller
 
     public function createFxTrade(Request $req)
     {
-      
+
          $login=$this->sendVertoFx();
                 $token=$login->token;
                 $response=$this->getFxRate($req->currency_from,$req->currency_to,$token);
@@ -7951,7 +7951,7 @@ class AdminController extends Controller
             $getxPay = $this->getxpayTrans();
             $allusers = $this->allUsers();
 
-            
+
               $login=$this->sendVertoFx();
                  $token=$login->token;
                 $response=$this->getFxRate($req->currency_from,$req->currency_to,$token);
@@ -7987,11 +7987,11 @@ class AdminController extends Controller
         $mode='apiKey';
 
            $data=$this->FxLogin($id, $apikey, $mode);
-           
+
            return $data;
 
     }
-    
+
 
 
     public function createSupportAgent(Request $req)
@@ -8865,6 +8865,64 @@ class AdminController extends Controller
 
 
             return view('admin.wallet.bankrequestwithdrawal')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
+    public function getMoexTransactionDetails(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing" || session('role') == "Customer Success") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'moextranx' => $this->getMoexTransactions()
+            );
+
+
+            return view('admin.wallet.moextransaction')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
         }
