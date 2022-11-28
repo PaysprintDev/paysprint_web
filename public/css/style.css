@@ -120,10 +120,11 @@ This files contents are outlined below.
     color: #222222;
     text-transform: uppercase;
     position: relative;
-    margin-bottom: 20px;
+    margin-top: 5rem;
+    /* margin-bottom: 10px; */
 }
 
-.subtittle h2:after {
+/* .subtittle h2:after {
     content: "";
     position: absolute;
     height: 2px;
@@ -131,7 +132,7 @@ This files contents are outlined below.
     background: #222222;
     left: 0;
     bottom: -22px;
-}
+} */
 
 .subtittle h5 {
     font: 400 14px "Montserrat", sans-serif;

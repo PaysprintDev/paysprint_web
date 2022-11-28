@@ -39,6 +39,7 @@
         "spatie/laravel-permission": "4.4.0",
         "spatie/laravel-translatable": "^4.6",
         "stripe/stripe-php": "^7.92",
+        "twilio/sdk": "^6.43",
         "weidner/goutte": "1.6.1"
     },
     "require-dev": {

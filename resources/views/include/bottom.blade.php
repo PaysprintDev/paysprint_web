@@ -8,7 +8,7 @@
                 <img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_white_horizotal_mb5ouw.png" style="position: relative; left: -40px;">
                 {{-- <p>Payca or electronic bill payment, is when a seller such as company, organization, or group sends its bills or invoices over the internet, and customers pay the bills electronically.</p> --}}
                 <p style="padding-top: 0px !important;">PaySprint is the fastest and most affordable way to send and
-                    receive money. Pay invoices and get paid at anytime!</p>
+                    receive money. Pay invoice,pay invoice and getting paid at anytime!</p>
                 <ul class="socail_icon">
                     <li><a href="https://www.facebook.com/EXPRESSCANADA2014/?modal=admin_todo_tour" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
                     <li><a href="https://twitter.com/EXBC2" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
@@ -61,8 +61,7 @@
                 <address>
                     <ul class="my_address">
                         <li><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i>info@paysprint.ca</a></li><br>
-                        <li><a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i><span> PaySprint by Express
-                                    Ca Corp, <br> 10 George St. North, Brampton. ON. L6X1R2. Canada </span></a></li>
+                        <li><a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i><span> PaySprint International <br> 10 George St. North, Brampton. ON. L6X1R2. Canada </span></a></li>
                         <li><a href="#"><i class="fas fa-thumbtack" aria-hidden="true"></i></i>Canada: FINTRAC Reg No:
                                 M21469983 | USA: FINCEN Reg No: 31000189515339</a></li><br>
                     </ul>

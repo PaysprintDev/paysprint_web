@@ -143,12 +143,14 @@ trait AccountNotify
 
         $this->name = 'Administrator';
         $this->email = 'accounting@paysprint.ca';
+        $this->email2 = 'lsuleiman@paysprint.ca';
         $this->subject = $subject;
 
         $this->message = $message;
 
 
         $this->myEmailSender($this->email, "Fund remittance");
+        $this->myEmailSender($this->email2, "Fund remittance");
     }
 
 

@@ -1190,10 +1190,10 @@ class GooglePaymentController extends Controller
                                                         'receiverLastName' => $req->mandatory_surname,
                                                         'receiverCountry' => $foreigncurrency->cca3,
                                                         'bankDeposit' => $req->card_type == "Bank Account" ? 'TRUE' : 'FALSE',
-                                                        'bankName' => $req->mandatory_bankName,
-                                                        'bankAddress' => $req->mandatory_bankName . ' ' . $thisuser->country,
-                                                        'bankAccount' => $req->mandatory_accountNumber,
-                                                        'branchCode' => '',
+                                                        'bankName' => isset($req->bank_code) ? explode("__", $req->bank_code)[1] : $req->mandatory_bankName,
+                                                        'bankAddress' => isset($req->bank_code) ? explode("__", $req->bank_code)[0] : $req->mandatory_bankName . ' ' . $thisuser->country,
+                                                        'bankAccount' => isset($req->banking_account_number) ? $req->banking_account_number : $req->mandatory_accountNumber,
+                                                        'branchCode' => isset($req->branchCode) ? $req->branchCode : '',
                                                         'amountToPay' => $amount,
                                                         'currencyToPay' => $foreigncurrency->currencyCode,
                                                         'amountSent' => $req->totalcharge,
@@ -1202,7 +1202,8 @@ class GooglePaymentController extends Controller
                                                         'auxiliaryInfo' => [
                                                             'SenderBirthDate' => $dob,
                                                             'SenderBirthPlace' => "",
-                                                            'SenderBirthCountry' => $getCountry->cca3
+                                                            'SenderBirthCountry' => $getCountry->cca3,
+                                                            'SenderGender' => $req->gender
                                                         ],
                                                         'reference' => $transaction_id
                                                     );
@@ -1225,7 +1226,7 @@ class GooglePaymentController extends Controller
                                                     }
 
 
-                                                    MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex)]);
+                                                    MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $amount, 'currency' => $thisuser->currencyCode, 'status' => 'pending']);
 
 
 
@@ -1304,9 +1305,10 @@ class GooglePaymentController extends Controller
 
 
 
-                                                        $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. Here is the transaction ID to claim your money <strong>' . $doMoex['transactionId'] . '</strong>. You can get paid at <strong>' . $req->remittance . '</strong> of your choice. Kindly have your means of identification match your identity to receive fund.</p>';
+                                                        $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. Here is the transaction ID: <strong>' . $doMoex['transactionId'] . '</strong>. Your fund will be processed to <strong>'.isset($req->bank_code) ? explode("__", $req->bank_code)[1] : $req->mandatory_bankName.' - '.(isset($req->banking_account_number) ? $req->banking_account_number : $req->mandatory_accountNumber).'<strong>. You can also get paid at <strong>' . $req->remittance . '</strong> of your choice. Kindly have your means of identification match your identity to receive fund.</p>';
 
-                                                        $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. Here is the transaction ID to claim your money ' . $doMoex['transactionId'] . '. You can get paid at ' . $req->remittance . ' of your choice. Kindly have your means of identification match your identity to receive fund.';
+                                                        $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. Here is the transaction ID: ' . $doMoex['transactionId'] . '. Your fund will be processed to '.isset($req->bank_code) ? explode("__", $req->bank_code)[1] : $req->mandatory_bankName.' - '.(isset($req->banking_account_number) ? $req->banking_account_number : $req->mandatory_accountNumber).' You can also get paid at ' . $req->remittance . ' of your choice. Kindly have your means of identification match your identity to receive fund.';
+
 
                                                         $recPhone = "+" . $req->countryCode . $req->phone;
 
@@ -1476,10 +1478,10 @@ class GooglePaymentController extends Controller
                                                                 'receiverLastName' => $req->mandatory_surname,
                                                                 'receiverCountry' => $foreigncurrency->cca3,
                                                                 'bankDeposit' => $req->payment_type == "Bank Account" ? 'TRUE' : ($req->payment_type == "Instant" ? 'TRUE' : 'FALSE'),
-                                                                'bankName' => $req->mandatory_bankName,
-                                                                'bankAddress' => $req->mandatory_bankName . ' ' . $thisuser->country,
-                                                                'bankAccount' => $req->mandatory_accountNumber,
-                                                                'branchCode' => '',
+                                                                'bankName' => isset($req->bank_code) ? explode("__", $req->bank_code)[1] : $req->mandatory_bankName,
+                                                                'bankAddress' => isset($req->bank_code) ? explode("__", $req->bank_code)[0] : $req->mandatory_bankName . ' ' . $thisuser->country,
+                                                                'bankAccount' => isset($req->banking_account_number) ? $req->banking_account_number : $req->mandatory_accountNumber,
+                                                                'branchCode' => isset($req->branchCode) ? $req->branchCode : '',
                                                                 'amountToPay' => $amount,
                                                                 'currencyToPay' => $foreigncurrency->currencyCode,
                                                                 'amountSent' => $req->totalcharge,
@@ -1488,7 +1490,8 @@ class GooglePaymentController extends Controller
                                                                 'auxiliaryInfo' => [
                                                                     'SenderBirthDate' => $dob,
                                                                     'SenderBirthPlace' => "",
-                                                                    'SenderBirthCountry' => $getCountry->cca3
+                                                                    'SenderBirthCountry' => $getCountry->cca3,
+                                                                    'SenderGender' => $req->gender
                                                                 ],
                                                                 'reference' => $transaction_id
                                                             );
@@ -1512,7 +1515,7 @@ class GooglePaymentController extends Controller
                                                             }
 
 
-                                                            MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex)]);
+                                                            MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $amount, 'currency' => $thisuser->currencyCode, 'status' => 'pending']);
 
 
                                                             $statement_route = "wallet";
@@ -1585,9 +1588,9 @@ class GooglePaymentController extends Controller
                                                                 $this->subject = $thisuser->name . " has sent you " . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . " on PaySprint";
 
 
-                                                                $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. Here is the transaction ID to claim your money <strong>' . $doMoex['transactionId'] . '</strong>. You can get paid at <strong>' . $req->remittance . '</strong> of your choice. Kindly have your means of identification match your identity to receive fund.</p>';
+                                                                $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. Here is the transaction ID: <strong>' . $doMoex['transactionId'] . '</strong>. Your fund will be processed to <strong>'.isset($req->bank_code) ? explode("__", $req->bank_code)[1] : $req->mandatory_bankName.' - '.(isset($req->banking_account_number) ? $req->banking_account_number : $req->mandatory_accountNumber).'<strong>. You can also get paid at <strong>' . $req->remittance . '</strong> of your choice. Kindly have your means of identification match your identity to receive fund.</p>';
 
-                                                                $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. Here is the transaction ID to claim your money ' . $doMoex['transactionId'] . '. You can get paid at ' . $req->remittance . ' of your choice. Kindly have your means of identification match your identity to receive fund.';
+                                                                $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. Here is the transaction ID: ' . $doMoex['transactionId'] . '. Your fund will be processed to '.isset($req->bank_code) ? explode("__", $req->bank_code)[1] : $req->mandatory_bankName.' - '.(isset($req->banking_account_number) ? $req->banking_account_number : $req->mandatory_accountNumber).' You can also get paid at ' . $req->remittance . ' of your choice. Kindly have your means of identification match your identity to receive fund.';
 
 
 

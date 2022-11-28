@@ -1,7 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-
+   
+    <style>
+        
+    </style>
     <!-- Banner area -->
     <section class="banner_area" data-stellar-background-ratio="0.5">
         <h2>About Us</h2>
@@ -15,11 +18,12 @@
     <!-- About Us Area -->
     <section class="about_us_area about_us_2 row">
         <div class="container">
+            <div style="text-align: center" class="subtittle">
+                <h2 >WHO WE ARE</h2>
+            </div>
             <div class="row about_row about_us2_pages">
                 <div class="who_we_area col-md-7">
-                    <div class="subtittle">
-                        <h2>WHO WE ARE</h2>
-                    </div>
+                    
                     <p>PaySprint is 100% subscription-based digital wallet that enhances payment processing among individuals and merchants. The digital wallet offers seamless, end-to-end payments at minimum costs.<br>
                     Our digital wallet enables individuals to send and receive money locally and across the border while merchants can receive payments from customers on any mobile device (for In-store sales) and on the business's website (for online sale) with no usage fees.
                     </p>
@@ -35,7 +39,7 @@
                         </div>
                     </div>
                     <div class="single_skill">
-                        <h3>No fee-Digital Wallet</h3>
+                        <h3>No-fee Peer-to-peer Digital Wallet</h3>
                         <div class="progress">
                             <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                 {{-- <div class="progress_parcent"><span class="counter2">96</span>%</div> --}}
@@ -43,7 +47,7 @@
                         </div>
                     </div>
                     <div class="single_skill">
-                        <h3>Mobile App, Web Application</h3>
+                        <h3>Multiple Access (Mobile App & Web Application)</h3>
                         <div class="progress">
                             <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                 {{-- <div class="progress_parcent"><span class="counter2">80</span>%</div> --}}
@@ -75,67 +79,41 @@
         <div class="container">
             <div class="feature_row row">
                 <div class="col-md-6 feature_img">
-                    <img src="https://www.adsc.com/hs-fs/hubfs/Improved-Billing-1.png?width=750&name=Improved-Billing-1.png" alt="">
+                    <img src="{{ asset('images/paysprintlogo.png') }}"alt="logo">
                 </div>
                 <div class="col-md-6 feature_content">
-
-                    <div class="media">
-                        <div class="media-left">
-                            <a href="#">
-                                <i class="fa fa-percent" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                        <div class="media-body">
-                            <a href="#">RENTAL PROPERTY MANAGEMENT</a>
-                            <p>
-                            Are you a Property Manager or a Landlord looking for a simple, effective, tool for managing the end-to-end processes of your rental property? With PaySprint, you have, at your fingertips, every aspect of the property management business, from maintenance to booking amenities and invoicing tenants. 
-                              <br>
-                            <a href="{{ route('login') }}" style="font-size: 14px;">Request for a Demo Today</a></p>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="media">
-                        <div class="media-left">
-                            <a href="#">
-                                <i class="fa fa-bolt" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                        <div class="media-body">
-                            <a href="#">UTILITY BILL</a>
-                            <p>Do you want to pay a utility bill to the landlord or government? Do you want to receive electronic copies (eCopy) of your bills? <br> <a href="{{ route('login') }}" style="font-size: 14px;">Open a free PaySprint account today!</a>.</p>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="media">
-                        <div class="media-left">
-                            <a href="#">
-                                <i class="fa fa-home" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                        <div class="media-body">
-                            <a href="#">PROPERTY TAX</a>
-                            <p>
-                            Do you have a bill to pay, or want to check if there is an outstanding balance on your property tax account? PaySprint is all you need.  <br>
-                            {{-- <a href="{{ route('login') }}" style="font-size: 14px;">Click to login</a> to your Account NOW  --}}
-                            <span style="background-color: tomato; color: #fff; border-radius: 10px; padding: 5px">Pre-register for this new service today.</span></p>
-                        </div>
+                       <h1 style="padding:1rem">PaySprint for Business</h1>
+                       <h4 style=" padding:2rem">...helps merchant to keep more money in business</h4>
+                       
+                       
+                    <div class="media" >
+                        <ul>
+                            <li style="font-size:2rem; color:black;font-weight:600; padding-bottom:5px">Receive Payments with PaySprint - One Platform, 3-Channels, Any Device, $0.00 Fees</li>
+                              <ul>
+                                <li style="font-size: 2rem">QR Code for Face-to-Face Payments</li>
+                                <li style="font-size: 2rem">Payments Links for Remote Payments</li>
+                                <li style="font-size: 2rem">Payments Gateway for Online Payments</li>
+                              </ul>
+                            <hr>
+                            <li style="font-size:2rem; color:black;font-weight:600; padding-bottom:5px">Supporting Business to Grow</li>
+                              <ul>
+                                <li style="font-size: 2rem">Easy to Access Working Capital</li>
+                                <li style="font-size: 2rem">Sell More to Customers on eStore</li>
+                                <li style="font-size: 2rem">Free invoicing to Customers on any device</li>
+                                <li style="font-size: 2rem">Free Cashflow Tool Kits</li>
+                              </ul>
+                            <hr>
+                            <li style="font-size:2rem; color:black;font-weight:600; padding-bottom:5px">Target Markets</li>
+                            <ul>
+                                <li style="font-size: 2rem">Muilt-Vendors</li>
+                                <li style="font-size: 2rem">Small and Medium Size Businesses</li>
+                                <li style="font-size: 2rem">Professionals</li>
+                               
+                              </ul>
+                        </ul>
                     </div>
                     
-                    <hr>
-                    <div class="media">
-                        <div class="media-left">
-                            <a href="#">
-                                <i class="fa fa-file" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                        <div class="media-body">
-                            <a href="#">PARKING TICKETS</a>
-                            <p>You can pay parking tickets and most other Provincial Offences Act (POA) violations issued by the City. <br> <span style="background-color: tomato; color: #fff; border-radius: 10px; padding: 5px">Pre-register for this new service today.</span></p>
-
-                            {{-- <p>You can pay the City parking tickets and most other Provincial Offences Act (POA) violations by telephone, in person or by mail. If you wish to dispute a ticket, you have to do so in person by asking for a <a href="https://www.brampton.ca/EN/residents/Parking/Pages/Trial-Request.aspx" target="_blank">trial</a>. <br> If you have received a parking ticket or another POA violation, such as a speeding ticket, click on the appropriate button when you login to the account. However, you must also carefully read the specific details on your Parking Infraction/Offence Notice. <a href="{{ route('login') }}" style="font-size: 14px;">Login to your account Today</a>.</p> --}}
-                        </div>
-                    </div>
-                    <hr>
+                    
 
                     <div class="media disp-0">
                         <div class="media-left">

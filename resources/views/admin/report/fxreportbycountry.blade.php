@@ -93,6 +93,34 @@
 
                     @if (count($data['statement']) > 0)
 
+
+                        {{-- @for ($i = 0; $i < count($data['statement']); $i++)
+
+                        @php
+                            $element = $data['statement'][$i];
+
+                            $sendSupply = $element->credit;
+                            $receiveDemand = $element->debit;
+                            $balance = $sendSupply - $receiveDemand;
+                            $cumbalance = $data['statement'][$i]['credit'] + $data['statement'][$i + 1]['credit'];
+                        @endphp
+
+
+                    <tr>
+                        <td>{{ date('d', strtotime($element->created_at)) }}</td>
+                        <td>{{ number_format($sendSupply, 2) }}</td>
+                        <td>{{ number_format($receiveDemand, 2) }}</td>
+                        <td>{{ number_format($balance, 2) }}</td>
+                        <td>{{ number_format($balance, 2) }}</td>
+                        <td>{{ number_format($tradingBalance, 2) }}%</td>
+                        <td>{{ number_format($tradingBalance, 2) }}%</td>
+                        <td>65%</td>
+
+                    </tr>
+
+
+                        @endfor --}}
+
                     @foreach ($data['statement'] as $item)
 
 
