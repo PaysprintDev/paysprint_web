@@ -87,7 +87,7 @@
             <div class="brand-logo">
 
                 <a @guest href="{{ route('home') }}" @endguest @auth href="{{ route('user home') }}" @endauth><img
-                        src="{{ asset('images/paysprint_logo/money-transfer.png') }}" class="light-version-logo "
+                        src="{{ asset('images/paysprint_logo/merchant.png') }}" class="light-version-logo "
                         style="width: 200px; height: inherit;"></a>
             </div>
             <div class="collapse navbar-collapse" id="mobile-menu">
