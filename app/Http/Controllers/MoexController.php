@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\Moex;
 use App\AllCountries;
 use App\Classes\TWSauth;
+use App\MoexTransaction;
 use Illuminate\Http\Request;
 use App\Classes\TWSPhoneConfig;
-use App\Traits\Moex;
 
 class MoexController extends Controller
 {
@@ -2597,20 +2598,32 @@ class MoexController extends Controller
     {
         try {
 
-            $getTransaction = $this->getMoexTransactions();
+            $getTransaction = $this->getNotProcessedMoexTransactions();
 
             foreach ($getTransaction as $item) {
 
                 if($item->status == 'initiated' || $item->status == 'pending'){
-                                    $transactions = json_decode($item->transaction);
+                $transactions = json_decode($item->transaction);
 
                 $data = $this->checkTransactionStatus($transactions->transactionId);
 
-
-                dd($data);
+                    // Update Status...
+                    if($data['transaction']->TransactionStatus === "PAG"){
+                            MoexTransaction::where('id', $item->id)->update(['status' => 'processed', 'transactionMessage' => 'The transaction has already been paid.']);
+                        }
+                        elseif($data['transaction']->TransactionStatus === "ENV" || $data['transaction']->TransactionStatus === "NEV"){
+                            MoexTransaction::where('id', $item->id)->update(['status' => 'pending', 'transactionMessage' => 'Available for pay']);
+                        }
+                        elseif($data['transaction']->TransactionStatus === "ANU"){
+                            MoexTransaction::where('id', $item->id)->update(['status' => 'cancelled', 'transactionMessage' => 'Cancelled transaction']);
+                        }
+                        elseif($data['transaction']->TransactionStatus === "DEV" || $data['transaction']->TransactionStatus === "DVO"){
+                            MoexTransaction::where('id', $item->id)->update(['status' => 'reversed', 'transactionMessage' => 'Transaction returned to sender']);
+                        }
+                        else{
+                            MoexTransaction::where('id', $item->id)->update(['status' => 'Transaction with problem']);
+                        }
                 }
-
-
 
             }
 

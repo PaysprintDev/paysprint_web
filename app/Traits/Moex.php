@@ -474,6 +474,14 @@ trait Moex
     }
 
 
+    public function getNotProcessedMoexTransactions()
+    {
+        $data = MoexTransaction::where('status', '!=', 'processed')->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+
     public function checkTransactionStatus($transactionId)
     {
         $data = $this->MEGetTransactionMoEx($transactionId);
