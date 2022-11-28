@@ -79,6 +79,33 @@
                     @endif
 
                     @if (session('role') == 'Super')
+
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-book"></i>
+                            <span>VertoFx</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="{{ route('login verto fx') }}"><i class="fa fa-circle-o"></i>
+                                    Login to VertoFx</a>
+                            </li>
+                            <li><a href="{{ route('get fx rate') }}"><i class="fa fa-circle-o"></i> Get Fx Rate</a>
+                            </li>
+                            <li><a href="{{ route('get fx trade page') }}"><i class="fa fa-circle-o"></i>
+                                    Create Fx Trade</a>
+                            </li>
+                            <li><a href="{{ route('get beneficiary page') }}"><i class="fa fa-circle-o"></i>
+                                    Create Beneficiaries</a>
+                            </li>
+                            <li><a href="{{ route('get beneficiary list') }}"><i class="fa fa-circle-o"></i>
+                                    Get Beneficiary List</a>
+                            </li>
+                        </ul>
+                    </li>
+
                     <li class="treeview">
                         <a href="#">
                             <i class="fa fa-book"></i>
@@ -292,7 +319,8 @@
             </li>
             @endif
 
-            @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access to Level 1 and 2 only')
+            @if (session('role') == 'Super' || session('role') == 'Access to Level 1 only' || session('role') == 'Access
+            to Level 1 and 2 only')
             <li>
                 <a href="{{ route('business report') }}">
                     <i class="fa fa-book"></i>

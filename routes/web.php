@@ -264,6 +264,10 @@ Route::get('/viewreviews', ['uses' => 'MerchantPageController@viewReviews', 'as'
 
 Route::get('/securityhistory', ['uses' => 'MerchantPageController@securityHistory', 'as' => 'security History']);
 
+Route::get('/overdrafthistory', ['uses' => 'MerchantPageController@overdraftHistory', 'as' => 'overdraft History']);
+
+Route::get('/merchantwallethistory', ['uses' => 'MerchantPageController@merchantWalletHistory', 'as' => 'merchant wallet history']);
+
 Route::post('/merchantreply', ['uses' => 'MerchantPageController@merchantReply', 'as' => 'merchant reply']);
 
 Route::get('/viewreply/{id}', ['uses' => 'MerchantPageController@viewmarketReplies', 'as' => 'view replies']);
@@ -749,6 +753,7 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::get('/user-purchase-statement', ['uses' => 'AdminController@userWalletPurchaseStatement', 'as' => 'user purchase statement']);
 	Route::get('/user-wallet-purchase', ['uses' => 'AdminController@userWalletPurchase', 'as' => 'users wallet purchase']);
 	Route::get('bankrequestwithdrawal', ['uses' => 'AdminController@bankRequestWithdrawal', 'as' => 'bank request withdrawal']);
+	Route::get('getmoextransaction', ['uses' => 'AdminController@getMoexTransactionDetails', 'as' => 'get moex transaction']);
 	Route::get('mobilemoneyrequestwithdrawal', ['uses' => 'AdminController@mobilemoneyRequestWithdrawal', 'as' => 'mobilemoney request withdrawal']);
 
 	Route::get('merchantbankdetails', ['uses' => 'AdminController@merchantBanksDetails', 'as' => 'merchant banking details']);
@@ -1089,6 +1094,16 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('activityperday', ['uses' => 'AdminController@platformActivityPerDay', 'as' => 'activity per day']);
 
 	Route::get('generatespecialinfoactivity', ['uses' => 'AdminController@generateSpecialInfoActivity', 'as' => 'generate special information activity']);
+	Route::get('loginfx', ['uses' => 'AdminController@loginVertoFx', 'as' => 'login verto fx']);
+	Route::get('getfxpage', ['uses' => 'AdminController@getFxPage', 'as' => 'get fx rate']);
+	Route::post('submitloginfx', ['uses' => 'AdminController@submitLoginVertoFx', 'as' => 'submit login verto fx']);
+	Route::post('submitfxrate', ['uses' => 'AdminController@submitFxRate', 'as' => 'submit fx rate']);
+	Route::get('getFxtradepage', ['uses' => 'AdminController@getFxTradePage', 'as' => 'get fx trade page']);
+	Route::post('createfxtrade', ['uses' => 'AdminController@createFxTrade', 'as' => 'create fx trade']);
+	Route::get('getbeneficiarypage', ['uses' => 'AdminController@getBeneficaryPage', 'as' => 'get beneficiary page']);
+	Route::post('submitbeneficiary', ['uses' => 'AdminController@submitBeneficiary', 'as' => 'submit beneficiary']);
+	Route::get('getbeneficiarylist', ['uses' => 'AdminController@getBeneficaryList', 'as' => 'get beneficiary list']);
+
 
 
 	// Create support agents

@@ -78,6 +78,7 @@ class Controller extends BaseController
 
 
         $ip_array = json_decode($ip_response);
+        
 
         return  $ip_array;
     }

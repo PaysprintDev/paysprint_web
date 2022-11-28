@@ -58,7 +58,9 @@ return [
     ],
      'vetofx' =>[
         'baseurl' => 'https://api-v3-sandbox.vertofx.com',
-        'token' => env('VETOFX_TOKEN'),
+        'token' => env('VERTOFX_TOKEN'),
+        'clientid' => 'XKDSE0RCKR450QQ3CBSSB2Y6CAPR',
+        'apikey' => env('VERTOFX_APIKEY'),
     ],
 
 ];

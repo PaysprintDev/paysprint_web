@@ -57,12 +57,12 @@
     <div class="container py-5">
         <!-- For demo purpose -->
         <div class="row mb-4">
-            <div class="col-lg-6 mx-auto text-center">
+            <div class="col-lg-8 mx-auto text-center">
                 <h1 class="display-4">Send Money to Non-PaySprint User</h1>
             </div>
         </div> <!-- End -->
         <div class="row">
-            <div class="col-lg-6 mx-auto">
+            <div class="col-lg-8 mx-auto">
                 <div class="card ">
                     <div class="card-header">
                         <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
@@ -484,7 +484,11 @@
 
                                             <div class="compulsory_data disp-0">
                                             </div>
+                                            <div class="gender_data disp-0">
+                                            </div>
                                             <div class="mandatory_data disp-0">
+                                            </div>
+                                            <div class="bank_data disp-0">
                                             </div>
                                             <div class="payoutAgent_data disp-0">
                                             </div>
@@ -645,7 +649,6 @@
                                         <div class="card-footer">
 
 
-
                                             <div class="row">
                                                 <div class="col-md-12 withCardGoogle disp-0">
                                                     <center>
@@ -726,6 +729,9 @@
                 }
 
             });
+
+
+
 
             $('#orgpayservice').change(function() {
                 if ($('#orgpayservice').val() == "Others") {
@@ -1538,10 +1544,15 @@
                     const result = await axios(config);
 
                     if (result.status === 200) {
+
+                        getBankingDetails(country);
+
                         let data = filterPaymentPolicy(country, result.data);
 
                         let compulsoryInput = $('.compulsory_data');
+                        let genderInput = $('.gender_data');
                         let mandatoryInput = $('.mandatory_data');
+
                         let paymentTypeInput = $('.paymentType_data');
                         let informationInput = $('.information_data');
                         let payoutAgentInput = $('.payoutAgent_data');
@@ -1549,6 +1560,7 @@
                         let payoutAgentSelect = $('#payout_record');
 
                         compulsoryInput.addClass('disp-0');
+                        genderInput.addClass('disp-0');
                         mandatoryInput.addClass('disp-0');
                         paymentTypeInput.addClass('disp-0');
                         informationInput.addClass('disp-0');
@@ -1558,6 +1570,7 @@
 
                         informationInput.html('');
                         compulsoryInput.html('');
+                        genderInput.html('');
                         mandatoryInput.html('');
                         paymentTypeInput.html('');
                         payoutAgentInput.html('');
@@ -1593,6 +1606,27 @@
 
 
                             }
+
+                            if(data[0].gender.length > 0){
+                                    let options = [];
+                                    genderInput.removeClass('disp-0');
+
+                                    $.each(data[0].gender, function(v, k) {
+                                        options.push(`<option value="${k}">${k === 'M' ? 'Male' : 'Female'}</option>`);
+                                    });
+
+                                    genderInput.html(`<br><h4>Gender</h4><hr><div class="form-group"> <label for="gender">
+                                                <h6><span class="text-danger">* </span>Select gender</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <select class="form-control" name="gender" id="gender" required>
+                                                    ${options}
+                                                </select>
+                                            </div>
+                                        </div>`);
+
+
+                                }
 
                             if(data[0].mandatory_data.length > 0){
                                 mandatoryInput.removeClass('disp-0');
@@ -1662,13 +1696,13 @@
 
                                 if(data[0].payoutAgent.length > 0){
                                     let options = [];
-                                payoutAgentInput.removeClass('disp-0');
+                                    payoutAgentInput.removeClass('disp-0');
 
-                                $.each(data[0].payoutAgent, function(v, k) {
-                                    options.push(`<option value="${k}">${k}</option>`);
-                                });
+                                    $.each(data[0].payoutAgent, function(v, k) {
+                                        options.push(`<option value="${k}">${k}</option>`);
+                                    });
 
-                                payoutAgentInput.html(`<br><h4>Payout Information</h4><hr><div class="form-group"> <label for="payout_agent">
+                                    payoutAgentInput.html(`<br><h4>Payout Information</h4><hr><div class="form-group"> <label for="payout_agent">
                                                 <h6><span class="text-danger">* </span>Select Payout</h6>
                                             </label>
                                             <div class="input-group">
@@ -1679,7 +1713,7 @@
                                         </div>`);
 
 
-                            }
+                                }
 
                             }
 
@@ -1705,6 +1739,10 @@
                                         <tr>
                                             <td>Payment Type</td>
                                             <td><strong>${data[0].payment_type !== undefined ? data[0].payment_type : '-'}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Service and Terms of Payment</td>
+                                            <td><strong>${data[0].terms_of_payment !== undefined ? data[0].terms_of_payment : '-'}</strong></td>
                                         </tr>
                                         <tr>
                                             <td>Remark</td>
@@ -1760,6 +1798,78 @@
 
 
                 return response;
+            }
+
+
+            const getBankingDetails = async (country) => {
+                let bankInput = $('.bank_data');
+                try {
+
+                    bankInput.removeClass('disp-0');
+                    bankInput.html('<h6 class="text-info">Checking for additional information...</h6>');
+
+                    const headers = {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    }
+
+                    let route = "{{ URL('/api/v1/getadditionallist') }}";
+
+                    const config = {
+                        method: 'post',
+                        url: route,
+                        data: {
+                            name: country
+                        },
+                        headers
+                    }
+
+                    const result = await axios(config);
+
+                    if(result.status === 200){
+
+                        if(result.data.data.length > 0){
+
+
+                                let options = [];
+                                bankInput.removeClass('disp-0');
+
+                                $.each(result.data.data, function(v, k) {
+                                    options.push(`<option value="${k.Code+'__'+k.Name}">${k.Name}</option>`);
+                                });
+
+                                bankInput.html(`<br><h4>Receiver's Bank Information</h4><hr><div class="form-group"> <label for="bank_code">
+                                                <h6><span class="text-danger">* </span>Select Bank</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <select class="form-control bank_code" name="bank_code" id="bank_code" required>
+                                                    ${options}
+                                                </select>
+                                            </div>
+                                        </div><div class="form-group"> <label for="banking_account_number">
+                                                <h6><span class="text-danger">* </span>Account Number</h6>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" name="banking_account_number" id="bank_account_number" value=""
+                                                    class="form-control">
+
+                                                    <input name="branchCode" value="${result.data.branchCode}" type="hidden">
+                                            </div>
+                                        </div>`);
+
+                            }
+
+                    }
+                    else{
+                        bankInput.addClass('disp-0');
+                        bankInput.html('');
+                    }
+
+
+                } catch (error) {
+                    bankInput.addClass('disp-0');
+                    bankInput.html('');
+                    console.error(error.message);
+                }
             }
 
 

@@ -813,37 +813,37 @@ class MoneyTransferController extends Controller
                 } else {
 
 
-                    $withdrawLimit = $this->getWithdrawalLimit($sender->country, $sender->id);
+                    // $withdrawLimit = $this->getWithdrawalLimit($sender->country, $sender->id);
 
-                    if ($req->amount > $withdrawLimit['withdrawal_per_transaction']) {
+                    // if ($req->amount > $withdrawLimit['withdrawal_per_transaction']) {
 
-                        $message = "Transaction limit for per transaction is " . $sender->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
+                    //     $message = "Transaction limit for per transaction is " . $sender->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_transaction'], 2) . ". Please withdraw a lesser amount";
 
-                        $status = 404;
+                    //     $status = 404;
 
-                        $resData = ['data' => [], 'message' => $message, 'status' => $status];
-                    } elseif ($req->amount > $withdrawLimit['withdrawal_per_day']) {
+                    //     $resData = ['data' => [], 'message' => $message, 'status' => $status];
+                    // } elseif ($req->amount > $withdrawLimit['withdrawal_per_day']) {
 
-                        $message = "Transaction limit for per transaction is " . $sender->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
+                    //     $message = "Transaction limit for per transaction is " . $sender->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_day'], 2) . ". Please try again the next day";
 
-                        $status = 404;
+                    //     $status = 404;
 
-                        $resData = ['data' => [], 'message' => $message, 'status' => $status];
-                    } elseif ($req->amount > $withdrawLimit['withdrawal_per_week']) {
+                    //     $resData = ['data' => [], 'message' => $message, 'status' => $status];
+                    // } elseif ($req->amount > $withdrawLimit['withdrawal_per_week']) {
 
-                        $message = "You have reached your limit for the week. Transaction limit per week is " . $sender->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
+                    //     $message = "You have reached your limit for the week. Transaction limit per week is " . $sender->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next week";
 
-                        $status = 404;
+                    //     $status = 404;
 
-                        $resData = ['data' => [], 'message' => $message, 'status' => $status];
-                    } elseif ($req->amount > $withdrawLimit['withdrawal_per_month']) {
+                    //     $resData = ['data' => [], 'message' => $message, 'status' => $status];
+                    // } elseif ($req->amount > $withdrawLimit['withdrawal_per_month']) {
 
-                        $message = "You have reached your limit for the week. Transaction limit per month is " . $sender->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next month";
+                    //     $message = "You have reached your limit for the week. Transaction limit per month is " . $sender->currencyCode . ' ' . number_format($withdrawLimit['withdrawal_per_week'], 2) . ". Please try again the next month";
 
-                        $status = 404;
+                    //     $status = 404;
 
-                        $resData = ['data' => [], 'message' => $message, 'status' => $status];
-                    } else {
+                    //     $resData = ['data' => [], 'message' => $message, 'status' => $status];
+                    // } else {
 
 
 
@@ -1271,7 +1271,7 @@ class MoneyTransferController extends Controller
 
                             $resData = ['data' => [], 'message' => "Kindly setup transaction pin in your profile settings", 'status' => $status];
                         }
-                    }
+                    // }
                 }
             }
         }
