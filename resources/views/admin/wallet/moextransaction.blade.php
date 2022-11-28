@@ -52,6 +52,7 @@
                   <th>Email</th>
                   <th>Country</th>
                   <th>Status</th>
+                  <th>Message</th>
                   <th>Date created</th>
                   <th>Action</th>
                 </tr>
@@ -89,6 +90,7 @@
                             <td>{{ $email }}</td>
                             <td>{{ $country }}</td>
                             <td>{{ $data->status }}</td>
+                            <td>{{ $data->transactionMessage }}</td>
                             <td>{{ date('d/m/Y', strtotime($data->created_at)) }}</td>
                             <td>
                                 <button type="button" data-toggle="modal" data-target="#exampleModal{{ $data->id }}" class="btn btn-primary btn-block">View details</button>

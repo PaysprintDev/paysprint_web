@@ -2615,24 +2615,37 @@ class MoexController extends Controller
                             MoexTransaction::where('id', $item->id)->update(['status' => 'pending', 'transactionMessage' => 'Available for pay']);
                         }
                         elseif($data['transaction']->TransactionStatus === "ANU"){
+
+                            // Refund back to users wallet and mail...
+
                             MoexTransaction::where('id', $item->id)->update(['status' => 'cancelled', 'transactionMessage' => 'Cancelled transaction']);
                         }
                         elseif($data['transaction']->TransactionStatus === "DEV" || $data['transaction']->TransactionStatus === "DVO"){
+
+                            // Refund back to users wallet and mail...
+
                             MoexTransaction::where('id', $item->id)->update(['status' => 'reversed', 'transactionMessage' => 'Transaction returned to sender']);
                         }
                         else{
+
+                            // Refund back to users wallet and mail...
+
                             MoexTransaction::where('id', $item->id)->update(['status' => 'Transaction with problem']);
                         }
                 }
 
             }
 
+            $data = [
+                'success' => 'Done'
+            ];
 
         } catch (\Throwable $th) {
             $data = [
                 'error' => $th->getMessage()
             ];
         }
+
 
 
             return $data;
