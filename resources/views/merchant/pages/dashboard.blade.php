@@ -60,13 +60,16 @@ use App\Http\Controllers\AllCountries; ?>
                                     <p style="font-size: 30px;">{{ Auth::user()->currencySymbol }}</p>
                                 </div>
                                 <h5>{{ number_format(Auth::user()->wallet_balance, 2) }}</h5>
-                                <p>Wallet Balance</p>
+                                <p>Wallet Balance <br> <span><a href="#" style="font-size:13px; color:red">View
+                                            History</a></span></p>
 
                                 <hr>
 
                                 <h5>{{ Auth::user()->currencySymbol.''.number_format(Auth::user()->overdraft_balance, 2)
                                     }}</h5>
-                                <p>Overdraft Balance</p>
+                                <p>Overdraft Balance <br> <span><a href="#" style="font-size:13px; color:red">View
+                                            History</a></span></p>
+
 
 
 
@@ -129,8 +132,7 @@ use App\Http\Controllers\AllCountries; ?>
                                 @else
                                 <!-- ShareThis BEGIN -->
                                 @if(Auth::user()->plan == 'classic' && Auth::user()->payment_link_access == 1 &&
-                                Auth::user()->payment_link_approval == 1
-                                && $datediff > 0)
+                                Auth::user()->payment_link_approval == 1)
                                 <p class="alert alert-danger text-white" style="cursor: pointer; font-size:10px"
                                     onclick="getMyPaymentLink('{{ Auth::user()->id }}')">
                                     <strong>Generate QR Code/Payments Link:</strong>

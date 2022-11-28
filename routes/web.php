@@ -264,6 +264,8 @@ Route::get('/viewreviews', ['uses' => 'MerchantPageController@viewReviews', 'as'
 
 Route::get('/securityhistory', ['uses' => 'MerchantPageController@securityHistory', 'as' => 'security History']);
 
+Route::get('/overdrafthistory', ['uses' => 'MerchantPageController@overdraftHistory', 'as' => 'overdraft History']);
+
 Route::post('/merchantreply', ['uses' => 'MerchantPageController@merchantReply', 'as' => 'merchant reply']);
 
 Route::get('/viewreply/{id}', ['uses' => 'MerchantPageController@viewmarketReplies', 'as' => 'view replies']);

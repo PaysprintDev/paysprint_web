@@ -7850,13 +7850,9 @@ class AdminController extends Controller
             $getxPay = $this->getxpayTrans();
             $allusers = $this->allUsers();
 
-            $data= $this->sendVertoFx();
-
-            $token=$data->token;
-
-            $response=$this->getBeneficiaryList();
-
-            // dd($response);
+                    $response=$this->getBeneficiaryList();  
+                    dd($response);
+                
 
             if(isset($response->success)){
                 $list=$response->data;

@@ -37,10 +37,10 @@ trait AccountReport
         $debitedAmount = Statement::where('country', $currency->name)->where('report_status', 'Withdraw from wallet')->sum('debit');
 		
         $monthlyAmount = Statement::where('country', $currency->name)->where('report_status', 'Monthly fee')->sum('debit');
-        // $sendInvoice = Statement::where('country', $currency->name)->where('action', 'Invoice')->sum('credit');
-		// dd($sendInvoice);
+        $sendInvoice = Statement::where('country', $currency->name)->where('action', 'Invoice')->sum('credit');
+		
         $withdrawAmount = Statement::where('country', $currency->name)->where('report_status', 'Withdraw from wallet')->sum('debit');
-         $credits = $addedAmount + $receivedAmount + ($debitedAmount - $monthlyAmount - $withdrawAmount);
+         $credits = $addedAmount + $receivedAmount + $sendInvoice + ($debitedAmount - $monthlyAmount - $withdrawAmount);
 
 		
 
