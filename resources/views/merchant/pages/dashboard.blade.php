@@ -60,7 +60,7 @@ use App\Http\Controllers\AllCountries; ?>
                                     <p style="font-size: 30px;">{{ Auth::user()->currencySymbol }}</p>
                                 </div>
                                 <h5>{{ number_format(Auth::user()->wallet_balance, 2) }}</h5>
-                                <p>Wallet Balance <br> <span><a href="#" style="font-size:13px; color:red">View
+                                <p>Wallet Balance <br> <span><a href="{{route('merchant wallet history')}}" style="font-size:13px; color:red">View
                                             History</a></span></p>
 
                                 <hr>

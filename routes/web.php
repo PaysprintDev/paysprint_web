@@ -266,6 +266,8 @@ Route::get('/securityhistory', ['uses' => 'MerchantPageController@securityHistor
 
 Route::get('/overdrafthistory', ['uses' => 'MerchantPageController@overdraftHistory', 'as' => 'overdraft History']);
 
+Route::get('/merchantwallethistory', ['uses' => 'MerchantPageController@merchantWalletHistory', 'as' => 'merchant wallet history']);
+
 Route::post('/merchantreply', ['uses' => 'MerchantPageController@merchantReply', 'as' => 'merchant reply']);
 
 Route::get('/viewreply/{id}', ['uses' => 'MerchantPageController@viewmarketReplies', 'as' => 'view replies']);

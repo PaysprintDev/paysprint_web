@@ -291,6 +291,22 @@ class MerchantPageController extends Controller
         return view('merchant.pages.overdrafthistory')->with(['data' => $data]);
     }
 
+    public function merchantWalletHistory()
+    {
+        $id = Auth::id();
+
+         $details= User::where('id',$id)->first();
+
+         $email=$details->email;
+
+        $data =
+            [
+                'history' => Statement::where('user_id', $email)->orderBy('created_at', 'DESC')->get(),
+            ];
+
+        return view('merchant.pages.merchanthistory')->with(['data' => $data]);
+    }
+
 
     public function viewmarketReplies(Request $req, $id)
     {
