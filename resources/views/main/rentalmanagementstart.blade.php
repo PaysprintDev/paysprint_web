@@ -37,7 +37,7 @@
 
                 <div class="col-md-4 col-sm-6 construction">
                    <div class="cns-img">
-                        <img src="https://johnisshak.com/wps/rest/57339/post/6349629/image.jpg" alt="">
+                        <img src="https://butterflymx.com/wp-content/uploads/2019/11/amenities_residents_want.jpg" alt="">
                    </div>
                    <div class="cns-content">
                         <i class="fa fa-bolt" aria-hidden="true"></i>
@@ -67,7 +67,7 @@
 
                 <div class="col-md-4 col-sm-6 construction">
                    <div class="cns-img">
-                        <img src="https://www.bankinghub.eu/wp-content/uploads/sites/2/2020/03/Payments%E2%80%94an-industry-undergoing-radical-change.jpg" alt="">
+                        <img src="https://paysimple.com/blog/wp-content/uploads/2017/01/iStock-1164946738-scaled.jpg" alt="">
                    </div>
                    <div class="cns-content">
                         <i class="fa fa-calendar" aria-hidden="true"></i>
