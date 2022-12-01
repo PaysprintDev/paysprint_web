@@ -61,7 +61,10 @@ class Kernel extends ConsoleKernel
         Commands\UserArchive::class,
         Commands\VirtualAccountTopUp::class,
         Commands\WeeklyLimit::class,
-        Commands\MailToVerifiedMerchant::class
+        Commands\MailToVerifiedMerchant::class,
+        Commands\MoexPSAllPaid::class,
+        Commands\MoexPSAllPayed::class,
+        Commands\MoexPSAllPending::class
         // Commands\DailyMetricsTask::class,
         // Commands\TestPSMoex::class,
     ];
@@ -121,6 +124,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('notificationtable:run')->cron('0 0 * * 2');
         $schedule->command('mailqueue:run')->everyTwoMinutes();
         $schedule->command('moextransactioncheck:run')->everyTwoMinutes();
+        $schedule->command('moextopsallpaid:run')->everyMinute();
+        $schedule->command('moextopsallpending:run')->everyMinute();
+        $schedule->command('moextopsallpayed:run')->everyMinute();
         $schedule->command('mailtoverfiedmerchants:run')->monthly();
 
     }

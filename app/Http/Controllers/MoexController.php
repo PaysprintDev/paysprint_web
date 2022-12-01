@@ -7,6 +7,7 @@ use App\Traits\Moex;
 use App\AllCountries;
 use App\Classes\TWSauth;
 use App\MoexTransaction;
+use App\MoexToPsTransaction;
 use Illuminate\Http\Request;
 use App\Classes\TWSPhoneConfig;
 
@@ -19,10 +20,6 @@ class MoexController extends Controller
 
         $data = $this->importPartnerFee();
         // dd($data);
-
-
-
-
 
         for ($i = 0; $i < count($data); $i++) {
             Allcountries::where('name', ucfirst(strtolower($data[$i]['country'])))->update([
@@ -2524,8 +2521,6 @@ class MoexController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
-
-
     // Cron to MOEX..
     public function sendDailyExchange()
     {
@@ -2545,7 +2540,7 @@ class MoexController extends Controller
             $csv = date('d-m-Y') . '_report.xls';
 
             // File pointer in writable mode
-            $file_pointer = fopen('../'.$csv, 'w');
+            $file_pointer = fopen('../' . $csv, 'w');
 
             // Traverse through the associative
             // array using for each loop
@@ -2562,7 +2557,7 @@ class MoexController extends Controller
             $setupController->name = "Money Exchange";
             $setupController->email = env('APP_ENV') === 'local' ? "adenugaadebambo41@gmail.com" : "tasas@moneyexchange.es";
             $setupController->subject = "Daily Exchange Rate - " . date('d-m-Y');
-            $setupController->message = "<p>Below is the daily exchange rate from PaySprint today.</p><h3>DAILY EXCHANGE RATE - TODAY ".date('d-m-Y')."</h3><hr><p>".$jsonans[0][0]." - <strong>".$jsonans[1]['Correspondent']."</strong></p><p>".$jsonans[0][1]." - <strong>".$jsonans[1]['Country']."</strong></p><p>".$jsonans[0][2]." - <strong>".$jsonans[1]['Currency']."</strong></p><p>".$jsonans[0][3]." - <strong>".$jsonans[1]['usdRate']."</strong></p><p>".$jsonans[0][4]." - <strong>".$jsonans[1]['active']."</strong></p><p>Also find attached</p><p>Best regards</p>";
+            $setupController->message = "<p>Below is the daily exchange rate from PaySprint today.</p><h3>DAILY EXCHANGE RATE - TODAY " . date('d-m-Y') . "</h3><hr><p>" . $jsonans[0][0] . " - <strong>" . $jsonans[1]['Correspondent'] . "</strong></p><p>" . $jsonans[0][1] . " - <strong>" . $jsonans[1]['Country'] . "</strong></p><p>" . $jsonans[0][2] . " - <strong>" . $jsonans[1]['Currency'] . "</strong></p><p>" . $jsonans[0][3] . " - <strong>" . $jsonans[1]['usdRate'] . "</strong></p><p>" . $jsonans[0][4] . " - <strong>" . $jsonans[1]['active'] . "</strong></p><p>Also find attached</p><p>Best regards</p>";
             $setupController->file = $csv;
             $setupController->sendEmail($setupController->email, "Daily Transaction Report");
             $setupController->sendEmail('duntanadebiyi@yahoo.com', "Daily Transaction Report");
@@ -2586,7 +2581,6 @@ class MoexController extends Controller
             $status = 200;
 
             $resData = ['data' => $data, 'message' => 'success', 'status' => $status];
-
         } catch (\Throwable $th) {
             $status = 400;
             $resData = ['data' => [], 'message' => $th->getMessage(), 'status' => $status];
@@ -2595,7 +2589,7 @@ class MoexController extends Controller
         return $this->returnJSON($resData, $status);
     }
 
-    public function paymentConfirmation ()
+    public function paymentConfirmation()
     {
         try {
 
@@ -2606,47 +2600,47 @@ class MoexController extends Controller
             foreach ($getTransaction as $item) {
 
 
-                if($item->status == 'initiated' || $item->status == 'pending'){
-                $transactions = json_decode($item->transaction);
+                if ($item->status == 'initiated' || $item->status == 'pending') {
+                    $transactions = json_decode($item->transaction);
 
 
-                $data = $this->checkTransactionStatus($transactions->transactionId);
+                    $data = $this->checkTransactionStatus($transactions->transactionId);
 
 
 
                     // Update Status...
-                    if($data['transaction']->TransactionStatus === "PAG"){
-                            MoexTransaction::where('id', $item->id)->update(['status' => 'processed', 'transactionMessage' => 'The transaction has already been paid.']);
-                        }
-                        elseif($data['transaction']->TransactionStatus === "ENV" || $data['transaction']->TransactionStatus === "NEV"){
-                            MoexTransaction::where('id', $item->id)->update(['status' => 'pending', 'transactionMessage' => 'Available for pay']);
-                        }
-                        elseif($data['transaction']->TransactionStatus === "ANU"){
-                            // Refund back to users wallet and mail...
-                            MoexTransaction::where('id', $item->id)->update(['status' => 'cancelled', 'transactionMessage' => 'Cancelled transaction']);
+                    if ($data['transaction']->TransactionStatus === "PAG") {
+                        MoexTransaction::where('id', $item->id)->update(['status' => 'processed', 'transactionMessage' => 'The transaction has already been paid.']);
+                    } elseif ($data['transaction']->TransactionStatus === "ENV" || $data['transaction']->TransactionStatus === "NEV") {
+                        MoexTransaction::where('id', $item->id)->update(['status' => 'pending', 'transactionMessage' => 'Available for pay']);
+                    } elseif ($data['transaction']->TransactionStatus === "ANU") {
+                        // Refund back to users wallet and mail...
+                        MoexTransaction::where('id', $item->id)->update(['status' => 'cancelled', 'transactionMessage' => 'Cancelled transaction']);
 
-                            $checkSetup->reverseBackFund($item->user_id, $data['transaction']->AmountToPay, 'Cancelled transaction');
-                        }
-                        elseif($data['transaction']->TransactionStatus === "DEV" || $data['transaction']->TransactionStatus === "DVO"){
-                            // Refund back to users wallet and mail...
-                            MoexTransaction::where('id', $item->id)->update(['status' => 'reversed', 'transactionMessage' => 'Transaction returned to sender']);
+                        $amount = $data['transaction']->AmountToPay + 0.015;
 
-                            $checkSetup->reverseBackFund($item->user_id, $data['transaction']->AmountToPay, 'Transaction returned to sender');
-                        }
-                        else{
-                            // Refund back to users wallet and mail...
-                            MoexTransaction::where('id', $item->id)->update(['status' => 'Transaction with problem']);
+                        $checkSetup->reverseBackFund($item->user_id, $amount, 'Cancelled transaction');
+                    } elseif ($data['transaction']->TransactionStatus === "DEV" || $data['transaction']->TransactionStatus === "DVO") {
+                        // Refund back to users wallet and mail...
+                        MoexTransaction::where('id', $item->id)->update(['status' => 'reversed', 'transactionMessage' => 'Transaction returned to sender']);
 
-                            $checkSetup->reverseBackFund($item->user_id, $data['transaction']->AmountToPay, 'Transaction with problem');
-                        }
+                        $amount = $data['transaction']->AmountToPay + 0.015;
+
+                        $checkSetup->reverseBackFund($item->user_id, $amount, 'Transaction returned to sender');
+                    } else {
+                        // Refund back to users wallet and mail...
+                        MoexTransaction::where('id', $item->id)->update(['status' => 'Transaction with problem']);
+
+                        $amount = $data['transaction']->AmountToPay + 0.015;
+
+                        $checkSetup->reverseBackFund($item->user_id, $amount, 'Transaction with problem');
+                    }
                 }
-
             }
 
             $data = [
                 'success' => 'Done'
             ];
-
         } catch (\Throwable $th) {
             $data = [
                 'error' => $th->getMessage()
@@ -2655,7 +2649,7 @@ class MoexController extends Controller
 
 
 
-            return $data;
+        return $data;
     }
 
 
@@ -2664,7 +2658,20 @@ class MoexController extends Controller
         try {
 
             $data = $this->addTransactionToMoex($body);
+        } catch (\Throwable $th) {
+            $data = [
+                'error' => $th->getMessage()
+            ];
+        }
 
+        return $data;
+    }
+
+
+    public function getExTransactionMoexPS($body)
+    {
+        try {
+            $data = $this->MEGetExtTransactionMoex($body);
 
         } catch (\Throwable $th) {
             $data = [
@@ -2672,9 +2679,118 @@ class MoexController extends Controller
             ];
         }
 
+        return $data;
+    }
 
-            return $data;
 
+    public function getExTransactionMoexPSAllPaid($fromDate, $toDate)
+    {
+        try {
+            $data = $this->MEGetTransactionMoExAllPaid($fromDate, $toDate);
+
+
+            if(isset($data['transactions'])){
+                // Save transactions to database...
+                if(count($data['transactions']) > 0){
+                foreach($data['transactions'] as $transaction){
+                    $getTransaction = MoexToPsTransaction::where('transactionId', $transaction->TransactionId)->first();
+
+                    if(empty($getTransaction)){
+                        // Create New Record
+                        MoexToPsTransaction::insert([
+                            'transactionId' => $transaction->TransactionId,
+                            'body' => json_encode($transaction),
+                            'status' => 'paid'
+                        ]);
+
+                        $this->doSlack("New PAID MOEX: ".$transaction->TransactionId.". Check it out.", $room = "moex-logs", $icon = ":longbox:", env('LOG_SLACK_MOEX_URL'));
+                    }
+                }
+                }
+
+            }
+
+        } catch (\Throwable $th) {
+            $data = [
+                'error' => $th->getMessage()
+            ];
+        }
+
+        return $data;
+    }
+
+
+    public function getExTransactionMoexPSAllPending()
+    {
+        try {
+            $data = $this->MEGetTransactionMoExAllPending();
+
+            if(isset($data['transactions'])){
+                // Save transactions to database...
+                if(count($data['transactions']) > 0){
+                foreach($data['transactions'] as $transaction){
+                    $getTransaction = MoexToPsTransaction::where('transactionId', $transaction->TransactionId)->first();
+
+                    if(empty($getTransaction)){
+                        // Create New Record
+                        MoexToPsTransaction::insert([
+                            'transactionId' => $transaction->TransactionId,
+                            'body' => json_encode($transaction),
+                            'status' => 'pending'
+                        ]);
+
+
+                        // Slack Notify
+                        $this->doSlack("New PENDING MOEX: ".$transaction->TransactionId.". Check it out.", $room = "moex-logs", $icon = ":longbox:", env('LOG_SLACK_MOEX_URL'));
+                    }
+                }
+                }
+
+            }
+
+        } catch (\Throwable $th) {
+            $data = [
+                'error' => $th->getMessage()
+            ];
+        }
+
+        return $data;
+    }
+
+
+    public function getExTransactionMoexPSAllPayed($fromDate, $toDate)
+    {
+        try {
+            $data = $this->MEGetTransactionMoExAllPayed($fromDate, $toDate);
+
+            if(isset($data['transactions'])){
+                // Save transactions to database...
+                if(count($data['transactions']) > 0){
+                foreach($data['transactions'] as $transaction){
+                    $getTransaction = MoexToPsTransaction::where('transactionId', $transaction->TransactionId)->first();
+
+                    if(empty($getTransaction)){
+                        // Create New Record
+                        MoexToPsTransaction::insert([
+                            'transactionId' => $transaction->TransactionId,
+                            'body' => json_encode($transaction),
+                            'status' => 'payed'
+                        ]);
+
+                        $this->doSlack("New PAYED MOEX: ".$transaction->TransactionId.". Check it out.", $room = "moex-logs", $icon = ":longbox:", env('LOG_SLACK_MOEX_URL'));
+                    }
+                }
+                }
+
+            }
+
+        } catch (\Throwable $th) {
+            $data = [
+                'error' => $th->getMessage()
+            ];
+        }
+
+        return $data;
     }
 
 
@@ -2687,30 +2803,25 @@ class MoexController extends Controller
 
             $data = $this->MEGetActiveExtBranchesMoEx($country->cca3);
 
-            if(isset($data['Id'])){
+            if (isset($data['Id'])) {
 
 
                 $result = $this->MEGetAdditionalList($country->cca3, $data['Id']);
 
 
-                if(isset($result['error'])){
+                if (isset($result['error'])) {
                     $status = 400;
                     $resData = ['data' => [], 'message' => $result['error']->Description, 'status' => $status];
-                }
-                else{
+                } else {
 
                     $status = 200;
                     $resData = ['data' => $result, 'message' => 'Success', 'status' => $status, 'branchCode' => $data['Id']];
                 }
-
-
-            }
-            else{
+            } else {
 
                 $status = 400;
                 $resData = ['data' => [], 'message' => $data['error'], 'status' => $status];
             }
-
         } catch (\Throwable $th) {
             $status = 400;
             $resData = ['data' => [], 'message' => $th->getMessage(), 'status' => $status];
@@ -2720,6 +2831,4 @@ class MoexController extends Controller
 
         return $this->returnJSON($resData, $status);
     }
-
-
 }

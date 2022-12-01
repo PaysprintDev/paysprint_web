@@ -754,6 +754,7 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::get('/user-wallet-purchase', ['uses' => 'AdminController@userWalletPurchase', 'as' => 'users wallet purchase']);
 	Route::get('bankrequestwithdrawal', ['uses' => 'AdminController@bankRequestWithdrawal', 'as' => 'bank request withdrawal']);
 	Route::get('getmoextransaction', ['uses' => 'AdminController@getMoexTransactionDetails', 'as' => 'get moex transaction']);
+	Route::get('getmoexpstransaction', ['uses' => 'AdminController@getMoexPSTransaction', 'as' => 'get moex ps transaction']);
 	Route::get('mobilemoneyrequestwithdrawal', ['uses' => 'AdminController@mobilemoneyRequestWithdrawal', 'as' => 'mobilemoney request withdrawal']);
 
 	Route::get('merchantbankdetails', ['uses' => 'AdminController@merchantBanksDetails', 'as' => 'merchant banking details']);
