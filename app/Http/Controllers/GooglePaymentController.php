@@ -1073,10 +1073,8 @@ class GooglePaymentController extends Controller
                         $transaction_id = "ps-" . date('dmY') . time();
 
                         $validator = Validator::make($req->all(), [
-                            'countryCode' => 'required',
                             'country' => 'required',
                             'payment_method' => 'required',
-                            'service' => 'required',
                             'amount' => 'required',
                             'transaction_pin' => 'required',
                         ]);

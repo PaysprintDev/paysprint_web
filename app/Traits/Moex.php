@@ -463,6 +463,28 @@ trait Moex
         return $BranchesMoex;
     }
 
+    // TODO1::
+
+    public function MEConfirmPaymentTransactionMoEx($IdTransaction, $PaymentDate, $ReceiverName, $ReceiverDocument)
+    {
+        $login = $this->twsAuthConfig();
+
+        $clientSoap = new \SoapClient($login->url_wsdl);
+
+        $BranchesMoex = $clientSoap->__soapCall("MEConfirmPaymentTransactionMoEx", [
+            "Login" => $login,
+            "ConfirmData" => [
+                "IdTransaction" => $IdTransaction,
+                "PaymentDate" => $PaymentDate,
+                "ReceiverName" => $ReceiverName,
+                "ReceiverDocument" => $ReceiverDocument
+            ]
+
+        ]);
+
+        return $BranchesMoex;
+    }
+
     // STOP MOEX - PS Module ...
 
 

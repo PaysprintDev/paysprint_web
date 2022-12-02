@@ -15,6 +15,7 @@ Route::prefix('moex/api')->group(function () {
 });
 
 Route::prefix('moextops')->group(function () {
-	Route::post('/verifytransaction', [MoexPSController::class, 'getExTransaction'])->name('call daily verifymoexpstransaction');
+	Route::post('/verifytransaction', [MoexPSController::class, 'getExTransaction'])->name('verify moex ps transaction');
+	Route::post('/confirmpayment', [MoexPSController::class, 'confirmPaymentTransaction'])->name('confirm moex ps transaction');
 });
 
