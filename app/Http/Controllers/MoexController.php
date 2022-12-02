@@ -2617,21 +2617,27 @@ class MoexController extends Controller
                         // Refund back to users wallet and mail...
                         MoexTransaction::where('id', $item->id)->update(['status' => 'cancelled', 'transactionMessage' => 'Cancelled transaction']);
 
-                        $amount = $data['transaction']->AmountToPay + 0.015;
+                        $money = MoexTransaction::where('id', $item->id)->first();
+
+                        $amount = $money->amount + 0.015;
 
                         $checkSetup->reverseBackFund($item->user_id, $amount, 'Cancelled transaction');
                     } elseif ($data['transaction']->TransactionStatus === "DEV" || $data['transaction']->TransactionStatus === "DVO") {
                         // Refund back to users wallet and mail...
                         MoexTransaction::where('id', $item->id)->update(['status' => 'reversed', 'transactionMessage' => 'Transaction returned to sender']);
 
-                        $amount = $data['transaction']->AmountToPay + 0.015;
+                        $money = MoexTransaction::where('id', $item->id)->first();
+
+                        $amount = $money->amount + 0.015;
 
                         $checkSetup->reverseBackFund($item->user_id, $amount, 'Transaction returned to sender');
                     } else {
                         // Refund back to users wallet and mail...
                         MoexTransaction::where('id', $item->id)->update(['status' => 'Transaction with problem']);
 
-                        $amount = $data['transaction']->AmountToPay + 0.015;
+                        $money = MoexTransaction::where('id', $item->id)->first();
+
+                        $amount = $money->amount + 0.015;
 
                         $checkSetup->reverseBackFund($item->user_id, $amount, 'Transaction with problem');
                     }

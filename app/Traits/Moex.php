@@ -485,6 +485,24 @@ trait Moex
         return $BranchesMoex;
     }
 
+
+    public function MEConfirmDownloadedTransactionMoEx($IdTransaction)
+    {
+        $login = $this->twsAuthConfig();
+
+        $clientSoap = new \SoapClient($login->url_wsdl);
+
+        $BranchesMoex = $clientSoap->__soapCall("MEConfirmDownloadedTransactionMoEx", [
+            "Login" => $login,
+            "ConfirmData" => [
+                "IdTransaction" => $IdTransaction
+            ]
+
+        ]);
+
+        return $BranchesMoex;
+    }
+
     // STOP MOEX - PS Module ...
 
 
