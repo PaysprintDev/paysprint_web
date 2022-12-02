@@ -243,7 +243,6 @@ Route::get('/clear', function () {
 	return "Package Cleared!";
 });
 
-
 // Major Routes
 
 
