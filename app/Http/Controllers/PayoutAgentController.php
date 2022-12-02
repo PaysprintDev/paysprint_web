@@ -168,12 +168,12 @@ class PayoutAgentController extends Controller
             if($thisuser->payment_link_approval == '0'){
                  User::where('ref_code', $req->ref_code)->update(['payment_link_approval' => 1]);
                 $message = 'Merchant Payment Link Successfully Activated ';
-              
+
             }else{
                  User::where('ref_code', $req->ref_code)->update(['payment_link_approval' => 0]);
-                $message = 'Merchant Payment Link Successfully De-activated ';  
+                $message = 'Merchant Payment Link Successfully De-activated ';
             }
-            
+
             // else{
             //     $data = [];
             //     $message = 'Cannot Approvate Merchant Link Due to Insuficient Balance';
@@ -185,13 +185,13 @@ class PayoutAgentController extends Controller
             $message = $th->getMessage();
 
             $status = 400;
-          
+
         }
    $resData = ['message' => $message, 'status' => $status];
  return $this->returnJSON($resData, $status);
 
 
-       
+
     }
 
 
@@ -765,7 +765,8 @@ class PayoutAgentController extends Controller
                                     }
                                     else{
 
-                                        MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex)]);
+
+                                        MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $req->amount, 'currency' => $thisuser->currencyCode, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated"]);
 
                                         // Get Transaction record for last money added to wallet
                                         $getTrans = Statement::where('reference_code', 'LIKE', '%ord-%')->where('reference_code', 'LIKE', '%wallet-%')->where('user_id', $thisuser->email)->latest()->first();

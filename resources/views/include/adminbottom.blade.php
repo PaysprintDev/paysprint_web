@@ -5729,6 +5729,44 @@ C</div>
 
         }
 
+
+        async function confirmPaymentMoex()
+        {
+            try {
+
+                var headers = {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                };
+
+                $('#btnconfirm').text('Please wait ...');
+
+
+            const config = {
+                method: 'POST',
+                url: "{{ URL('/moextops/confirmpayment') }}",
+                headers,
+                data: {
+                    IdTransaction: $('#IdTransaction').val(),
+                    PaymentDate: $('#PaymentDate').val(),
+                    ReceiverName: $('#ReceiverName').val(),
+                    ReceiverDocument: $('#ReceiverDocument').val()
+                }
+            }
+
+            const response = await axios(config);
+
+            swal('Great!', response.data.message, 'sucess');
+
+            }  catch (error) {
+                $('#btnconfirm').text('Confirm Payment');
+                    if (error.response) {
+                    swal('Oops', error.response.data.message, 'error');
+                    } else {
+                    swal('Error', error.message, 'error');
+                    }
+            }
+        }
+
         // End MOEX - PS Transaction
 
 

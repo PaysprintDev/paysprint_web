@@ -7,25 +7,21 @@ use Session;
 use App\MarkUp;
 use App\Points;
 use App\PromoDate;
-use App\MarketplaceNews;
 use App\TrialDate;
 use App\watchlist;
-use App\merchantTrial;
-
 use Carbon\Carbon;
-
 use App\Tax as Tax;
+
 use App\FxStatement;
+
+use App\MobileMoney;
 use App\SurveyExcel;
+use App\Traits\Moex;
 //Session
 use App\Traits\MyFX;
-use App\Traits\UserManagement;
-
 use App\InvestorPost;
 
 use App\SpecialPromo;
-
-use App\SecurityDepositStatement;
 
 use App\SurveyReport;
 
@@ -39,25 +35,31 @@ use App\EscrowAccount;
 
 use App\HistoryReport;
 
+use App\merchantTrial;
+
 use App\ReferralClaim;
 
 use App\ReferredUsers;
-
-use App\DusupaymentReferences;
 
 use App\Admin as Admin;
 
 use App\Mail\sendEmail;
 
+use App\Traits\DusuPay;
+
 use App\Traits\Trulioo;
 
-use App\Traits\Moex;
+use App\Traits\VertoFx;
+
+use App\MarketplaceNews;
 
 use App\InvestorRelation;
 
 use App\ReferralGenerate;
 
 use App\Traits\Xwireless;
+
+use App\VerifiedMerchant;
 
 use App\InvoiceCommission;
 
@@ -68,25 +70,25 @@ use App\AddCard as AddCard;
 use App\SpecialpromoReport;
 
 use App\Traits\FlagPayment;
-
 use App\Traits\GenerateOtp;
+
 use App\Traits\PointsClaim;
 
 use App\Traits\SpecialInfo;
+
+use App\UnverifiedMerchant;
+
+use App\MoexToPsTransaction;
 
 use Illuminate\Http\Request;
 
 use App\Imports\SurveyImport;
 
-use App\Imports\MerchantImport;
-
-use App\Imports\VerifiedImport;
-
 use App\Traits\AccountNotify;
 
 use App\Traits\PointsHistory;
 
-use App\Traits\DusuPay;
+use App\DusupaymentReferences;
 
 use App\ThirdPartyIntegration;
 
@@ -94,65 +96,63 @@ use App\Traits\PaymentGateway;
 
 use App\Traits\PaysprintPoint;
 
+use App\Traits\UserManagement;
+
 use App\AnonUsers as AnonUsers;
 
+use App\Imports\MerchantImport;
+
+use App\Imports\VerifiedImport;
+
 use App\PlatformPaymentGateway;
-
 use App\Statement as Statement;
-
 use App\Traits\PaystackPayment;
-
-use App\Traits\VertoFx;
-
 use App\CardIssuer as CardIssuer;
 use App\ClientInfo as ClientInfo;
 use App\Createpost as Createpost;
 use App\MonthlyFee as MonthlyFee;
+
+use App\SecurityDepositStatement;
+
 use App\SuperAdmin as SuperAdmin;
 use App\UserClosed as UserClosed;
+
 use Illuminate\Support\Collection;
 
 use Illuminate\Support\Facades\DB;
 
 use App\CashAdvance as CashAdvance;
+
 use App\CreateEvent as CreateEvent;
 
 use App\CrossBorder as CrossBorder;
 
 use App\ImportExcel as ImportExcel;
 
-use App\UnverifiedMerchant;
-
-use App\VerifiedMerchant;
-
 use App\ServiceType as ServiceType;
-
 use App\Traits\MailChimpNewsLetter;
-
 use App\UpgradePlan as UpgradePlan;
 use Illuminate\Support\Facades\Log;
+
+
 use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Hash;
 
-
 use Illuminate\Support\Facades\Mail;
-
-use Illuminate\Support\Facades\Validator;
-
 use Maatwebsite\Excel\Facades\Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
-use App\AllCountries as AllCountries;
 
+use App\AllCountries as AllCountries;
 use App\CcWithdrawal as CcWithdrawal;
 use App\DeletedCards as DeletedCards;
 use App\Epaywithdraw as Epaywithdraw;
-use App\InAppMessage as InAppMessage;
 
+use App\InAppMessage as InAppMessage;
 use App\MailCampaign as MailCampaign;
 use App\PricingSetup as PricingSetup;
-use App\Exports\WalletStatementExport;
 
-use App\MobileMoney;
+use App\Exports\WalletStatementExport;
 
 use App\CollectionFee as CollectionFee;
 
@@ -166,6 +166,8 @@ use App\BankWithdrawal as BankWithdrawal;
 
 use App\InvoicePayment as InvoicePayment;
 
+use Illuminate\Support\Facades\Validator;
+
 use Illuminate\Support\Facades\Validation;
 
 use App\ImportExcelLink as ImportExcelLink;
@@ -175,7 +177,6 @@ use App\MerchantService as MerchantService;
 use App\MonerisActivity as MonerisActivity;
 
 use App\OrganizationPay as OrganizationPay;
-
 use App\SupportActivity as SupportActivity;
 use App\TransactionCost as TransactionCost;
 use App\BVNVerificationList as BVNVerificationList;
@@ -14194,6 +14195,153 @@ class AdminController extends Controller
 
 
             return view('admin.report.businessreport')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
+    public function getMoexPaidTransaction(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing" || session('role') == "Customer Success") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $otherPays = DB::table('invoice_payment')
+                    ->select(DB::raw('invoice_payment.transactionid, invoice_payment.name, invoice_payment.email, import_excel.amount as invoice_amount, invoice_payment.invoice_no, invoice_payment.service, invoice_payment.created_at as transaction_date, import_excel.description as description, invoice_payment.remaining_balance as runningbalance, invoice_payment.amount as amount_paid, import_excel.status, invoice_payment.mystatus'))->distinct()
+                    ->join('import_excel', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')
+                    ->where('import_excel.uploaded_by', session('user_id'))
+                    ->orderBy('invoice_payment.created_at', 'DESC')->get();
+            }
+
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $servicetypes = $this->getServiceTypes();
+
+            $data = [
+                'paid' => MoexToPsTransaction::where('status', 'paid')->get()
+            ];
+
+
+            return view('admin.report.moexpaidtransactions')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
+    public function getMoexPayedTransaction(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing" || session('role') == "Customer Success") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $otherPays = DB::table('invoice_payment')
+                    ->select(DB::raw('invoice_payment.transactionid, invoice_payment.name, invoice_payment.email, import_excel.amount as invoice_amount, invoice_payment.invoice_no, invoice_payment.service, invoice_payment.created_at as transaction_date, import_excel.description as description, invoice_payment.remaining_balance as runningbalance, invoice_payment.amount as amount_paid, import_excel.status, invoice_payment.mystatus'))->distinct()
+                    ->join('import_excel', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')
+                    ->where('import_excel.uploaded_by', session('user_id'))
+                    ->orderBy('invoice_payment.created_at', 'DESC')->get();
+            }
+
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $servicetypes = $this->getServiceTypes();
+
+            $data = [
+                'payed' => MoexToPsTransaction::where('status', 'payed')->get()
+            ];
+
+
+            return view('admin.report.moexpayedtransactions')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+
+    public function getMoexPendingTransaction(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing" || session('role') == "Customer Success") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+
+                $otherPays = DB::table('invoice_payment')
+                    ->select(DB::raw('invoice_payment.transactionid, invoice_payment.name, invoice_payment.email, import_excel.amount as invoice_amount, invoice_payment.invoice_no, invoice_payment.service, invoice_payment.created_at as transaction_date, import_excel.description as description, invoice_payment.remaining_balance as runningbalance, invoice_payment.amount as amount_paid, import_excel.status, invoice_payment.mystatus'))->distinct()
+                    ->join('import_excel', 'import_excel.invoice_no', '=', 'invoice_payment.invoice_no')
+                    ->where('import_excel.uploaded_by', session('user_id'))
+                    ->orderBy('invoice_payment.created_at', 'DESC')->get();
+            }
+
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $servicetypes = $this->getServiceTypes();
+
+
+            $data = [
+                'pending' => MoexToPsTransaction::where('status', 'pending')->get()
+            ];
+
+            return view('admin.report.moexpendingtransactions')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'transCost' => $transCost, 'servicetypes' => $servicetypes, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
         }

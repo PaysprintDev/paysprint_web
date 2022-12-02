@@ -31,7 +31,7 @@
                     <div class="icon">
                         <i class="ion ion-stats-bars"></i>
                     </div>
-                    <a href="{{ route('business report') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{ route('get moex paid transaction') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
 
@@ -46,7 +46,7 @@
                     <div class="icon">
                         <i class="ion ion-stats-bars"></i>
                     </div>
-                    <a href="{{ route('business report') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{ route('get moex payed transaction') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
 
@@ -61,7 +61,7 @@
                     <div class="icon">
                         <i class="ion ion-stats-bars"></i>
                     </div>
-                    <a href="{{ route('business report') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
+                    <a href="{{ route('get moex pending transaction') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             </div>
 
@@ -72,17 +72,52 @@
                         <h3>Verify a Transaction Here...</h3>
                     <div class="box container">
                         <div class="mx-auto">
-                            <div class="col-md-8">
+                            <div class="col-md-6">
                                 <br>
                                 <br>
                                 <form>
+                                    <h2 class="text-center">Get Record</h2>
+                                    <hr>
                                     <div class="form-group">
                                         <label for="transactionId">Transaction Id</label>
                                         <input type="text" class="form-control" id="transactionId" aria-describedby="transactionIdHelp" placeholder="Enter transaction id">
                                         <small id="transactionIdHelp" class="form-text text-muted">Please provide the transaction id to verify transaction.</small>
                                     </div>
 
-                                    <button type="button" class="btn btn-primary" onclick="getTransactionReference()" id="btn">Fetch Record</button>
+                                    <button type="button" class="btn btn-primary btn-block" onclick="getTransactionReference()" id="btn">Fetch Record</button>
+                                </form>
+                                <br>
+                                <br>
+                            </div>
+
+                            <div class="col-md-6">
+                                <br>
+                                <br>
+                                <form>
+                                    <h2 class="text-center">Confirm Payment</h2>
+                                    <hr>
+                                    <div class="form-group">
+                                        <label for="IdTransaction">Transaction Id</label>
+                                        <input type="text" class="form-control" id="IdTransaction" aria-describedby="IdTransactionHelp" placeholder="Enter Transaction Id">
+                                        <small id="IdTransactionHelp" class="form-text text-muted">Please provide the transaction id to verify transaction.</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="PaymentDate">Payment Date</label>
+                                        <input type="text" class="form-control" id="PaymentDate" aria-describedby="PaymentDateHelp" placeholder="Enter Payment Date">
+                                        <small id="PaymentDateHelp" class="form-text text-muted">Please provide the payment date from transaction.</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ReceiverName">Receiver Name</label>
+                                        <input type="text" class="form-control" id="ReceiverName" aria-describedby="ReceiverNameHelp" placeholder="Enter Receiver Name">
+                                        <small id="ReceiverNameHelp" class="form-text text-muted">Please provide the receiver name from transaction.</small>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ReceiverDocument">Receiver Document</label>
+                                        <input type="text" class="form-control" id="ReceiverDocument" aria-describedby="ReceiverDocumentHelp" placeholder="Enter Receiver Document">
+                                        <small id="ReceiverDocumentHelp" class="form-text text-muted">Please provide the receiver document from transaction.</small>
+                                    </div>
+
+                                    <button type="button" class="btn btn-primary btn-block" onclick="confirmPaymentMoex()" id="btnconfirm">Confirm Payment</button>
                                 </form>
                                 <br>
                                 <br>

@@ -1179,7 +1179,7 @@
                                     $('.commissionInfo').addClass('alert alert-success');
                                     $('.commissionInfo').removeClass('alert alert-danger');
 
-                                    let commissionVal = Number(result.data) * 0.1;
+                                    let commissionVal = Number(result.data) * 0.015;
                                     let finalDeduct = Number(result.data) + commissionVal
 
                                     $('.commissionInfo').html(

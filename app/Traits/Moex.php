@@ -387,7 +387,7 @@ trait Moex
             $this->doSlack(json_encode($BranchesMoex), $room = "moex-logs", $icon = ":longbox:", env('LOG_SLACK_MOEX_URL'));
         } else {
             $responseData = [
-                'error' => $BranchesMoex['error']->Description
+                'error' => $BranchesMoex['error']
             ];
             $this->doSlack($BranchesMoex['error']->Description, $room = "moex-logs", $icon = ":longbox:", env('LOG_SLACK_MOEX_URL'));
         }
@@ -458,6 +458,46 @@ trait Moex
             "Login" => $login,
             "FromDate" => $FromDate,
             "ToDate" => $ToDate
+        ]);
+
+        return $BranchesMoex;
+    }
+
+    // TODO1::
+
+    public function MEConfirmPaymentTransactionMoEx($IdTransaction, $PaymentDate, $ReceiverName, $ReceiverDocument)
+    {
+        $login = $this->twsAuthConfig();
+
+        $clientSoap = new \SoapClient($login->url_wsdl);
+
+        $BranchesMoex = $clientSoap->__soapCall("MEConfirmPaymentTransactionMoEx", [
+            "Login" => $login,
+            "ConfirmData" => [
+                "IdTransaction" => $IdTransaction,
+                "PaymentDate" => $PaymentDate,
+                "ReceiverName" => $ReceiverName,
+                "ReceiverDocument" => $ReceiverDocument
+            ]
+
+        ]);
+
+        return $BranchesMoex;
+    }
+
+
+    public function MEConfirmDownloadedTransactionMoEx($IdTransaction)
+    {
+        $login = $this->twsAuthConfig();
+
+        $clientSoap = new \SoapClient($login->url_wsdl);
+
+        $BranchesMoex = $clientSoap->__soapCall("MEConfirmDownloadedTransactionMoEx", [
+            "Login" => $login,
+            "ConfirmData" => [
+                "IdTransaction" => $IdTransaction
+            ]
+
         ]);
 
         return $BranchesMoex;

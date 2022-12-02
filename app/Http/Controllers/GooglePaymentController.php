@@ -1073,10 +1073,8 @@ class GooglePaymentController extends Controller
                         $transaction_id = "ps-" . date('dmY') . time();
 
                         $validator = Validator::make($req->all(), [
-                            'countryCode' => 'required',
                             'country' => 'required',
                             'payment_method' => 'required',
-                            'service' => 'required',
                             'amount' => 'required',
                             'transaction_pin' => 'required',
                         ]);
@@ -1226,7 +1224,7 @@ class GooglePaymentController extends Controller
                                                     }
 
 
-                                                    MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $amount, 'currency' => $thisuser->currencyCode, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated"]);
+                                                    MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $req->amount, 'currency' => $thisuser->currencyCode, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated"]);
 
 
 
@@ -1515,7 +1513,7 @@ class GooglePaymentController extends Controller
                                                             }
 
 
-                                                            MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $amount, 'currency' => $thisuser->currencyCode, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated"]);
+                                                            MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $req->amount, 'currency' => $thisuser->currencyCode, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated"]);
 
 
                                                             $statement_route = "wallet";
