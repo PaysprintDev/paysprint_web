@@ -387,7 +387,7 @@ trait Moex
             $this->doSlack(json_encode($BranchesMoex), $room = "moex-logs", $icon = ":longbox:", env('LOG_SLACK_MOEX_URL'));
         } else {
             $responseData = [
-                'error' => $BranchesMoex['error']->Description
+                'error' => $BranchesMoex['error']
             ];
             $this->doSlack($BranchesMoex['error']->Description, $room = "moex-logs", $icon = ":longbox:", env('LOG_SLACK_MOEX_URL'));
         }
