@@ -187,8 +187,6 @@
                                 <div class="tab-content" id="myTabContent">
                                     <div class="tab-pane fade" id="home" role="tabpanel"
                                         aria-labelledby="haveAccount">
-
-
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="mt-3">
@@ -201,7 +199,7 @@
                                                         <input type="hidden" name="currencyCode" id="currencyCode" value="{{ $data['currencyCode']->currencyCode }}">
                                                         <input type="hidden" name="payType" id="payType" value="ps_user">
                                                         <input type="hidden" name="merchant_id" id="payuser_id"
-                                        value="{{ Request::segment(3) }}">
+                                                       value="{{ Request::segment(3) }}">
 
                                                         <div class="form-group"> <label for="enter_account_number">
                                                                 <h6><span style="color: red;">*</span> Please enter your
@@ -354,11 +352,8 @@
                                             </div>
                                         </div>
 
-
-
-
-
                                     </div>
+
                                     <div class="tab-pane fade show active" id="profile" role="tabpanel"
                                         aria-labelledby="dontHaveAccount">
 
@@ -378,10 +373,7 @@
                                         value="{{ Request::segment(3) }}">
 
                                         <input type="hidden" name="cardType" id="cardType"
-                                                            value="">
-
-
-
+                                        value="">
                                     <div class="form-group"> <label for="currency">
                                             <h6>Full Name</h6>
                                         </label>
@@ -678,17 +670,9 @@
 
 
                                 </form>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-
-
-
-
-
-
+                                </div>
+                                </div>
+                                </div>
 
 
                                     </div>
@@ -749,11 +733,6 @@
 
                                 </div>
                             </div>
-
-
-
-
-
 
                         </div>
 
