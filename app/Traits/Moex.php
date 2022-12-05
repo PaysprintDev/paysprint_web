@@ -463,8 +463,6 @@ trait Moex
         return $BranchesMoex;
     }
 
-    // TODO1::
-
     public function MEConfirmPaymentTransactionMoEx($IdTransaction, $PaymentDate, $ReceiverName, $ReceiverDocument)
     {
         $login = $this->twsAuthConfig();

@@ -64,7 +64,8 @@ class Kernel extends ConsoleKernel
         Commands\MailToVerifiedMerchant::class,
         Commands\MoexPSAllPaid::class,
         Commands\MoexPSAllPayed::class,
-        Commands\MoexPSAllPending::class
+        Commands\MoexPSAllPending::class,
+        Commands\PlatformCurrencyConvert::class
         // Commands\DailyMetricsTask::class,
         // Commands\TestPSMoex::class,
     ];
@@ -128,6 +129,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('moextopsallpending:run')->everyMinute();
         $schedule->command('moextopsallpayed:run')->everyMinute();
         $schedule->command('mailtoverfiedmerchants:run')->monthly();
+        $schedule->command('platformcurrencyconverter:run')->twiceDaily(0, 12);
 
     }
 

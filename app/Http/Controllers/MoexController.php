@@ -2694,16 +2694,20 @@ class MoexController extends Controller
         try {
             $data = $this->MEGetTransactionMoExAllPaid($fromDate, $toDate);
 
+            dd($data);
+
             if(isset($data['transactions'])){
                 // Save transactions to database...
                 if(count($data['transactions']) > 0){
                 foreach($data['transactions'] as $transaction){
-                    $getTransaction = MoexToPsTransaction::where('transactionId', $transaction->TransactionId)->first();
+                    $getTransaction = MoexToPsTransaction::where('transactionId', trim($transaction->TransactionId))->first();
+
+
 
                     if(empty($getTransaction)){
                         // Create New Record
                         MoexToPsTransaction::insert([
-                            'transactionId' => $transaction->TransactionId,
+                            'transactionId' => trim($transaction->TransactionId),
                             'body' => trim(json_encode($transaction)),
                             'status' => 'paid',
                             'created_at' => date('Y-m-d H:i:s'),
@@ -2749,6 +2753,7 @@ class MoexController extends Controller
                             'updated_at' => date('Y-m-d H:i:s')
                         ]);
 
+                        $this->MEConfirmDownloadedTransactionMoEx(trim($transaction->TransactionId));
 
                         // Slack Notify
                         $this->doSlack("New PENDING MOEX: ".$transaction->TransactionId.". Check it out.", $room = "moex-logs", $icon = ":longbox:", env('LOG_SLACK_MOEX_URL'));
