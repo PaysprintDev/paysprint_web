@@ -805,6 +805,7 @@
                 today = dd + '/' + mm + '/' + yyyy;
 
                 $("#conversionamount").val("");
+                $("#amount").val("");
 
                 var currency = "NGN";
                 var localcurrency = "{{ $data['currencyCode']->currencyCode }}";
@@ -964,6 +965,8 @@
 
                 var currencySymbol = "{{ Auth::user()->currencySymbol }}";
 
+                $("#amount").val('');
+
 
                 $('.payutilityBtn').addClass('btn-danger');
                 $('.payutilityBtn').removeClass('btn-primary');
@@ -992,7 +995,6 @@
                                 $('.payutilityBtn').text('Please wait...');
                             },
                             success: function(result) {
-
 
                                 $('.payutilityBtn').removeClass('btn-danger');
                                 $('.payutilityBtn').addClass('btn-primary');
@@ -1039,17 +1041,13 @@
 
                                             $.each(k.ListItems, function(i, j) {
 
-
                                                 var checkerItem = j.ItemName +
                                                     ': ₦' + j.Amount + ' (' + j
                                                     .ItemDesc + ')';
 
-                                                console.log(checkerItem,
-                                                    selectedOption);
 
-
-                                                if (checkerItem == selectedOption) {
-
+                                                if (checkerItem.trim() ==
+                                                    selectedOption.trim()) {
 
                                                     if (currencySymbol != "₦") {
 
@@ -1093,7 +1091,8 @@
                                                                     );
 
 
-                                                                if (checkerItem ==
+                                                                if (checkerItem
+                                                                    .trim() ==
                                                                     "AIRTIME: ₦0 (-)"
                                                                 ) {
                                                                     getAmount
@@ -1108,6 +1107,7 @@
                                                                         =
                                                                         getAmount;
                                                                 }
+
 
 
                                                                 if (payInput ==
@@ -1137,6 +1137,7 @@
                                                                         getAmount
                                                                     );
 
+
                                                                 runCommission
                                                                     ();
 
@@ -1146,10 +1147,8 @@
 
                                                     } else {
 
-                                                        if (checkerItem ==
+                                                        if (checkerItem.trim() ==
                                                             "AIRTIME: ₦0 (-)") {
-
-
 
                                                             var myAmount = $(
                                                                 "#amount").val();
@@ -1168,25 +1167,28 @@
 
                                                         } else {
 
-                                                            getAmount = j.Amount *
+                                                            getAmount = Number(j
+                                                                    .Amount) *
                                                                 numberOfMonths;
 
+
+                                                                console.log("New Check Here! ",payInput, getAmount, $('#'+payInput).val(getAmount));
                                                             if (payInput ==
                                                                 "amount") {
                                                                 $("#" + payInput)
                                                                     .val(getAmount);
+
                                                             } else {
                                                                 $("#amount").val(
                                                                     getAmount);
                                                             }
+
                                                         }
-
-
 
                                                     }
 
-
                                                 } else {
+
                                                     if (currencySymbol != "₦") {
 
                                                         // convert Amount to other currency and pass to price amount
@@ -1229,7 +1231,8 @@
                                                                     );
 
 
-                                                                if (checkerItem ==
+                                                                if (checkerItem
+                                                                    .trim() ==
                                                                     "AIRTIME: ₦0 (-)"
                                                                 ) {
                                                                     getAmount
@@ -1273,6 +1276,7 @@
                                                                         getAmount
                                                                     );
 
+
                                                                 runCommission
                                                                     ();
 
@@ -1282,7 +1286,7 @@
 
                                                     } else {
 
-                                                        if (checkerItem ==
+                                                        if (checkerItem.trim() ==
                                                             "AIRTIME: ₦0 (-)") {
 
 
@@ -1323,7 +1327,10 @@
                                                 }
 
 
+
                                             });
+
+
                                         }
 
                                     });
@@ -1340,12 +1347,12 @@
                                             $("#" + payInput).attr('readonly', false);
                                         }
 
+
                                     } else {
                                         $("#amount").val(getAmount);
                                         $("#amount").attr('readonly', true);
 
                                     }
-
 
                                     runCommission();
                                 } else {

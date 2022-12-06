@@ -135,10 +135,6 @@ trait ExpressPayment
         }
 
 
-
-
-
-
         // Get our charge
 
         return $data;

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\SendGridController;
 
 class MailToVerifiedMerchant extends Command
 {
@@ -11,7 +12,7 @@ class MailToVerifiedMerchant extends Command
      *
      * @var string
      */
-    protected $signature = 'mailtoverfiedmerchants:run';
+    protected $signature = 'mailtoverifiedmerchants:run';
 
     /**
      * The console command description.
@@ -37,7 +38,7 @@ class MailToVerifiedMerchant extends Command
      */
     public function handle()
     {
-         $checkSetup = new SendgridController();
+         $checkSetup = new SendGridController();
 
         $checkSetup->claimBusiness();
 
