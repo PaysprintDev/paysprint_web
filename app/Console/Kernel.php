@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
         Commands\BvnListUpdate::class,
         Commands\ChargeFee::class,
         Commands\CheckTelephone::class,
-        Commands\CronToConsumers::class,
+        // Commands\CronToConsumers::class,
         // Commands\CronToMerchant::class,
         Commands\DailyExchange::class,
         Commands\MoexTransactionCheck::class,
@@ -84,7 +84,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('bvnlistupdate:run')->dailyAt('02:00');
         $schedule->command('chargefee:run')->twiceDaily(1, 13);
         $schedule->command('checktelephone:run')->dailyAt('00:00');
-        $schedule->command('crontoconsumer:run')->fridays();
+        // $schedule->command('crontoconsumer:run')->fridays();
         // $schedule->command('crontomerchant:run')->tuesdays();
         $schedule->command('dailyexchange:run')->dailyAt('07:00');
         $schedule->command('dailylimit:run')->cron('0 0 * * *');

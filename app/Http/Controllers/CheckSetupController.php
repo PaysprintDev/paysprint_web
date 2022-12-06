@@ -1761,10 +1761,6 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
                     $this->message = "<p>We  wish to remind you that your verification process is yet to be completed.</p><p>You can only RECEIVE funds to your wallet until you have completed the required identity verification process that would enable you 'to Add Money/Top Up Wallet' and 'Send Money from Wallet' and also access other features on PaySprint.</p><p>To Complete the identity verification processes, kindly follow these steps:</p><p>a. Login to your PaySprint Account on your mobile app or at: <a href='https://paysprint.ca'>www.paysprint.ca</a></p><p> b. Go to Profile section and upload the following: <br> 1. Selfie of yourself <br> 2. Government Issued Photo ID (Drivers license or International Passport or National ID card) <br> 3. Utility Bill ( Electricity, Hydro etc. Note that Bank or Credit Card Statements are not accepted)</p><br><p>Thank you for choosing us.</p>";
 
-
-
-
-
                     // $this->sendEmail($this->email, "Incomplete Setup");
 
 
