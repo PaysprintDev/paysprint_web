@@ -2951,7 +2951,7 @@ class MerchantApiController extends Controller
 
 
                             // Insert Statement
-                            $activity = "Transfer of " . $myCurrency . " " . number_format($req->amount + $collectionFee, 2) . " to " . $thismerchant->businessname . " for " . $service . ". A service fee of " . $myCurrency . " " . number_format($collectionFee, 2) . " inclusive";
+                            $activity = "Transfer of " . $myCurrency . " " . number_format($req->amount + $collectionFee, 2) . " to " . $thismerchant->businessname . " for " . $service . ". A service fee of " . $myCurrency . " " . number_format($collectionFee, 2) . " is charged";
                             $credit = 0;
                             $debit = $req->amount + $collectionFee;
                             $reference_code = $reference_code;
@@ -2974,19 +2974,19 @@ class MerchantApiController extends Controller
                                 $recWallet = $thismerchant->wallet_balance + $amount;
                                 $walletstatus = "Delivered";
 
-                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of " . $myCurrency . " " . $collectionFee . " inclusive to PaySprint Inc. for " . $service . " from " . $req->firstname . " " . $req->lastname . " You now have " . $myCurrency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
+                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of " . $myCurrency . " " . $collectionFee . " is charged for " . $service . " from " . $req->firstname . " " . $req->lastname . " You now have " . $myCurrency . ' ' . number_format($recWallet, 2) . " balance in your wallet. PaySprint Team";
                             } else {
                                 $recWallet = $thismerchant->wallet_balance;
                                 $walletstatus = "Pending";
 
-                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of " . $myCurrency . " " . $collectionFee . " inclusive to PaySprint Inc. for " . $service . " from " . $req->firstname . " " . $req->lastname . " Your wallet balance is " . $myCurrency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
+                                $recMsg = "Hi " . $thismerchant->businessname . ", You have received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of " . $myCurrency . " " . $collectionFee . " is charged for " . $service . " from " . $req->firstname . " " . $req->lastname . " Your wallet balance is " . $myCurrency . ' ' . number_format($recWallet, 2) . ". Kindly login to your wallet account to receive money. PaySprint Team " . route('my account');
                             }
 
 
                             User::where('ref_code', $thismerchant->ref_code)->update(['wallet_balance' => $recWallet]);
 
                             // thismerchant Statement
-                            $this->insStatement($thismerchant->email, $paymentToken, "Received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of " . $myCurrency . " " . $collectionFee . " inclusive to PaySprint Inc. for " . $service . " from " . $req->firstname . " " . $req->lastname, $amount, 0, $balance, $trans_date, $walletstatus, "Wallet credit", $thismerchant->ref_code, 1, $statement_route, $thismerchant->auto_deposit, $thismerchant->country, $mode);
+                            $this->insStatement($thismerchant->email, $paymentToken, "Received " . $myCurrency . ' ' . number_format($amount, 2) . " and a transaction fee of " . $myCurrency . " " . $collectionFee . " is charged for " . $service . " from " . $req->firstname . " " . $req->lastname, $amount, 0, $balance, $trans_date, $walletstatus, "Wallet credit", $thismerchant->ref_code, 1, $statement_route, $thismerchant->auto_deposit, $thismerchant->country, $mode);
 
                             // Send mail to both parties
 

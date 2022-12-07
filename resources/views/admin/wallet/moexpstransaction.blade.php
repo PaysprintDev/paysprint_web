@@ -25,7 +25,7 @@
                 <!-- small box -->
                 <div class="small-box bg-aqua">
                     <div class="inner">
-                        <h3>&nbsp;</h3>
+                        <h3>{{ $data['paid'] }}</h3>
                         <p>All Paid Transaction</p>
                     </div>
                     <div class="icon">
@@ -40,7 +40,7 @@
                 <!-- small box -->
                 <div class="small-box bg-green">
                     <div class="inner">
-                        <h3>&nbsp;</h3>
+                        <h3>{{ $data['payed'] }}</h3>
                         <p>All Payed Transaction</p>
                     </div>
                     <div class="icon">
@@ -55,7 +55,7 @@
                 <!-- small box -->
                 <div class="small-box bg-red">
                     <div class="inner">
-                        <h3>&nbsp;</h3>
+                        <h3>{{ $data['pending'] }}</h3>
                         <p>All Pending Transaction</p>
                     </div>
                     <div class="icon">

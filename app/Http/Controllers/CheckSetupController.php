@@ -1057,7 +1057,7 @@ your PaySprint Account.You need to provide the outstanding information and compl
 
     public function updateExbcAccount()
     {
-        // Create Statement And Credit EXBC account holder
+        // Create Statement And Credit PaySprint Account holder
         // $exbcMerchant = User::where('email', 'bambo@vimfile.com')->first();
         $exbcMerchant = User::where('email', 'bambo@vimfile.com')->first();
 
@@ -1203,7 +1203,7 @@ your PaySprint Account.You need to provide the outstanding information and compl
 
     public function reverseFund()
     {
-        // Create Statement And Credit EXBC account holder
+        // Create Statement And Credit PaySprint Account holder
         // $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
         $exbcMerchant = User::where('email', 'Finance@monrenardbleu.com')->first();
 

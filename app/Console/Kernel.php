@@ -110,8 +110,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('publisharchive:run')->cron('0 0 * * *');
         $schedule->command('publishexisting:run')->cron('0 0 * * *');
         $schedule->command('quicksetup:run')->cron('10 15 1,15 * *');
-        $schedule->command('refreshbid:run')->cron('59 23 * * *');
-        $schedule->command('renewsub:run')->cron('55 23 * * *');
+        $schedule->command('refreshbid:run')->daily();
+        $schedule->command('renewsub:run')->daily();
         $schedule->command('rewardpoint:run')->cron('0 13 26 * 1');
         $schedule->command('suspendedaccountlist:run')->cron('0 0 * * *');
         $schedule->command('transactionlimits:run')->cron('0,30 * * * *');

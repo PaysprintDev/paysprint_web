@@ -50,7 +50,7 @@
     <!-- small box -->
     <div class="small-box bg-red">
         <div class="inner">
-            <h3>&nbsp;</h3>
+            <h3>{{ $data['moextopspending'] }}</h3>
 
             <p>MOEX - PS Transaction</p>
         </div>

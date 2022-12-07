@@ -304,7 +304,8 @@ class AdminController extends Controller
                     'paiduserscount' => $this->getPaidUsersCount(),
                     'freeuserscount' => $this->getFreeUsersCount(),
                     'transfer' => $this->electronicTransfers(),
-                    'moextranx' => $this->getMoexTransactions()
+                    'moextranx' => $this->getMoexTransactions(),
+                    'moextopspending' => MoexToPsTransaction::where('status', 'paid')->count() + MoexToPsTransaction::where('status', 'payed')->count() + MoexToPsTransaction::where('status', 'pending')->count()
                 );
 
 
@@ -8973,7 +8974,10 @@ class AdminController extends Controller
             $allusers = $this->allUsers();
 
             $data = array(
-                'moextranx' => $this->getMoexTransactions()
+                'moextranx' => $this->getMoexTransactions(),
+                'paid' => MoexToPsTransaction::where('status', 'paid')->count(),
+                'payed' => MoexToPsTransaction::where('status', 'payed')->count(),
+                'pending' => MoexToPsTransaction::where('status', 'pending')->count()
             );
 
 
@@ -18071,7 +18075,6 @@ class AdminController extends Controller
                         }
 
 
-                        // TODO:: Kindly return to live when subscription live on ShuftiPro...
 
                         if (env('APP_ENV') !== 'local') {
                             $dob = $getMerchant->yearOfBirth . "-" . $getMerchant->monthOfBirth . "-" . $getMerchant->dayOfBirth;
@@ -18604,7 +18607,6 @@ class AdminController extends Controller
                         }
 
 
-                        // TODO:: Kindly return to live when subscription live on ShuftiPro...
 
                         if (env('APP_ENV') !== 'local') {
                             $dob = $getMerchant->yearOfBirth . "-" . $getMerchant->monthOfBirth . "-" . $getMerchant->dayOfBirth;

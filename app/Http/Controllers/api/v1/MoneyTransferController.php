@@ -438,7 +438,7 @@ class MoneyTransferController extends Controller
         $this->insStatement($data->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, 1, $statement_route, 'on', $data->country);
 
 
-        // Create Statement And Credit EXBC account holder
+        // Create Statement And Credit PaySprint Account holder
         $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
 
         if (isset($exbcMerchant)) {

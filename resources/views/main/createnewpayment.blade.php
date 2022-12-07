@@ -460,9 +460,7 @@
                                             </label>
                                             <div class="input-group">
                                                 <select id="partner_country" name="country" class="form-control"
-                                                    readonly>
-                                                    <option value="{{ Auth::user()->country }}" selected>
-                                                        {{ Auth::user()->country }}</option>
+                                                    >
 
                                                     @if (count($data['availablecountry']))
                                                         @foreach ($data['availablecountry'] as $country)
@@ -564,43 +562,6 @@
                                             </div>
                                         </div>
 
-
-                                        <div class="form-group disp-0">
-                                            <div class="input-group">
-                                                <p style="color: red; font-weight: bold;"><input type="checkbox"
-                                                        name="commission" id="partner_commission"> Transfer include
-                                                    commission
-                                                </p>
-
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group disp-0"> <label for="netwmount">
-                                                <h6>Currency Conversion <br><small class="text-info"><b>Exchange rate
-                                                            today according to currencylayer.com</b></small></h6>
-                                                <p style="font-weight: bold;">
-                                                    {{ $data['currencyCode']->currencyCode }} <=> USD
-                                                </p>
-                                            </label>
-                                            <div class="input-group">
-                                                <input type="text" name="conversionamount" class="form-control"
-                                                    id="partner_conversionamount" value="" placeholder="0.00"
-                                                    readonly>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group"> <label for="netwmount">
-                                                <h6>Net Amount <br><small class="text-success"><b>Total amount that
-                                                            would
-                                                            be received</b></small></h6>
-
-                                            </label>
-                                            <div class="input-group">
-                                                <input type="text" name="amounttosend" class="form-control"
-                                                    id="partner_amounttosend" value="" placeholder="0.00"
-                                                    readonly>
-                                            </div>
-                                        </div>
                                         <div class="form-group"> <label for="netwmount">
                                                 <h6>Fee <small class="text-success"><b>(1.5% Payout Fee)</b></small></h6>
                                             </label>
@@ -615,6 +576,45 @@
 
                                             </div>
                                         </div>
+
+
+                                        <div class="form-group disp-0">
+                                            <div class="input-group">
+                                                <p style="color: red; font-weight: bold;"><input type="checkbox"
+                                                        name="commission" id="partner_commission"> Transfer include
+                                                    commission
+                                                </p>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group disp-0"> <label for="netwmount">
+                                                <h6>Conversion</h6>
+                                                <p style="font-weight: bold;">
+                                                    1 {{ $data['currencyCode']->currencyCode }} <=> <span id="countryConvertedValue"></span><span id="selectedCountryCode"></span>
+                                                </p>
+                                                <small class="text-info"><b>Estimated amount to be received</b></small>
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" name="conversionamount" class="form-control"
+                                                    id="partner_conversionamount" value="" placeholder="0.00"
+                                                    readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group"> <label for="netwmount">
+                                                <h6>Net Amount <br><small class="text-success"><b>Total amount that
+                                                            would
+                                                            be sent</b></small></h6>
+
+                                            </label>
+                                            <div class="input-group">
+                                                <input type="text" name="amounttosend" class="form-control"
+                                                    id="partner_amounttosend" value="" placeholder="0.00"
+                                                    readonly>
+                                            </div>
+                                        </div>
+
 
                                         <div class="form-group"> <label for="transaction_pin">
                                                 <h6>Transaction Pin</h6>
@@ -752,17 +752,31 @@
 
             $('#paymentMode').change(function() {
 
+                $("#paymentWallet option[value='fx_wallet']").remove();
+
                 if ($('#paymentMode').val() === 'PaySprint') {
                     $('.paywithpaysprint').removeClass('disp-0');
                     $('.paywithpatners').addClass('disp-0');
-                } else {
+                    $('#paymentWallet').append(`<option value="fx_wallet">PaySprint FX Wallet</option>`);
+                }
+
+                else if($('#paymentMode').val() === 'Partner') {
                     $('.paywithpaysprint').addClass('disp-0');
                     $('.paywithpatners').removeClass('disp-0');
+
+                    // Remove fx_wallet from the select list
+                    $("#paymentWallet option[value='fx_wallet']").remove();
+
 
                     // Load Payment Policy on change...
                     let country = $('#partner_country').val();
 
                     getPaymentPolicy(country);
+                }
+                else{
+
+                    $('.paywithpaysprint').addClass('disp-0');
+                    $('.paywithpatners').addClass('disp-0');
                 }
 
 
@@ -778,10 +792,14 @@
                 if ($('#paymentWallet').val() === 'ps_wallet') {
                     $('.wallet_details').removeClass('disp-0');
                     $('.fx_wallet_details').addClass('disp-0');
-                } else {
+                } else if($('#paymentWallet').val() === 'fx_wallet') {
                     $('.wallet_details').addClass('disp-0');
                     $('.fx_wallet_details').removeClass('disp-0');
                     fetchMyFXWallet();
+                }
+                else{
+                    $('.wallet_details').addClass('disp-0');
+                    $('.fx_wallet_details').addClass('disp-0');
                 }
 
 
@@ -1137,6 +1155,8 @@
 
 
                             if (result.message == "success") {
+
+                                console.log(result);
 
                                 $(".wallet-info").html(result.walletCheck);
                                 $('.withWallet').removeClass('disp-0');
@@ -1529,6 +1549,9 @@
 
 
             const getPaymentPolicy = async (country) => {
+
+                $('#selectedCountryCode').text('');
+
                 try {
 
                     const headers = {
@@ -1754,7 +1777,7 @@
                                 </div>
                             `);
 
-
+                                $('#selectedCountryCode').text(`${data[0].currency}`);
 
 
                         }

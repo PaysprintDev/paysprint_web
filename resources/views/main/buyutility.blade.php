@@ -288,9 +288,7 @@
                                                                 <option value="">{{ $dataProduct->FieldName }}
                                                                 </option>
                                                                 @foreach ($dataProduct->ListItems as $listItem)
-                                                                    <option value="{{ $listItem->ItemType }}">
-                                                                        {{ $listItem->ItemName . ': ₦' . $listItem->Amount . ' (' . $listItem->ItemDesc . ')' }}
-                                                                    </option>
+                                                                    <option value="{{ $listItem->ItemType }}">{{ $listItem->ItemName . ': ₦' . $listItem->Amount . ' (' . $listItem->ItemDesc . ')' }}</option>
                                                                 @endforeach
                                                             </select>
                                                         @endif
@@ -965,9 +963,6 @@
 
                 var currencySymbol = "{{ Auth::user()->currencySymbol }}";
 
-                $("#amount").val('');
-
-
                 $('.payutilityBtn').addClass('btn-danger');
                 $('.payutilityBtn').removeClass('btn-primary');
                 $('.payutilityBtn').attr('disabled', true);
@@ -1037,17 +1032,27 @@
                                         if (k.FieldName == "Product type" || k.FieldName ==
                                             "Product Type" || k.FieldName ==
                                             "Select Package (Amount)" || k.FieldName ==
-                                            "Select Package" || k.FieldName == "Product") {
+                                            "Select Package" || k.FieldName == "Product" || k.FieldName == "9Mobile Data Plan") {
 
-                                            $.each(k.ListItems, function(i, j) {
+                                                for (let i = 0; i < k.ListItems.length; i++) {
+                                                    const element = k.ListItems[i];
 
-                                                var checkerItem = j.ItemName +
-                                                    ': ₦' + j.Amount + ' (' + j
+
+
+                                                    var checkerItem = element.ItemName +
+                                                    ': ₦' + element.Amount + ' (' + element
                                                     .ItemDesc + ')';
 
 
-                                                if (checkerItem.trim() ==
+                                                    console.log({
+                                                        item: element,
+                                                        checker: checkerItem.trim(),
+                                                        selected: selectedOption.trim(),
+                                                    });
+
+                                                    if (checkerItem.trim() ==
                                                     selectedOption.trim()) {
+
 
                                                     if (currencySymbol != "₦") {
 
@@ -1060,7 +1065,7 @@
                                                             "{{ URL('Ajax/getconversion') }}";
                                                         var thisdata = {
                                                             currency: currency,
-                                                            amount: j.Amount,
+                                                            amount: element.Amount,
                                                             val: "send",
                                                             localcurrency: localcurrency
                                                         };
@@ -1167,12 +1172,9 @@
 
                                                         } else {
 
-                                                            getAmount = Number(j
-                                                                    .Amount) *
+                                                            getAmount = Number(element.Amount) *
                                                                 numberOfMonths;
 
-
-                                                                console.log("New Check Here! ",payInput, getAmount, $('#'+payInput).val(getAmount));
                                                             if (payInput ==
                                                                 "amount") {
                                                                 $("#" + payInput)
@@ -1182,12 +1184,21 @@
                                                                 $("#amount").val(
                                                                     getAmount);
                                                             }
+
+
 
                                                         }
 
+
                                                     }
 
-                                                } else {
+
+
+                                                }
+
+
+
+                                                else {
 
                                                     if (currencySymbol != "₦") {
 
@@ -1200,7 +1211,7 @@
                                                             "{{ URL('Ajax/getconversion') }}";
                                                         var thisdata = {
                                                             currency: currency,
-                                                            amount: j.Amount,
+                                                            amount: element.Amount,
                                                             val: "send",
                                                             localcurrency: localcurrency
                                                         };
@@ -1308,7 +1319,7 @@
 
                                                         } else {
 
-                                                            getAmount = j.Amount *
+                                                            getAmount = element.Amount *
                                                                 numberOfMonths;
 
                                                             if (payInput ==
@@ -1326,10 +1337,7 @@
                                                     }
                                                 }
 
-
-
-                                            });
-
+                                            }
 
                                         }
 
@@ -1355,6 +1363,7 @@
                                     }
 
                                     runCommission();
+
                                 } else {
                                     swal("Oops", result.message, "error");
                                 }

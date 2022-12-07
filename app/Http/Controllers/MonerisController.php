@@ -5838,7 +5838,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                     // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
 
-                                                    // Create Statement And Credit EXBC account holder
+                                                    // Create Statement And Credit PaySprint Account holder
                                                     $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
 
                                                     if (isset($exbcMerchant)) {
@@ -6189,7 +6189,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                         $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
-                                                        // Create Statement And Credit EXBC account holder
+                                                        // Create Statement And Credit PaySprint Account holder
                                                         $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
 
                                                         if (isset($exbcMerchant)) {
@@ -6831,7 +6831,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 $resData = ['data' => $data, 'message' => $message, 'status' => $status];
                                                             }
 
-                                                            $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to EXBC Prepaid Card. Withdrawal fee charge of " . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . " inclusive";
+                                                            $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to EXBC Prepaid Card. Withdrawal fee charge of " . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . " is charged";
                                                             $credit = 0;
                                                             $debit = $req->amount + $withdrawalCharge;
                                                             $reference_code = $transaction_id;
@@ -6865,7 +6865,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                             $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
-                                                            // Create Statement And Credit EXBC account holder
+                                                            // Create Statement And Credit PaySprint Account holder
                                                             $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
 
                                                             if (isset($exbcMerchant)) {
@@ -6947,7 +6947,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 ]);
 
 
-                                                                $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Bank Account " . $bankDetails->bankName . " - " . $bankDetails->accountNumber . ". Withdrawal fee charge of " . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . " inclusive";
+                                                                $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Bank Account " . $bankDetails->bankName . " - " . $bankDetails->accountNumber . ". Withdrawal fee charge of " . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . " is charged";
                                                                 $credit = 0;
                                                                 $debit = $req->amount + $withdrawalCharge;
                                                                 $reference_code = $transaction_id;
@@ -6962,7 +6962,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
 
-                                                                $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Withdrawal fee charge of ' . $req->currencyCode . ' ' . number_format($withdrawalCharge, 2) . ' inclusive. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                                                $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Withdrawal fee charge of ' . $req->currencyCode . ' ' . number_format($withdrawalCharge, 2) . ' is charged. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
 
 
@@ -7029,7 +7029,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                                             $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                                            $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Credit/Debit card. Withdrawal fee charge of " . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . " inclusive";
+                                                            $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Credit/Debit card. Withdrawal fee charge of " . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . " is charged";
 
                                                             $credit = 0;
                                                             $debit = $req->amount + $withdrawalCharge;
@@ -7055,11 +7055,11 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                             $this->email = $thisuser->email;
                                                             $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " has been Withdrawn from your Wallet with PaySprint";
 
-                                                            $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. Withdrawal fee charge of ' . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . ' inclusive. </p><p>You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+                                                            $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. Withdrawal fee charge of ' . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . ' is charged. </p><p>You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
 
 
 
-                                                            $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. Withdrawal fee charge of ' . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . ' inclusive. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
+                                                            $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. Withdrawal fee charge of ' . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . ' is charged. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
 
                                                             $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -7161,7 +7161,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                     $resData = ['data' => $data, 'message' => $message, 'status' => $status];
                                                                 }
 
-                                                                $activity = "Withdraw " . $req->currencyCode . ' ' . $req->amount . " from Wallet to EXBC Prepaid Card. Withdrawal fee charge of " . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . " inclusive";
+                                                                $activity = "Withdraw " . $req->currencyCode . ' ' . $req->amount . " from Wallet to EXBC Prepaid Card. Withdrawal fee charge of " . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . " is charged";
                                                                 $credit = 0;
                                                                 $debit = $req->amount + $withdrawalCharge;
                                                                 $reference_code = $transaction_id;
@@ -7195,7 +7195,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
-                                                                // Create Statement And Credit EXBC account holder
+                                                                // Create Statement And Credit PaySprint Account holder
                                                                 $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
 
                                                                 if (isset($exbcMerchant)) {
@@ -7283,7 +7283,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 ]);
 
 
-                                                                $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Bank Account " . $bankDetails->bankName . " - " . $bankDetails->accountNumber . ". Withdrawal fee charge of " . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . " inclusive";
+                                                                $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Bank Account " . $bankDetails->bankName . " - " . $bankDetails->accountNumber . ". Withdrawal fee charge of " . $req->currencyCode . '' . number_format($withdrawalCharge, 2) . " is charged";
                                                                 $credit = 0;
                                                                 $debit = $req->amount + $withdrawalCharge;
                                                                 $reference_code = $transaction_id;
@@ -7298,7 +7298,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $thistatus, $action, $regards, 1, $statement_route, $thisuser->country, 0);
 
 
-                                                                $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Withdrawal fee charge of ' . $req->currencyCode . ' ' . number_format($withdrawalCharge, 2) . ' inclusive. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
+                                                                $sendMsg = 'Hello ' . strtoupper($thisuser->name) . ', The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your Bank Account ' . $bankDetails->bankName . ' and Account Number: ' . $bankDetails->accountNumber . ' has been received. The Direct deposit into your Bank account would be done within the next 5 business days. Withdrawal fee charge of ' . $req->currencyCode . ' ' . number_format($withdrawalCharge, 2) . ' is charged. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your account';
 
 
 
@@ -7351,7 +7351,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                                                                 $userData = User::select('id', 'ref_code as refCode', 'name', 'email', 'telephone', 'wallet_balance as walletBalance', 'number_of_withdrawals as noOfWithdrawals')->where('api_token', $req->bearerToken())->first();
 
-                                                                $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Credit/Debit card. Withdrawal fee charge of " . $req->currencyCode . ' ' . number_format($withdrawalCharge, 2) . " inclusive";
+                                                                $activity = "Withdraw " . $req->currencyCode . '' . number_format($req->amount, 2) . " from Wallet to Credit/Debit card. Withdrawal fee charge of " . $req->currencyCode . ' ' . number_format($withdrawalCharge, 2) . " is charged";
                                                                 $credit = 0;
                                                                 $debit = $req->amount + $withdrawalCharge;
                                                                 // $reference_code = $response->responseData['ReceiptId'];
@@ -7380,9 +7380,9 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                                                                 $this->email = $thisuser->email;
                                                                 $this->subject = $req->currencyCode . ' ' . number_format($req->amount, 2) . " has been Withdrawn from your Wallet with PaySprint";
 
-                                                                $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. Withdrawal fee charge of ' . $req->currencyCode . ' ' . number_format($withdrawalCharge, 2) . ' inclusive. </p><p>You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
+                                                                $this->message = '<p>The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: <strong>' . strtoupper($cardDetails->card_name) . '</strong> and Number: <strong>' . wordwrap($cardNo, 4, '-', true) . '</strong> is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. Withdrawal fee charge of ' . $req->currencyCode . ' ' . number_format($withdrawalCharge, 2) . ' is charged. </p><p>You have <strong>' . $req->currencyCode . ' ' . number_format($walletBal, 2) . '</strong> balance in your wallet.</p>';
 
-                                                                $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. Withdrawal fee charge of ' . $req->currencyCode . ' ' . number_format($withdrawalCharge, 2) . ' inclusive. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
+                                                                $sendMsg = 'The withdrawal of ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to your card, Card Name: ' . strtoupper($cardDetails->card_name) . ' and Number: ' . wordwrap($cardNo, 4, '-', true) . ' is successful. The withdrawal will take up to 5 working days before it reflects in your bank account or credit card. Withdrawal fee charge of ' . $req->currencyCode . ' ' . number_format($withdrawalCharge, 2) . ' is charged. You have ' . $req->currencyCode . ' ' . number_format($walletBal, 2) . ' balance in your wallet.';
 
                                                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -7511,7 +7511,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
             ]);
 
 
-            $activity = "Charge back of " . $thisuser->currencyCode . '' . number_format($transDeduct, 2) . " (Charge back amount of " . $thisuser->currencyCode . '' . number_format($data->credit, 2) . " and " . $subType . " of " . $thisuser->currencyCode . '' . number_format($checkTransaction->fixed, 2) . " inclusive.) from PaySprint to your Bank Account has been processed.";
+            $activity = "Charge back of " . $thisuser->currencyCode . '' . number_format($transDeduct, 2) . " (Charge back amount of " . $thisuser->currencyCode . '' . number_format($data->credit, 2) . " and " . $subType . " of " . $thisuser->currencyCode . '' . number_format($checkTransaction->fixed, 2) . " is charged.) from PaySprint to your Bank Account has been processed.";
 
             $credit = 0;
             $debit = $data->credit;
@@ -9139,7 +9139,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 'amount' => $req->amount * 100,
                 'currency' => $req->currencyCode,
                 'receipt_email' => $req->email,
-                'description' => "Add " . $req->currencyCode . " " . number_format($req->amounttosend, 2) . " to PaySprint wallet, Charge fee of: " . $req->currencyCode . " " . number_format($req->commissiondeduct, 2) . " inclusive",
+                'description' => "Add " . $req->currencyCode . " " . number_format($req->amounttosend, 2) . " to PaySprint wallet, Charge fee of: " . $req->currencyCode . " " . number_format($req->commissiondeduct, 2) . " is charged",
             ]);
 
 
@@ -9743,7 +9743,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
 
-                $sendMsg = "Hi " . $req->name . ", You have successfully transferred " . $req->currencyCode . " " . number_format($req->amount, 2) . " to " . $thisuser->businessname . " for " . $req->purpose . " and a transaction fee of " . $req->currencyCode . " " . number_format($req->commissiondeduct, 2) . " inclusively charged from your card. Open a PaySprint account today to pay at a lesser rate.";
+                $sendMsg = "Hi " . $req->name . ", You have successfully transferred " . $req->currencyCode . " " . number_format($req->amount, 2) . " to " . $thisuser->businessname . " for " . $req->purpose . " and a transaction fee of " . $req->currencyCode . " " . number_format($req->commissiondeduct, 2) . " is chargedly charged from your card. Open a PaySprint account today to pay at a lesser rate.";
 
                 $sendPhone = $req->phone;
 
