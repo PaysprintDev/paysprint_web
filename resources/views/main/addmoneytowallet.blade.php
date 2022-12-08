@@ -220,14 +220,14 @@
                                     @if (Auth::user()->country == 'Canada')
                                     <label>Select Payment Option</label>
                                     <select class="form-control mb-3" name="payment_option" id="paymentoption">
-                                        <option value="card" selected>Debit / Credit Card</option>
+                                        <option value="card" selected>Debit Card Only</option>
                                         <option value="bank_transfer">Bank/WireTransfer</option>
                                         <option value="electronic_transfer">Electronic Transfer</option>
                                     </select>
                                     @else
                                     <label>Select Payment Option</label>
                                     <select class="form-control mb-3" name="payment_option" id="paymentoption">
-                                        <option value="card" selected>Debit / Credit Card</option>
+                                        <option value="card" selected>Debit Card Only</option>
                                         <option value="bank_transfer">Bank/WireTransfer</option>
                                     </select>
                                     @endif

@@ -169,21 +169,46 @@ trait SecurityChecker {
     {
         $thisuser = User::where('ref_code', $refCode)->first();
 
-        if($walletBalance < 0){
+        // Get overdraft alotted for this user...
 
-            // First pay for the overdraft...
-            $overdraftLimitBalance = $thisuser->withdrawal_per_overdraft - $thisuser->overdraft_balance;
+        $allotedOverdraft = (double)$thisuser->withdrawal_per_overdraft;
 
-            $remainingAmount = $amountToAdd - $overdraftLimitBalance;
+        if(($allotedOverdraft - (double)$thisuser->overdraft_balance) !== 0)
+        {
 
-            User::where('ref_code', $refCode)->update(['overdraft_balance' => ($thisuser->overdraft_balance + $overdraftLimitBalance) ]);
+            // Get remaining amount from whats added...
 
-            return $remainingAmount;
+            $amounttoPayBack =  $allotedOverdraft - (double)$thisuser->overdraft_balance; // Say $allotedOverdraft = 50000, $thisuser->overdraft_balance = 30000, $checkAmountSpent = 50000 - 30000 = 20000
+
+            $amountToWallet = (double)$amountToAdd - $amounttoPayBack;
+
+            User::where('ref_code', $refCode)->update(['overdraft_balance' => ((double)$thisuser->overdraft_balance + max(0, $amounttoPayBack)) ]);
+
+
+            return $amountToWallet;
 
         }
         else{
             return $amountToAdd;
         }
+
+
+
+        // if($walletBalance < 0){
+
+        //     // First pay for the overdraft...
+        //     $overdraftLimitBalance = $thisuser->withdrawal_per_overdraft - $thisuser->overdraft_balance;
+
+        //     $remainingAmount = $amountToAdd - $overdraftLimitBalance;
+
+        //     User::where('ref_code', $refCode)->update(['overdraft_balance' => ($thisuser->overdraft_balance + $overdraftLimitBalance) ]);
+
+        //     return $remainingAmount;
+
+        // }
+        // else{
+        //     return $amountToAdd;
+        // }
     }
 
     public function emailSender($objDemoa, $purpose)
