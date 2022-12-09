@@ -268,10 +268,10 @@
                                                     </span> </div>
                                                 <select name="card_type" id="card_type" class="form-control" required>
                                                     <option value="Debit Card" selected>Select option</option>
-                                                    @if (Auth::user()->country != 'Nigeria')
+                                                    {{-- @if (Auth::user()->country != 'Nigeria')
                                                     <option value="Credit Card">Credit Card</option>
-                                                    @endif
-                                                    <option value="Debit Card">Debit VISA/Mastercard</option>
+                                                    @endif --}}
+                                                    <option value="Debit Card">Debit Card Only</option>
                                                     {{-- <option value="Google Pay">Google Pay</option> --}}
                                                     {{-- <option value="Prepaid Card">Prepaid Card</option> --}}
                                                     {{-- <option value="Bank Account">Bank Account</option> --}}

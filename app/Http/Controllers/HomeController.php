@@ -1361,6 +1361,7 @@ class HomeController extends Controller
                 'continent' => $this->timezone[0],
                 'specialInfo' => $this->getthisInfo(Auth::user()->country),
                 'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
+                'subscription' => $this->minimumBalanceCost(Auth::user()->country, Auth::user()->accountType)
             );
 
             // dd($data);
@@ -1972,6 +1973,15 @@ class HomeController extends Controller
     public function getConsumerCost($country)
     {
         $data = TransactionCost::where('country', $country)->where('structure', 'Consumer Monthly Subscription')->first();
+
+        $price = $data->fixed;
+
+        return $price;
+    }
+
+    public function minimumBalanceCost($country, $accountType)
+    {
+        $data = TransactionCost::where('country', $country)->where('structure', $accountType === 'Merchant' ? 'Merchant Monthly Subscription' : 'Consumer Monthly Subscription')->first();
 
         $price = $data->fixed;
 
@@ -6659,6 +6669,8 @@ class HomeController extends Controller
         // $minimumBal = TransactionCost::where('structure', $subminType)->where('country', $thisuser->country)->first();
 
 
+        $subscription = $this->minimumBalanceCost($thisuser->country, $thisuser->accountType);
+
         // if (isset($minimumBal)) {
         //     $available = $minimumBal->fixed;
         // } else {
@@ -6669,10 +6681,10 @@ class HomeController extends Controller
         $walletCheck = "";
 
         // if($req->pay_method == "Wallet"){
-        $wallet = $thisuser->wallet_balance;
+        $wallet = max(0, ($thisuser->wallet_balance - $subscription));
 
         if ($thisuser->withdrawal_per_overdraft !== NULL) {
-            $availableWalletBalance = $thisuser->withdrawal_per_overdraft > 0 ? ((double)$thisuser->withdrawal_per_overdraft - $available) : ((double)$wallet - $available);
+            $availableWalletBalance = $thisuser->withdrawal_per_overdraft > 0 ? ((double)$thisuser->withdrawal_per_overdraft + (double)$wallet - $available) : ((double)$wallet - $available);
         } else {
             $availableWalletBalance = (double)$wallet - $available;
         }
@@ -6687,7 +6699,7 @@ class HomeController extends Controller
                 $route = route('merchant add money');
             }
 
-            $walletCheck = 'Wallet Balance: <strong>' . $req->localcurrency . number_format($wallet, 4) . '</strong>. <br> Available Wallet Balance: <strong>' . $req->localcurrency . number_format($availableWalletBalance, 4) . '</strong>. <br> Insufficient balance. <a href="' . $route . '">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
+            $walletCheck = 'Wallet Balance: <strong>' . $req->localcurrency . number_format($wallet, 4) . '</strong>. <br>Overdraft Balance: <strong>' . $req->localcurrency . number_format($thisuser->overdraft_balance, 4) . '</strong>. <br> Available Wallet Balance: <strong>' . $req->localcurrency . number_format($availableWalletBalance, 4) . '</strong>. <br> Insufficient balance. <a href="' . $route . '">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
         }
         // }
 
