@@ -79,6 +79,7 @@
         <div class="container">
             <div class="feature_row row">
                 <div class="col-md-6 feature_img">
+                    <img src="{{ asset('images/ps-building.jpg') }}"alt="logo">
                     <img src="{{ asset('images/paysprintlogo.png') }}"alt="logo">
                 </div>
                 <div class="col-md-6 feature_content">
@@ -91,14 +92,14 @@
                             <li style="font-size:2rem; color:black;font-weight:600; padding-bottom:5px">Receive Payments with PaySprint - One Platform, 3-Channels, Any Device, $0.00 Fees</li>
                               <ul>
                                 <li style="font-size: 2rem">QR Code for Face-to-Face Payments</li>
-                                <li style="font-size: 2rem">Payments Links for Remote Payments</li>
-                                <li style="font-size: 2rem">Payments Gateway for Online Payments</li>
+                                <li style="font-size: 2rem">Payment Links for Remote Payments</li>
+                                <li style="font-size: 2rem">Payment Gateway for Online Payments</li>
                               </ul>
                             <hr>
                             <li style="font-size:2rem; color:black;font-weight:600; padding-bottom:5px">Supporting Business to Grow</li>
                               <ul>
-                                <li style="font-size: 2rem">Easy to Access Working Capital</li>
-                                <li style="font-size: 2rem">Sell More to Customers on eStore</li>
+                                <li style="font-size: 2rem">Easy Access to Working Capital</li>
+                                <li style="font-size: 2rem">Utilize Additional Outlet to Sell More to Customers</li>
                                 <li style="font-size: 2rem">Free invoicing to Customers on any device</li>
                                 <li style="font-size: 2rem">Free Cashflow Tool Kits</li>
                               </ul>
