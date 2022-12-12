@@ -5114,16 +5114,16 @@ class AdminController extends Controller
             // dd(Session::all());
 
             if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing" || session('role') == "Customer Success") {
-                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
-                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $adminUser = Admin::orderBy('created_at','DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at','DESC')->get();
                 $payInvoice = DB::table('client_info')
-                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->join('invoice_payment','client_info.user_id','=','invoice_payment.client_id')
                     ->orderBy('invoice_payment.created_at', 'DESC')
                     ->get();
 
                 $otherPays = DB::table('organization_pay')
-                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
-                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->join('users','organization_pay.user_id','=','users.email')
+                    ->orderBy('organization_pay.created_at','DESC')
                     ->get();
 
                 $query = [
