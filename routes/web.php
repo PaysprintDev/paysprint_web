@@ -48,6 +48,8 @@ Route::post('triggerdate', ['uses' => 'TriggerController@triggerDate', 'as' => '
 Route::get('claimmerchantbusiness', ['uses' => 'AdminController@claimingBusiness', 'as' => 'claiming business']);
 
 
+
+
 // Route::get('feecharge', 'MaintenanceFeeCharge@monthlyMaintenaceFee');
 Route::get('renewsub', 'MaintenanceFeeCharge@renewSubscription');
 Route::get('refreshbid', 'CurrencyFxController@refreshBids');
@@ -102,7 +104,7 @@ Route::get('virtual-account-top-up', 'CheckSetupController@getAllTransactionTran
 Route::get('mailforvirtualaccount', 'SendGridController@cronToCustomersOnVirtualAccount');
 
 
-// Send Notice to Users and Merchants...
+//  Notice to Users and Merchants...
 Route::get('publicizemerchant', 'CheckSetupController@publicizeMerchantToConsumer');
 Route::get('notify-merchant-page', 'CheckSetupController@notifyMerchantPage');
 // update walletcredit
@@ -123,6 +125,8 @@ Route::get('mailtocustomer', 'SendGridController@cronToPublicizeMerchantToConsum
 Route::get('claimbusiness', 'SendGridController@claimBusiness');
 Route::get('productlist', 'SendGridController@productList');
 Route::get('rebateproduct','SendGridController@rebateProduct');
+// mail to unverified merchant
+Route::get('unverifiedmerchant','SendGridController@unverifiedMerchant');
 
 // country flag
 Route::get('countryflag', 'CountryFlagController@displayCountryFlag');
