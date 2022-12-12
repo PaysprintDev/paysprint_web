@@ -288,9 +288,7 @@
                                                                 <option value="">{{ $dataProduct->FieldName }}
                                                                 </option>
                                                                 @foreach ($dataProduct->ListItems as $listItem)
-                                                                    <option value="{{ $listItem->ItemType }}">
-                                                                        {{ $listItem->ItemName . ': ₦' . $listItem->Amount . ' (' . $listItem->ItemDesc . ')' }}
-                                                                    </option>
+                                                                    <option value="{{ $listItem->ItemType }}">{{ $listItem->ItemName . ': ₦' . $listItem->Amount . ' (' . $listItem->ItemDesc . ')' }}</option>
                                                                 @endforeach
                                                             </select>
                                                         @endif
@@ -805,6 +803,7 @@
                 today = dd + '/' + mm + '/' + yyyy;
 
                 $("#conversionamount").val("");
+                $("#amount").val("");
 
                 var currency = "NGN";
                 var localcurrency = "{{ $data['currencyCode']->currencyCode }}";
@@ -964,7 +963,6 @@
 
                 var currencySymbol = "{{ Auth::user()->currencySymbol }}";
 
-
                 $('.payutilityBtn').addClass('btn-danger');
                 $('.payutilityBtn').removeClass('btn-primary');
                 $('.payutilityBtn').attr('disabled', true);
@@ -992,7 +990,6 @@
                                 $('.payutilityBtn').text('Please wait...');
                             },
                             success: function(result) {
-
 
                                 $('.payutilityBtn').removeClass('btn-danger');
                                 $('.payutilityBtn').addClass('btn-primary');
@@ -1035,20 +1032,26 @@
                                         if (k.FieldName == "Product type" || k.FieldName ==
                                             "Product Type" || k.FieldName ==
                                             "Select Package (Amount)" || k.FieldName ==
-                                            "Select Package" || k.FieldName == "Product") {
+                                            "Select Package" || k.FieldName == "Product" || k.FieldName == "9Mobile Data Plan") {
 
-                                            $.each(k.ListItems, function(i, j) {
+                                                for (let i = 0; i < k.ListItems.length; i++) {
+                                                    const element = k.ListItems[i];
 
 
-                                                var checkerItem = j.ItemName +
-                                                    ': ₦' + j.Amount + ' (' + j
+
+                                                    var checkerItem = element.ItemName +
+                                                    ': ₦' + element.Amount + ' (' + element
                                                     .ItemDesc + ')';
 
-                                                console.log(checkerItem,
-                                                    selectedOption);
 
+                                                    console.log({
+                                                        item: element,
+                                                        checker: checkerItem.trim(),
+                                                        selected: selectedOption.trim(),
+                                                    });
 
-                                                if (checkerItem == selectedOption) {
+                                                    if (checkerItem.trim() ==
+                                                    selectedOption.trim()) {
 
 
                                                     if (currencySymbol != "₦") {
@@ -1062,7 +1065,7 @@
                                                             "{{ URL('Ajax/getconversion') }}";
                                                         var thisdata = {
                                                             currency: currency,
-                                                            amount: j.Amount,
+                                                            amount: element.Amount,
                                                             val: "send",
                                                             localcurrency: localcurrency
                                                         };
@@ -1093,7 +1096,8 @@
                                                                     );
 
 
-                                                                if (checkerItem ==
+                                                                if (checkerItem
+                                                                    .trim() ==
                                                                     "AIRTIME: ₦0 (-)"
                                                                 ) {
                                                                     getAmount
@@ -1108,6 +1112,7 @@
                                                                         =
                                                                         getAmount;
                                                                 }
+
 
 
                                                                 if (payInput ==
@@ -1137,6 +1142,7 @@
                                                                         getAmount
                                                                     );
 
+
                                                                 runCommission
                                                                     ();
 
@@ -1146,10 +1152,8 @@
 
                                                     } else {
 
-                                                        if (checkerItem ==
+                                                        if (checkerItem.trim() ==
                                                             "AIRTIME: ₦0 (-)") {
-
-
 
                                                             var myAmount = $(
                                                                 "#amount").val();
@@ -1168,25 +1172,34 @@
 
                                                         } else {
 
-                                                            getAmount = j.Amount *
+                                                            getAmount = Number(element.Amount) *
                                                                 numberOfMonths;
 
                                                             if (payInput ==
                                                                 "amount") {
                                                                 $("#" + payInput)
                                                                     .val(getAmount);
+
                                                             } else {
                                                                 $("#amount").val(
                                                                     getAmount);
                                                             }
-                                                        }
 
+
+
+                                                        }
 
 
                                                     }
 
 
-                                                } else {
+
+                                                }
+
+
+
+                                                else {
+
                                                     if (currencySymbol != "₦") {
 
                                                         // convert Amount to other currency and pass to price amount
@@ -1198,7 +1211,7 @@
                                                             "{{ URL('Ajax/getconversion') }}";
                                                         var thisdata = {
                                                             currency: currency,
-                                                            amount: j.Amount,
+                                                            amount: element.Amount,
                                                             val: "send",
                                                             localcurrency: localcurrency
                                                         };
@@ -1229,7 +1242,8 @@
                                                                     );
 
 
-                                                                if (checkerItem ==
+                                                                if (checkerItem
+                                                                    .trim() ==
                                                                     "AIRTIME: ₦0 (-)"
                                                                 ) {
                                                                     getAmount
@@ -1273,6 +1287,7 @@
                                                                         getAmount
                                                                     );
 
+
                                                                 runCommission
                                                                     ();
 
@@ -1282,7 +1297,7 @@
 
                                                     } else {
 
-                                                        if (checkerItem ==
+                                                        if (checkerItem.trim() ==
                                                             "AIRTIME: ₦0 (-)") {
 
 
@@ -1304,7 +1319,7 @@
 
                                                         } else {
 
-                                                            getAmount = j.Amount *
+                                                            getAmount = element.Amount *
                                                                 numberOfMonths;
 
                                                             if (payInput ==
@@ -1322,8 +1337,8 @@
                                                     }
                                                 }
 
+                                            }
 
-                                            });
                                         }
 
                                     });
@@ -1340,14 +1355,15 @@
                                             $("#" + payInput).attr('readonly', false);
                                         }
 
+
                                     } else {
                                         $("#amount").val(getAmount);
                                         $("#amount").attr('readonly', true);
 
                                     }
 
-
                                     runCommission();
+
                                 } else {
                                     swal("Oops", result.message, "error");
                                 }

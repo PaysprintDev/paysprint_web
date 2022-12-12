@@ -71,7 +71,7 @@
     <div class="container py-5">
         <!-- For demo purpose -->
         <div class="row mb-4">
-            <div class="col-lg-8 mx-auto text-center">
+            <div class="col-lg-6 mx-auto text-center">
                 <h1 class="display-4">PaySprint Invoice Payment</h1>
             </div>
         </div> <!-- End -->
@@ -319,7 +319,7 @@
 
                                                 @if ($data['getinvoice'][0]->installlimit > $data['getinvoice'][0]->installcount)
                                                     <div class="form-group"> <label for="currency">
-                                                            <h6>Do you want to pay intallmentally?</h6>
+                                                            <h6>Do you want to pay installmentally?</h6>
                                                         </label>
                                                         <div class="input-group"> <span
                                                                 class="input-group-text text-muted"> <img

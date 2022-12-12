@@ -72,7 +72,7 @@
                                     class="fas fa-info-circle" style="cursor: pointer;"
                                     title="The fund would be auto deposited into the wallet of the receiver and the receiver would get a text message and email notification of the transaction"></i></a>
                         </li>
-                        <li class="tab-menu"><a data-toggle="tab" href="#menu4">Bulk transfer to PaySprint User <i
+                        <li class="tab-menu disp-0"><a data-toggle="tab" href="#menu4">Bulk transfer to PaySprint User <i
                             class="fas fa-info-circle" style="cursor: pointer;"
                             title="The fund would be auto deposited into the wallet of the receiver and the receiver would get a text message and email notification of the transaction"></i></a>
                         </li>

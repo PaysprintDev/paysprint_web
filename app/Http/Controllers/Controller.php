@@ -78,7 +78,7 @@ class Controller extends BaseController
 
 
         $ip_array = json_decode($ip_response);
-        
+
 
         return  $ip_array;
     }
@@ -323,7 +323,7 @@ class Controller extends BaseController
                     $markValue = (1 + ($markuppercent[1]->percentage / 100));
                 }
             } else {
-                $markValue = (1 + ($markuppercent[1]->percentage / 100));
+                $markValue = (1 + ($markuppercent[0]->percentage / 100));
             }
 
 

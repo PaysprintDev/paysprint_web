@@ -2,24 +2,24 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Console\Command;
-use App\Http\Controllers\SendGridController;
 
-class MailToVerifiedMerchant extends Command
+class PlatformCurrencyConvert extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mailtoverifiedmerchants:run';
+    protected $signature = 'platformcurrencyconverter:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Mail to Verified Merchants';
+    protected $description = 'Daily conversion rate from apilayer';
 
     /**
      * Create a new command instance.
@@ -38,10 +38,11 @@ class MailToVerifiedMerchant extends Command
      */
     public function handle()
     {
-         $checkSetup = new SendGridController();
+        $checkSetup = new Controller();
 
-        $checkSetup->claimBusiness();
+        $checkSetup->platformcurrencyConvert();
 
-        $this->info("Mail to Verified Merchants completed successfully");
+
+        $this->info("Daily conversion rate from apilayer completed successfully");
     }
 }

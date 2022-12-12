@@ -259,8 +259,8 @@ C</div>
         function dataZoo()
         {
              $('#datazooform').submit()
-             
-            
+
+
         }
 
 
@@ -2445,13 +2445,13 @@ C</div>
         }
 
         function grantFx(id) {
-        
+
         // Open Modal, ask for permission to accept Inbound, Outbound or Both...
-        
-        
-        
+
+
+
         var route = "{{ URL('Ajax/accesstousepaysprintfx') }}";
-        
+
         swal({
         title: "Are you sure?",
         text: "Your decision is about to be processed",
@@ -2461,12 +2461,12 @@ C</div>
         })
         .then((willDelete) => {
         if (willDelete) {
-        
+
         $('#grantfxform' + id).submit();
-        
+
         // $("input[name='imt_id']").val(id);
-        
-        
+
+
         }
         });
         }
@@ -2689,15 +2689,15 @@ C</div>
 
 
         function activatePaymentLink(ref_code) {
-        
+
         let data = {
         ref_code: ref_code
         };
-        
+
         var headers = {
         'X-CSRF-TOKEN': "{{ csrf_token() }}",
         };
-        
+
         swal({
         title: "Are you sure?",
         text: "Click OK to proceed",
@@ -2707,45 +2707,45 @@ C</div>
         })
         .then(async (willDelete) => {
         if (willDelete) {
-        
+
         try {
-        
+
         $('#btns' + ref_code).text('Please wait ...');
-        
-        
+
+
         const config = {
         method: 'POST',
         url: "{{ URL('/api/v1/activatemerchantpaymentlink') }}",
         headers,
         data
         }
-        
-        
+
+
         const response = await axios(config);
-        
+
         $('#btns' + ref_code).text('Activate Merchant Payment Link');
-        
-        
+
+
         swal('Great', response.data.message, 'success');
-        
+
         setTimeout(() => {
         location.reload();
         }, 1000);
-        
+
         } catch (error) {
-        
+
         $('#btns' + ref_code).text('Activate Merchant Payment Link');
-        
+
         if (error.response) {
         swal('Oops!', error.response.data.message, 'error');
         } else {
         swal('Oops!', error.message, 'error');
         }
-        
+
         }
-        
-        
-        
+
+
+
         }
         });
         }
@@ -4527,13 +4527,13 @@ C</div>
         }
 
         function reverseCrossBorder(transactionid) {
-        
+
         var route = "{{ URL('Ajax/reversecrossborder') }}";
-        
+
         var thisdata;
         var button = $(".spins" + transactionid);
-        
-        
+
+
         swal({
         title: "Are you sure?",
         text: 'Please be sure before you proceed!',
@@ -4557,7 +4557,7 @@ C</div>
         },
         success: function(result) {
         button.text('Reverse Payment');
-        
+
         if (result.message == "success") {
         // Route to another page
         swal(result.title, result.res, result.message);
@@ -4567,24 +4567,30 @@ C</div>
         } else {
         swal(result.title, result.res, result.message);
         }
-        
-        
+
+
         },
         error: function(err) {
-        
+
         button.text('Reverse Payment');
+<<<<<<< HEAD
         // swal("Oops", err.responseJSON.message, "error");
         swal("Oops", "Something Went Wrong!")
         
+=======
+        swal("Oops", err.responseJSON.message, "error");
+
+
+>>>>>>> 46fb9ef9d8c5f110d99ddaa59efd16787e9b4c11
         }
-        
+
         });
-        
+
         } else {
         swal('', 'Cancelled', 'info');
         }
         });
-        
+
         }
 
 
@@ -5441,7 +5447,7 @@ C</div>
         }
 
         function deleteTransaction(id) {
-        
+
         swal({
         title: "Are you sure?",
         text: "Once deleted, you will not be able to recover this transaction!",
@@ -5454,12 +5460,12 @@ C</div>
         $('#deletetransaction' + id).submit();
         }
         });
-        
-        
+
+
         }
 
         function restoreTransaction(id) {
-        
+
         swal({
         title: "Are you sure?",
         text: "Are you sure you want to restore this transaction?",
@@ -5472,9 +5478,304 @@ C</div>
         $('#restoretransaction' + id).submit();
         }
         });
-        
-        
+
+
         }
+
+
+        // Start MOEX - PS Transaction
+
+        async function getTransactionReference()
+        {
+
+            $('.displayResponse').html('');
+
+            try {
+
+                var headers = {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                };
+
+                $('#btn').text('Please wait ...');
+
+            const config = {
+                method: 'POST',
+                url: "{{ URL('/moextops/verifytransaction') }}",
+                headers,
+                data: {
+                    transactionId: $('#transactionId').val()
+                }
+            }
+
+            const response = await axios(config);
+
+            $('#btn').text('Fetch Record');
+
+            var result = response.data.data;
+
+            $('.displayResponse').html(`
+
+            <table class="table table-striped table-hover">
+                <tbody>
+                    <tr>
+                        <td>Amount Sent</td>
+                        <td>${result.AmountSent}</td>
+                    </tr>
+                    <tr>
+                        <td>Amount to Pay</td>
+                        <td>${result.AmountToPay}</td>
+                    </tr>
+                    <tr>
+                        <td>Bank Account</td>
+                        <td>${result.BankAccount}</td>
+                    </tr>
+                    <tr>
+                        <td>Bank Account</td>
+                        <td>${result.BankAccount}</td>
+                    </tr>
+                    <tr>
+                        <td>Bank Address</td>
+                        <td>${result.BankAddress}</td>
+                    </tr>
+                    <tr>
+                        <td>Bank Deposit</td>
+                        <td>${result.BankDeposit}</td>
+                    </tr>
+                    <tr>
+                        <td>Bank Name</td>
+                        <td>${result.BankName}</td>
+                    </tr>
+                    <tr>
+                        <td>Confirmation Date</td>
+                        <td>${result.ConfirmationDate}</td>
+                    </tr>
+                    <tr>
+                        <td>Currency Sent</td>
+                        <td>${result.CurrencySent}</td>
+                    </tr>
+                    <tr>
+                        <td>Currency To Pay</td>
+                        <td>${result.CurrencyToPay}</td>
+                    </tr>
+                    <tr>
+                        <td>Origin Country</td>
+                        <td>${result.OriginCountry}</td>
+                    </tr>
+                    <tr>
+                        <td>Payment Branch Address</td>
+                        <td>${result.PaymentBranchAddress}</td>
+                    </tr>
+                    <tr>
+                        <td>Payment Branch AuxId</td>
+                        <td>${result.PaymentBranchAuxId}</td>
+                    </tr>
+                    <tr>
+                        <td>Payment BranchId</td>
+                        <td>${result.PaymentBranchId}</td>
+                    </tr>
+                    <tr>
+                        <td>Payment Branch Name</td>
+                        <td>${result.PaymentBranchName}</td>
+                    </tr>
+                    <tr>
+                        <td>Payment Branch Phone</td>
+                        <td>${result.PaymentBranchPhone}</td>
+                    </tr>
+                    <tr>
+                        <td>Payment Date</td>
+                        <td>${result.PaymentDate}</td>
+                    </tr>
+                    <tr>
+                        <td>Payment Branch Name</td>
+                        <td>${result.PaymentBranchName}</td>
+                    </tr>
+                    <tr>
+                        <td>Receiver</td>
+                        <td>${result.Receiver}</td>
+                    </tr>
+                    <tr>
+                        <td>Receiver Address</td>
+                        <td>${result.ReceiverAddress}</td>
+                    </tr>
+                    <tr>
+                        <td>Receiver City</td>
+                        <td>${result.ReceiverCity}</td>
+                    </tr>
+                    <tr>
+                        <td>Receiver Country</td>
+                        <td>${result.ReceiverCountry}</td>
+                    </tr>
+                    <tr>
+                        <td>Receiver Id</td>
+                        <td>${result.ReceiverId}</td>
+                    </tr>
+                    <tr>
+                        <td>ReceiverId Document Number</td>
+                        <td>${result.ReceiverIdDocumentNumber}</td>
+                    </tr>
+                    <tr>
+                        <td>ReceiverId Document Type</td>
+                        <td>${result.ReceiverIdDocumentType}</td>
+                    </tr>
+                    <tr>
+                        <td>Receiver Last Name</td>
+                        <td>${result.ReceiverLastName}</td>
+                    </tr>
+                    <tr>
+                        <td>Receiver Last Name2</td>
+                        <td>${result.ReceiverLastName2}</td>
+                    </tr>
+                    <tr>
+                        <td>Receiver Name</td>
+                        <td>${result.ReceiverName}</td>
+                    </tr>
+                    <tr>
+                        <td>Receiver Phone</td>
+                        <td>${result.ReceiverPhone}</td>
+                    </tr>
+                    <tr>
+                        <td>Receiver Phone2</td>
+                        <td>${result.ReceiverPhone2}</td>
+                    </tr>
+                    <tr>
+                        <td>Receiver Reference</td>
+                        <td>${result.ReceiverReference}</td>
+                    </tr>
+                    <tr>
+                        <td>Reference</td>
+                        <td>${result.Reference}</td>
+                    </tr>
+                    <tr>
+                        <td>Sender</td>
+                        <td>${result.Sender}</td>
+                    </tr>
+                    <tr>
+                        <td>Sender Address</td>
+                        <td>${result.SenderAddress}</td>
+                    </tr>
+                    <tr>
+                        <td>Sender City</td>
+                        <td>${result.SenderCity}</td>
+                    </tr>
+                    <tr>
+                        <td>Sender Country</td>
+                        <td>${result.SenderCountry}</td>
+                    </tr>
+                    <tr>
+                        <td>Sender Id</td>
+                        <td>${result.SenderId}</td>
+                    </tr>
+                    <tr>
+                        <td>SenderId Document Number</td>
+                        <td>${result.SenderIdDocumentNumber}</td>
+                    </tr>
+                    <tr>
+                        <td>SenderId Document Type</td>
+                        <td>${result.SenderIdDocumentType}</td>
+                    </tr>
+                    <tr>
+                        <td>Sender LastName</td>
+                        <td>${result.SenderLastName}</td>
+                    </tr>
+                    <tr>
+                        <td>Sender LastName2</td>
+                        <td>${result.SenderLastName2}</td>
+                    </tr>
+                    <tr>
+                        <td>Sender Message</td>
+                        <td>${result.SenderMessage}</td>
+                    </tr>
+                    <tr>
+                        <td>Sender Name</td>
+                        <td>${result.SenderName}</td>
+                    </tr>
+                    <tr>
+                        <td>Sender Reference</td>
+                        <td>${result.SenderReference}</td>
+                    </tr>
+                    <tr>
+                        <td>Transaction Date</td>
+                        <td>${result.TransactionDate}</td>
+                    </tr>
+                    <tr>
+                        <td>Transaction Id</td>
+                        <td>${result.TransactionId}</td>
+                    </tr>
+                    <tr>
+                        <td>Transaction Status</td>
+                        <td>${result.TransactionStatus}</td>
+                    </tr>
+                    <tr>
+                        <td>Transfer Amount To Correspondent</td>
+                        <td>${result.TransferAmountToCorrespondent}</td>
+                    </tr>
+                    <tr>
+                        <td>Transfer Currency To Correspondent</td>
+                        <td>${result.TransferCurrencyToCorrespondent}</td>
+                    </tr>
+                    <tr>
+                        <td>Transfer Fee To Correspondent</td>
+                        <td>${result.TransferFeeToCorrespondent}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            `);
+
+
+
+            } catch (error) {
+                $('#btn').text('Fetch Record');
+                    if (error.response) {
+                    swal('Oops', error.response.data.message, 'error');
+                    } else {
+                    swal('Error', error.message, 'error');
+                    }
+            }
+
+        }
+
+
+        async function confirmPaymentMoex()
+        {
+            try {
+
+                var headers = {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                };
+
+                $('#btnconfirm').text('Please wait ...');
+
+
+            const config = {
+                method: 'POST',
+                url: "{{ URL('/moextops/confirmpayment') }}",
+                headers,
+                data: {
+                    IdTransaction: $('#IdTransaction').val(),
+                    PaymentDate: $('#PaymentDate').val(),
+                    ReceiverName: $('#ReceiverName').val(),
+                    ReceiverDocument: $('#ReceiverDocument').val()
+                }
+            }
+
+            const response = await axios(config);
+
+            swal('Great!', response.data.message, 'sucess');
+
+            }  catch (error) {
+                $('#btnconfirm').text('Confirm Payment');
+                    if (error.response) {
+                    swal('Oops', error.response.data.message, 'error');
+                    } else {
+                    swal('Error', error.message, 'error');
+                    }
+            }
+        }
+
+        // End MOEX - PS Transaction
+
+
     </script>
 
     </body>

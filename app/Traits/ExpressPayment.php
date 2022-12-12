@@ -135,10 +135,6 @@ trait ExpressPayment
         }
 
 
-
-
-
-
         // Get our charge
 
         return $data;
@@ -188,7 +184,14 @@ trait ExpressPayment
 
 
 
+            // TODO1:: Direct Payment to EXBC server,
+            // TODO2:: Get response from EXBC server and return result to PaySprint...
+
+
             $data = $this->doPayPost();
+
+
+
 
 
             return $data;

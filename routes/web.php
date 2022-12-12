@@ -243,7 +243,6 @@ Route::get('/clear', function () {
 	return "Package Cleared!";
 });
 
-
 // Major Routes
 
 
@@ -753,6 +752,11 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::get('/user-purchase-statement', ['uses' => 'AdminController@userWalletPurchaseStatement', 'as' => 'user purchase statement']);
 	Route::get('/user-wallet-purchase', ['uses' => 'AdminController@userWalletPurchase', 'as' => 'users wallet purchase']);
 	Route::get('bankrequestwithdrawal', ['uses' => 'AdminController@bankRequestWithdrawal', 'as' => 'bank request withdrawal']);
+	Route::get('getmoextransaction', ['uses' => 'AdminController@getMoexTransactionDetails', 'as' => 'get moex transaction']);
+	Route::get('getmoexpaidtransaction', ['uses' => 'AdminController@getMoexPaidTransaction', 'as' => 'get moex paid transaction']);
+	Route::get('getmoexpayedtransaction', ['uses' => 'AdminController@getMoexPayedTransaction', 'as' => 'get moex payed transaction']);
+	Route::get('getmoexpendingtransaction', ['uses' => 'AdminController@getMoexPendingTransaction', 'as' => 'get moex pending transaction']);
+	Route::get('getmoexpstransaction', ['uses' => 'AdminController@getMoexPSTransaction', 'as' => 'get moex ps transaction']);
 	Route::get('mobilemoneyrequestwithdrawal', ['uses' => 'AdminController@mobilemoneyRequestWithdrawal', 'as' => 'mobilemoney request withdrawal']);
 
 	Route::get('merchantbankdetails', ['uses' => 'AdminController@merchantBanksDetails', 'as' => 'merchant banking details']);

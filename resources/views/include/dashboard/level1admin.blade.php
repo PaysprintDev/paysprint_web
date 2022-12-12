@@ -35,6 +35,20 @@
     <!-- small box -->
     <div class="small-box bg-blue">
         <div class="inner">
+            <h3>{{ count($data['moextranx']) }}</h3>
+
+            <p>PS - MOEX Transaction</p>
+        </div>
+        <div class="icon">
+            <i class="ion ion-stats-bars"></i>
+        </div>
+        <a href="{{ route('get moex transaction') }}" class="small-box-footer">View details <i class="fa fa-arrow-circle-right"></i></a>
+    </div>
+</div>
+<div class="col-lg-3 col-xs-6">
+    <!-- small box -->
+    <div class="small-box bg-blue">
+        <div class="inner">
             <h3>{{ $data['crossborder'] }}</h3>
 
             <p>Cross Border Payment</p>
@@ -129,6 +143,25 @@
         </div>
         <a href="{{ route('approved pending users by country') }}" class="small-box-footer">View all <i
                 class="fa fa-arrow-circle-right"></i></a>
+    </div>
+</div>
+
+<div class="col-lg-3 col-xs-6">
+    <!-- small box -->
+    <div class="small-box bg-green">
+        <div class="inner">
+            <h3>
+                @if ($approvedusers = \App\User::where('account_check', 2)->count())
+                {{ $approvedusers }} @else 0
+                @endif
+            </h3>
+
+            <p>IDV Fully Completed</p>
+        </div>
+        <div class="icon">
+            <i class="ion ion-person-add"></i>
+        </div>
+        <a href="{{ route('approved users by country') }}" class="small-box-footer">View all <i class="fa fa-arrow-circle-right"></i></a>
     </div>
 </div>
 

@@ -129,7 +129,7 @@
 
                     <li class="dropdown submenu">
                         <a href="{{ route('login') }}">Login</a>
-                        {{-- <a href="https://exbc.ca/login">Login</a> --}}
+                        {{-- <a href="https://paysprint.ca/AdminLogin">Login</a> --}}
                     </li>
                     <li class="dropdown submenu">
                         <a href="{{ route('register') }}">Sign Up for FREE</a>

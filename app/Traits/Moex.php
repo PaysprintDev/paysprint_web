@@ -6,9 +6,10 @@ use SoapClient;
 
 use App\AllCountries;
 use App\Classes\TWSauth;
+use App\MoexTransaction;
 use App\ConversionCountry;
-use function GuzzleHttp\json_decode;
 use App\Traits\PaymentGateway;
+use function GuzzleHttp\json_decode;
 
 trait Moex
 {
@@ -383,12 +384,12 @@ trait Moex
 
         if ($BranchesMoex['return'] === 0) {
             $responseData = $BranchesMoex;
-            $this->doSlack(json_encode($BranchesMoex), $room = "moex-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+            $this->doSlack(json_encode($BranchesMoex), $room = "moex-logs", $icon = ":longbox:", env('LOG_SLACK_MOEX_URL'));
         } else {
             $responseData = [
-                'error' => $BranchesMoex['error']->Description
+                'error' => $BranchesMoex['error']
             ];
-            $this->doSlack($BranchesMoex['error']->Description, $room = "moex-logs", $icon = ":longbox:", env('LOG_SLACK_WEBHOOK_URL'));
+            $this->doSlack($BranchesMoex['error']->Description, $room = "moex-logs", $icon = ":longbox:", env('LOG_SLACK_MOEX_URL'));
         }
 
 
@@ -396,6 +397,111 @@ trait Moex
 
         return $responseData;
     }
+
+
+
+    // START MOEX - PS Module ...
+
+    public function MEGetExtTransactionMoex($reference)
+    {
+        $login = $this->twsAuthConfig();
+
+        $clientSoap = new \SoapClient($login->url_wsdl);
+
+        $BranchesMoex = $clientSoap->__soapCall("MEGetExtTransactionMoex", [
+            "Login" => $login,
+            "Reference" => $reference
+        ]);
+
+        return $BranchesMoex;
+    }
+
+
+    public function MEGetTransactionMoExAllPaid($FromDate, $ToDate)
+    {
+        $login = $this->twsAuthConfig();
+
+        $clientSoap = new \SoapClient($login->url_wsdl);
+
+        $BranchesMoex = $clientSoap->__soapCall("MEGetTransactionMoExAllPaid", [
+            "Login" => $login,
+            "FromDate" => $FromDate,
+            "ToDate" => $ToDate
+        ]);
+
+        return $BranchesMoex;
+    }
+
+
+
+    public function MEGetTransactionMoExAllPending()
+    {
+        $login = $this->twsAuthConfig();
+
+        $clientSoap = new \SoapClient($login->url_wsdl);
+
+        $BranchesMoex = $clientSoap->__soapCall("MEGetTransactionMoExAllPending", [
+            "Login" => $login
+        ]);
+
+        return $BranchesMoex;
+    }
+
+
+    public function MEGetTransactionMoExAllPayed($FromDate, $ToDate)
+    {
+        $login = $this->twsAuthConfig();
+
+        $clientSoap = new \SoapClient($login->url_wsdl);
+
+        $BranchesMoex = $clientSoap->__soapCall("MEGetTransactionMoExAllPayed", [
+            "Login" => $login,
+            "FromDate" => $FromDate,
+            "ToDate" => $ToDate
+        ]);
+
+        return $BranchesMoex;
+    }
+
+    public function MEConfirmPaymentTransactionMoEx($IdTransaction, $PaymentDate, $ReceiverName, $ReceiverDocument)
+    {
+        $login = $this->twsAuthConfig();
+
+        $clientSoap = new \SoapClient($login->url_wsdl);
+
+        $BranchesMoex = $clientSoap->__soapCall("MEConfirmPaymentTransactionMoEx", [
+            "Login" => $login,
+            "ConfirmData" => [
+                "IdTransaction" => $IdTransaction,
+                "PaymentDate" => $PaymentDate,
+                "ReceiverName" => $ReceiverName,
+                "ReceiverDocument" => $ReceiverDocument
+            ]
+
+        ]);
+
+        return $BranchesMoex;
+    }
+
+
+    public function MEConfirmDownloadedTransactionMoEx($IdTransaction)
+    {
+        $login = $this->twsAuthConfig();
+
+        $clientSoap = new \SoapClient($login->url_wsdl);
+
+        $BranchesMoex = $clientSoap->__soapCall("MEConfirmDownloadedTransactionMoEx", [
+            "Login" => $login,
+            "ConfirmData" => [
+                "IdTransaction" => $IdTransaction
+            ]
+
+        ]);
+
+        return $BranchesMoex;
+    }
+
+    // STOP MOEX - PS Module ...
 
 
     public function twsAuthConfig()
@@ -461,6 +567,31 @@ trait Moex
         curl_close($curl);
 
         return json_decode($response);
+    }
+
+
+    // Get Moex Transactions...
+    public function getMoexTransactions()
+    {
+        $data = MoexTransaction::orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+
+    public function getNotProcessedMoexTransactions()
+    {
+        $data = MoexTransaction::where('status', '!=', 'processed')->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+
+    public function checkTransactionStatus($transactionId)
+    {
+        $data = $this->MEGetTransactionMoEx($transactionId);
+
+        return $data;
     }
 
     public function doSlack($message, $room = "success-logs", $icon = ":longbox:", $webhook)

@@ -3,23 +3,23 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Http\Controllers\SendGridController;
+use App\Http\Controllers\MoexController;
 
-class MailToVerifiedMerchant extends Command
+class MoexPSAllPaid extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mailtoverifiedmerchants:run';
+    protected $signature = 'moextopsallpaid:run';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Mail to Verified Merchants';
+    protected $description = 'This is to get the moex to ps all paid transactions';
 
     /**
      * Create a new command instance.
@@ -38,10 +38,17 @@ class MailToVerifiedMerchant extends Command
      */
     public function handle()
     {
-         $checkSetup = new SendGridController();
+        $checkSetup = new MoexController();
 
-        $checkSetup->claimBusiness();
+        $start = date('2022-11-28 H:i:s');
+        $end = date('Y-m-d H:i:s');
 
-        $this->info("Mail to Verified Merchants completed successfully");
+
+        $checkSetup->getExTransactionMoexPSAllPaid($start, $end);
+
+
+
+        $this->info("MOEX to PaySprint All Paid Transactions successfully executed");
+
     }
 }

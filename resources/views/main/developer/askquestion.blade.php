@@ -127,17 +127,17 @@
                                     @csrf
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
-                                            <label for="categories">Categories</label>
-                                            <select name="categories" id="categories" class="form-control">
-                                                <option>Choose a category</option>
-                                                <option>App Review</option>
-                                                <option>PaySprint Login </option>
-                                                <option>Developer Tools</option>
-                                                <option>API Integration</option>
-                                                <option>Payment</option>
-                                                <option>Platform Policy</option>
-                                                <option value="others">Other</option>
-                                            </select>
+                                        <label for="categories">Categories</label>
+                                        <select name="categories" id="categories" class="form-control">
+                                            <option>Choose a category</option>
+                                            <option>App Review</option>
+                                            <option>PaySprint Login </option>
+                                            <option>Developer Tools</option>
+                                            <option>API Integration</option>
+                                            <option>Payment</option>
+                                            <option>Platform Policy</option>
+                                            <option value="others">Other</option>
+                                        </select>
                                         </div>
 
                                         <div class="form-group has-feedback specify_Categories disp-0">

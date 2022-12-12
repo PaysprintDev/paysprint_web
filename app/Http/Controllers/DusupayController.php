@@ -389,7 +389,7 @@ class DusupayController extends Controller
                                                 // $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amounttosend);
 
 
-                                                // Create Statement And Credit EXBC account holder
+                                                // Create Statement And Credit PaySprint Account holder
                                                 $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
 
                                                 if (isset($exbcMerchant)) {
@@ -740,7 +740,7 @@ class DusupayController extends Controller
                                                     $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
-                                                    // Create Statement And Credit EXBC account holder
+                                                    // Create Statement And Credit PaySprint Account holder
                                                     $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
 
                                                     if (isset($exbcMerchant)) {
@@ -1252,7 +1252,7 @@ class DusupayController extends Controller
                                                         $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
-                                                        // Create Statement And Credit EXBC account holder
+                                                        // Create Statement And Credit PaySprint Account holder
                                                         $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
 
                                                         if (isset($exbcMerchant)) {
@@ -1620,7 +1620,7 @@ class DusupayController extends Controller
                                                             $this->getfeeTransaction($transaction_id, $thisuser->ref_code, $req->amount, $req->commissiondeduct, $req->amount);
 
 
-                                                            // Create Statement And Credit EXBC account holder
+                                                            // Create Statement And Credit PaySprint Account holder
                                                             $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
 
                                                             if (isset($exbcMerchant)) {

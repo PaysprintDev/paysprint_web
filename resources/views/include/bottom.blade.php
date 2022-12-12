@@ -5,7 +5,7 @@
             <div class="col-md-3 col-sm-6 footer_about">
                 <h2 style="padding-bottom: 0px !important;">ABOUT OUR COMPANY</h2>
                 {{-- <p style="font-weight: bold; font-size: 30px;">Pay<span style="color: #f6b60b">Sprint</span></p> --}}
-                <img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_white_horizotal_mb5ouw.png" style="position: relative; left: -40px;">
+                {{-- <img src="https://res.cloudinary.com/pilstech/image/upload/v1603726392/pay_sprint_white_horizotal_mb5ouw.png" style="position: relative; left: -40px;"> --}}
                 {{-- <p>Payca or electronic bill payment, is when a seller such as company, organization, or group sends its bills or invoices over the internet, and customers pay the bills electronically.</p> --}}
                 <p style="padding-top: 0px !important;">PaySprint is the fastest and most affordable way to send and
                     receive money. Pay invoice,pay invoice and getting paid at anytime!</p>

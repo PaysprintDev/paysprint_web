@@ -1211,6 +1211,9 @@ class CurrencyFxController extends Controller
 
                     $thisuser = User::where('id', $value->user_id)->first();
 
+
+                    if(isset($thisuser)){
+
                     $getescrow = EscrowAccount::where('currencyCode', $value->sell_currencyCode)->where('user_id', $value->user_id)->first();
 
                     $walletBal = $getescrow->wallet_balance;
@@ -1227,7 +1230,7 @@ class CurrencyFxController extends Controller
                     $transaction_id = "es-wallet-" . date('dmY') . time();
 
                     // Insert Escrow Statement
-                    $activity = "Wallet deposit of " . $thisuser->currencyCode . " " . number_format($value->sell, 2) . " for a bid has been refunded back to your (" . $thisuser->currencyCode . ") wallet on PaySprint FX";
+                    $activity = "Wallet deposit of " . $value->sell_currencyCode . " " . number_format($value->sell, 2) . " for a bid has been refunded back to your (" . $value->sell_currencyCode . ") wallet on PaySprint FX";
                     $credit = $value->sell;
                     $debit = 0;
                     $reference_code = $transaction_id;
@@ -1316,15 +1319,17 @@ class CurrencyFxController extends Controller
 
                     $this->createNotification($thisuser->ref_code, "Hello " . strtoupper($thisuser->name) . ", " . $sendMsg, $thisuser->playerId, $sendMsg, "Escrow Wallet Credit");
 
-                    echo "Done for " . $expiry . "<hr>";
+                    echo "Done for " . $expiry . "\n";
+
+                    }
                 }
             }
 
-            echo "Finally done";
+            echo "Finally done \n";
         } else {
             Log::info('No expired market today: ' . $today);
 
-            echo 'No expired market today: ' . $today;
+            echo 'No expired market today: ' . $today." \n";
         }
     }
 

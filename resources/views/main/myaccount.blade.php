@@ -121,13 +121,16 @@
                                                         Wallet Balance
                                                     </h6>
                                                 </div>
-                                                <div class="col-md-7">
+                                                <div class="col-md-12">
                                                     <h4>
                                                         {{ $data['currencyCode']->currencySymbol . '' .
                                                         number_format(Auth::user()->wallet_balance, 4) }}
                                                     </h4>
                                                     <hr>
-                                                    <div class="alert alert-info">
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="alert alert-info">
                                                         <h6 class="font-sm">
                                                         Overdraft Balance
                                                     </h6>
@@ -135,6 +138,19 @@
                                                         {{ $data['currencyCode']->currencySymbol . '' .
                                                         number_format(Auth::user()->overdraft_balance, 4) }}
                                                     </h5>
+                                                    </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="alert alert-dark">
+                                                        <h6 class="font-sm">
+                                                        Available to withdraw
+                                                    </h6>
+                                                    <h5 class="font-sm">
+                                                        {{ $data['currencyCode']->currencySymbol . '' .
+                                                        number_format(((Auth::user()->wallet_balance + Auth::user()->overdraft_balance) - $data['subscription']), 4) }}
+                                                    </h5>
+                                                    </div>
+                                                        </div>
                                                     </div>
 
 

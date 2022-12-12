@@ -1057,7 +1057,7 @@ your PaySprint Account.You need to provide the outstanding information and compl
 
     public function updateExbcAccount()
     {
-        // Create Statement And Credit EXBC account holder
+        // Create Statement And Credit PaySprint Account holder
         // $exbcMerchant = User::where('email', 'bambo@vimfile.com')->first();
         $exbcMerchant = User::where('email', 'bambo@vimfile.com')->first();
 
@@ -1138,9 +1138,72 @@ your PaySprint Account.You need to provide the outstanding information and compl
 
     // Reverse Money
 
+
+    public function reverseBackFund($id, $amount, $reason)
+    {
+
+        $thisuser = User::where('id', $id)->first();
+
+        if (isset($thisuser)) {
+
+            $transaction_id = "wallet-" . date('dmY') . time();
+
+            $activity = "Reversal of " . $thisuser->currencyCode . '' . number_format($amount, 2) . " has been processed back to wallet. Reason: ".$reason;
+            $credit = $amount;
+            $debit = 0;
+            $reference_code = $transaction_id;
+            $balance = 0;
+            $trans_date = date('Y-m-d');
+            $transstatus = "Delivered";
+            $action = "Wallet credit";
+            $regards = $thisuser->ref_code;
+            $statement_route = "wallet";
+
+            $walletBalance = $thisuser->wallet_balance + $amount;
+
+            User::where('email', $thisuser->email)->update([
+                'wallet_balance' => $walletBalance
+            ]);
+
+
+            // Senders statement
+            $this->insStatement($thisuser->email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $transstatus, $action, $regards, 1, $statement_route, $thisuser->country);
+
+            $this->getfeeTransaction($reference_code, $thisuser->ref_code, $amount, 0.00, $amount);
+
+            $sendMerchantMsg = 'Reversal of ' . $thisuser->currencyCode . ' ' . number_format($amount, 2) . '  has been processed back to wallet. Reason: '.$reason.'. You now have ' . $thisuser->currencyCode . ' ' . number_format($walletBalance, 2) . ' balance in your PaySprint Wallet.';
+
+            $this->createNotification($thisuser->ref_code, $sendMerchantMsg, $thisuser->playerId, $sendMerchantMsg, "Wallet credit");
+
+
+            $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
+
+            if (isset($userPhone)) {
+
+                $sendPhone = $thisuser->telephone;
+            } else {
+                $sendPhone = "+" . $thisuser->code . $thisuser->telephone;
+            }
+
+            if ($thisuser->country == "Nigeria") {
+
+                $correctPhone = preg_replace("/[^0-9]/", "", $sendPhone);
+                $this->sendSms($sendMerchantMsg, $correctPhone);
+            } else {
+                $this->sendMessage($sendMerchantMsg, $sendPhone);
+            }
+
+            $this->slack($sendMerchantMsg, $room = "success-logs", $icon = ":longbox:", env('LOG_SLACK_SUCCESS_URL'));
+
+            echo $sendMerchantMsg;
+        } else {
+            // Do nothing
+        }
+    }
+
     public function reverseFund()
     {
-        // Create Statement And Credit EXBC account holder
+        // Create Statement And Credit PaySprint Account holder
         // $exbcMerchant = User::where('email', 'prepaidcard@exbc.ca')->first();
         $exbcMerchant = User::where('email', 'Finance@monrenardbleu.com')->first();
 
@@ -1697,10 +1760,6 @@ in the your business category.</p> <p>This means your competitors are receiving 
                     $this->subject = "Its Time to Complete Your Verification on PaySprint";
 
                     $this->message = "<p>We  wish to remind you that your verification process is yet to be completed.</p><p>You can only RECEIVE funds to your wallet until you have completed the required identity verification process that would enable you 'to Add Money/Top Up Wallet' and 'Send Money from Wallet' and also access other features on PaySprint.</p><p>To Complete the identity verification processes, kindly follow these steps:</p><p>a. Login to your PaySprint Account on your mobile app or at: <a href='https://paysprint.ca'>www.paysprint.ca</a></p><p> b. Go to Profile section and upload the following: <br> 1. Selfie of yourself <br> 2. Government Issued Photo ID (Drivers license or International Passport or National ID card) <br> 3. Utility Bill ( Electricity, Hydro etc. Note that Bank or Credit Card Statements are not accepted)</p><br><p>Thank you for choosing us.</p>";
-
-
-
-
 
                     // $this->sendEmail($this->email, "Incomplete Setup");
 

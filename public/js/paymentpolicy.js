@@ -267,5 +267,31 @@
             "MONEY EXCHANGE"
         ],
         "remarks": "Beneficiary´s data must be exactly the same as beneficiary´s Identity card."
+    },
+    {
+        "country": "Canada",
+        "currency": "CAN",
+        "min_amount": 10,
+        "max_amount": 5000,
+        "payment_type": "Instant Payment",
+        "terms_of_payment": "Bank deposit: 24 hrs",
+        "gender": [
+            "M",
+            "F"
+        ],
+        "mandatory_data": [
+            "surname",
+            "fullname",
+            "emailAddress",
+            "phoneNumber"
+        ],
+        "compulsory_data": [
+            "id_Type",
+            "id_Number"
+        ],
+        "remittance_company": [
+            "PAYSPRINT"
+        ],
+        "remarks": "Beneficiary´s data must be exactly the same as beneficiary´s Identity card."
     }
 ]

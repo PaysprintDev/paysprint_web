@@ -1073,10 +1073,8 @@ class GooglePaymentController extends Controller
                         $transaction_id = "ps-" . date('dmY') . time();
 
                         $validator = Validator::make($req->all(), [
-                            'countryCode' => 'required',
                             'country' => 'required',
                             'payment_method' => 'required',
-                            'service' => 'required',
                             'amount' => 'required',
                             'transaction_pin' => 'required',
                         ]);
@@ -1226,7 +1224,7 @@ class GooglePaymentController extends Controller
                                                     }
 
 
-                                                    MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $amount, 'currency' => $thisuser->currencyCode, 'status' => 'pending']);
+                                                    MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $req->amount, 'currency' => $thisuser->currencyCode, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated"]);
 
 
 
@@ -1269,9 +1267,9 @@ class GooglePaymentController extends Controller
                                                         $this->email = $thisuser->email;
                                                         $this->subject = $walletResult->currencyCode . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
 
-                                                        $this->message = '<p>You have sent <strong>' . $walletResult->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->mandatory_fullname . '. Payout fee of <strong>' . $walletResult->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . '</strong> inclusive. You now have <strong>' . $walletResult->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your ' . $walletResult->currencyCode . ' FX wallet account</p>';
+                                                        $this->message = '<p>You have sent <strong>' . $walletResult->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->mandatory_fullname . '. Payout fee of <strong>' . $walletResult->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . '</strong> is charged. You now have <strong>' . $walletResult->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your ' . $walletResult->currencyCode . ' FX wallet account</p>';
 
-                                                        $sendMsg = 'You have sent ' . $walletResult->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->mandatory_fullname . '. Payout fee of ' . $walletResult->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ' inclusive. You now have ' . $walletResult->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your ' . $walletResult->currencyCode . ' FX wallet account';
+                                                        $sendMsg = 'You have sent ' . $walletResult->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->mandatory_fullname . '. Payout fee of ' . $walletResult->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ' is charged. You now have ' . $walletResult->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your ' . $walletResult->currencyCode . ' FX wallet account';
 
                                                         $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -1295,19 +1293,18 @@ class GooglePaymentController extends Controller
 
 
 
-
-
                                                         // Notification for receiver
                                                         $this->name = $req->mandatory_fullname;
                                                         // $this->to = "bambo@vimfile.com";
                                                         $this->to = $req->mandatory_emailAddress;
                                                         $this->subject = $thisuser->name . " has sent you " . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . " on PaySprint";
 
+                                                        $bankNameRecord = isset($req->bank_code) ? explode("__", $req->bank_code)[1] : $req->mandatory_bankName;
+                                                        $bankNumberRecord = isset($req->banking_account_number) ? $req->banking_account_number : $req->mandatory_accountNumber;
 
+                                                        $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. Here is the transaction ID: <strong>' . $doMoex['transactionId'] . '</strong>. Your fund will be processed to <strong>'.$bankNameRecord.' - '.$bankNumberRecord.'</strong>. You can also get paid at <strong>' . $req->remittance . '</strong> of your choice. Kindly have your means of identification match your identity to receive fund.</p>';
 
-                                                        $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. Here is the transaction ID: <strong>' . $doMoex['transactionId'] . '</strong>. Your fund will be processed to <strong>'.isset($req->bank_code) ? explode("__", $req->bank_code)[1] : $req->mandatory_bankName.' - '.(isset($req->banking_account_number) ? $req->banking_account_number : $req->mandatory_accountNumber).'<strong>. You can also get paid at <strong>' . $req->remittance . '</strong> of your choice. Kindly have your means of identification match your identity to receive fund.</p>';
-
-                                                        $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. Here is the transaction ID: ' . $doMoex['transactionId'] . '. Your fund will be processed to '.isset($req->bank_code) ? explode("__", $req->bank_code)[1] : $req->mandatory_bankName.' - '.(isset($req->banking_account_number) ? $req->banking_account_number : $req->mandatory_accountNumber).' You can also get paid at ' . $req->remittance . ' of your choice. Kindly have your means of identification match your identity to receive fund.';
+                                                        $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. Here is the transaction ID: ' . $doMoex['transactionId'] . '. Your fund will be processed to '.$bankNameRecord.' - '.$bankNumberRecord.' You can also get paid at ' . $req->remittance . ' of your choice. Kindly have your means of identification match your identity to receive fund.';
 
 
                                                         $recPhone = "+" . $req->countryCode . $req->phone;
@@ -1330,7 +1327,7 @@ class GooglePaymentController extends Controller
 
 
                                                         // Insert Statement
-                                                        $activity = $req->payment_method . " transfer of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " to " . $req->fname . ' ' . $req->lname . " for " . $service;
+                                                        $activity = $req->payment_method . " transfer of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " to " . $req->fname . ' ' . $req->lname . " for " . $service.". Payout fee of " . $walletResult->currencyCode . " " . number_format($req->commissiondeduct, 2) . " is charged";
                                                         $credit = 0;
                                                         // $debit = $req->conversionamount + $req->commissiondeduct;
                                                         $debit = $req->amount;
@@ -1515,7 +1512,7 @@ class GooglePaymentController extends Controller
                                                             }
 
 
-                                                            MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $amount, 'currency' => $thisuser->currencyCode, 'status' => 'pending']);
+                                                            MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $req->amount, 'currency' => $thisuser->currencyCode, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated"]);
 
 
                                                             $statement_route = "wallet";
@@ -1553,9 +1550,9 @@ class GooglePaymentController extends Controller
                                                                 $this->email = $thisuser->email;
                                                                 $this->subject = $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " has been sent through Text-To-Transfer Platform from your Wallet with PaySprint.";
 
-                                                                $this->message = '<p>You have sent <strong>' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->mandatory_fullname . '. Payout fee of <strong>' . $thisuser->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . '</strong> inclusive. You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your account</p>';
+                                                                $this->message = '<p>You have sent <strong>' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . '</strong> to ' . $req->mandatory_fullname . '. Payout fee of <strong>' . $thisuser->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . '</strong> is charged. You now have <strong>' . $thisuser->currencyCode . ' ' . number_format($wallet_balance, 2) . '</strong> balance in your account</p>';
 
-                                                                $sendMsg = 'You have sent ' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->mandatory_fullname . ' Payout fee of ' . $thisuser->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ' inclusive. You now have ' . $thisuser->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your account';
+                                                                $sendMsg = 'You have sent ' . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $req->mandatory_fullname . ' Payout fee of ' . $thisuser->currencyCode . ' ' . number_format($req->commissiondeduct, 2) . ' is charged. You now have ' . $thisuser->currencyCode . ' ' . number_format($wallet_balance, 2) . ' balance in your account';
 
                                                                 $userPhone = User::where('email', $thisuser->email)->where('telephone', 'LIKE', '%+%')->first();
 
@@ -1580,7 +1577,6 @@ class GooglePaymentController extends Controller
 
 
 
-
                                                                 // Notification for receiver
                                                                 $this->name = $req->mandatory_fullname;
                                                                 // $this->to = "bambo@vimfile.com";
@@ -1588,9 +1584,19 @@ class GooglePaymentController extends Controller
                                                                 $this->subject = $thisuser->name . " has sent you " . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . " on PaySprint";
 
 
-                                                                $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. Here is the transaction ID: <strong>' . $doMoex['transactionId'] . '</strong>. Your fund will be processed to <strong>'.isset($req->bank_code) ? explode("__", $req->bank_code)[1] : $req->mandatory_bankName.' - '.(isset($req->banking_account_number) ? $req->banking_account_number : $req->mandatory_accountNumber).'<strong>. You can also get paid at <strong>' . $req->remittance . '</strong> of your choice. Kindly have your means of identification match your identity to receive fund.</p>';
+                                                                $bankNameRecord = isset($req->bank_code) ? explode("__", $req->bank_code)[1] : $req->mandatory_bankName;
+                                                                $bankNumberRecord = isset($req->banking_account_number) ? $req->banking_account_number : $req->mandatory_accountNumber;
 
-                                                                $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. Here is the transaction ID: ' . $doMoex['transactionId'] . '. Your fund will be processed to '.isset($req->bank_code) ? explode("__", $req->bank_code)[1] : $req->mandatory_bankName.' - '.(isset($req->banking_account_number) ? $req->banking_account_number : $req->mandatory_accountNumber).' You can also get paid at ' . $req->remittance . ' of your choice. Kindly have your means of identification match your identity to receive fund.';
+
+                                                                $this->message = '<p>You have received <strong>' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . '</strong> from ' . $thisuser->name . '. Here is the transaction ID: <strong>' . $doMoex['transactionId'] . '</strong>.
+                                                                Your fund will be processed to
+                                                                <strong>'.$bankNameRecord.' - '.$bankNumberRecord.'</strong>.
+                                                                You can also get paid at <strong>' . $req->remittance . '</strong> of your choice. Kindly have your means of identification match your identity to receive fund.</p>';
+
+                                                                $recMesg = 'You have received ' . $foreigncurrency->currencyCode . ' ' . number_format($amount, 2) . ' from ' . $thisuser->name . '. Here is the transaction ID: ' . $doMoex['transactionId'] . '. Your fund will be processed to '.$bankNameRecord.' - '.$bankNumberRecord.' You can also get paid at ' . $req->remittance . ' of your choice. Kindly have your means of identification match your identity to receive fund.';
+
+
+
 
 
 
@@ -1599,7 +1605,6 @@ class GooglePaymentController extends Controller
 
 
                                                                 $this->sendEmail($this->to, "Fund remittance");
-
 
 
                                                                 if ($req->country == "Nigeria") {
@@ -1615,7 +1620,7 @@ class GooglePaymentController extends Controller
 
 
                                                                 // Insert Statement
-                                                                $activity = $req->payment_method . " transfer of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " to " . $req->mandatory_fullname . " for " . $service;
+                                                                $activity = $req->payment_method . " transfer of " . $thisuser->currencyCode . ' ' . number_format($req->amount, 2) . " to " . $req->mandatory_fullname . " for " . $service.". Payout fee of " . $thisuser->currencyCode . " " . number_format($req->commissiondeduct, 2) . " is charged";
                                                                 $credit = 0;
                                                                 // $debit = $req->conversionamount + $req->commissiondeduct;
                                                                 $debit = $req->amount;

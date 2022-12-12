@@ -17,11 +17,12 @@ class Kernel extends ConsoleKernel
         Commands\ApprovedUsersMove::class,
         Commands\AutoDepositOff::class,
         Commands\BvnListUpdate::class,
-    Commands\ChargeFee::class,
+        Commands\ChargeFee::class,
         Commands\CheckTelephone::class,
-        Commands\CronToConsumers::class,
-        Commands\CronToMerchant::class,
+        // Commands\CronToConsumers::class,
+        // Commands\CronToMerchant::class,
         Commands\DailyExchange::class,
+        Commands\MoexTransactionCheck::class,
         Commands\DailyLimit::class,
         Commands\DocPendingList::class,
         Commands\ExbcCardRequest::class,
@@ -30,7 +31,7 @@ class Kernel extends ConsoleKernel
         Commands\GetInvoiceCurrency::class,
         Commands\IdvCompletedList::class,
         Commands\IdvFailedList::class,
-        Commands\IdvNotificationMessage::class,
+        // Commands\IdvNotificationMessage::class,
         Commands\IdvPassedList::class,
         Commands\MailForVirtualAccount::class,
         Commands\MatchedUsersMove::class,
@@ -60,7 +61,11 @@ class Kernel extends ConsoleKernel
         Commands\UserArchive::class,
         Commands\VirtualAccountTopUp::class,
         Commands\WeeklyLimit::class,
-        Commands\MailToVerifiedMerchant::class
+        Commands\MailToVerifiedMerchant::class,
+        Commands\MoexPSAllPaid::class,
+        Commands\MoexPSAllPayed::class,
+        Commands\MoexPSAllPending::class,
+        Commands\PlatformCurrencyConvert::class
         // Commands\DailyMetricsTask::class,
         // Commands\TestPSMoex::class,
     ];
@@ -79,9 +84,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('bvnlistupdate:run')->dailyAt('02:00');
         $schedule->command('chargefee:run')->twiceDaily(1, 13);
         $schedule->command('checktelephone:run')->dailyAt('00:00');
-        $schedule->command('crontoconsumer:run')->fridays();
-        $schedule->command('crontomerchant:run')->tuesdays();
-        $schedule->command('dailyexchange:run')->dailyAt('02:00');
+        // $schedule->command('crontoconsumer:run')->fridays();
+        // $schedule->command('crontomerchant:run')->tuesdays();
+        $schedule->command('dailyexchange:run')->dailyAt('07:00');
         $schedule->command('dailylimit:run')->cron('0 0 * * *');
         $schedule->command('docpendinglist:run')->cron('0 1 * * *');
         $schedule->command('exbccardrequest:run')->cron('0 4 * * *');
@@ -90,7 +95,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('getinvoicecurrency:run')->cron('*/5 * * * *');
         $schedule->command('idvcompletedlist:run')->cron('0 6 * * *');
         $schedule->command('idvfailedlist:run')->dailyAt('02:00');
-        $schedule->command('idvnotificationmessage:run')->wednesdays();
+        // $schedule->command('idvnotificationmessage:run')->wednesdays();
         $schedule->command('idvpassedlist:run')->cron('0 4 * * *');
         $schedule->command('mailtovirtualaccount:run')->cron('0 8 * * 4');
         $schedule->command('matchedusersmove:run')->cron('0 0 * * *');
@@ -105,8 +110,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('publisharchive:run')->cron('0 0 * * *');
         $schedule->command('publishexisting:run')->cron('0 0 * * *');
         $schedule->command('quicksetup:run')->cron('10 15 1,15 * *');
-        $schedule->command('refreshbid:run')->cron('59 23 * * *');
-        $schedule->command('renewsub:run')->cron('55 23 * * *');
+        $schedule->command('refreshbid:run')->daily();
+        $schedule->command('renewsub:run')->daily();
         $schedule->command('rewardpoint:run')->cron('0 13 26 * 1');
         $schedule->command('suspendedaccountlist:run')->cron('0 0 * * *');
         $schedule->command('transactionlimits:run')->cron('0,30 * * * *');
@@ -119,7 +124,12 @@ class Kernel extends ConsoleKernel
         $schedule->command('weeklylimit:run')->cron('0 0 * * 0');
         $schedule->command('notificationtable:run')->cron('0 0 * * 2');
         $schedule->command('mailqueue:run')->everyTwoMinutes();
-        $schedule->command('mailtoverfiedmerchants:run')->monthly();
+        $schedule->command('moextransactioncheck:run')->everyTwoMinutes();
+        $schedule->command('moextopsallpaid:run')->everyMinute();
+        $schedule->command('moextopsallpending:run')->everyMinute();
+        $schedule->command('moextopsallpayed:run')->everyMinute();
+        $schedule->command('mailtoverifiedmerchants:run')->monthly();
+        $schedule->command('platformcurrencyconverter:run')->twiceDaily(1, 13);
 
     }
 

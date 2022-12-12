@@ -377,7 +377,7 @@ class HomeController extends Controller
 
         return view('main.newpage.shade-pro.merchanthome')->with(['pages' => $this->page, 'data' => $data]);
     }
-    
+
     public function merchantUseCase()
     {
         $allcountry = AllCountries::where('approval', 1)->get();
@@ -1361,6 +1361,7 @@ class HomeController extends Controller
                 'continent' => $this->timezone[0],
                 'specialInfo' => $this->getthisInfo(Auth::user()->country),
                 'idvchecks' => $this->checkUsersPassAccount(Auth::user()->id),
+                'subscription' => $this->minimumBalanceCost(Auth::user()->country, Auth::user()->accountType)
             );
 
             // dd($data);
@@ -1972,6 +1973,15 @@ class HomeController extends Controller
     public function getConsumerCost($country)
     {
         $data = TransactionCost::where('country', $country)->where('structure', 'Consumer Monthly Subscription')->first();
+
+        $price = $data->fixed;
+
+        return $price;
+    }
+
+    public function minimumBalanceCost($country, $accountType)
+    {
+        $data = TransactionCost::where('country', $country)->where('structure', $accountType === 'Merchant' ? 'Merchant Monthly Subscription' : 'Consumer Monthly Subscription')->first();
 
         $price = $data->fixed;
 
@@ -3649,7 +3659,7 @@ class HomeController extends Controller
 
     public function rentalManagementAdminviewconsultant(Request $req)
     {
-        
+
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
                 $this->page = 'Rental Property Maintenance for Property Owner';
@@ -3681,7 +3691,7 @@ class HomeController extends Controller
                 'continent' => $this->timezone[0]
             );
         }
-       
+
         // Get Organization & Business
         $providers = $this->providersCheck($this->email);
 
@@ -4133,12 +4143,12 @@ class HomeController extends Controller
 
     public function bulkPayment(Request $req)
     {
-     
-        
+
+
          $bulkaccount=$req->id;
         //  dd($bulkaccount);
          $singleaccount= preg_split("/[,]/",$bulkaccount);
-       
+
         if ($req->session()->has('email') == false) {
             if (Auth::check() == true) {
                 $this->page = 'Payment';
@@ -4162,7 +4172,7 @@ class HomeController extends Controller
         $clientInfo = $this->clientsInformation();
         $location = $this->myLocation();
 
-       
+
         $data = array(
             'newnotification' => $this->notification($this->email),
             'allnotification' => $this->allnotification($this->email),
@@ -4175,7 +4185,7 @@ class HomeController extends Controller
         );
 
         // dd($data);
-        
+
 
 
         return view('main.bulkpayment')->with(['pages' => $this->page, 'name' => $this->name, 'email' => $this->email, 'clientInfo' => $clientInfo, 'location' => $location, 'data' => $data]);
@@ -4184,21 +4194,21 @@ class HomeController extends Controller
     public function createBulkTransfer(Request $req)
     {
         dd($req->all());
-       
-       
+
+
         $id= Auth::id();
        $data=User::where('id',$id)->first();
-       
-     
+
+
 
         $req['record'] = ['bulkreceiver'=>$req->receivers, 'receiver' => $req->receive, 'purpose' => $req->service, 'amount' => $req->amount];
-       
-       
+
+
         $bulkaccount=json_encode($req->receive);
         $bulkpurpose=json_encode($req->service);
         $bulkamount=json_encode($req->amount);
         //    dd($bulkaccount);
-      
+
         $data=[
             'record' => $req->record
         ];
@@ -4211,13 +4221,13 @@ class HomeController extends Controller
     public function bulkSend(Request $req)
     {
         $data= Transfers::where('sender_id',Auth::id())->first();
-    
+
 
         return view('main.bulksend')->with($data);
     }
 
-    
-   
+
+
 
     public function notification($email)
     {
@@ -6373,7 +6383,7 @@ class HomeController extends Controller
                     $this->name = $clientinfo[0]->business_name;
                     $this->email = $clientinfo[0]->email;
                     $this->subject = "Maintenace Request";
-                    $this->message = "Hi " . $this->name . ", <br> A tenant, <b>" . $req->ten_name . "</b>, submitted Maintenance Request: -- <b>" . $req->subject . "</b>. <br><br> <table style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'><tbody><tr><td>Maintenance Request #</td><td>" . $post_id . "</td></tr><tr><td>Unit</td><td>" . $unit_id . "</td></tr><tr><td>Tenant Name</td><td>" . $req->ten_name . "</td></tr><tr><td>Tenant Phone Number</td><td>" . $req->phone_number . "</td></tr><tr><td>Status</td><td>Open</td></tr><tr><td>Priority</td><td>" . $req->priority . "</td></tr><tr><td>Is the problem in the unit?</td><td>" . $req->problem_in_unit . "</td></tr><tr><td>Permission granted to enter unit alone?</td><td>" . $permission . "</td></tr><tr><td>Subject</td><td>" . $req->subject . "</td></tr><tr><td>Details</td><td>" . $req->details . "</td></tr><tr><td>Additional Info.</td><td>" . $req->additional_info . "</td></tr></tbody></table> <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Property Manager/Owner <br><br> Thanks <br> PaySprint Management.";
+                    $this->message = "Hi " . $this->name . ", <br> A tenant, <b>" . $req->ten_name . "</b>, submitted Maintenance Request: -- <b>" . $req->subject . "</b>. <br><br> <table style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'><tbody><tr><td>Maintenance Request #</td><td>" . $post_id . "</td></tr><tr><td>Unit</td><td>" . $unit_id . "</td></tr><tr><td>Tenant Name</td><td>" . $req->ten_name . "</td></tr><tr><td>Tenant Phone Number</td><td>" . $req->phone_number . "</td></tr><tr><td>Status</td><td>Open</td></tr><tr><td>Priority</td><td>" . $req->priority . "</td></tr><tr><td>Is the problem in the unit?</td><td>" . $req->problem_in_unit . "</td></tr><tr><td>Permission granted to enter unit alone?</td><td>" . $permission . "</td></tr><tr><td>Subject</td><td>" . $req->subject . "</td></tr><tr><td>Details</td><td>" . $req->details . "</td></tr><tr><td>Additional Info.</td><td>" . $req->additional_info . "</td></tr></tbody></table> <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://paysprint.ca/AdminLogin'>https://paysprint.ca/AdminLogin</a> to login to PaySprint Account. <br> b. Go to Manage Rental Property on Free Business App and Select Property Manager/Owner <br><br> Thanks <br> PaySprint Management.";
 
 
 
@@ -6492,7 +6502,7 @@ class HomeController extends Controller
         return $data;
     }
 
-    
+
     // ajaxbulkpayment
 
     public function ajaxMakeBulkPayment(Request $req)
@@ -6508,7 +6518,6 @@ class HomeController extends Controller
     {
 
         $thisuser = User::where('api_token', $req->bearerToken())->first();
-
 
 
         if ($req->pay_method != "Wallet") {
@@ -6660,6 +6669,8 @@ class HomeController extends Controller
         // $minimumBal = TransactionCost::where('structure', $subminType)->where('country', $thisuser->country)->first();
 
 
+        $subscription = $this->minimumBalanceCost($thisuser->country, $thisuser->accountType);
+
         // if (isset($minimumBal)) {
         //     $available = $minimumBal->fixed;
         // } else {
@@ -6670,16 +6681,17 @@ class HomeController extends Controller
         $walletCheck = "";
 
         // if($req->pay_method == "Wallet"){
-        $wallet = $thisuser->wallet_balance;
+        $wallet = max(0, ($thisuser->wallet_balance - $subscription));
 
         if ($thisuser->withdrawal_per_overdraft !== NULL) {
-            $availableWalletBalance = $thisuser->withdrawal_per_overdraft > 0 ? $thisuser->withdrawal_per_overdraft - $available : $wallet - $available;
+            $availableWalletBalance = $thisuser->withdrawal_per_overdraft > 0 ? ((double)$thisuser->withdrawal_per_overdraft + (double)$wallet - $available) : ((double)$wallet - $available);
         } else {
-            $availableWalletBalance = $wallet - $available;
+            $availableWalletBalance = (double)$wallet - $available;
         }
 
 
-        if ($availableWalletBalance <= $amountReceive) {
+
+        if ($availableWalletBalance <= (double)$amountReceive) {
 
             if ($thisuser->accountType == "Individual") {
                 $route = route('Add Money');
@@ -6687,14 +6699,13 @@ class HomeController extends Controller
                 $route = route('merchant add money');
             }
 
-            $walletCheck = 'Wallet Balance: <strong>' . $req->localcurrency . number_format($wallet, 4) . '</strong>. <br> Available Wallet Balance: <strong>' . $req->localcurrency . number_format($availableWalletBalance, 4) . '</strong>. <br> Insufficient balance. <a href="' . $route . '">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
+            $walletCheck = 'Wallet Balance: <strong>' . $req->localcurrency . number_format($wallet, 4) . '</strong>. <br>Overdraft Balance: <strong>' . $req->localcurrency . number_format($thisuser->overdraft_balance, 4) . '</strong>. <br> Available Wallet Balance: <strong>' . $req->localcurrency . number_format($availableWalletBalance, 4) . '</strong>. <br> Insufficient balance. <a href="' . $route . '">Add money <i class="fa fa-plus" style="font-size: 15px;border-radius: 100%;border: 1px solid grey;padding: 3px;" aria-hidden="true"></i></a>';
         }
         // }
 
 
 
-        $resData = ['data' => $amountReceive, 'message' => 'success', 'state' => $state, 'collection' => $collection, 'walletCheck' => $walletCheck, ''];
-
+        $resData = ['data' => $amountReceive, 'message' => 'success', 'state' => $state, 'collection' => $collection, 'walletCheck' => $walletCheck];
 
 
         return $this->returnJSON($resData, 200);
@@ -6946,7 +6957,7 @@ class HomeController extends Controller
 
                         $collection = $y;
 
-                
+
 
                     } else {
 
@@ -7220,7 +7231,7 @@ class HomeController extends Controller
             $this->name = $clientinfo[0]->business_name;
             $this->email = $clientinfo[0]->email;
             $this->subject = "Maintenace Request Deleted";
-            $this->message = "Hi " . $this->name . ", <br> A tenant, <b>" . $getReq[0]->tenant_name . "</b>, deleted a Maintenance Request: -- <b>" . $getReq[0]->subject . "</b>. <br><br> <table style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'><tbody><tr><td>Maintenance Request #</td><td>" . $getReq[0]->post_id . "</td></tr><tr><td>Unit</td><td>" . $getReq[0]->unit_id . "</td></tr><tr><td>Tenant</td><td>" . $getReq[0]->tenant_name . "</td></tr><tr><td>Status</td><td>Open</td></tr><tr><td>Priority</td><td>" . $getReq[0]->priority . "</td></tr><tr><td>Is the problem in the unit?</td><td>" . $getReq[0]->problem_in_unit . "</td></tr><tr><td>Permission granted to enter unit alone?</td><td>" . $permission . "</td></tr><tr><td>Subject</td><td>" . $getReq[0]->subject . "</td></tr><tr><td>Details</td><td>" . $getReq[0]->details . "</td></tr><tr><td>Additional Info.</td><td>" . $getReq[0]->additional_info . "</td></tr></tbody></table> <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Property Manager/Owner <br><br> Thanks <br> PaySprint Management.";
+            $this->message = "Hi " . $this->name . ", <br> A tenant, <b>" . $getReq[0]->tenant_name . "</b>, deleted a Maintenance Request: -- <b>" . $getReq[0]->subject . "</b>. <br><br> <table style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'><tbody><tr><td>Maintenance Request #</td><td>" . $getReq[0]->post_id . "</td></tr><tr><td>Unit</td><td>" . $getReq[0]->unit_id . "</td></tr><tr><td>Tenant</td><td>" . $getReq[0]->tenant_name . "</td></tr><tr><td>Status</td><td>Open</td></tr><tr><td>Priority</td><td>" . $getReq[0]->priority . "</td></tr><tr><td>Is the problem in the unit?</td><td>" . $getReq[0]->problem_in_unit . "</td></tr><tr><td>Permission granted to enter unit alone?</td><td>" . $permission . "</td></tr><tr><td>Subject</td><td>" . $getReq[0]->subject . "</td></tr><tr><td>Details</td><td>" . $getReq[0]->details . "</td></tr><tr><td>Additional Info.</td><td>" . $getReq[0]->additional_info . "</td></tr></tbody></table> <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://paysprint.ca/AdminLogin'>https://paysprint.ca/AdminLogin</a> to login to PaySprint Account. <br> b. Go to Manage Rental Property on Free Business App and Select Property Manager/Owner <br><br> Thanks <br> PaySprint Management.";
 
 
 
@@ -7313,7 +7324,7 @@ class HomeController extends Controller
             $this->email = $clientinfo[0]->email;
             $this->subject = "Maintenace Request";
 
-            $this->message = "Hi " . $this->name . ", <br> A tenant, <b>" . $req->ten_name . "</b>, submitted Maintenance Request: -- <b>" . $req->subject . "</b>. <br><br> <table style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'><tbody><tr><td>Maintenance Request #</td><td>" . $req->post_id . "</td></tr><tr><td>Unit</td><td>" . $req->unit . "</td></tr><tr><td>Tenant Name</td><td>" . $req->ten_name . "</td></tr><tr><td>Tenant Phone Number</td><td>" . $req->phone_number . "</td></tr><tr><td>Status</td><td>Open</td></tr><tr><td>Priority</td><td>" . $req->priority . "</td></tr><tr><td>Is the problem in the unit?</td><td>" . $req->problem_in_unit . "</td></tr><tr><td>Permission granted to enter unit alone?</td><td>" . $permission . "</td></tr><tr><td>Subject</td><td>" . $req->subject . "</td></tr><tr><td>Details</td><td>" . $req->details . "</td></tr><tr><td>Additional Info.</td><td>" . $req->additional_info . "</td></tr></tbody></table> <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://exbc.ca/login'>https://exbc.ca/login</a> to login to EXBC Account. <br> b. Go to Manage Rental Property on Free Business App and Select Property Manager/Owner <br><br> Thanks <br> PaySprint Management.";
+            $this->message = "Hi " . $this->name . ", <br> A tenant, <b>" . $req->ten_name . "</b>, submitted Maintenance Request: -- <b>" . $req->subject . "</b>. <br><br> <table style='font-family: arial, sans-serif; border-collapse: collapse; width: 100%;'><tbody><tr><td>Maintenance Request #</td><td>" . $req->post_id . "</td></tr><tr><td>Unit</td><td>" . $req->unit . "</td></tr><tr><td>Tenant Name</td><td>" . $req->ten_name . "</td></tr><tr><td>Tenant Phone Number</td><td>" . $req->phone_number . "</td></tr><tr><td>Status</td><td>Open</td></tr><tr><td>Priority</td><td>" . $req->priority . "</td></tr><tr><td>Is the problem in the unit?</td><td>" . $req->problem_in_unit . "</td></tr><tr><td>Permission granted to enter unit alone?</td><td>" . $permission . "</td></tr><tr><td>Subject</td><td>" . $req->subject . "</td></tr><tr><td>Details</td><td>" . $req->details . "</td></tr><tr><td>Additional Info.</td><td>" . $req->additional_info . "</td></tr></tbody></table> <br><br> Kindly follow these steps to manage the Request: <br> a. Click on this link <a href='https://paysprint.ca/AdminLogin'>https://paysprint.ca/AdminLogin</a> to login to PaySprint Account. <br> b. Go to Manage Rental Property on Free Business App and Select Property Manager/Owner <br><br> Thanks <br> PaySprint Management.";
 
 
             $this->file = "noImage.png";
