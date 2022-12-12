@@ -10,6 +10,8 @@ use App\MoexTransaction;
 use App\ConversionCountry;
 use App\Traits\PaymentGateway;
 use function GuzzleHttp\json_decode;
+use App\Http\Controllers\MonthlySubController;
+use App\User;
 
 trait Moex
 {
@@ -584,6 +586,26 @@ trait Moex
         $data = MoexTransaction::where('status', '!=', 'processed')->orderBy('created_at', 'DESC')->get();
 
         return $data;
+    }
+
+
+    public function updateMoexReceiver()
+    {
+        $topUpSetup = new MonthlySubController();
+
+        $data = MoexTransaction::where('status', 'processed')->get();
+
+        foreach ($data as $item) {
+
+            $thisuser = User::where('id', $item->user_id)->first();
+
+            if(isset($thisuser)){
+                $topUpSetup->moexTopUpAccount($thisuser->country, $item->amount > 0 ? max(0, $item->amount + 0.015) : 0 , $thisuser->name, $thisuser->accountType);
+            }
+
+        }
+
+        echo "Done \n";
     }
 
 

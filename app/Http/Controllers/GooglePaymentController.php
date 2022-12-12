@@ -1224,8 +1224,7 @@ class GooglePaymentController extends Controller
                                                     }
 
 
-                                                    MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $req->amount, 'currency' => $thisuser->currencyCode, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated"]);
-
+                                                    MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $req->amount, 'currency' => $thisuser->currencyCode, 'country' => $thisuser->country, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated"]);
 
 
                                                     // Getting the payer
@@ -1512,7 +1511,8 @@ class GooglePaymentController extends Controller
                                                             }
 
 
-                                                            MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $req->amount, 'currency' => $thisuser->currencyCode, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated"]);
+                                                            MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $req->amount, 'currency' => $thisuser->currencyCode, 'country' => $thisuser->country, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated"]);
+
 
 
                                                             $statement_route = "wallet";

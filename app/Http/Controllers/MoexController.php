@@ -2611,6 +2611,19 @@ class MoexController extends Controller
                     // Update Status...
                     if ($data['transaction']->TransactionStatus === "PAG") {
                         MoexTransaction::where('id', $item->id)->update(['status' => 'processed', 'transactionMessage' => 'The transaction has already been paid.']);
+
+                        $money = MoexTransaction::where('id', $item->id)->first();
+
+                        $amount = $money->amount + 0.015;
+
+                        $thisuser = User::where('id', $item->user_id)->first();
+
+                        if(isset($thisuser)){
+                            $topUpSetup = new MonthlySubController();
+                            $topUpSetup->moexTopUpAccount($thisuser->country, $amount, $thisuser->name, $thisuser->accountType);
+                        }
+
+
                     } elseif ($data['transaction']->TransactionStatus === "ENV" || $data['transaction']->TransactionStatus === "NEV") {
                         MoexTransaction::where('id', $item->id)->update(['status' => 'pending', 'transactionMessage' => 'Available for pay']);
                     } elseif ($data['transaction']->TransactionStatus === "ANU") {
@@ -2693,8 +2706,6 @@ class MoexController extends Controller
     {
         try {
             $data = $this->MEGetTransactionMoExAllPaid($fromDate, $toDate);
-
-            dd($data);
 
             if(isset($data['transactions'])){
                 // Save transactions to database...

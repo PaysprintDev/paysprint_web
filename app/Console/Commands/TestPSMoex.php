@@ -39,7 +39,8 @@ class TestPSMoex extends Command
      */
     public function handle()
     {
-        $data = $this->paysprintMoex();
+
+        $data = $this->updateMoexReceiver();
 
         $this->info($data);
     }
