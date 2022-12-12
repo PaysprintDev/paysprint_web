@@ -7685,7 +7685,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
             }elseif($paymentmethod == 'Wallet'){
 
             $data=Statement::where('reference_code',$req->transactionid)->first();
-            dd($data);
+      
 
 
             $escrow = CrossBorder::where('transaction_id', $data->reference_code)->first();
@@ -7772,7 +7772,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
         return $this->returnJSON($resData, $status);
         }
-
 
 
     }

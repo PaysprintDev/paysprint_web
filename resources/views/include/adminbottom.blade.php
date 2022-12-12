@@ -4573,8 +4573,8 @@ C</div>
         error: function(err) {
         
         button.text('Reverse Payment');
-        swal("Oops", err.responseJSON.message, "error");
-        
+        // swal("Oops", err.responseJSON.message, "error");
+        swal("Oops", "Something Went Wrong!")
         
         }
         
