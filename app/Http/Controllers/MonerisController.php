@@ -3290,6 +3290,26 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
             if ($response->responseCode == "00") {
 
 
+                // Check if transaction already processed...
+
+                // If Processed, return to page, else, proceed to process...
+
+                $checkexist = MonerisActivity::where('transaction_id', $req->paymentToken)->first();
+
+                if(isset($checkexist)){
+
+                    $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('ref_code', $req->ref_code)->first();
+
+                    $data = $userInfo;
+                    $status = 200;
+                    $message = 'You have successfully sent ' . $req->currencyCode . ' ' . number_format($req->amount, 2) . ' to ' . $thisuser->businessname;
+                    $action = 'success';
+
+                    return redirect()->route('epsresponseback', 'status=' . $action . '&message=' . $message)->with($action, $message);
+
+                }
+
+
 
                 if (isset($thisuser)) {
                     $gateway = "Express Payment Solution";
@@ -9219,6 +9239,45 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 // Insert Payment Record
 
 
+                $checkexist = MonerisActivity::where('transaction_id', $req->paymentToken)->first();
+
+                if(isset($checkexist)){
+
+                    $userInfo = User::select(
+                    'id',
+                    'code as countryCode',
+                    'ref_code as refCode',
+                    'name',
+                    'email',
+                    'password',
+                    'address',
+                    'telephone',
+                    'city',
+                    'state',
+                    'country',
+                    'zip as zipCode',
+                    'avatar',
+                    'api_token as apiToken',
+                    'approval',
+                    'accountType',
+                    'wallet_balance as walletBalance',
+                    'number_of_withdrawals as numberOfWithdrawal',
+                    'transaction_pin as transactionPin',
+                    'currencyCode',
+                    'currencySymbol'
+                    )->where('api_token', $req->api_token)->first();
+
+                    $data = $userInfo;
+                    $status = 200;
+                    $message = 'You have successfully added ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to your wallet. Kindly allow up to 12-24 hours for the funds to reflect in your wallet.';
+                    $action = 'success';
+
+
+                    return redirect()->route('epsresponseback', 'status=' . $action . '&message=' . $message)->with($action, $message);
+
+                }
+
+
                 $repayAmount = $this->repayOverdraft($thisuser->wallet_balance, $req->amounttosend, $thisuser->ref_code);
 
                 if ($req->commission == "on") {
@@ -9677,6 +9736,47 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
             if ($getVerification->responseCode == "00") {
                 // Insert Payment Record
+                $thismerchant = ClientInfo::where('api_secrete_key', $req->api_token)->first();
+                $thisuser = User::where('ref_code', $thismerchant->user_id)->first();
+
+                $checkexist = MonerisActivity::where('transaction_id', $req->paymentToken)->first();
+
+                if(isset($checkexist)){
+
+                    $userInfo = User::select(
+                    'id',
+                    'code as countryCode',
+                    'ref_code as refCode',
+                    'name',
+                    'email',
+                    'password',
+                    'address',
+                    'telephone',
+                    'city',
+                    'state',
+                    'country',
+                    'zip as zipCode',
+                    'avatar',
+                    'api_token as apiToken',
+                    'approval',
+                    'accountType',
+                    'wallet_balance as walletBalance',
+                    'number_of_withdrawals as numberOfWithdrawal',
+                    'transaction_pin as transactionPin',
+                    'currencyCode',
+                    'currencySymbol'
+                )->where('ref_code', $thismerchant->user_id)->first();
+
+                $data = $userInfo;
+                $status = 200;
+                $message = 'You have successfully transferred ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to ' . $thisuser->businessname . '.';
+                $action = 'success';
+
+
+                    return redirect()->route('epsresponseback', 'status=' . $action . '&message=' . $message)->with($action, $message);
+
+                }
+
 
                 if ($req->commission == "on") {
                     $grossAmount = $req->amount;
@@ -9685,9 +9785,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                 }
 
 
-                $thismerchant = ClientInfo::where('api_secrete_key', $req->api_token)->first();
 
-                $thisuser = User::where('ref_code', $thismerchant->user_id)->first();
 
 
                 // Get Guest Information....
