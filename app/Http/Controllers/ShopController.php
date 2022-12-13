@@ -122,7 +122,8 @@ class ShopController extends Controller
             if ($validator->passes()) {
 
 
-                $routing = Auth::user()->businessname . "/myproduct";
+                $routing = str_replace(" ", "_", Auth::user()->businessname . "/myproduct");
+                
 
                 $docPath = $this->uploadImageFile($req->file('file'), $routing, 300, 300);
 
@@ -299,7 +300,8 @@ class ShopController extends Controller
 
                 if ($req->hasFile('file')) {
 
-                    $routing = Auth::user()->businessname . "/myproduct";
+                    $routing = str_replace(" ", "_", Auth::user()->businessname . "/myproduct");
+                    
 
                     $docPath = $this->uploadImageFile($req->file('file'), $routing, 300, 300);
                 } else {
@@ -665,7 +667,7 @@ class ShopController extends Controller
 
             if ($validator->passes()) {
 
-                $routing = Auth::user()->businessname . "/estore";
+                $routing = str_replace(" ", "_", Auth::user()->businessname . "/estore");
 
                 $headContentImage = "";
                 $advertSectionImage = "";

@@ -766,7 +766,8 @@ class PayoutAgentController extends Controller
                                     else{
 
 
-                                        MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $req->amount, 'currency' => $thisuser->currencyCode, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated"]);
+                                        MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $req->amount, 'currency' => $thisuser->currencyCode, 'country' => $thisuser->country, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated"]);
+
 
                                         // Get Transaction record for last money added to wallet
                                         $getTrans = Statement::where('reference_code', 'LIKE', '%ord-%')->where('reference_code', 'LIKE', '%wallet-%')->where('user_id', $thisuser->email)->latest()->first();

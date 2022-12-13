@@ -379,6 +379,73 @@ class SendGridController extends Controller
         }
     }
 
+    // mail to unverified merchant
+    public function unverifiedMerchant()
+    {
+        try {
+
+
+            // $thisuser = ClientInfo::get();
+            
+            $thisuser = ClientInfo::inRandomOrder()->take(2)->get();
+            // $thisuser = ClientInfo::where('country', $country)->where('accountMode', $mode)->get();
+
+            dd($thisuser);
+
+
+            if (count($thisuser) > 0) {
+
+
+                foreach ($thisuser as $user) {
+                    $name = $user->name;
+                    // $receiver = $user->email;
+                    $receiver = 'olasunkanmimunirat@gmail.com';
+                    $data = [
+                        "name"  => $name,
+                        "message" => "<p>Thanks for Opening a Business Account with PaySprint.
+                        With Inflation spiraling and global economic easing into recession, businesses would need to find a more innovative way to increase revenue and reduce operating costs. 
+                        These are the objectives PaySprint Business Account is set to achieve.
+                        
+                        PaySprint Business Account connects merchant with customers and enable merchant to reduce the costs of receiving payments from customer to as much as 90%.
+                        
+                        To enjoy these benefits and much more, kindly take these 2 steps to complete the verification processes.
+                        
+                        1. Complete your personal verification by uploading a Selfie of yourself, a Government issued Photo ID and a copy of Utility bill.
+                        2. Complete your business profile and  verification as well, To complete business verification, kindly upload a valid business document like Certificate and Article of Incorporation, Business Registration documents etc.
+                        
+                        Follow these steps to update a Business Account:
+                        1. Login  to your business account using this link: https://paysprint.ca/AdminLogin
+                        2. Upload all the required documents (for Personal Verifications-Selfie, Government issued Photo Id and Utility Bills, for Business Verifications-Registration or incorporation Documents)
+                        3. Account  is approved and you start saving on the cost of receiving payments from customers
+                        
+                        Do you know that PaySprint Business Account allows you to:
+                        a. Receive payments from customers through QR Code for face-to-face payments, Payments link to remote customers  and also receive online payments on your business website at no cost to your business
+                        b. Utilize additional outlets to sell more to customers through our eStore
+                        c. Create and Send Invoice to customers on any mobile device.
+                        
+                        
+                        PaySprint, - One Platform, 3 Easy-to-Use Channels, Any Device, No fee
+                        
+                        
+                        If you need further assistance, kindly send email to: info@paysprint.ca
+                        
+                        Thanks
+                        Business Development Team-PaySprint Merchant Services  </p>",
+                        // "url" => route('home') . '/claimmerchantbusiness?id=' . $user->id,
+                    ];
+
+                    $template_id = config('constants.marketplace.claimsbusiness');
+
+                    $response = $this->marketplaceDynamicMail($receiver, $data, $template_id);
+
+                  
+                    echo 'done';
+                }
+            }
+        } catch (\Throwable $th) {
+            throw $th;
+        }  
+    }
 
 
 
@@ -552,9 +619,9 @@ class SendGridController extends Controller
 
         for ($i = 0; $i < count($user); $i++) {
         
-            // $receiver = $user[$i]['email'];
+            $receiver = $user[$i]['email'];
            
-              $receiver = 'olasunkanmimunirat@gmail.com';
+            //   $receiver = 'olasunkanmimunirat@gmail.com';
             
             $businesses['name'] = $user[$i]['name'];
             // dd($businesses);
@@ -626,9 +693,9 @@ class SendGridController extends Controller
 
         for ($i = 0; $i < count($user); $i++) {
         
-            // $receiver = $user[$i]['email'];
+            $receiver = $user[$i]['email'];
            
-              $receiver = 'olasunkanmimunirat@gmail.com';
+            //   $receiver = 'olasunkanmimunirat@gmail.com';
             
             $businesses['name'] = $user[$i]['name'];
             // dd($businesses);

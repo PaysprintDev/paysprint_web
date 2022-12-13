@@ -67,7 +67,7 @@ class Kernel extends ConsoleKernel
         Commands\MoexPSAllPending::class,
         Commands\PlatformCurrencyConvert::class
         // Commands\DailyMetricsTask::class,
-        // Commands\TestPSMoex::class,
+        // Commands\TestPSMoex::class
     ];
 
     /**

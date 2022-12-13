@@ -2704,7 +2704,7 @@ in the your business category.</p> <p>This means your competitors are receiving 
             echo "Process complete!";
         } catch (\Throwable $th) {
 
-            if (count($data->data) > 0) {
+            if (isset($data->data) && count($data->data) > 0) {
                 foreach ($data->data as $record) {
 
                     $referenced_code = $record->flw_ref;

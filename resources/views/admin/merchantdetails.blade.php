@@ -117,7 +117,6 @@
                                                 target="_blank">Back view</a>
                                             @endif
                                         </small>
-
                                         <input type="checkbox" name="incorporationcheck"
                                             id="incorporationcheck{{ $datainfo['users']->id }}"
                                             onchange="checkMyBox('incorporationcheck', '{{ $datainfo['users']->id }}')"

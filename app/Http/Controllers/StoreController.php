@@ -592,9 +592,8 @@ class StoreController extends Controller
         $storeId = StoreProducts::where('id', $id)->first();
 
         $thisuser = User::where('id', $storeId->merchantId)->first();
-
-
-        $routing = $thisuser->businessname . "/myproduct";
+        
+        $routing = str_replace(" ", "_", $thisuser->businessname . "/myproduct" );
 
         $headContentImage = '';
         $advertSectionImage = '';
@@ -1284,7 +1283,8 @@ class StoreController extends Controller
                 $thisuser = User::where('id', $storeId->merchantId)->first();
 
 
-                $routing = $thisuser->businessname . "/estore";
+              
+                $routing = str_replace(" ", "_", $thisuser->businessname . "/estore");
 
                 $headContentImage = '';
                 $advertSectionImage = '';
