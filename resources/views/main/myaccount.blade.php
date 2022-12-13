@@ -143,7 +143,7 @@
                                                         <div class="col-md-6">
                                                             <div class="alert alert-dark">
                                                         <h6 class="font-sm">
-                                                        Available to withdraw
+                                                        Available balance
                                                     </h6>
                                                     <h5 class="font-sm">
                                                         {{ $data['currencyCode']->currencySymbol . '' .

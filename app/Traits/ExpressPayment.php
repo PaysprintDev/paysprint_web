@@ -178,23 +178,19 @@ trait ExpressPayment
             $this->Base_Url = (env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_URL_DEV') : env('EPXRESS_PAYMENT_URL_PROD')) . 'api/Payments/VerifyPayment';
 
 
-            $this->curlPost = json_encode([
-                'transactionId' => $paymentToken,
-            ]);
+            // $this->curlPost = json_encode([
+            //     'transactionId' => $paymentToken,
+            // ]);
+            $this->curlPost = [
+                'transactionId' => $paymentToken
+            ];
+
+            // $data = $this->doPayPost();
+
+            $data = $this->doExbcPayPostRedirect();
 
 
-
-            // TODO1:: Direct Payment to EXBC server,
-            // TODO2:: Get response from EXBC server and return result to PaySprint...
-
-
-            $data = $this->doPayPost();
-
-
-
-
-
-            return $data;
+            return $data->data;
         } catch (\Throwable $th) {
 
             $data = $this->newVerification($paymentToken);
@@ -583,6 +579,40 @@ trait ExpressPayment
 
         return json_decode($response);
     }
+
+    public function doExbcPayPostRedirect()
+    {
+        $exbcUrl = env('APP_ENV') === 'local' ? 'http://localhost:7500/api/v1/paysprint/expresscallback' : 'https://exbc.ca/api/v1/paysprint/expresscallback';
+
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $exbcUrl,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $this->curlPost,
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Bearer base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks='
+            ),
+        ));
+
+
+
+        $response = curl_exec($curl);
+
+
+        curl_close($curl);
+
+
+        return json_decode($response);
+    }
+
 
     public function payBillCurrencyConvert($billerCurrency, $myCurrency, $amount, $route = null)
     {
