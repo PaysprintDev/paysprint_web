@@ -28,8 +28,9 @@ use App\Http\Controllers\User; ?>
                         <br>
                         <div class="col-md-12">
                             <h3 style="font-size:18px">
-                                {{ $data['currencyCode']->currencySymbol . '' .
-                                number_format(Auth::user()->wallet_balance, 2) }}
+                                    {{ $data['currencyCode']->currencySymbol . '' .
+                                                        number_format(((Auth::user()->wallet_balance + Auth::user()->overdraft_balance) - $data['subscription']), 2) }}
+
                             </h3>
                         </div>
                     </div>
