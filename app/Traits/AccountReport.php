@@ -21,42 +21,45 @@ trait AccountReport
 			$currency=AllCountries::where('name',$country)->first();
 			
 			$converter=new Controller();
+
 			$rate=$converter->currencyConvert($currency->currencyCode,1);
 			
 			$activecountry=AllCountries::where('approval','1')->get();
 
 			$sum = 0;
 
-		// foreach( $activecountry as $countries){
-		$addedAmount = Statement::where('country', $currency->name)->where('report_status', 'Added to wallet')->sum('credit');
+			$addedAmount = Statement::where('country', $currency->name)->where('report_status', 'Added to wallet')->sum('credit');
 			
+       		$receivedAmount = Statement::where('country', $currency->name)->where('report_status', 'Money received')->sum('credit');
 		
-        $receivedAmount = Statement::where('country', $currency->name)->where('report_status', 'Money received')->sum('credit');
 		
-		
-        $debitedAmount = Statement::where('country', $currency->name)->where('report_status', 'Withdraw from wallet')->sum('debit');
-		
-        $monthlyAmount = Statement::where('country', $currency->name)->where('report_status', 'Monthly fee')->sum('debit');
-        $sendInvoice = Statement::where('country', $currency->name)->where('action', 'Invoice')->sum('credit');
-		
-        $withdrawAmount = Statement::where('country', $currency->name)->where('report_status', 'Withdraw from wallet')->sum('debit');
-         $credits = $addedAmount + $receivedAmount + $sendInvoice + ($debitedAmount - $monthlyAmount - $withdrawAmount);
+        	$debitedAmount = Statement::where('country', $currency->name)->where('report_status', 'Withdraw from wallet')->sum('debit');
+
+       	 	$monthlyAmount = Statement::where('country', $currency->name)->where('report_status', 'Monthly fee')->sum('debit');
+
+
+        	$sendInvoice = Statement::where('country', $currency->name)->where('action', 'Invoice')->sum('credit');
 
 		
+        	$withdrawAmount = Statement::where('country', $currency->name)->where('report_status', 'Withdraw from wallet')->sum('debit');
 
-		 $sum= $credits;
 
-		 
-         
-			// }
+        	$credits = $addedAmount + $receivedAmount + $sendInvoice + ($debitedAmount - $monthlyAmount - $withdrawAmount);
+
+		
+			$sum= $credits;
+
+			
 			$fxcredit=FxStatement::where('country',$currency->name)->sum('credit');
 			
         	$fxdebit=FxStatement::where('country',$currency->name)->sum('debit');
+
 			$totalsum=$sum;
 			
 			$totaltransact=$totalsum+$fxcredit-$fxdebit;
 			
 			$totalmoneydone=$totaltransact;
+
 			return number_format($totalmoneydone,2);
 				
 		}
