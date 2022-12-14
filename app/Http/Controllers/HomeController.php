@@ -1984,7 +1984,7 @@ class HomeController extends Controller
     {
         $data = TransactionCost::where('country', $country)->where('structure', $accountType === 'Merchant' ? 'Merchant Monthly Subscription' : 'Consumer Monthly Subscription')->first();
 
-        $price = $data->fixed;
+        $price = (double)$data->fixed;
 
         return $price;
     }

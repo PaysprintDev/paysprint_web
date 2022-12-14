@@ -137,7 +137,7 @@ class GooglePaymentController extends Controller
     public function orgPaymentInvoice(Request $req)
     {
 
-
+        $getSubscription = new HomeController();
 
         if ($req->amount < 0) {
             $resData = ['res' => 'Please enter a positive amount to send', 'message' => 'error', 'title' => 'Oops!'];
@@ -178,15 +178,27 @@ class GooglePaymentController extends Controller
                         $creditAmount = floatval($req->totalcharge);
                     }
 
+                    $subscription = $getSubscription->minimumBalanceCost($user->country, $user->accountType);
 
-                    if ($user->wallet_balance < $debitAmount) {
-                        $resData = ['res' => 'Insufficient wallet balance', 'message' => 'error', 'title' => 'Oops!'];
+                    if((double)$user->overdraft_balance < $debitAmount && ((double)$user->wallet_balance - $subscription) <= 0)
+                    {
+                         $resData = ['res' => 'Insufficient wallet balance', 'message' => 'error', 'title' => 'Oops!'];
 
                         $response = 'Insufficient wallet balance';
                         $respaction = 'error';
 
                         return redirect()->back()->with($respaction, $response);
                     }
+
+                    // if ((((double)$user->wallet_balance - $subscription) + (double)$user->overdraft_balance) < $debitAmount) {
+
+                    //     $resData = ['res' => 'Insufficient wallet balance', 'message' => 'error', 'title' => 'Oops!'];
+
+                    //     $response = 'Insufficient wallet balance';
+                    //     $respaction = 'error';
+
+                    //     return redirect()->back()->with($respaction, $response);
+                    // }
 
 
 
@@ -255,7 +267,7 @@ class GooglePaymentController extends Controller
                                         if ($debitAmount > $user->wallet_balance) {
 
 
-                                            $checkForOverDraft = $this->overDraftInfo($user->wallet_balance, $debitAmount, $user->ref_code);
+                                            $checkForOverDraft = $this->overDraftInfo($user->wallet_balance, $debitAmount, $user->ref_code, $subscription);
 
                                             if ($checkForOverDraft['status'] === false) {
 

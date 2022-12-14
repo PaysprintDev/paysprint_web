@@ -6,7 +6,7 @@ namespace App\Traits;
 use App\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\sendEmail;
-
+use App\OverdraftTransaction;
 
 trait SecurityChecker {
 
@@ -116,14 +116,14 @@ trait SecurityChecker {
     }
 
 
-    public function overDraftInfo($walletBalance, $amountToSend, $refCode) {
+    public function overDraftInfo($walletBalance, $amountToSend, $refCode, $subscription = 0) {
 
         $thisuser = User::where('ref_code', $refCode)->first();
 
         // If criteria is mot met, return false and give insufficient funds...
 
         // Check if the overdraft limit meets up with the amount....
-        if($thisuser->withdrawal_per_overdraft < $amountToSend){
+        if(((double)$thisuser->withdrawal_per_overdraft + ((double)$walletBalance - $subscription)) < (double)$amountToSend){
 
             $result = ['message' => 'Amount for transaction exceeds your overdraft limit of ' . $thisuser->currencyCode.' '.number_format($thisuser->withdrawal_per_overdraft, 2), 'status' => false];
 
@@ -132,9 +132,9 @@ trait SecurityChecker {
 
         // Check if the overdraft meets up with the amount....
 
-        if($thisuser->overdraft_balance < $amountToSend){
+        if(( ((double)$walletBalance - $subscription) <= 0 || (double)$thisuser->overdraft_balance - $subscription) < (double)$amountToSend){
 
-            $result = ['message' => 'Amount for transaction exceeds your overdraft balance of ' . $thisuser->currencyCode.' '.number_format($thisuser->overdraft_balance, 2), 'status' => false];
+            $result = ['message' => 'Amount for transaction exceeds your overdraft balance of ' . $thisuser->currencyCode.' '.number_format($thisuser->overdraft_balance - $subscription, 2), 'status' => false];
 
             return $result;
         }
@@ -147,15 +147,34 @@ trait SecurityChecker {
             return $result;
         }
         // Deduct wallet balance to negative...
-        $walletBalance = $thisuser->wallet_balance - $amountToSend;
+        $initiateDebit = (double)$thisuser->wallet_balance - (double)$amountToSend;
+
+        $walletBalance = max(0, $initiateDebit);
+
+
 
         // Deduct overdraft balance to positive...
-        $overdraftBalance = $walletBalance + $thisuser->overdraft_balance;
+        $overdraftBalance = max(0, $thisuser->overdraft_balance - (double)$amountToSend);
+
+        $newOverDraftBal = $initiateDebit + (double)$amountToSend + $overdraftBalance;
+
 
         // Update user balance respectively...
-        User::where('ref_code', $refCode)->update(['wallet_balance' => $walletBalance, 'overdraft_balance' => $overdraftBalance]);
+        User::where('ref_code', $refCode)->update(['wallet_balance' => $walletBalance, 'overdraft_balance' => $newOverDraftBal]);
 
         // If criteria is met, return true and proceed with transaction
+
+
+        OverdraftTransaction::insert([
+            "userId" => $thisuser->id,
+            "amountToSend" => $amountToSend,
+            "overdraftBalance" => $newOverDraftBal,
+            "overdraftLimit" => $thisuser->withdrawal_per_overdraft,
+            "country" => $thisuser->country,
+            "currencyCode" => $thisuser->currencyCode,
+            "created_at" => date('Y-m-d H:i:s'),
+            "updated_at" => date('Y-m-d H:i:s')
+        ]);
 
         $result = ['message' => 'Overdraft initiated', 'status' => true];
 
@@ -182,10 +201,10 @@ trait SecurityChecker {
 
             $amountToWallet = (double)$amountToAdd - $amounttoPayBack;
 
-            User::where('ref_code', $refCode)->update(['overdraft_balance' => ((double)$thisuser->overdraft_balance + max(0, $amounttoPayBack)) ]);
+            User::where('ref_code', $refCode)->update(['overdraft_balance' => ($amountToWallet < 0 ? (double)$thisuser->overdraft_balance + max(0, $amounttoPayBack) + (double)$amountToAdd - $allotedOverdraft : (double)$thisuser->overdraft_balance + max(0, $amounttoPayBack)) ]);
 
 
-            return $amountToWallet;
+            return max(0, $amountToWallet);
 
         }
         else{
