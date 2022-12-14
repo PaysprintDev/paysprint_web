@@ -1560,7 +1560,7 @@
 
                     const config = {
                         method: 'get',
-                        url: "{{ asset('js/paymentpolicy.js') }}",
+                        url: "{{ asset('js/paymentpolicy.json') }}",
                         headers
                     }
 
