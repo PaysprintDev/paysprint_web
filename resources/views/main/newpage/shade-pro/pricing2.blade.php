@@ -2,13 +2,247 @@
 
 @section('content')
 <!-- navbar- -->
+<style>
+    *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+.wrapper{
+    max-width: 1090px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+    justify-content: space-between;
+}
+
+.wrapper .table{
+    background: #fff;
+    width: calc(33% - 20px);
+    padding: 30px 30px;
+    position: relative;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 1020px){
+    .wrapper .table{
+        width: calc(50% - 20px);
+        margin-bottom: 40px;
+    }
+}
+
+@media (max-width: 698px){
+    .wrapper .table{
+        width: 100%;
+    }
+}
+
+.table .price-section{
+   display: flex;
+   justify-content: center;
+}
+
+.price-section .price-area{
+    height: 120px;
+    width: 120px;
+    background: #ffd861;
+    border-radius: 50%;
+    padding: 2px;
+}
+
+.price-section .price-area .inner-area{
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    color: #fff;
+    line-height: 117px;
+    text-align: center;
+    position: relative;
+}
+
+.price-area .inner-area .text{
+    font-size: 20px;
+    /* font-weight: 200; */
+    position: absolute;
+    top: -10px;
+    left: 17px;
+}
+
+.price-area .inner-area .price{
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.table .package-name{
+    width: 100%;
+    height: 2px;
+    background: #ffecb3;
+    margin: 35px 0;
+    position: relative;
+}
+
+.table .package-name::before{
+    position: absolute;
+    content: "Freemium";
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    font-size: 25px;
+    padding: 0 10px;
+    font-weight: bolder;
+}
+
+.table .features li{
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.features li .list-name{
+    font-size: 17px;
+    font-weight: 400;
+}
+
+.features li .icon{
+    font-size: 15px;
+}
+
+.features li .icon.check{
+    color: #2db94d;
+}
+
+.features li .icon.cross{
+    color: #cd3241;
+}
+
+.table .btn{
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
+}
+
+.table .btn button{
+    width: 80%;
+    height: 50px;
+    font-weight: 700;
+    color: #fff;
+    font-size: 20px;
+    border: none;
+    outline: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.basic .price-area,
+.basic .inner-area{
+    background: #ffd861;
+}
+
+.basic .btn button{
+    background: #fff;
+    color: #ffd861;
+    border: 2px solid #ffd861;
+}
+
+.basic .btn button:hover{
+    border-radius: 6px;
+    background: #ffd861;
+    color: #fff;
+}
+
+.Premium .price-area,
+.Premium .inner-area{
+    background: #a26bfa;
+}
+
+.Premium .btn button{
+    background: #fff;
+    color: #a26bfa;
+    border: 2px solid #a26bfa;
+}
+
+.Premium .btn button:hover{
+    border-radius: 6px;
+    background: #a26bfa;
+    color: #fff;
+}
+
+.Ultimate .price-area,
+.Ultimate .inner-area{
+    background: #43ef8b;
+}
+
+.Ultimate .btn button{
+    background: #fff;
+    color: #43ef8b;
+    border: 2px solid #43ef8b;
+}
+
+.Ultimate .btn button:hover{
+    border-radius: 6px;
+    background: #43ef8b;
+    color: #fff;
+}
+
+.basic .package-name{
+    background: #ffecb3;
+}
+
+.Premium .package-name{
+    background: #a26bfa;
+}
+
+.Ultimate .package-name{
+    background: #43ef8b;
+}
+
+.basic .package-name::before{
+    content: "Freemium";
+}
+
+.Premium .package-name::before{
+    content: "Basic";
+}
+
+.Ultimate .package-name::before{
+    content: "Classic";
+}
+
+.basic ::selection,
+.basic .price-area,
+.basic .inner-area{
+    background: #ffd861;
+}
+
+.Premium ::selection,
+.Premium .price-area,
+.Premium .inner-area{
+    background: #a26bfa;
+}
+
+.Ultimate ::selection,
+.Ultimate .price-area,
+.Ultimate .inner-area{
+    background: #43ef8b;
+}
+</style>
+
+
 <div style="overflow-y: auto !important;">
     <div class="inner-banner pt-29 pt-lg-30 pb-9 pb-lg-12 bg-default-6">
         <div class="container">
             <div class="row  justify-content-center pt-5">
                 <div class="col-xl-8 col-lg-9">
                     <div class="px-md-15 text-center">
-                        <h2 class="title gr-text-2 mb-8 mb-lg-10">Pricing</h2>
+                        <h2 class="title gr-text-2 mb-8 mb-lg-10">Plan and Pricing</h2>
                         {{-- <p class="gr-text-7 mb-0 mb-lg-13">Full Time, Remote</p> --}}
                     </div>
                 </div>
@@ -47,421 +281,384 @@
 
                 </div>
                 <div class="table table-responsive">
-                    <table class="table table-striped table-bordered">
-                        <tbody>
-
-                            <tr>
-                                <td>
-                                    <p class="gr-text-6 font-weight-bold mb-9"></p>
-                                </td>
-
-                                <td align="center">
-                                    <p class="gr-text-6 font-weight-bold mb-9">Freemium</p>
-                                    <p class="text-danger"></p>
-                                </td>
-                                
-                                <td align="center">
-                                    <p class="gr-text-6 font-weight-bold mb-9">Basic</p>
-                                    <p class="text-danger">{{ $data['currency'] . '0.00' }} Fee</p>
-                                </td>
+                   
+               
 
 
-                                @if ($thisprices = \App\TransactionCost::where('country', $data['country'])->where('structure', 'Merchant Monthly Subscription')->first())
+                        @if ($thisprices = \App\TransactionCost::where('country', $data['country'])->where('structure', 'Merchant Monthly Subscription')->first())
 
-                                @php
-                                $monthlyBased = $thisprices->fixed;
-                                $yearlyBased = $thisprices->fixed * 10;
-                                @endphp
+                        @php
+                        $monthlyBased = $thisprices->fixed;
+                        $yearlyBased = $thisprices->fixed * 10;
+                        @endphp
 
-                                @else
-                                @php
-                                $monthlyBased = 0;
-                                $yearlyBased = 0;
-                                @endphp
-                                @endif
+                        @else
+                        @php
+                        $monthlyBased = 0;
+                        $yearlyBased = 0;
+                        @endphp
+                        @endif
 
-                                <td align="center">
-                                    <p class="gr-text-6 font-weight-bold mb-9">Classic</p>
-                                    <p class="text-danger">
+                   
+                   
+                    <div class="wrapper">
+                        <div class="table basic">
+                            <div class="price-section">
+                                <div class="price-area">
+                                    <div class="inner-area">
                                         
-                                        {{ $data['currency'] . number_format($monthlyBased, 2) }}
-                                        Monthly
-                                    </p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="gr-text-7 mb-0 ">
-                                        <strong>Receive Payment from Customers</strong>
-                                    </p>
-                                </td>
-                                <td align="center"> 
-                                </td>
-                                <td align="center">
-                                 
-                                </td>
-                                <td align="center">
-                                
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <p class="gr-text-9 mb-0">QR Code</p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" /> 
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="gr-text-9 mb-0">Payment Links</p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <p class="gr-text-9 mb-0">Online Payment</p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" /> 
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <p class="gr-text-7 mb-0"><strong>Invoicing System</strong></p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="gr-text-7 mb-0"><strong>PaySprint eStore</strong></p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                            </tr>
-
-                            @if (Request::get('country') == 'Canada' || Request::get('country') == 'United States')
-
-                            <tr>
-                                <td>
-                                    <p class="gr-text-7 mb-0"><strong>Rental Property Management</strong></p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                            </tr>
-
-                            @endif
-
-
-
-                            @if (Request::get('country') == 'Canada' || Request::get('country') == 'United States')
-
-                            <tr>
-                                <td>
-                                    <p class="gr-text-7 mb-0"><strong>Merchants Cash Advance</strong></p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                            </tr>
-
-                            @endif
-
-                            <tr>
-                                <td>
-                                    <p class="gr-text-7 mb-0"><strong>PaySprint - Working Capital Support</strong></p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <p class="gr-text-7 mb-0"><strong>PaySprint FX</strong></p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <p class="gr-text-7 mb-0"><strong>Transfer</strong> </p>
-                                </td>
-                                <td align="center">
-                                    
-
-                                </td>
-                                <td align="center">
+                                        </span>
+                                        <span class="price">00</span>
+                                    </div>
                                    
-
-                                </td>
-                                <td align="center">
-                                    
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="gr-text-9 mb-0">Local(PaySprint User)</p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="gr-text-9 mb-0">Local(Non-PaySprint User)</p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="gr-text-9 mb-0">International(PaySprint User)</p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="gr-text-9 mb-0">International(Non-PaySprint User)</p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="gr-text-7 mb-0"><strong>Pay Invoice</strong></p>
-                                </td>
-                                <td align="center">
+                                </div>
+                               
+                            </div>
+                            <div class="package-name">
+                           
+                            </div>
+                            <div class="features">
+                               
+                                <div class="accordion" id="accordionPanelsStayOpenExample">
                                   
+                                    <div class="accordion-item">
+                                    <div class="mt-33">
+                                      <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                        <h6>
+                                          Money Transfer
+                                        
+                                        </h6>
+                                      </h2>
+                                      <div>
+                                        <div>
+                                            <li>
+                                                <span class="list-name">PaySprint Account - Local</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                           
+                                            <li>
+                                                <span class="list-name">PaySprint Account - Cross Border</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                          
+                                        </div>
+                                      </div>
+                                    </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <div class="mt-26">
+                                      <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                                       
+                                        <h6 >
+                                          Pay Invoice
+                                         
+                                        </h6>
+                                      </h2>
+                                      <div >
+                                        <div>
+                                            <li>
+                                                <span class="list-name">PaySprint Merchant(Local)</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            {{-- <li>
+                                                <span class="list-name">PaySprint Merchant(International)</span>
+                                                <span class="icon cross"><i class="far fa-times-circle"></i></span>
+                                            </li> --}}
+                                            <li>
+                                                <span class="list-name">Non-PaySprint Merchant(Local)</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            {{-- <li>
+                                                <span class="list-name">Non-PaySprint Merchant(International)</span>
+                                                <span class="icon cross"><i class="far fa-times-circle"></i></span>
+                                            </li> --}}
+                                        </div>
+                                      </div>
+                                    </div>
+                                    </div>
+                                </div>
 
-                                </td>
-                                <td align="center">
-                                 
+                               
+                                <div class="mt-25">
+                                    <h6 >
+                                        Other Services
 
-                                </td>
-                                <td align="center">
-                                  
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="gr-text-9 mb-0">PaySprint Merchant(Local)</p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+                                      </h6>
+                                <li class="">
+                                    <span class="list-name">Invoicing System</span>
+                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                </li>
+                             
+                                <li>
+                                    <span class="list-name">Merchant Cash Advance</span>
+                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                </li>
+                               
+                                <li>
+                                    <span class="list-name">Bill Payments</span>
+                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                </li>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table Premium">
+                            <div class="price-section">
+                                <div class="price-area">
+                                    <div class="inner-area">
+                                        
+                                        </span>
+                                        <span class="price">{{ $data['currency'] . '0.00' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="package-name">
+                             
+                            </div>
+                            <div class="features">
+                                <div class="accordion" id="accordionPanelsStayOpenExample">
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                                        <h6 >
+                                          Receive Payments from Customers 
+                                       
+                                        </h6>
+                                     
+                                      </h2>
+                                      <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                                        <div class="accordion-body">
+                                            <li>
+                                                <span class="list-name">QR Code</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name">Payment Links</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name">Online Payment</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                          
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                        <h6>
+                                          Money Transfer
+                                        
+                                        </h6>
+                                      </h2>
+                                      <div>
+                                        <div>
+                                            <li>
+                                                <span class="list-name"> PaySprint Account - Local</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name"> Non-PaySprint Account - Local</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name">PaySprint Account - Cross Border</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name"> Non-PaySprint Account - Cross Border </span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                                        <h6 >
+                                          Pay Invoice
+                                        
+                                        </h6>
+                                      </h2>
+                                      <div >
+                                        <div>
+                                            <li>
+                                                <span class="list-name">PaySprint Merchant(Local)</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name">PaySprint Merchant(International)</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name">Non-PaySprint Merchant(Local)</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="mt-19">
+                                    <h6 >
+                                        Other Services
 
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+                                      </h6>
+                                <li class="">
+                                    <span class="list-name">Invoicing System</span>
+                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                </li>
+                                
+                                <li>
+                                    <span class="list-name">Merchant Cash Advance</span>
+                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                </li>
+                              
+                                <li>
+                                    <span class="list-name">Bill Payments</span>
+                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                </li>
+                                </div>
+                                
+                               
+                            </div>
+                        </div>
+                        <div class="table Ultimate">
+                            <div class="price-section">
+                                <div class="price-area">
+                                    <div class="inner-area">
+                                       
+                                        </span>
+                                        <span class="price"> {{ $data['currency'] . number_format($monthlyBased, 2) }}
+                                            Monthly</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="package-name">
+                                
+                            </div>
+                            <div class="features">
+                                <div class="accordion" id="accordionPanelsStayOpenExample">
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                                        <h6 >
+                                          Receive Payments from Customers 
+                                          {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                                        </h6>
+                                     
+                                      </h2>
+                                      <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                                        <div class="accordion-body">
+                                            <li>
+                                                <span class="list-name">QR Code</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name">Payment Links</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name">Online Payment</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                          
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                        <h6>
+                                          Money Transfer
+                                          {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                                        </h6>
+                                      </h2>
+                                      <div>
+                                        <div>
+                                            <li>
+                                                <span class="list-name"> PaySprint Account - Local</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name"> Non-PaySprint Account - Local</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name">PaySprint Account - Cross Border</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name"> Non-PaySprint Account - Cross Border </span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                                        <h6 >
+                                          Pay Invoice
+                                          {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                                        </h6>
+                                      </h2>
+                                      <div >
+                                        <div>
+                                            <li>
+                                                <span class="list-name">PaySprint Merchant(Local)</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name">PaySprint Merchant(International)</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name">Non-PaySprint Merchant(Local)</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name">Non-PaySprint Merchant(International)</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="extras">
+                                    <h6 >
+                                        Other Services
 
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="gr-text-9 mb-0">PaySprint Merchant(International)</p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="gr-text-9 mb-0">Non-PaySprint Merchant(Local)</p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="gr-text-9 mb-0">Non-PaySprint Merchant(International)</p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="gr-text-7 mb-0"><strong>Bill Payment</strong></p>
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-
-                                </td>
-                                <td align="center">
-                                    <img src="https://img.icons8.com/fluency/48/000000/checked.png" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <p class="gr-text-9 mb-0 text-danger">Minimum balance of {{ $data['currency'] . number_format($monthlyBased, 2) }} in Wallet Applies.</p>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">
-                                    <p class="text-center text-danger">7days Free Subscription. Cancel Subscription at any time.</p>
-                                </td>
-                                 <td></td>
-                                {{-- <td></td> --}}
-                            </tr>
-                            <tr>
-                                <td colspan="3">
-                                    <p class="text-center text-danger">Where PaySprint has no office, Partner fee may apply.</p>
-                                </td>
-                                 <td></td>
-                                {{-- <td></td> --}}
-                            </tr>
-
-                        </tbody>
-
-
-                    </table>
+                                      </h6>
+                                <li class="">
+                                    <span class="list-name">Invoicing System</span>
+                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                </li>
+                                <li>
+                                    <span class="list-name">PaySprint eStore</span>
+                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                </li>
+                                <li>
+                                    <span class="list-name">Rental Property Management</span>
+                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                </li>
+                                <li>
+                                    <span class="list-name">Merchant Cash Advance</span>
+                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                </li>
+                                <li>
+                                    <span class="list-name">PaySprint-Working Capital Support</span>
+                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                </li>
+                                <li>
+                                    <span class="list-name">PaySprint FX</span>
+                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                </li>
+                                <li>
+                                    <span class="list-name">Bill Payments</span>
+                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                </li>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center text-danger">7days Free Subscription. Cancel Subscription at any time.</p>
+                    <p class="text-center text-danger">Where PaySprint has no office, Partner fee may apply</p>
                 </div>
 
             </div>
