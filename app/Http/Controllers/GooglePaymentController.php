@@ -1044,6 +1044,7 @@ class GooglePaymentController extends Controller
     {
 
 
+
         if ($req->amount < 0) {
             $response = 'Please enter a positive amount to send';
             $data = [];
@@ -1224,7 +1225,7 @@ class GooglePaymentController extends Controller
                                                     }
 
 
-                                                    MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $req->amount, 'currency' => $thisuser->currencyCode, 'country' => $thisuser->country, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated"]);
+                                                    MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $req->amount, 'currency' => $thisuser->currencyCode, 'country' => $thisuser->country, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated", "ps_reference" => $transaction_id]);
 
 
                                                     // Getting the payer
@@ -1511,7 +1512,8 @@ class GooglePaymentController extends Controller
                                                             }
 
 
-                                                            MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $req->amount, 'currency' => $thisuser->currencyCode, 'country' => $thisuser->country, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated"]);
+
+                                                            MoexTransaction::insert(['user_id' => $thisuser->id, 'transaction' => json_encode($doMoex), 'amount' => $req->amount, 'currency' => $thisuser->currencyCode, 'country' => $thisuser->country, 'status' => 'initiated', 'transactionMessage' => "Transaction initiated", "ps_reference" => $transaction_id]);
 
 
 

@@ -56,6 +56,12 @@ Route::prefix('/v1')->group(function () {
     Route::post('confirmtransaction',  ['uses' => 'MoexController@confirmThisTransactionId'])->name('confirm this transaction');
 
 
+
+    // Moex Payment Policy...
+    Route::get('moex/paymentpolicy',  ['uses' => 'MoexController@getPaymentPolicy'])->name('payment policy fetch');
+    Route::get('moex/paymentpolicy/{country}',  ['uses' => 'MoexController@getPaymentPolicyByCountry'])->name('payment policy fetch by country');
+
+
     Route::group(['middleware' => ['appkey']], function () {
 
         // Registration

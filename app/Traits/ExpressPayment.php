@@ -178,19 +178,27 @@ trait ExpressPayment
             $this->Base_Url = (env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_URL_DEV') : env('EPXRESS_PAYMENT_URL_PROD')) . 'api/Payments/VerifyPayment';
 
 
-            // $this->curlPost = json_encode([
-            //     'transactionId' => $paymentToken,
-            // ]);
-            $this->curlPost = [
+            if(env('APP_ENV') == 'local'){
+                $this->curlPost = [
                 'transactionId' => $paymentToken
             ];
-
-            // $data = $this->doPayPost();
-
             $data = $this->doExbcPayPostRedirect();
 
-
             return $data->data;
+            }
+            else{
+
+
+            $this->curlPost = json_encode([
+                'transactionId' => $paymentToken,
+            ]);
+
+             $data = $this->doPayPost();
+
+             return $data;
+
+            }
+
         } catch (\Throwable $th) {
 
             $data = $this->newVerification($paymentToken);
