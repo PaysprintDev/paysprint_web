@@ -96,9 +96,11 @@ use App\Http\Controllers\User; ?>
 
                                     @foreach ($data['activeStores'] as $items)
                                     @if ($user = \App\User::where('id', $items->merchantId)->first())
+
+
                                     <div class="col-md-4 mb-4">
                                         <div class="card" style="width: 100%;">
-                                            <img src="{{ array_filter(explode(', ', $items->headerContent))[0] }}" class="card-img-top" alt="{{ $user->businessname }}">
+                                            <img src="{{ array_filter(explode(', ', str_replace(" ", "_", $items->headerContent)))[0] }}" class="card-img-top" alt="{{ $user->businessname }}">
                                             <div class="card-body">
                                                 <h5 class="card-title">{{ $user->businessname }}</h5>
                                                 <p class="card-text">{{ $items->headerTitle }} - <span class="card-text text-info" style="font-weight: 700">({{ $user->country }})</span>

@@ -50,7 +50,8 @@
 
                                     <div class="header-element logo">
                                         <a href="{{ route('merchant shop now', $data['user']->businessname) }}">
-                                            <img src="{{ $data['mystore']->businessLogo }}" alt="logo-image"
+
+                                            <img src="{{ str_replace(" ", "_", $data['mystore']->businessLogo) }}" alt="logo-image"
                                                 class="img-fluid" style="width: 70px; height: 70px;">
                                         </a>
                                     </div>

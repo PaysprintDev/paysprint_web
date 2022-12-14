@@ -281,8 +281,8 @@
 
                 </div>
                 <div class="table table-responsive">
-                   
-               
+
+
 
 
                         @if ($thisprices = \App\TransactionCost::where('country', $data['country'])->where('structure', 'Merchant Monthly Subscription')->first())
@@ -299,34 +299,34 @@
                         @endphp
                         @endif
 
-                   
-                   
+
+
                     <div class="wrapper">
                         <div class="table basic">
                             <div class="price-section">
                                 <div class="price-area">
                                     <div class="inner-area">
-                                        
+
                                         </span>
                                         <span class="price">00</span>
                                     </div>
-                                   
+
                                 </div>
-                               
+
                             </div>
                             <div class="package-name">
-                           
+
                             </div>
                             <div class="features">
-                               
+
                                 <div class="accordion" id="accordionPanelsStayOpenExample">
-                                  
+
                                     <div class="accordion-item">
                                     <div class="mt-33">
                                       <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
                                         <h6>
                                           Money Transfer
-                                        
+
                                         </h6>
                                       </h2>
                                       <div>
@@ -335,12 +335,12 @@
                                                 <span class="list-name">PaySprint Account - Local</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
-                                           
+
                                             <li>
                                                 <span class="list-name">PaySprint Account - Cross Border</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
-                                          
+
                                         </div>
                                       </div>
                                     </div>
@@ -348,10 +348,10 @@
                                     <div class="accordion-item">
                                         <div class="mt-26">
                                       <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                                       
+
                                         <h6 >
                                           Pay Invoice
-                                         
+
                                         </h6>
                                       </h2>
                                       <div >
@@ -361,7 +361,7 @@
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
                                             {{-- <li>
-                                                <span class="list-name">PaySprint Merchant(International)</span>
+                                                <span class="list-name">PaySprint Merchant (Cross Border)</span>
                                                 <span class="icon cross"><i class="far fa-times-circle"></i></span>
                                             </li> --}}
                                             <li>
@@ -369,7 +369,7 @@
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
                                             {{-- <li>
-                                                <span class="list-name">Non-PaySprint Merchant(International)</span>
+                                                <span class="list-name">Non-PaySprint Merchant (Cross Border)</span>
                                                 <span class="icon cross"><i class="far fa-times-circle"></i></span>
                                             </li> --}}
                                         </div>
@@ -378,7 +378,7 @@
                                     </div>
                                 </div>
 
-                               
+
                                 <div class="mt-25">
                                     <h6 >
                                         Other Services
@@ -388,12 +388,12 @@
                                     <span class="list-name">Invoicing System</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
-                             
+
                                 <li>
                                     <span class="list-name">Merchant Cash Advance</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
-                               
+
                                 <li>
                                     <span class="list-name">Bill Payments</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
@@ -405,24 +405,24 @@
                             <div class="price-section">
                                 <div class="price-area">
                                     <div class="inner-area">
-                                        
+
                                         </span>
                                         <span class="price">{{ $data['currency'] . '0.00' }}</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="package-name">
-                             
+
                             </div>
                             <div class="features">
                                 <div class="accordion" id="accordionPanelsStayOpenExample">
                                     <div class="accordion-item">
                                       <h2 class="accordion-header" id="panelsStayOpen-headingOne">
                                         <h6 >
-                                          Receive Payments from Customers 
-                                       
+                                          Receive Payments from Customers
+
                                         </h6>
-                                     
+
                                       </h2>
                                       <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
                                         <div class="accordion-body">
@@ -438,7 +438,7 @@
                                                 <span class="list-name">Online Payment</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
-                                          
+
                                         </div>
                                       </div>
                                     </div>
@@ -446,7 +446,7 @@
                                       <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
                                         <h6>
                                           Money Transfer
-                                        
+
                                         </h6>
                                       </h2>
                                       <div>
@@ -474,7 +474,7 @@
                                       <h2 class="accordion-header" id="panelsStayOpen-headingThree">
                                         <h6 >
                                           Pay Invoice
-                                        
+
                                         </h6>
                                       </h2>
                                       <div >
@@ -484,14 +484,14 @@
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
                                             <li>
-                                                <span class="list-name">PaySprint Merchant(International)</span>
+                                                <span class="list-name">PaySprint Merchant (Cross Border)</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
                                             <li>
                                                 <span class="list-name">Non-PaySprint Merchant(Local)</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
-                                            
+
                                         </div>
                                       </div>
                                     </div>
@@ -505,26 +505,26 @@
                                     <span class="list-name">Invoicing System</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
-                                
+
                                 <li>
                                     <span class="list-name">Merchant Cash Advance</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
-                              
+
                                 <li>
                                     <span class="list-name">Bill Payments</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
                                 </div>
-                                
-                               
+
+
                             </div>
                         </div>
                         <div class="table Ultimate">
                             <div class="price-section">
                                 <div class="price-area">
                                     <div class="inner-area">
-                                       
+
                                         </span>
                                         <span class="price"> {{ $data['currency'] . number_format($monthlyBased, 2) }}
                                             Monthly</span>
@@ -532,17 +532,17 @@
                                 </div>
                             </div>
                             <div class="package-name">
-                                
+
                             </div>
                             <div class="features">
                                 <div class="accordion" id="accordionPanelsStayOpenExample">
                                     <div class="accordion-item">
                                       <h2 class="accordion-header" id="panelsStayOpen-headingOne">
                                         <h6 >
-                                          Receive Payments from Customers 
+                                          Receive Payments from Customers
                                           {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
                                         </h6>
-                                     
+
                                       </h2>
                                       <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
                                         <div class="accordion-body">
@@ -558,7 +558,7 @@
                                                 <span class="list-name">Online Payment</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
-                                          
+
                                         </div>
                                       </div>
                                     </div>
@@ -604,7 +604,7 @@
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
                                             <li>
-                                                <span class="list-name">PaySprint Merchant(International)</span>
+                                                <span class="list-name">PaySprint Merchant (Cross Border)</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
                                             <li>
@@ -612,7 +612,7 @@
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
                                             <li>
-                                                <span class="list-name">Non-PaySprint Merchant(International)</span>
+                                                <span class="list-name">Non-PaySprint Merchant (Cross Border)</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
                                         </div>
@@ -653,7 +653,7 @@
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>
