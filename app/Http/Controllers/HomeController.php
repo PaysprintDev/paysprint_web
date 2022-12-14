@@ -228,6 +228,7 @@ class HomeController extends Controller
                     'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first(),
                     'specialpromo' => $this->specialpromoCount(),
                     'products' => StoreProducts::get(),
+                    'subscription' => $this->minimumBalanceCost(Auth::user()->country, Auth::user()->accountType)
                 );
                     // dd($data['products']);
                 $view = 'home';

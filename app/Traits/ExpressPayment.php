@@ -178,23 +178,24 @@ trait ExpressPayment
             $this->Base_Url = (env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_URL_DEV') : env('EPXRESS_PAYMENT_URL_PROD')) . 'api/Payments/VerifyPayment';
 
 
-            $this->curlPost = json_encode([
-                'transactionId' => $paymentToken,
-            ]);
+            if (env('APP_ENV') == 'local') {
+                $this->curlPost = [
+                    'transactionId' => $paymentToken
+                ];
+                $data = $this->doExbcPayPostRedirect();
+
+                return $data->data;
+            } else {
 
 
+                $this->curlPost = json_encode([
+                    'transactionId' => $paymentToken,
+                ]);
 
-            // TODO1:: Direct Payment to EXBC server,
-            // TODO2:: Get response from EXBC server and return result to PaySprint...
+                $data = $this->doPayPost();
 
-
-            $data = $this->doPayPost();
-
-
-
-
-
-            return $data;
+                return $data;
+            }
         } catch (\Throwable $th) {
 
             $data = $this->newVerification($paymentToken);
@@ -206,7 +207,8 @@ trait ExpressPayment
 
 
     // New Verification query...
-    public function newVerification($paymentToken){
+    public function newVerification($paymentToken)
+    {
         try {
 
             $this->Base_Url = (env('APP_ENV') == 'local' ? env('EPXRESS_PAYMENT_NEW_URL_DEV') : env('EPXRESS_PAYMENT_NEW_URL_PROD')) . 'v1/payments/query';
@@ -334,7 +336,6 @@ trait ExpressPayment
             $myamount = ($data['commissiondeduct'] + 0.01) + $data['amounttosend'];
             // Convert currency to Dollar
             $inputamount = $this->payBillCurrencyConvert("NGN", $thisuser->currencyCode, $myamount, 'utilitypurchase');
-
         }
 
 
@@ -394,8 +395,6 @@ trait ExpressPayment
                             } else {
                                 $response = false;
                             }
-
-
                         }
 
                         // For DSTV and GOTV
@@ -584,6 +583,40 @@ trait ExpressPayment
         return json_decode($response);
     }
 
+    public function doExbcPayPostRedirect()
+    {
+        $exbcUrl = env('APP_ENV') === 'local' ? 'http://localhost:7500/api/v1/paysprint/expresscallback' : 'https://exbc.ca/api/v1/paysprint/expresscallback';
+
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $exbcUrl,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $this->curlPost,
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: Bearer base64:HgMO6FDHGziGl01OuLH9mh7CeP095shB6uuDUUClhks='
+            ),
+        ));
+
+
+
+        $response = curl_exec($curl);
+
+
+        curl_close($curl);
+
+
+        return json_decode($response);
+    }
+
+
     public function payBillCurrencyConvert($billerCurrency, $myCurrency, $amount, $route = null)
     {
 
@@ -632,22 +665,19 @@ trait ExpressPayment
             // Conversion Rate Local to USD currency ie Y = 4000NGN / 380NGN(1 USD to Naira)
             // $convertLocal = ($amount / $result->quotes->$localCurrency) * $markValue;
 
-            if($localCurrency === 'USDUSD'){
+            if ($localCurrency === 'USDUSD') {
                 $localConv = 1;
-            }
-            else{
+            } else {
                 $localConv = $result->quotes->$localCurrency * $markValue;
             }
 
 
 
-            if($localCurrency === $currency){
-                    $convertLocal = $amount / $localConv;
-            }
-            elseif($localCurrency !== 'USDUSD' && $currency !== 'USDUSD'){
+            if ($localCurrency === $currency) {
+                $convertLocal = $amount / $localConv;
+            } elseif ($localCurrency !== 'USDUSD' && $currency !== 'USDUSD') {
                 $convertLocal = ($amount / $localConv) * $markValue;
-            }
-            else{
+            } else {
                 $convertLocal = $amount / $localConv;
             }
 
@@ -657,10 +687,10 @@ trait ExpressPayment
 
 
             $actualRate = ($currency !== 'USDUSD' ? ($result->quotes->$currency * $markValue) : 1) * $convertLocal;
-                // $convRate = $actualRate * 95/100;
+            // $convRate = $actualRate * 95/100;
 
 
-                $this->calculateBufferedTransaction($actualRate, $convRate, $route);
+            $this->calculateBufferedTransaction($actualRate, $convRate, $route);
 
 
             $message = 'success';

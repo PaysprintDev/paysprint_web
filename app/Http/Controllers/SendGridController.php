@@ -387,8 +387,8 @@ class SendGridController extends Controller
 
             // $thisuser = ClientInfo::get();
             
-            $thisuser = ClientInfo::inRandomOrder()->take(2)->get();
-            // $thisuser = ClientInfo::where('country', $country)->where('accountMode', $mode)->get();
+            // $thisuser = ClientInfo::inRandomOrder()->take(2)->get();
+            $thisuser = ClientInfo::where('accountMode', 'test')->get();
 
             dd($thisuser);
 

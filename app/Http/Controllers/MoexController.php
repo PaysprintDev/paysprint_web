@@ -2838,6 +2838,44 @@ class MoexController extends Controller
     }
 
 
+    public function getPaymentPolicy()
+    {
+        try {
+            $filename = env('APP_ENV') === 'local' ? 'js/paymentpolicy.json' : '../../js/paymentpolicy.json';
+            $data = file_get_contents($filename);
+
+            $status = 200;
+            $resData = ['data' => json_decode($data), 'message' => 'Success', 'status' => $status];
+
+        } catch (\Throwable $th) {
+            $status = 400;
+            $resData = ['data' => [], 'message' => $th->getMessage(), 'status' => $status];
+        }
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
+    public function getPaymentPolicyByCountry($country)
+    {
+        try {
+            $filename = env('APP_ENV') === 'local' ? 'js/paymentpolicy.json' : '../../js/paymentpolicy.json';
+            $data = file_get_contents($filename);
+
+            $result = $this->searchForItem($country, json_decode($data));
+
+            $status = 200;
+            $resData = ['data' => $result, 'message' => 'Success', 'status' => $status];
+
+        } catch (\Throwable $th) {
+            $status = 400;
+            $resData = ['data' => [], 'message' => $th->getMessage(), 'status' => $status];
+        }
+
+        return $this->returnJSON($resData, $status);
+    }
+
+
 
     public function getAdditionalList(Request $req)
     {
@@ -2875,4 +2913,16 @@ class MoexController extends Controller
 
         return $this->returnJSON($resData, $status);
     }
+
+
+public function searchForItem($country, $array) {
+   foreach ($array as $val) {
+       if ($val->country === $country) {
+           return $val;
+       }
+   }
+   return null;
+}
+
+
 }
