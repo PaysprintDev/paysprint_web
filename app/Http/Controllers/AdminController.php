@@ -7951,8 +7951,11 @@ class AdminController extends Controller
 
 
               $login=$this->sendVertoFx();
+          
                  $token=$login->token;
-                $response=$this->getFxRate($req->currency_from,$req->currency_to,$token);
+                $response=$this->getFxRate($req->currency_from,$req->currency_to);
+                
+                
 
                  if(isset($response->success))
              {
