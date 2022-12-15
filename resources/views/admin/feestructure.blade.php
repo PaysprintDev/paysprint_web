@@ -344,6 +344,20 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group has-success">
+                                <label class="control-label" for="inputSuccess"> Basic</label>
+                                <input type="number" min="0.00" step="0.01" class="form-control" name="basic" id="basic" placeholder="" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group has-success">
+                                <label class="control-label" for="inputSuccess"> Classic</label>
+                                <input type="number" min="0.00" step="0.01" class="form-control" name="classic" id="classic" placeholder="" readonly>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
                 <!-- /.box-body -->
@@ -369,6 +383,8 @@
                   <th>Method</th>
                   <th>Fixed</th>
                   <th>Variable</th>
+                  <th>Basic</th>
+                  <th>Classic</th>
                   <th>Date Added</th>
                   <th>Last Updated</th>
                   <th>Action</th>
@@ -389,6 +405,8 @@
                                 <td>{{ $item->method }}</td>
                                 <td>{{ $item->fixed }}</td>
                                 <td>{{ $item->variable }}</td>
+                                <td>{{ $item->basic }}</td>
+                                <td>{{ $item->classic }}</td>
                                 <td>{{ date('d/M/Y', strtotime($item->created_at)) }}</td>
                                 <td>{{ date('d/M/Y', strtotime($item->updated_at)) }}</td>
                                 <td><a href="{{ route('editfee', $item->id) }}" style="color: navy; font-weight: bold;">Edit</a> | <form action="{{ route('deletefee', $item->id) }}" method="POST" id="deletefee{{ $item->id }}" class="disp-0">@csrf</form> <a href="#" style="color: red; font-weight: bold;" onclick="del('deletefee', {{ $item->id }})">Delete</a></td>
