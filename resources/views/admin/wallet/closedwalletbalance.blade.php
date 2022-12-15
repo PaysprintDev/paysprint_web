@@ -58,7 +58,8 @@
 									<td>{{ $i++ }}</td>
 									<td>{{ $data->country }}</td>
 
-									@if($totPay = \App\User::where('country', $data->country)->sum('wallet_balance'))
+									@if($totPay = \App\UserClosed::where('country',
+									$data->country)->sum('wallet_balance'))
 									<td style="font-weight: 700;">{{ $data->currencyCode.' '.number_format($totPay, 2)
 										}}</td>
 
@@ -68,7 +69,7 @@
 
 
 									<td>
-										<a href="{{ route('balance by country', 'country='.$data->country) }}"
+										<a href="{{ route('close balance by country', 'country='.$data->country) }}"
 											class="btn btn-primary" type="button">View details</a>
 									</td>
 								</tr>

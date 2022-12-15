@@ -829,6 +829,7 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::post('actonreturnrefundmoney/{reference_code}', ['uses' => 'AdminController@returnRefundMoney', 'as' => 'act on return refund money']);
 
 	Route::get('balancebycountry', ['uses' => 'AdminController@balanceByCountry', 'as' => 'balance by country']);
+	Route::get('closedbalancebycountry', ['uses' => 'AdminController@closedBalanceByCountry', 'as' => 'close balance by country']);
 	Route::get('maintenancefee', ['uses' => 'AdminController@maintenancefeeDetail', 'as' => 'maintenance fee detail']);
 	Route::get('maintenancefeebycountry', ['uses' => 'AdminController@maintenancefeeByCountry', 'as' => 'maintenance fee by country']);
 
