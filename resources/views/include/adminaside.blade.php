@@ -761,7 +761,10 @@
                 </a>
                 <ul class="treeview-menu">
                     <li title="Balance"><a href="{{ route('wallet balance') }}"><i class="fa fa-circle-o text-red"></i>
-                            Balance</a></li>
+                            Active Users Balance</a></li>
+                    <li title="Balance"><a href="{{ route('closed wallet balance') }}"><i
+                                class="fa fa-circle-o text-red"></i>
+                            Closed Users Balance</a></li>
                     {{-- <li title="Processed Payment"><a href="{{ route('processed payment') }}"><i
                                 class="fa fa-circle-o text-red"></i> Processed Payment</a>
                     </li> --}}

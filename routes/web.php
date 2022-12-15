@@ -753,6 +753,7 @@ Route::prefix('Admin/wallet')->group(function () {
 
 	Route::get('/', ['uses' => 'AdminController@walletBalance', 'as' => 'wallet balance']);
 	Route::get('/user-statement', ['uses' => 'AdminController@userWalletStatement', 'as' => 'users wallet statement']);
+	Route::get('/closedbalance', ['uses' => 'AdminController@closedWalletBalance', 'as' => 'closed wallet balance']);
 	Route::get('/user-purchase-statement', ['uses' => 'AdminController@userWalletPurchaseStatement', 'as' => 'user purchase statement']);
 	Route::get('/user-wallet-purchase', ['uses' => 'AdminController@userWalletPurchase', 'as' => 'users wallet purchase']);
 	Route::get('bankrequestwithdrawal', ['uses' => 'AdminController@bankRequestWithdrawal', 'as' => 'bank request withdrawal']);
