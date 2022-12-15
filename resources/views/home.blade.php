@@ -18,12 +18,12 @@ use App\Http\Controllers\User; ?>
         <br>
         <br>
         <div class="row builder_all">
-            <div class="col-md-2 col-sm-6 builder walletInformation">
+            <div class="col-md-4 col-sm-6 builder walletInformation">
                 <div class="alert alert-warning">
                     <div class="row">
                         <div class="col-md-12">
                             <h4 class="font-sm">
-                                Balance
+                                Available Balance
                         </div>
                         <br>
                         <div class="col-md-12">
@@ -36,7 +36,7 @@ use App\Http\Controllers\User; ?>
                     </div>
                 </div>
             </div>
-            <div class="col-md-2 col-sm-6 builder walletInformation">
+            <div class="col-md-4 col-sm-6 builder walletInformation">
                 <div class="alert alert-info">
                     <div class="row">
                         <div class="col-md-12">
@@ -52,7 +52,7 @@ use App\Http\Controllers\User; ?>
                     </div>
                 </div>
             </div>
-            <div class="col-md-2 col-sm-6 builder walletInformation">
+            <div class="col-md-4 col-sm-6 builder walletInformation">
                 <div class="alert alert-success">
                     <div class="row">
                         <div class="col-md-12">
@@ -97,7 +97,7 @@ use App\Http\Controllers\User; ?>
 
                 </div>
             </div>
-            <div class="col-md-2 col-sm-6 builder walletInformation">
+            <div class="col-md-4 col-sm-6 builder walletInformation">
                 <div class="alert alert-success">
                     <div class="row">
                         <div class="col-md-12">
@@ -133,7 +133,7 @@ use App\Http\Controllers\User; ?>
 
                 </div>
             </div>
-            <div class="col-md-2 col-sm-6 builder walletInformation">
+            <div class="col-md-4 col-sm-6 builder walletInformation">
                 <div class="alert alert-success">
                     <div class="row">
                         <div class="col-md-12">

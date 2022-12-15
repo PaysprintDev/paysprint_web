@@ -2841,7 +2841,7 @@ class MoexController extends Controller
     public function getPaymentPolicy()
     {
         try {
-            $filename = env('APP_ENV') === 'local' ? 'js/paymentpolicy.json' : '../../js/paymentpolicy.json';
+            $filename = 'js/paymentpolicy.json';
             $data = file_get_contents($filename);
 
             $status = 200;
@@ -2859,7 +2859,7 @@ class MoexController extends Controller
     public function getPaymentPolicyByCountry($country)
     {
         try {
-            $filename = env('APP_ENV') === 'local' ? 'js/paymentpolicy.json' : '../../js/paymentpolicy.json';
+            $filename = 'js/paymentpolicy.json';
             $data = file_get_contents($filename);
 
             $result = $this->searchForItem($country, json_decode($data));

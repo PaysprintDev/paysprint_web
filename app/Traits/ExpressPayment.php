@@ -185,6 +185,7 @@ trait ExpressPayment
                 $data = $this->doExbcPayPostRedirect();
 
                 return $data->data;
+
             } else {
 
 

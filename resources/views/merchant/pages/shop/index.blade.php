@@ -25,6 +25,7 @@
                 <div class="swiper-wrapper">
 
 
+
                     @for ($i = 0; $i < count(array_filter(explode(', ', $data['mystore']->headerContent))); $i++)
                         @if (count(array_filter(explode(', ', $data['mystore']->headerTitle))) == count(array_filter(explode(', ', $data['mystore']->headerContent))) && count(array_filter(explode(', ', $data['mystore']->headerSubtitle))) == count(array_filter(explode(', ', $data['mystore']->headerContent))) && array_key_exists($i, array_filter(explode(', ', $data['mystore']->headerContent))))
                             <div class="swiper-slide">
@@ -34,11 +35,12 @@
 
                                 @if (array_key_exists($i, array_filter(explode(', ', $data['mystore']->headerContent))))
                                     @php
-                                        $headerContent = array_filter(explode(', ', $data['mystore']->headerContent))[$i];
+
+                                        $headerContent = array_filter(explode(', ', str_replace(" ", "_", $data['mystore']->headerContent)))[$i];
                                     @endphp
                                 @else
                                     @php
-                                        $headerContent = array_filter(explode(', ', $data['mystore']->headerContent))[0];
+                                        $headerContent = array_filter(explode(', ', str_replace(" ", "_", $data['mystore']->headerContent)))[0];
                                     @endphp
                                 @endif
 
@@ -132,11 +134,13 @@
                                 @if (array_key_exists($i, array_filter(explode(', ', $data['mystore']->advertSectionImage))) && count(array_filter(explode(', ', $data['mystore']->advertTitle))) == count(array_filter(explode(', ', $data['mystore']->advertSectionImage))) && count(array_filter(explode(', ', $data['mystore']->advertSubtitle))) == count(array_filter(explode(', ', $data['mystore']->advertSectionImage))))
                                     <div class="offer-banner">
                                         <a href="#" class="banner-hover">
-                                            <img src="{{ array_filter(explode(', ', $data['mystore']->advertSectionImage))[$i] }}"
+
+                                            <img src="{{ array_filter(explode(',_', str_replace(" ", "_", $data['mystore']->advertSectionImage)))[$i] }}"
                                                 alt="offer-banner" class="img-fluid"
                                                 style="width: 100%; height: 280px; object-fit:cover;">
                                         </a>
                                         <div class="banner-content">
+
                                             <span>{{ array_filter(explode(', ', $data['mystore']->advertTitle))[$i] }}</span>
                                             <h2>{{ array_filter(explode(', ', $data['mystore']->advertSubtitle))[$i] }}
                                             </h2>
@@ -146,7 +150,8 @@
                                 @else
                                     <div class="offer-banner">
                                         <a href="#" class="banner-hover">
-                                            <img src="{{ array_filter(explode(', ', $data['mystore']->advertSectionImage))[0] }}"
+
+                                            <img src="{{ array_filter(explode(',_', str_replace(" ", "_", $data['mystore']->advertSectionImage)))[0] }}"
                                                 alt="offer-banner" class="img-fluid"
                                                 style="width: 100%; height: 280px; object-fit:cover;">
                                         </a>

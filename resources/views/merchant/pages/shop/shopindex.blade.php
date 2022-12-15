@@ -20,7 +20,7 @@
     <!--home page slider start-->
     <section class="about-breadcrumb">
         <div class="about-back section-tb-padding"
-            style="background-image: url('{{ array_filter(explode(', ', $data['mystore']->headerContent))[0] }}')">
+            style="background-image: url('{{ array_filter(explode(', ', str_replace(" ", "_", $data['mystore']->headerContent)))[0] }}')">
             <div class="container">
                 <div class="row">
                     <div class="col">
