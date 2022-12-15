@@ -12447,8 +12447,23 @@ class AdminController extends Controller
             $method = $req->method;
         }
 
+        if($structure === "Consumer Monthly Subscription"){
+
+            $basic = $req->fixed / 2;
+            $classic = $req->fixed;
+
+        }
+        elseif($structure === "Merchant Monthly Subscription"){
+            $basic = $req->fixed / 1.5;
+            $classic = $req->fixed;
+        }
+        else{
+            $basic = 0;
+            $classic = 0;
+        }
+
         // Insert Record
-        $rec = TransactionCost::insert(['_token' => $req->_token, 'variable' => $req->variable, 'fixed' => $req->fixed, 'structure' => $structure, 'method' => $method, 'country' => $req->country]);
+        $rec = TransactionCost::insert(['_token' => $req->_token, 'variable' => $req->variable, 'fixed' => $req->fixed, 'basic' => $basic, 'classic' => $classic, 'structure' => $structure, 'method' => $method, 'country' => $req->country]);
 
         $resData = "Saved";
         $resp = "success";
@@ -12460,6 +12475,28 @@ class AdminController extends Controller
     public function editFeeStructure(Request $req, $id)
     {
         // Insert Record
+
+        $data = TransactionCost::where('id', $id)->first();
+
+
+        
+        if($data->structure === "Consumer Monthly Subscription"){
+
+            $req['basic'] = $req->fixed / 2;
+            $req['classic'] = $req->fixed;
+
+        }
+        elseif($data->structure === "Merchant Monthly Subscription"){
+            $req['basic'] = $req->fixed / 1.5;
+            $req['classic'] = $req->fixed;
+        }
+        else{
+            $req['basic'] = 0;
+            $req['classic'] = 0;
+        }
+
+
+
         $rec = TransactionCost::where('id', $id)->update($req->all());
 
         $resData = "Updated successfully";

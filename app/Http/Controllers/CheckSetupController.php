@@ -2868,6 +2868,14 @@ in the your business category.</p> <p>This means your competitors are receiving 
     }
 
 
+    // TODO1:: Set an array of key value, country => [prices];
+    // TODO2:: Get all the countries...
+    // TODO3:: Loop through, to get their prices...
+    // TODO4:: Update their prices with the array stack on TODO1..
+
+    
+
+
     public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit)
     {
         Statement::insert(['user_id' => $email, 'reference_code' => $reference_code, 'activity' => $activity, 'credit' => $credit, 'debit' => $debit, 'balance' => $balance, 'trans_date' => $trans_date, 'status' => $status, 'action' => $action, 'regards' => $regards, 'state' => $state, 'statement_route' => $statement_route, 'auto_deposit' => $auto_deposit]);
