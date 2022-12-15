@@ -28,11 +28,13 @@ trait VertoFx
       
   }
    
-	public function getFxRate($codea,$codeb,$token)
+	public function getFxRate($codea,$codeb)
 	{
 		 $this->vetobaseUrl = config("constants.vetofx.baseurl")."/orders/v2.1/fx?currencyFrom=$codea&currencyTo=$codeb";
 
-        $result = $this->getFxRateCurl($token);
+        $result = $this->getFxRateCurl();
+
+        dd($result);
 
         return $result;
 	}
@@ -105,13 +107,11 @@ trait VertoFx
       CURLOPT_CUSTOMREQUEST => 'GET',
       CURLOPT_HTTPHEADER => array(
 	    'Content-Type: application/json',
-        'Authorization: Bearer ' . $token->token
+        'Authorization: Bearer '.$token->token
        ),
         ));
 
         $response = curl_exec($curl);
-
-
         curl_close($curl);
         return json_decode($response);
 

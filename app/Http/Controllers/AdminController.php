@@ -6039,8 +6039,65 @@ class AdminController extends Controller
             );
 
 
-
             return view('admin.wallet.walletbalance')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+     public function closedWalletBalance(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing" || session('role') == "Customer Success") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'walletBalance' => $this->closedUserBalance(),
+                'walletcategoryBalance' => $this->closedUserWalletBalancebyCategory(),
+            );
+
+
+            return view('admin.wallet.closedwalletbalance')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
         }
@@ -6288,6 +6345,64 @@ class AdminController extends Controller
 
 
             return view('admin.wallet.walletbalancebycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
+        } else {
+            return redirect()->route('AdminLogin');
+        }
+    }
+
+     public function closedBalanceByCountry(Request $req)
+    {
+
+        if ($req->session()->has('username') == true) {
+            // dd(Session::all());
+
+            if (session('role') == "Super" || session('role') == "Access to Level 1 only" || session('role') == "Access to Level 1 and 2 only" || session('role') == "Customer Marketing" || session('role') == "Customer Success") {
+                $adminUser = Admin::orderBy('created_at', 'DESC')->get();
+                $invoiceImport = ImportExcel::orderBy('created_at', 'DESC')->get();
+                $payInvoice = DB::table('client_info')
+                    ->join('invoice_payment', 'client_info.user_id', '=', 'invoice_payment.client_id')
+                    ->orderBy('invoice_payment.created_at', 'DESC')
+                    ->get();
+
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            } else {
+                $adminUser = Admin::where('username', session('username'))->get();
+                $invoiceImport = ImportExcel::where('uploaded_by', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $payInvoice = InvoicePayment::where('client_id', session('user_id'))->orderBy('created_at', 'DESC')->get();
+                $otherPays = DB::table('organization_pay')
+                    ->join('users', 'organization_pay.user_id', '=', 'users.email')
+                    ->where('organization_pay.coy_id', session('user_id'))
+                    ->orderBy('organization_pay.created_at', 'DESC')
+                    ->get();
+            }
+
+            // dd($payInvoice);
+
+            $clientPay = InvoicePayment::orderBy('created_at', 'DESC')->get();
+
+            $transCost = $this->transactionCost();
+
+            $getwithdraw = $this->withdrawRemittance();
+            $collectfee = $this->allcollectionFee();
+            $getClient = $this->getallClient();
+            $getCustomer = $this->getCustomer($req->route('id'));
+
+
+            // Get all xpaytransactions where state = 1;
+
+            $getxPay = $this->getxpayTrans();
+            $allusers = $this->allUsers();
+
+            $data = array(
+                'walletByCountry' => $this->closedUserBalanceByCountry($req->get('country'))
+            );
+
+
+
+            return view('admin.wallet.closedwalletbalancebycountry')->with(['pages' => 'Dashboard', 'clientPay' => $clientPay, 'adminUser' => $adminUser, 'invoiceImport' => $invoiceImport, 'payInvoice' => $payInvoice, 'otherPays' => $otherPays, 'getwithdraw' => $getwithdraw, 'transCost' => $transCost, 'collectfee' => $collectfee, 'getClient' => $getClient, 'getCustomer' => $getCustomer, 'status' => '', 'message' => '', 'xpayRec' => $getxPay, 'allusers' => $allusers, 'data' => $data]);
         } else {
             return redirect()->route('AdminLogin');
         }
@@ -7951,8 +8066,11 @@ class AdminController extends Controller
 
 
               $login=$this->sendVertoFx();
+          
                  $token=$login->token;
-                $response=$this->getFxRate($req->currency_from,$req->currency_to,$token);
+                $response=$this->getFxRate($req->currency_from,$req->currency_to);
+                
+                
 
                  if(isset($response->success))
              {
@@ -11835,6 +11953,21 @@ class AdminController extends Controller
         return $data;
     }
 
+    public function closedUserBalance()
+    {
+        $data=UserClosed::select('id', 'name', 'email', 'ref_code')->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
+    public function closedUserBalanceByCountry($country)
+    {
+
+        $data = UserClosed::where('country', $country)->orderBy('created_at', 'DESC')->get();
+
+        return $data;
+    }
+
 
     public function userWalletBalancebyCountry($country)
     {
@@ -11856,6 +11989,13 @@ class AdminController extends Controller
     public function userWalletBalancebyCategory()
     {
         $data = User::select('country', 'currencyCode', 'wallet_balance')->orderBy('created_at', 'DESC')->groupBy('country')->get();
+
+        return $data;
+    }
+
+     public function closedUserWalletBalancebyCategory()
+    {
+        $data = UserClosed::select('country', 'currencyCode', 'wallet_balance')->orderBy('created_at', 'DESC')->groupBy('country')->get();
 
         return $data;
     }
