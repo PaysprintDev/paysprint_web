@@ -12,11 +12,11 @@
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
 		<h1>
-			Closed Users Wallet Balance By Country
+			Overdraft Users Details
 		</h1>
 		<ol class="breadcrumb">
 			<li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-			<li class="active">Closed Users Wallet Balance By Country</li>
+			<li class="active">Overdraft Users Details</li>
 		</ol>
 	</section>
 
@@ -26,7 +26,7 @@
 			<div class="col-xs-12">
 				<div class="box">
 					<div class="box-header">
-						<h3 class="box-title">Closed Users Wallet Balance By Country</h3>
+						<h3 class="box-title">Overdraft Users Details</h3>
 
 					</div>
 					<!-- /.box-header -->
@@ -45,42 +45,58 @@
 								</div>
 								<tr>
 									<th>S/N</th>
-									<th>Country</th>
-									<th>Total Wallet Balance</th>
-									<th>Action</th>
+									<th>Amount to Send</th>
+									<th>Overdraft Balance</th>
+									<th>Overdraft Limit</th>
+									<th>Date</th>
 								</tr>
 							</thead>
 							<tbody>
-								@if (count($data['walletcategoryBalance']) > 0)
-								<?php $i = 1;?>
-								@foreach ($data['walletcategoryBalance'] as $data)
+								@if (count($data['walletByCountry']) > 0)
+								<?php $i = 1; $totalPaid = 0; $remtoPay = 0; $totalinv = 0;?>
+								@foreach ($data['walletByCountry'] as $data)
 								<tr>
 									<td>{{ $i++ }}</td>
-									<td>{{ $data->country }}</td>
-
-									@if($totPay = \App\UserClosed::where('country',
-									$data->country)->sum('wallet_balance'))
-									<td style="font-weight: 700;">{{ $data->currencyCode.' '.number_format($totPay, 2)
-										}}</td>
-
-									@else
-									<td style="font-weight: 700;">{{ $data->currencyCode.' '.number_format(0, 2) }}</td>
-									@endif
+									<td>{{$data->amountToSend}}</td>
+									<td>{{$data->overdraftBalance}}</td>
+									<td>{{$data->overdraftLimit}}</td>
+									<td>{{$data->created_at}}</td>
 
 
-									<td>
-										<a href="{{ route('close balance by country', 'country='.$data->country) }}"
-											class="btn btn-primary" type="button">View details</a>
-									</td>
+
+
 								</tr>
+
+								@php
+								$totalPaid += $data->wallet_balance;
+								@endphp
+
 								@endforeach
+
+
 
 								@else
 								<tr>
-									<td colspan="4" align="center">No record available</td>
+									<td colspan="6" align="center">No record available</td>
 								</tr>
 								@endif
 							</tbody>
+
+							@isset($totalPaid)
+							<tfoot>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td style="font-weight: bold; color: black;">Total: </td>
+									<td style="font-weight: bold; color: green;">{{ '+'.$data->currencyCode.'
+										'.number_format($totalPaid, 2) }}</td>
+
+								</tr>
+							</tfoot>
+							@endisset
+
 						</table>
 					</div>
 					<!-- /.box-body -->

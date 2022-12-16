@@ -12,11 +12,11 @@
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
 		<h1>
-			Closed Users Wallet Balance By Country
+			Overdraft By Country
 		</h1>
 		<ol class="breadcrumb">
 			<li><a href="{{ route('Admin') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-			<li class="active">Closed Users Wallet Balance By Country</li>
+			<li class="active">Wallet Balance By Country</li>
 		</ol>
 	</section>
 
@@ -26,7 +26,7 @@
 			<div class="col-xs-12">
 				<div class="box">
 					<div class="box-header">
-						<h3 class="box-title">Closed Users Wallet Balance By Country</h3>
+						<h3 class="box-title">Overdraft By Country</h3>
 
 					</div>
 					<!-- /.box-header -->
@@ -46,7 +46,8 @@
 								<tr>
 									<th>S/N</th>
 									<th>Country</th>
-									<th>Total Wallet Balance</th>
+									<th>TotaL Amount Sent</th>
+									<th>Total Overdraft Balance</th>
 									<th>Action</th>
 								</tr>
 							</thead>
@@ -58,8 +59,17 @@
 									<td>{{ $i++ }}</td>
 									<td>{{ $data->country }}</td>
 
-									@if($totPay = \App\UserClosed::where('country',
-									$data->country)->sum('wallet_balance'))
+									@if($totPay = \App\OverdraftTransaction::where('country',
+									$data->country)->sum('amountToSend'))
+									<td style="font-weight: 700;">{{ $data->currencyCode.' '.number_format($totPay, 2)
+										}}</td>
+
+									@else
+									<td style="font-weight: 700;">{{ $data->currencyCode.' '.number_format(0, 2) }}</td>
+									@endif
+
+									@if($totPay = \App\OverdraftTransaction::where('country',
+									$data->country)->sum('overdraftBalance'))
 									<td style="font-weight: 700;">{{ $data->currencyCode.' '.number_format($totPay, 2)
 										}}</td>
 
@@ -69,7 +79,7 @@
 
 
 									<td>
-										<a href="{{ route('close balance by country', 'country='.$data->country) }}"
+										<a href="{{ route('overdraft by country', 'country='.$data->country) }}"
 											class="btn btn-primary" type="button">View details</a>
 									</td>
 								</tr>
