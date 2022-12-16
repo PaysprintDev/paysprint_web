@@ -324,9 +324,34 @@
                             <div class="features">
 
                                 <div class="accordion" id="accordionPanelsStayOpenExample">
-
                                     <div class="accordion-item">
-                                    <div class="mt-33">
+                                        <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                                          <h6 >
+                                            Receive Payments from Customers
+  
+                                          </h6>
+  
+                                        </h2>
+                                        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                                          <div class="accordion-body">
+                                              <li>
+                                                  <span class="list-name">QR Code</span>
+                                                  <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                              </li>
+                                              <li>
+                                                  <span class="list-name">Payment Links</span>
+                                                  <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                              </li>
+                                              <li>
+                                                  <span class="list-name">Online Payment</span>
+                                                  <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                              </li>
+                                              <p class=" text-danger">Limited.</p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    <div class="accordion-item">
+                                    <div class="">
                                       <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
                                         <h6>
                                           Money Transfer
@@ -364,18 +389,12 @@
                                                 <span class="list-name">PaySprint Merchant(Local)</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
-                                            {{-- <li>
-                                                <span class="list-name">PaySprint Merchant (Cross Border)</span>
-                                                <span class="icon cross"><i class="far fa-times-circle"></i></span>
-                                            </li> --}}
+                                          
                                             <li>
                                                 <span class="list-name">Non-PaySprint Merchant(Local)</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
-                                            {{-- <li>
-                                                <span class="list-name">Non-PaySprint Merchant (Cross Border)</span>
-                                                <span class="icon cross"><i class="far fa-times-circle"></i></span>
-                                            </li> --}}
+                                           
                                         </div>
                                       </div>
                                     </div>
@@ -383,7 +402,7 @@
                                 </div>
 
 
-                                <div class="mt-25">
+                                <div class="mt-27">
                                     <h6 >
                                         Other Services
 
@@ -442,7 +461,7 @@
                                                 <span class="list-name">Online Payment</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
-
+                                            <p class=" text-danger">Unlimited.</p>
                                         </div>
                                       </div>
                                     </div>
@@ -460,13 +479,14 @@
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
                                             <li>
-                                                <span class="list-name"> Non-PaySprint Account - Local</span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
-                                            <li>
                                                 <span class="list-name">PaySprint Account - Cross Border</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
+                                            <li>
+                                                <span class="list-name"> Non-PaySprint Account - Local</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                          
                                             <li>
                                                 <span class="list-name"> Non-PaySprint Account - Cross Border </span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
@@ -488,13 +508,14 @@
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
                                             <li>
-                                                <span class="list-name">PaySprint Merchant (Cross Border)</span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
-                                            <li>
                                                 <span class="list-name">Non-PaySprint Merchant(Local)</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
+                                            <li>
+                                                <span class="list-name">PaySprint Merchant (Cross Border)</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                           
 
                                         </div>
                                       </div>
@@ -561,7 +582,7 @@
                                                 <span class="list-name">Online Payment</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
-
+                                            <p class=" text-danger">UnLimited.</p>
                                         </div>
                                       </div>
                                     </div>
@@ -579,13 +600,14 @@
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
                                             <li>
-                                                <span class="list-name"> Non-PaySprint Account - Local</span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
-                                            <li>
                                                 <span class="list-name">PaySprint Account - Cross Border</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
+                                            <li>
+                                                <span class="list-name"> Non-PaySprint Account - Local</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                          
                                             <li>
                                                 <span class="list-name"> Non-PaySprint Account - Cross Border </span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
@@ -607,13 +629,14 @@
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
                                             <li>
-                                                <span class="list-name">PaySprint Merchant (Cross Border)</span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
-                                            <li>
                                                 <span class="list-name">Non-PaySprint Merchant(Local)</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
+                                            <li>
+                                                <span class="list-name">PaySprint Merchant (Cross Border)</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                           
                                             <li>
                                                 <span class="list-name">Non-PaySprint Merchant (Cross Border)</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
@@ -632,6 +655,14 @@
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
                                 <li>
+                                    <span class="list-name">Merchant Cash Advance</span>
+                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                </li>
+                                <li>
+                                    <span class="list-name">Bill Payments</span>
+                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                </li>
+                                <li>
                                     <span class="list-name">PaySprint eStore</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
@@ -639,10 +670,7 @@
                                     <span class="list-name">Rental Property Management</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
-                                <li>
-                                    <span class="list-name">Merchant Cash Advance</span>
-                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                </li>
+                              
                                 <li>
                                     <span class="list-name">PaySprint-Working Capital Support</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
@@ -651,10 +679,7 @@
                                     <span class="list-name">PaySprint FX</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
-                                <li>
-                                    <span class="list-name">Bill Payments</span>
-                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                </li>
+                              
                                 </div>
 
                             </div>

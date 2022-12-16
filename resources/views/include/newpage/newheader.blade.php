@@ -108,7 +108,7 @@
 
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('pricing structure') }}" role="button"
+                            <a class="nav-link" href="{{ route('pricing structure merchant')}}" role="button"
                                 aria-expanded="false">PRICING</a>
                         </li>
 
