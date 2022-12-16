@@ -16,7 +16,7 @@ use App\Http\Controllers\Controller;
 trait AccountReport
 {
 
-		public function totalTransaction($country)
+		public function accountReport($country)
 		{
 			$currency=AllCountries::where('name',$country)->first();
 			
@@ -26,55 +26,48 @@ trait AccountReport
 			
 			$activecountry=AllCountries::where('approval','1')->get();
 
-			$sum = 0;
+			$result=[];
 
-			$addedAmount = Statement::where('report_status', 'Added to wallet')->sum('credit');
-			
-       		$receivedAmount = Statement::where('report_status', 'Money received')->sum('credit');
-		
-		
-        	$debitedAmount = Statement::where('report_status', 'Withdraw from wallet')->sum('debit');
-
-       	 	$monthlyAmount = Statement::where('report_status', 'Monthly fee')->sum('debit');
-
-
-        	$sendInvoice = Statement::where('action', 'Invoice')->sum('credit');
-
-		
-        	$withdrawAmount = Statement::where('report_status', 'Withdraw from wallet')->sum('debit');
-
-
-        	$credits = $addedAmount + $receivedAmount + $sendInvoice + ($debitedAmount - $monthlyAmount - $withdrawAmount);
-
-		
-			$sum= $credits;
-
-			
-			$fxcredit=FxStatement::where('country',$currency->name)->sum('credit');
-			
-        	$fxdebit=FxStatement::where('country',$currency->name)->sum('debit');
-
-			$totalsum=$sum;
-			
-			$totaltransact=$totalsum+$fxcredit-$fxdebit;
-			
-			$totalmoneydone=$totaltransact;
-
-			return number_format($totalmoneydone,2);
+			foreach( $activecountry as $allcountry){
+				$added=$this->addedToWallet($country);
+			}
 				
 		}
 
-		public function TotalCountryVariation($country)
+		public function addedToWallet($country)
 		{
-		
         $addedAmount = Statement::where('country', $country)->where('report_status', 'Added to wallet')->sum('credit');
-        $receivedAmount = Statement::where('country', $country)->where('report_status', 'Money received')->sum('credit');
-        $debitedAmount = Statement::where('country', $country)->where('report_status', 'Withdraw from wallet')->sum('debit');
-        $monthlyAmount = Statement::where('country', $country)->where('report_status', 'Monthly fee')->sum('debit');
-        $sendInvoice = Statement::where('country', $country)->where('action', 'Invoice')->sum('credit');
-        $withdrawAmount = Statement::where('country', $country)->where('report_status', 'Withdraw from wallet')->sum('debit');
-         $credits = $addedAmount + $receivedAmount + $sendInvoice + (- $debitedAmount - $monthlyAmount - $withdrawAmount);
-         return number_format($credits,2);
+
+         return number_format($addedAmount,2);
 		}
+
+		public function moneyReceived($country)
+		{
+			$receivedAmount = Statement::where('country', $country)->where('report_status', 'Money received')->sum('credit');
+
+			return number_format($receivedAmount,2);
+		}
+
+		public function withdrawFromWallet($country)
+		{
+			$debitedAmount = Statement::where('country', $country)->where('report_status', 'Withdraw from wallet')->sum('debit');
+
+			return number_format($debitedAmount,2);
+		}
+
+		public function monthlyFee($country)
+		{
+			$monthlyAmount = Statement::where('country', $country)->where('report_status', 'Monthly fee')->sum('debit');
+
+			return number_format($monthlyAmount,2);
+		}
+
+		public function invoice($country)
+		{
+			 $monthlyAmount = Statement::where('country', $country)->where('report_status', 'Monthly fee')->sum('debit');
+
+			 return number_format($monthlyAmount,2);
+		}
+
  
 }
