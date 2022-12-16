@@ -354,7 +354,7 @@ use App\Http\Controllers\TransactionCost; ?>
                                 </div>
                                 </div>
                                 <div class="accordion-item">
-                                    <div class="mt-30">
+                                    <div class="mt-32">
                                   <h2 class="accordion-header" id="panelsStayOpen-headingThree">
 
                                     <h6 >
@@ -459,13 +459,14 @@ use App\Http\Controllers\TransactionCost; ?>
                                             <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                         </li>
                                         <li>
-                                            <span class="list-name">PaySprint Merchant (Cross Border)</span>
-                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                        </li>
-                                        <li>
                                             <span class="list-name">Non-PaySprint Merchant(Local)</span>
                                             <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                         </li>
+                                        <li>
+                                            <span class="list-name">PaySprint Merchant (Cross Border)</span>
+                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                        </li>
+                                      
 
                                     </div>
                                   </div>
@@ -554,13 +555,14 @@ use App\Http\Controllers\TransactionCost; ?>
                                             <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                         </li>
                                         <li>
-                                            <span class="list-name">PaySprint Merchant (Cross Border)</span>
-                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                        </li>
-                                        <li>
                                             <span class="list-name">Non-PaySprint Merchant(Local)</span>
                                             <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                         </li>
+                                        <li>
+                                            <span class="list-name">PaySprint Merchant (Cross Border)</span>
+                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                        </li>
+                                       
                                         <li>
                                             <span class="list-name">Non-PaySprint Merchant (Cross Border)</span>
                                             <span class="icon check"><i class="fas fa-check-circle"></i></span>
@@ -574,10 +576,7 @@ use App\Http\Controllers\TransactionCost; ?>
                                     Other Services
 
                                   </h6>
-                            <li class="">
-                                <span class="list-name">PaySprint FX</span>
-                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                            </li>
+                         
                             <li>
                                 <span class="list-name">PaySprint eStore</span>
                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
@@ -589,6 +588,10 @@ use App\Http\Controllers\TransactionCost; ?>
 
                             <li>
                                 <span class="list-name">Bill Payments</span>
+                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                            </li>
+                            <li class="">
+                                <span class="list-name">PaySprint FX</span>
                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                             </li>
                             </div>
