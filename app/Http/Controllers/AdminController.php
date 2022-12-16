@@ -6153,7 +6153,7 @@ class AdminController extends Controller
             $data = array(
                 'walletBalance' => $this->userWalletBalance(),
                 'walletcategoryBalance' => $this->userWalletBalancebyCategory(),
-                'allusers' => $this->userWalletBalance(),
+                'country' => $this->getActiveCountries()
             );
 
 
@@ -8066,11 +8066,11 @@ class AdminController extends Controller
 
 
               $login=$this->sendVertoFx();
-          
+
                  $token=$login->token;
                 $response=$this->getFxRate($req->currency_from,$req->currency_to);
-                
-                
+
+
 
                  if(isset($response->success))
              {
@@ -12619,7 +12619,7 @@ class AdminController extends Controller
         $data = TransactionCost::where('id', $id)->first();
 
 
-        
+
         if($data->structure === "Consumer Monthly Subscription"){
 
             $req['basic'] = $req->fixed / 2;
@@ -17218,7 +17218,7 @@ class AdminController extends Controller
 
             $thisdata = [
                 'result' => $this->getUserWalletStatementRecordByDate($req->user_id, $req->statement_start, $req->statement_end),
-                'allusers' => $this->userWalletBalance(),
+                'country' => $this->getActiveCountries()
             ];
 
 

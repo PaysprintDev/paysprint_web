@@ -5770,6 +5770,54 @@ C</div>
         // End MOEX - PS Transaction
 
 
+        $('#country_record').change(async () => {
+
+            $('#statement_service').html('');
+
+            try {
+
+                $('#statement_service').html('Please wait...');
+
+                var headers = {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                };
+
+                var country = $('#country_record').val();
+
+            const config = {
+                method: 'GET',
+                url: "/Ajax/getuserbycountry?country="+country,
+                headers
+            }
+
+            const response = await axios(config);
+
+            $.each(response.data.data, function(v, k) {
+
+                $('#statement_service').append(
+                    `<option value="${k.email}" selected>${k.name+'- Account Number: '+k.ref_code}</option>`
+                );
+
+            });
+
+
+            } catch (error) {
+
+                $('#statement_service').html('Error occured');
+
+                if (error.response) {
+                    swal('Oops', error.response.data.message, 'error');
+                    } else {
+                    swal('Error', error.message, 'error');
+                    }
+            }
+
+
+
+
+        });
+
+
     </script>
 
     </body>

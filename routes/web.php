@@ -1378,6 +1378,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 	Route::post('Ajaxregister', ['uses' => 'HomeController@ajaxregister', 'as' => 'Ajaxregister']);
 	Route::post('Ajaxlogin', ['uses' => 'HomeController@ajaxlogin', 'as' => 'Ajaxlogin']);
 	Route::post('contactus', ['uses' => 'HomeController@contactus', 'as' => 'contactus']);
+	Route::get('getuserbycountry', ['uses' => 'HomeController@getuserByCountry', 'as' => 'getuserbycountry']);
 
 
 
