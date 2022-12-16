@@ -246,7 +246,7 @@ use App\Http\Controllers\TransactionCost; ?>
             <div class="row  justify-content-center pt-5">
                 <div class="col-xl-8 col-lg-9">
                     <div class="px-md-15 text-center">
-                        <h2 class="title gr-text-2 mb-8 mb-lg-10">{{ $pages }}</h2>
+                        <h2 class="title gr-text-2 mb-8 mb-lg-10">Plan and Pricing</h2>
                         {{-- <p class="gr-text-7 mb-0 mb-lg-13">Full Time, Remote</p> --}}
 
 
