@@ -290,13 +290,17 @@
                         @php
                         $monthlyBased = $thisprices->fixed;
                         $yearlyBased = $thisprices->fixed * 10;
+                        $basic = $thisprices->basic;
+                        $classic = $thisprices->classic;
                         @endphp
 
                         @else
                         @php
                         $monthlyBased = 0;
                         $yearlyBased = 0;
-                        @endphp
+                        $basic = 0;
+                        $classic = 0;                      
+                         @endphp
                         @endif
 
 
@@ -407,7 +411,7 @@
                                     <div class="inner-area">
 
                                         </span>
-                                        <span class="price">{{ $data['currency'] . '0.00' }}</span>
+                                        <span class="price">{{ $data['currency'] . number_format($basic, 2)}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -526,8 +530,7 @@
                                     <div class="inner-area">
 
                                         </span>
-                                        <span class="price"> {{ $data['currency'] . number_format($monthlyBased, 2) }}
-                                            Monthly</span>
+                                        <span class="price">{{ $data['currency'] . number_format($classic, 2)}}</span>
                                     </div>
                                 </div>
                             </div>
