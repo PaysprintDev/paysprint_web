@@ -325,6 +325,9 @@
 
                                 <div class="accordion" id="accordionPanelsStayOpenExample">
                                     <div class="accordion-item">
+                                        <p style="font-size: .8rem" class="text-danger">
+                                            Unimited Transactions
+                                        </p>
                                         <h2 class="accordion-header" id="panelsStayOpen-headingOne">
                                           <h6 >
                                             Receive Payments from Customers
@@ -335,47 +338,29 @@
                                         <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
                                           <div class="accordion-body">
                                               <li>
-                                                  <span class="list-name">QR Code</span>
+                                                  <span class="list-name">Display QR Code to Receive Face-to-Face Payment</span>
                                                   <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                               </li>
+                                              <p style="font-size: .8rem">(Customer Scan QR to make payments. No need for a Point of Sale Terminal)</p>
                                               <li>
-                                                  <span class="list-name">Payment Links</span>
+                                                  <span class="list-name">Share Payment Links</span>
                                                   <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                               </li>
+                                              <p style="font-size: .8rem">(Send Payment link via emails,SMS or Whatsapp for remote Customers to make payment)</p>
                                               <li>
-                                                  <span class="list-name">Online Payment</span>
+                                                  <span class="list-name">Receive Online Payment</span>
                                                   <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                               </li>
-                                              <p class=" text-danger">Limited.</p>
+                                              <p style="font-size: .8rem">(Install the App on the business website to receive payment from customers)</p>
+                                           
                                           </div>
                                         </div>
                                       </div>
                                     <div class="accordion-item">
-                                    <div class="">
-                                      <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-                                        <h6>
-                                          Money Transfer
-
-                                        </h6>
-                                      </h2>
-                                      <div>
-                                        <div>
-                                            <li>
-                                                <span class="list-name">PaySprint Account - Local</span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
-
-                                            <li>
-                                                <span class="list-name">PaySprint Account - Cross Border</span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
-
-                                        </div>
-                                      </div>
-                                    </div>
+                                    
                                     </div>
                                     <div class="accordion-item">
-                                        <div class="mt-26">
+                                        <div >
                                       <h2 class="accordion-header" id="panelsStayOpen-headingThree">
 
                                         <h6 >
@@ -386,14 +371,15 @@
                                       <div >
                                         <div>
                                             <li>
-                                                <span class="list-name">PaySprint Merchant(Local)</span>
+                                                <span class="list-name">to other businesses on PaySprint(B2B)</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
-                                          
+                                            <p style="font-size: .8rem">(Pay Vendors and suppliers that are on PaySprint at a click of button)</p>
                                             <li>
-                                                <span class="list-name">Non-PaySprint Merchant(Local)</span>
+                                                <span class="list-name">to other businesses not on PaySprint(B2B)</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
+                                            <p style="font-size: .8rem">(Pay Vendors and suppliers that are  not on PaySprint at a click of button)</p>
                                            
                                         </div>
                                       </div>
@@ -402,26 +388,45 @@
                                 </div>
 
 
-                                <div class="mt-27">
+                                <div class="">
                                     <h6 >
-                                        Other Services
+                                        Business Tools
 
                                       </h6>
-                                <li class="">
-                                    <span class="list-name">Invoicing System</span>
-                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                </li>
-
-                                <li>
-                                    <span class="list-name">Merchant Cash Advance</span>
-                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                </li>
-
-                                <li>
-                                    <span class="list-name">Bill Payments</span>
-                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                </li>
+                                      <li class="">
+                                        <span class="list-name">Invoicing</span>
+                                        <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                    </li>
+                                    <p style="font-size: .8rem">(Create and  Send invoice to customers with any mobile device)</p>
+                                    <li>
+                                        <span class="list-name">Merchant Cash Advance</span>
+                                        <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                    </li>
+                                    <p style="font-size: .8rem">(Access additional funds to boost your cashflow)</p>
+                                    <li>
+                                        <span class="list-name">Bill Payments</span>
+                                        <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                    </li>
+                                    <p style="font-size: .8rem">(Pay Utility bills on time)</p>
                                 </div>
+                                <div class="mt-34 pt-31">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                        <h6>
+                                            Money Transfer(Wallet-to-Wallet. Fee Apply)
+                                            {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                                          </h6>
+                                    </h2>
+                                    <div>
+                                        <div>
+                                            <li>
+                                                <span class="list-name">Local Money Transfer</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                         
+                                           
+                                        </div>
+                                    </div>
+                                  </div>
                             </div>
                         </div>
                         <div class="table Premium">
@@ -440,6 +445,9 @@
                             <div class="features">
                                 <div class="accordion" id="accordionPanelsStayOpenExample">
                                     <div class="accordion-item">
+                                        <p style="font-size: .8rem" class="text-danger">
+                                            Unimited Transactions
+                                        </p>
                                       <h2 class="accordion-header" id="panelsStayOpen-headingOne">
                                         <h6 >
                                           Receive Payments from Customers
@@ -450,97 +458,117 @@
                                       <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
                                         <div class="accordion-body">
                                             <li>
-                                                <span class="list-name">QR Code</span>
+                                                <span class="list-name">Display QR Code to Receive Face-to-Face Payment</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
+                                            <p style="font-size: .8rem">(Customer Scan QR to make payments. No need for a Point of Sale Terminal)</p>
                                             <li>
-                                                <span class="list-name">Payment Links</span>
+                                                <span class="list-name">Share Payment Links</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
+                                            <p style="font-size: .8rem">(Send Payment link via emails,SMS or Whatsapp for remote Customers to make payment)</p>
                                             <li>
-                                                <span class="list-name">Online Payment</span>
+                                                <span class="list-name">Receive Online Payment</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
-                                            <p class=" text-danger">Unlimited.</p>
+                                            <p style="font-size: .8rem">(Install the App on the business website to receive payment from customers)</p>
+                                         
                                         </div>
                                       </div>
                                     </div>
-                                    <div class="accordion-item">
+                                   
+                                   
+                                </div>
+                             
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                                      <h6 >
+                                        Pay Invoice
+
+                                      </h6>
+                                    </h2>
+                                    <div >
+                                        <div>
+                                            <li>
+                                                <span class="list-name">to other businesses on PaySprint(B2B)</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <p style="font-size: .8rem">(Pay Vendors and suppliers that are on PaySprint at a click of button)</p>
+                                            <li>
+                                                <span class="list-name">to other businesses not on PaySprint(B2B)</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <p style="font-size: .8rem">(Pay Vendors and suppliers that are  not on PaySprint at a click of button)</p>
+                                           
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <h6 >
+                                            Business Tools
+    
+                                          </h6>
+                                          <li class="">
+                                            <span class="list-name">Invoicing</span>
+                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                        </li>
+                                        <p style="font-size: .8rem">(Create and  Send invoice to customers with any mobile device)</p>
+                                        <li>
+                                            <span class="list-name">Merchant Cash Advance</span>
+                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                        </li>
+                                        <p style="font-size: .8rem">(Access additional funds to boost your cashflow)</p>
+                                        <li>
+                                            <span class="list-name">Bill Payments</span>
+                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                        </li>
+                                        <p style="font-size: .8rem">(Pay Utility bills on time)</p>
+                                    </div>
+                                    <div class="mt-34 pt-31">
+                                    <div class="accordion-item ">
                                       <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
                                         <h6>
-                                          Money Transfer
-
-                                        </h6>
+                                            Money Transfer(Wallet-to-Wallet with No Fee)
+                                            {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                                          </h6>
                                       </h2>
                                       <div>
                                         <div>
                                             <li>
-                                                <span class="list-name"> PaySprint Account - Local</span>
+                                                <span class="list-name">Local Money Transfer</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
                                             <li>
-                                                <span class="list-name">PaySprint Account - Cross Border</span>
+                                                <span class="list-name"> Cross Border Money Transfer </span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
-                                            <li>
-                                                <span class="list-name"> Non-PaySprint Account - Local</span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
-                                          
-                                            <li>
-                                                <span class="list-name"> Non-PaySprint Account - Cross Border </span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
+                                           
                                         </div>
                                       </div>
                                     </div>
                                     <div class="accordion-item">
-                                      <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                                        <h6 >
-                                          Pay Invoice
-
-                                        </h6>
-                                      </h2>
-                                      <div >
+                                     
+                                        <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                          <h6>
+                                            Money Transfer(Wallet-to-Wallet. Fee Apply)
+                                            {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                                          </h6>
+                                        </h2>
                                         <div>
-                                            <li>
-                                                <span class="list-name">PaySprint Merchant(Local)</span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
-                                            <li>
-                                                <span class="list-name">Non-PaySprint Merchant(Local)</span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
-                                            <li>
-                                                <span class="list-name">PaySprint Merchant (Cross Border)</span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
-                                           
-
+                                          <div>
+                                              <li>
+                                                  <span class="list-name">Local Money Transfer</span>
+                                                  <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                              </li>
+                                              <li>
+                                                  <span class="list-name"> Cross Border Money Transfer </span>
+                                                  <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                              </li>
+                                             
+                                          </div>
                                         </div>
-                                      </div>
-                                    </div>
+                                  </div>
                                 </div>
-                                <div class="mt-19">
-                                    <h6 >
-                                        Other Services
-
-                                      </h6>
-                                <li class="">
-                                    <span class="list-name">Invoicing System</span>
-                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                </li>
-
-                                <li>
-                                    <span class="list-name">Merchant Cash Advance</span>
-                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                </li>
-
-                                <li>
-                                    <span class="list-name">Bill Payments</span>
-                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                </li>
-                                </div>
+                                  </div>
 
 
                             </div>
@@ -561,60 +589,38 @@
                             <div class="features">
                                 <div class="accordion" id="accordionPanelsStayOpenExample">
                                     <div class="accordion-item">
+                                        <p style="font-size: .8rem" class="text-danger">
+                                            Unimited Transactions
+                                        </p>
                                       <h2 class="accordion-header" id="panelsStayOpen-headingOne">
                                         <h6 >
                                           Receive Payments from Customers
-                                          {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                                        
                                         </h6>
 
                                       </h2>
                                       <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
                                         <div class="accordion-body">
                                             <li>
-                                                <span class="list-name">QR Code</span>
+                                                <span class="list-name">Display QR Code to Receive Face-to-Face Payment</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
+                                            <p style="font-size: .8rem">(Customer Scan QR to make payments. No need for a Point of Sale Terminal)</p>
                                             <li>
-                                                <span class="list-name">Payment Links</span>
+                                                <span class="list-name">Share Payment Links</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
+                                            <p style="font-size: .8rem">(Send Payment link via emails,SMS or Whatsapp for remote Customers to make payment)</p>
                                             <li>
-                                                <span class="list-name">Online Payment</span>
+                                                <span class="list-name">Receive Online Payment</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
-                                            <p class=" text-danger">UnLimited.</p>
+                                            <p style="font-size: .8rem">(Install the App on the business website to receive payment from customers)</p>
+                                         
                                         </div>
                                       </div>
                                     </div>
-                                    <div class="accordion-item">
-                                      <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-                                        <h6>
-                                          Money Transfer
-                                          {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
-                                        </h6>
-                                      </h2>
-                                      <div>
-                                        <div>
-                                            <li>
-                                                <span class="list-name"> PaySprint Account - Local</span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
-                                            <li>
-                                                <span class="list-name">PaySprint Account - Cross Border</span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
-                                            <li>
-                                                <span class="list-name"> Non-PaySprint Account - Local</span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
-                                          
-                                            <li>
-                                                <span class="list-name"> Non-PaySprint Account - Cross Border </span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
-                                        </div>
-                                      </div>
-                                    </div>
+                                   
                                     <div class="accordion-item">
                                       <h2 class="accordion-header" id="panelsStayOpen-headingThree">
                                         <h6 >
@@ -625,62 +631,105 @@
                                       <div >
                                         <div>
                                             <li>
-                                                <span class="list-name">PaySprint Merchant(Local)</span>
+                                                <span class="list-name">to other businesses on PaySprint(B2B)</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
+                                            <p style="font-size: .8rem">(Pay Vendors and suppliers that are on PaySprint at a click of button)</p>
                                             <li>
-                                                <span class="list-name">Non-PaySprint Merchant(Local)</span>
+                                                <span class="list-name">to other businesses not on PaySprint(B2B)</span>
                                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                             </li>
-                                            <li>
-                                                <span class="list-name">PaySprint Merchant (Cross Border)</span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
+                                            <p style="font-size: .8rem">(Pay Vendors and suppliers that are  not on PaySprint at a click of button)</p>
                                            
-                                            <li>
-                                                <span class="list-name">Non-PaySprint Merchant (Cross Border)</span>
-                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                            </li>
                                         </div>
                                       </div>
                                     </div>
                                 </div>
                                 <div class="extras">
                                     <h6 >
-                                        Other Services
+                                        Business Tools
 
                                       </h6>
                                 <li class="">
-                                    <span class="list-name">Invoicing System</span>
+                                    <span class="list-name">Invoicing</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
+                                <p style="font-size: .8rem">(Create and  Send invoice to customers with any mobile device)</p>
                                 <li>
                                     <span class="list-name">Merchant Cash Advance</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
+                                <p style="font-size: .8rem">(Access additional funds to boost your cashflow)</p>
                                 <li>
                                     <span class="list-name">Bill Payments</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
+                                <p style="font-size: .8rem">(Pay Utility bills on time)</p>
                                 <li>
-                                    <span class="list-name">PaySprint eStore</span>
+                                    <span class="list-name">Sell Online</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
+                                <p style="font-size: .8rem">(Utilize additional outlet to sell more to customers)</p>
                                 <li>
-                                    <span class="list-name">Rental Property Management</span>
+                                    <span class="list-name">Manage Rental Property</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
-                              
+                                <p style="font-size: .8rem">(Manage your rental property with ease)</p>
                                 <li>
-                                    <span class="list-name">PaySprint-Working Capital Support</span>
+                                    <span class="list-name">Working Capital Support</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
+                                <p style="font-size: .8rem">(Easily access additional funds based on transaction history in your business account with PaySprint)</p>
                                 <li>
-                                    <span class="list-name">PaySprint FX</span>
+                                    <span class="list-name">Cross Border Business Payment</span>
                                     <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                 </li>
-                              
+                                <p style="font-size: .8rem">(Pay Invoice or bills of foreign supplies or venders with ease)</p>
                                 </div>
+                                <div class="accordion-item mt-4">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                        <h6>
+                                          Money Transfer(Wallet-to-Wallet with No Fee)
+                                          {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                                        </h6>
+                                      </h2>
+                                      <div>
+                                        <div>
+                                            <li>
+                                                <span class="list-name">Local Money Transfer</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name"> Cross Border Money Transfer </span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                           
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                       
+                                        <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                          <h6>
+                                            Money Transfer(Wallet-to-Wallet. Fee Apply)
+                                            {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                                          </h6>
+                                        </h2>
+                                        <div>
+                                          <div>
+                                              <li>
+                                                  <span class="list-name">Local Money Transfer</span>
+                                                  <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                              </li>
+                                              <li>
+                                                  <span class="list-name"> Cross Border Money Transfer </span>
+                                                  <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                              </li>
+                                             
+                                          </div>
+                                        </div>
+                                  </div>
+                                  </div>
 
                             </div>
                         </div>

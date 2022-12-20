@@ -8,6 +8,7 @@ return [
         'pub_key_prod' => env('FLUTTERWAVE_PUB_LIVE'),
         'sec_key_prod' => env('FLUTTERWAVE_SEC_LIVE')
     ],
+
     'sendgrid' => [
         'baseurl' => 'https://api.sendgrid.com/v3',
         'api_key' => env('sendgrid_api__key'),
@@ -19,11 +20,12 @@ return [
         'publicize_merchant' => "d-e3fb830f20f14848b54f4a63b121b838",
         'claimbusiness' => "d-60d61b8d49b549939e148398eda52321",
         'merchantusername' => "d-5b768115aa3443578f656fa9a9284c68",
-        'unverifiedmerchant'=>"d-23424959b107453980037fb3d3debec8",
+        'unverified_merchant'=>"d-23424959b107453980037fb3d3debec8",
         'requestreview' => "d-7e9d0e22efa14c0ca98aeb964e2112a2",
         'productlist' => "d-170c383925bf41dc923dd19e282c98b5",
         'sales' => "d-bdd860861ecd4b61b278b391d3d57b72",
     ],
+    
     'marketplace' => [
         'baseurl' => 'https://api.sendgrid.com/v3',
         'api_key' => env('sendgridmarketplace_api_key'),
