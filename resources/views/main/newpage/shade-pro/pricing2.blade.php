@@ -326,7 +326,7 @@
                                 <div class="accordion" id="accordionPanelsStayOpenExample">
                                     <div class="accordion-item">
                                         <p style="font-size: .8rem" class="text-danger">
-                                            Unimited Transactions
+                                            Limited Transactions
                                         </p>
                                         <h2 class="accordion-header" id="panelsStayOpen-headingOne">
                                           <h6 >
@@ -446,7 +446,7 @@
                                 <div class="accordion" id="accordionPanelsStayOpenExample">
                                     <div class="accordion-item">
                                         <p style="font-size: .8rem" class="text-danger">
-                                            Unimited Transactions
+                                            Unlimited Transactions
                                         </p>
                                       <h2 class="accordion-header" id="panelsStayOpen-headingOne">
                                         <h6 >
@@ -590,7 +590,7 @@
                                 <div class="accordion" id="accordionPanelsStayOpenExample">
                                     <div class="accordion-item">
                                         <p style="font-size: .8rem" class="text-danger">
-                                            Unimited Transactions
+                                            Unlimited Transactions
                                         </p>
                                       <h2 class="accordion-header" id="panelsStayOpen-headingOne">
                                         <h6 >
