@@ -61,10 +61,6 @@
 									<td>{{$data->overdraftBalance}}</td>
 									<td>{{$data->overdraftLimit}}</td>
 									<td>{{$data->created_at}}</td>
-
-
-
-
 								</tr>
 
 								@php

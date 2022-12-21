@@ -28,8 +28,9 @@ use App\Http\Controllers\User; ?>
                         <br>
                         <div class="col-md-12">
                             <h3 style="font-size:18px">
-                                    {{ $data['currencyCode']->currencySymbol . '' .
-                                                        number_format(((Auth::user()->wallet_balance + Auth::user()->overdraft_balance) - $data['subscription']), 2) }}
+                                {{ $data['currencyCode']->currencySymbol . '' .
+                                number_format(((Auth::user()->wallet_balance + Auth::user()->overdraft_balance) -
+                                $data['subscription']), 2) }}
 
                             </h3>
                         </div>
@@ -220,12 +221,12 @@ use App\Http\Controllers\User; ?>
                 </div>
             </div>
             <div class="row">
-               <div class="col-md-8">
+                <div class="col-md-8">
 
-               </div>
-               <div class="col-md-4">
+                </div>
+                <div class="col-md-4">
 
-               </div>
+                </div>
             </div>
             {{-- <div class="col-md-4">
                 <div class="row">
@@ -815,13 +816,13 @@ use App\Http\Controllers\User; ?>
                                                             @if ($payInv->payment_status == 0)
                                                             <small><span class='badge badge-danger'
                                                                     style='cursor: pointer;'
-                                                                    onclick=location.href='{{ route('payment',
+                                                                    onclick=location.href='{{ route(' payment',
                                                                     $payInv->invoice_no) }}'>Pay
                                                                     Invoice</span></small>
                                                             @elseif($payInv->payment_status == 2)
                                                             <small><span class='badge badge-danger'
                                                                     style='cursor: pointer;'
-                                                                    onclick=location.href='{{ route('payment',
+                                                                    onclick=location.href='{{ route(' payment',
                                                                     $payInv->invoice_no) }}'>Pay
                                                                     Balance</span></small>
                                                             @else

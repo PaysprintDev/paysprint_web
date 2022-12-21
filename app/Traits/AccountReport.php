@@ -29,9 +29,13 @@ trait AccountReport
 			$result=[];
 
 			foreach( $activecountry as $allcountry){
-				$added=$this->addedToWallet($country);
+				$added=$this->addedToWallet($allcountry);
+				$received=$this->moneyReceived($country);
+				$withdraw=$this->withdrawFromWallet($country);
+				$monthlyfees= $this->monthlyFee($country);
+				$invoice=$this->allinvoice($country);
 			}
-				
+
 		}
 
 		public function addedToWallet($country)
@@ -39,6 +43,7 @@ trait AccountReport
         $addedAmount = Statement::where('country', $country)->where('report_status', 'Added to wallet')->sum('credit');
 
          return number_format($addedAmount,2);
+		 
 		}
 
 		public function moneyReceived($country)
@@ -62,7 +67,7 @@ trait AccountReport
 			return number_format($monthlyAmount,2);
 		}
 
-		public function invoice($country)
+		public function allinvoice($country)
 		{
 			 $monthlyAmount = Statement::where('country', $country)->where('report_status', 'Monthly fee')->sum('debit');
 

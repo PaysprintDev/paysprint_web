@@ -82,7 +82,7 @@ use App\Http\Controllers\User; ?>
 
 				<div class="card ">
 					<div class="card-header">
-						{!! session('msg') !!}
+						{{-- {!! session('msg') !!} --}}
 						<div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
 
 							{!! session('msg') !!}
@@ -478,6 +478,194 @@ use App\Http\Controllers\User; ?>
 											</td>
 										</tr>
 										@endif
+
+										@if(Auth::user()->accountType == 'Merchant')
+										<tr>
+											<td>Certificate of Incorporation</td>
+											@if(isset($data['cacdocument']))
+											<td>
+												<img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+												@else
+											<td>
+												<img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
+											</td>
+											@endif
+											<td>
+												@if(isset($data['cacdocument']))
+
+												@else
+												<!-- Button trigger modal -->
+												<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+													data-bs-target="#exampleModal6">
+													Update
+												</button>
+
+												<!-- Modal -->
+												<div class="modal fade" id="exampleModal6" tabindex="-1" role="dialog"
+													aria-labelledby="exampleModalLabel" aria-hidden="true">
+													<div class="modal-dialog" role="document">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title" id="exampleModalLabel">CAC
+																	Document</h5>
+																<button type="button" class="close"
+																	data-bs-dismiss="modal" aria-label="Close">
+																	<span aria-hidden="true">&times;</span>
+																</button>
+															</div>
+															<div class="modal-body">
+																<form action="{{route('verify cac document')}}"
+																	method="post" enctype="multipart/form-data">
+																	@csrf
+																	<div class="col-md-12">
+																		<label>Kindly Upload your CAC Document</label>
+																		<input type="file"
+																			name="incorporation_doc_front"
+																			class="form-control"
+																			placeholder="kindly enter your bvn digits">
+																	</div>
+
+
+															</div>
+															<div class="modal-footer">
+																<button type="button" class="btn btn-danger"
+																	data-bs-dismiss="modal">Close</button>
+																<button type="submit" class="btn btn-success">Save
+																</button>
+															</div>
+															</form>
+														</div>
+													</div>
+												</div>
+												@endif
+											</td>
+										</tr>
+
+										<!--Directors Document -->
+										<tr>
+											<td>Directors Document</td>
+											@if(isset($data['directorsdoc']))
+											<td>
+												<img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+												@else
+											<td>
+												<img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
+											</td>
+											@endif
+											<td>
+												@if(isset($data['directorsdoc']))
+
+												@else
+												<!-- Button trigger modal -->
+												<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+													data-bs-target="#exampleModal6">
+													Update
+												</button>
+
+												<!-- Modal -->
+												<div class="modal fade" id="exampleModal6" tabindex="-1" role="dialog"
+													aria-labelledby="exampleModalLabel" aria-hidden="true">
+													<div class="modal-dialog" role="document">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title" id="exampleModalLabel">Directors
+																	Document</h5>
+																<button type="button" class="close"
+																	data-bs-dismiss="modal" aria-label="Close">
+																	<span aria-hidden="true">&times;</span>
+																</button>
+															</div>
+															<div class="modal-body">
+																<form action="{{route('verify director document')}}"
+																	method="post" enctype="multipart/form-data">
+																	@csrf
+																	<div class="col-md-12">
+																		<label>Kindly Upload Directors
+																			Document</label>
+																		<input type="file" name="directors_document"
+																			class="form-control"
+																			placeholder="kindly enter your bvn digits">
+																	</div>
+
+
+															</div>
+															<div class="modal-footer">
+																<button type="button" class="btn btn-danger"
+																	data-bs-dismiss="modal">Close</button>
+																<button type="submit" class="btn btn-success">Save
+																</button>
+															</div>
+															</form>
+														</div>
+													</div>
+												</div>
+												@endif
+											</td>
+										</tr>
+
+										<!-- shareholders Document -->
+										<tr>
+											<td>Shareholders Document</td>
+											@if(isset($data['shareholdersdoc']))
+											<td>
+												<img src="https://img.icons8.com/fluency/48/000000/checked.png" />
+												@else
+											<td>
+												<img src="https://img.icons8.com/fluency/48/000000/cancel.png" />
+											</td>
+											@endif
+											<td>
+												@if(isset($data['shareholdersdoc']))
+
+												@else
+												<!-- Button trigger modal -->
+												<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+													data-bs-target="#exampleModal6">
+													Update
+												</button>
+
+												<!-- Modal -->
+												<div class="modal fade" id="exampleModal6" tabindex="-1" role="dialog"
+													aria-labelledby="exampleModalLabel" aria-hidden="true">
+													<div class="modal-dialog" role="document">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h5 class="modal-title" id="exampleModalLabel">
+																	Shareholders
+																	Document</h5>
+																<button type="button" class="close"
+																	data-bs-dismiss="modal" aria-label="Close">
+																	<span aria-hidden="true">&times;</span>
+																</button>
+															</div>
+															<div class="modal-body">
+																<form action="{{route('verify shareholder document')}}"
+																	method="post" enctype="multipart/form-data">
+																	@csrf
+																	<div class="col-md-12">
+																		<label>Kindly Upload Shareholders
+																			Document</label>
+																		<input type="file" name="shareholders_document"
+																			class="form-control"
+																			placeholder="kindly enter your bvn digits">
+																	</div>
+
+
+															</div>
+															<div class="modal-footer">
+																<button type="button" class="btn btn-danger"
+																	data-bs-dismiss="modal">Close</button>
+																<button type="submit" class="btn btn-success">Save
+																</button>
+															</div>
+															</form>
+														</div>
+													</div>
+												</div>
+												@endif
+											</td>
+										</tr>
+										@endif
 									</tbody>
 								</table>
 							</div>
@@ -485,13 +673,21 @@ use App\Http\Controllers\User; ?>
 								@if(Auth::user()->country == 'Nigeria')
 								@if($data['avatar'] != NULL && ($data['identitycard'] != NULL || $data['passport'] !=
 								NULL ||
-								$data['license'] != NULL) && $data['bill'] != NULL && $data['bvn'] != NULL)
+								$data['license'] != NULL) && $data['bill'] != NULL && $data['bvn'] != NULL &&
+								($data['cacdocument'] != NULL || $data['directorsdoc'] != NULL ||
+								$data['shareholdersdoc']
+								!=
+								NULL))
 								<a href="{{route('home')}}" class="btn btn-primary form-control mt-2 mb-3">Continue</a>
 								@endif
 								@else
 								@if($data['avatar'] != NULL && ($data['identitycard'] != NULL || $data['passport'] !=
 								NULL ||
-								$data['license'] != NULL) && $data['bill'] != NULL)
+								$data['license'] != NULL) && $data['bill'] != NULL &&
+								($data['cacdocument'] != NULL || $data['directorsdoc'] != NULL ||
+								$data['shareholdersdoc']
+								!=
+								NULL))
 								<a href="{{route('home')}}" class="btn btn-primary form-control mt-2 mb-3">Continue</a>
 								@endif
 								@endif

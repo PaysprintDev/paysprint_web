@@ -45,10 +45,14 @@
 								</div>
 								<tr>
 									<th>S/N</th>
+									<th>PS Account Number</th>
 									<th>Name</th>
 									<th>Email</th>
 									<th>Phone</th>
 									<th>Account Type</th>
+									<th>Approved Limit</th>
+									<th>Overdraft Balance</th>
+									<th>Available Balance</th>
 									{{-- <th>Wallet Balance</th> --}}
 									<th>Action</th>
 								</tr>
@@ -61,17 +65,20 @@
 								<tr>
 									<td>{{ $i++ }}</td>
 									@if($user=App\User::where('id',$data->userId)->first())
-									<td>{{ $user->name }}</td>
-									@endif
+									<td>{{$user->ref_code}}</td>
 
-									@if($user=App\User::where('id',$data->userId)->first())
+									<td>{{ $user->name }}</td>
+
 									<td>{{ $user->email }}</td>
-									@endif
-									@if($user=App\User::where('id',$data->userId)->first())
+
 									<td>{{ $user->telephone }}</td>
-									@endif
-									@if($user=App\User::where('id',$data->userId)->first())
+
 									<td>{{ $user->accountType }}</td>
+
+									<td>{{number_format($user->withdrawal_per_overdraft,2)}}</td>
+									<td>{{number_format($user->overdraft_balance,2)}}</td>
+									<td>{{number_format($user->wallet_balance+$user->overdraft_balance-$user->subscription,2)}}
+									</td>
 									@endif
 									{{-- <td style="font-weight: 700;">{{ $data->currencyCode.'
 										'.number_format($data->wallet_balance, 2) }}</td> --}}
