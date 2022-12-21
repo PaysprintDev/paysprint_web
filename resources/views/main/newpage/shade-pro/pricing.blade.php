@@ -335,71 +335,93 @@ use App\Http\Controllers\TransactionCost; ?>
                             <div class="accordion" id="accordionPanelsStayOpenExample">
 
                                 <div class="accordion-item">
-                                <div class="">
-                                  <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-                                    <h6>
-                                      Money Transfer
-
-                                    </h6>
-                                  </h2>
-                                  <div>
-                                    <div>
-                                        <li>
-                                            <span class="list-name">PaySprint Account - Local</span>
-                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                        </li>
-
+                                    <div class="accordion-item">
+                                   
+                                        <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                          <h6>
+                                            Money Transfer(Wallet-to-Wallet with No Fee)
+                                            {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                                          </h6>
+                                        </h2>
+                                        <div>
+                                          <div>
+                                              <li>
+                                                  <span class="list-name">Local Money Transfer</span>
+                                                  <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                              </li>
+                                            
+                                             
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="accordion-item mt-14">
+                                         
+                                          <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                            <h6>
+                                              Money Transfer(Wallet-to-Wallet. Fee Apply)
+                                              {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                                            </h6>
+                                          </h2>
+                                          <div>
+                                            <div>
+                                                <li>
+                                                    <span class="list-name">Local Money Transfer</span>
+                                                    <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                                </li>
+                                             
+                                               
+                                            </div>
+                                          </div>
+                                      </div>
+                                </div>
+                                <div class="accordion-item mt-14">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                                      <h6 >
+                                        Pay Invoice
+                                        {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                                      </h6>
+                                    </h2>
+                                    <div >
+                                      <div>
+                                          <li>
+                                              <span class="list-name">to Local Business on PaySprint (P2B)</span>
+                                              <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                          </li>
+                                          <p style="font-size: .8rem">(Pay vendors and suppliers that are on PaySprint at a click of button)</p>
+                                          <li>
+                                              <span class="list-name">to Local Business Not on PaySprint  (P2B)</span>
+                                              <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                          </li>
+                                          <p style="font-size: .8rem">(Pay vendors and suppliers that are not on PaySprint at a click of button)</p>
+                                      
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                                </div>
-                                <div class="accordion-item">
-                                    <div class="mt-32">
-                                  <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-
-                                    <h6 >
-                                      Pay Invoice
-
-                                    </h6>
-                                  </h2>
-                                  <div >
-                                    <div>
-                                        <li>
-                                            <span class="list-name">PaySprint Merchant(Local)</span>
-                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                        </li>
-
-                                        <li>
-                                            <span class="list-name">Non-PaySprint Merchant(Local)</span>
-                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                        </li>
-
-                                    </div>
-                                  </div>
-                                </div>
-                                </div>
                             </div>
 
 
-                            <div class="mt-26">
+                            <div class="">
                                 <h6 >
-                                    Other Services
+                                 Services
 
                                   </h6>
                             <li class="">
-                                <span class="list-name">PaySprint eStore</span>
+                                <span class="list-name">Shop Online</span>
                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                             </li>
+                            <p style="font-size: .8rem">(Shop online and get cash rewards from seller on PaySprint)</p>
 
                             <li>
-                                <span class="list-name">Rental Property Management</span>
+                                <span class="list-name">Manage Tenancy</span>
                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                             </li>
+                            <p style="font-size: .8rem">(Pay rents and also request for repair-work order, right on the mobile app)</p>
 
                             <li>
                                 <span class="list-name">Bill Payments</span>
                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                             </li>
+                            <p style="font-size: .8rem">(Buy Airtime,Data and Utility bills on time )</p>
                             </div>
                         </div>
                     </div>
@@ -421,76 +443,95 @@ use App\Http\Controllers\TransactionCost; ?>
                             <div class="accordion" id="accordionPanelsStayOpenExample">
 
                                 <div class="accordion-item">
-                                  <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-                                    <h6>
-                                      Money Transfer
-
-                                    </h6>
-                                  </h2>
-                                  <div>
+                                   
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                      <h6>
+                                        Money Transfer(Wallet-to-Wallet with No Fee)
+                                        {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                                      </h6>
+                                    </h2>
                                     <div>
-                                        <li>
-                                            <span class="list-name"> PaySprint Account - Local</span>
-                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                        </li>
-                                        <li>
-                                            <span class="list-name"> Non-PaySprint Account - Local</span>
-                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                        </li>
-                                        <li>
-                                            <span class="list-name">PaySprint Account - Cross Border</span>
-                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                        </li>
-
+                                      <div>
+                                          <li>
+                                              <span class="list-name">Local Money Transfer</span>
+                                              <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                          </li>
+                                          <li>
+                                              <span class="list-name"> Cross Border Money Transfer </span>
+                                              <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                          </li>
+                                         
+                                      </div>
                                     </div>
-                                  </div>
                                 </div>
-                                <div class="mt-18">
-                                  <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                                    <h6 >
-                                      Pay Invoice
-
-                                    </h6>
-                                  </h2>
-                                  <div >
-                                    <div>
-                                        <li>
-                                            <span class="list-name">PaySprint Merchant(Local)</span>
-                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                        </li>
-                                        <li>
-                                            <span class="list-name">Non-PaySprint Merchant(Local)</span>
-                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                        </li>
-                                        <li>
-                                            <span class="list-name">PaySprint Merchant (Cross Border)</span>
-                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                        </li>
+                                  <div class="accordion-item">
+                                     
+                                      <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                        <h6>
+                                          Money Transfer(Wallet-to-Wallet. Fee Apply)
+                                          {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                                        </h6>
+                                      </h2>
+                                      <div>
+                                        <div>
+                                            <li>
+                                                <span class="list-name">Local Money Transfer</span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                            <li>
+                                                <span class="list-name"> Cross Border Money Transfer </span>
+                                                <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                            </li>
+                                           
+                                        </div>
+                                      </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                                      <h6 >
+                                        Pay Invoice
+                                        {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                                      </h6>
+                                    </h2>
+                                    <div >
+                                      <div>
+                                          <li>
+                                              <span class="list-name">to Local Business on PaySprint (P2B)</span>
+                                              <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                          </li>
+                                          <p style="font-size: .8rem">(Pay vendors and suppliers that are on PaySprint at a click of button)</p>
+                                          <li>
+                                              <span class="list-name">to Local Business Not on PaySprint  (P2B)</span>
+                                              <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                          </li>
+                                          <p style="font-size: .8rem">(Pay vendors and suppliers that are not on PaySprint at a click of button)</p>
                                       
-
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
                             </div>
-                            <div class="mt-21">
+                            <div class="">
                                 <h6 >
-                                    Other Services
+                                 Services
 
                                   </h6>
                             <li class="">
-                                <span class="list-name">PaySprint eStore</span>
+                                <span class="list-name">Shop Online</span>
                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                             </li>
+                            <p style="font-size: .8rem">(Shop online and get cash rewards from seller on PaySprint)</p>
 
                             <li>
-                                <span class="list-name">Rental Property Management</span>
+                                <span class="list-name">Manage Tenancy</span>
                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                             </li>
+                            <p style="font-size: .8rem">(Pay rents and also request for repair-work order, right on the mobile app)</p>
 
                             <li>
                                 <span class="list-name">Bill Payments</span>
                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                             </li>
+                            <p style="font-size: .8rem">(Buy Airtime,Data and Utility bills on time )</p>
                             </div>
 
 
@@ -514,86 +555,101 @@ use App\Http\Controllers\TransactionCost; ?>
                             <div class="accordion" id="accordionPanelsStayOpenExample">
 
                                 <div class="accordion-item">
+                                   
                                   <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
                                     <h6>
-                                      Money Transfer
+                                      Money Transfer(Wallet-to-Wallet with No Fee)
                                       {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
                                     </h6>
                                   </h2>
                                   <div>
                                     <div>
                                         <li>
-                                            <span class="list-name"> PaySprint Account - Local</span>
+                                            <span class="list-name">Local Money Transfer</span>
                                             <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                         </li>
                                         <li>
-                                            <span class="list-name"> Non-PaySprint Account - Local</span>
+                                            <span class="list-name"> Cross Border Money Transfer </span>
                                             <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                         </li>
-                                        <li>
-                                            <span class="list-name">PaySprint Account - Cross Border</span>
-                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                        </li>
-                                        <li>
-                                            <span class="list-name"> Non-PaySprint Account - Cross Border </span>
-                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                        </li>
+                                       
                                     </div>
                                   </div>
+                                </div>
+                                <div class="accordion-item">
+                                   
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                      <h6>
+                                        Money Transfer(Wallet-to-Wallet. Fee Apply)
+                                        {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                                      </h6>
+                                    </h2>
+                                    <div>
+                                      <div>
+                                          <li>
+                                              <span class="list-name">Local Money Transfer</span>
+                                              <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                          </li>
+                                          <li>
+                                              <span class="list-name"> Cross Border Money Transfer </span>
+                                              <span class="icon check"><i class="fas fa-check-circle"></i></span>
+                                          </li>
+                                         
+                                      </div>
+                                    </div>
                                 </div>
                                 <div class="accordion-item">
                                   <h2 class="accordion-header" id="panelsStayOpen-headingThree">
                                     <h6 >
                                       Pay Invoice
-                                      {{-- <span class="icon check"><i class="fas fa-arrow-down"></i></span> --}}
+                               
                                     </h6>
                                   </h2>
                                   <div >
                                     <div>
                                         <li>
-                                            <span class="list-name">PaySprint Merchant(Local)</span>
+                                            <span class="list-name">to Local Business on PaySprint (P2B)</span>
                                             <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                         </li>
+                                        <p style="font-size: .8rem">(Pay vendors and suppliers that are on PaySprint at a click of button)</p>
                                         <li>
-                                            <span class="list-name">Non-PaySprint Merchant(Local)</span>
+                                            <span class="list-name">to Local Business Not on PaySprint  (P2B)</span>
                                             <span class="icon check"><i class="fas fa-check-circle"></i></span>
                                         </li>
-                                        <li>
-                                            <span class="list-name">PaySprint Merchant (Cross Border)</span>
-                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                        </li>
-                                       
-                                        <li>
-                                            <span class="list-name">Non-PaySprint Merchant (Cross Border)</span>
-                                            <span class="icon check"><i class="fas fa-check-circle"></i></span>
-                                        </li>
+                                        <p style="font-size: .8rem">(Pay vendors and suppliers that are not on PaySprint at a click of button)</p>
+                                    
                                     </div>
                                   </div>
                                 </div>
                             </div>
                             <div class="extras">
                                 <h6 >
-                                    Other Services
+                                    Services
 
                                   </h6>
                          
                             <li>
-                                <span class="list-name">PaySprint eStore</span>
+                                <span class="list-name">Bill Payment</span>
                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                             </li>
+                            <p style="font-size: .8rem">(Buy Airtime,Data and Utility bills on time)</p>
                             <li>
-                                <span class="list-name">Rental Property Management</span>
+                                <span class="list-name">Manage Tenancy</span>
                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                             </li>
+                            <p style="font-size: .8rem">(Pay rents and also request for repair-work order, right on the mobile app)</p>
 
                             <li>
-                                <span class="list-name">Bill Payments</span>
+                                <span class="list-name">Shop Online</span>
                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                             </li>
+                            <p style="font-size: .8rem">(Shop online and get cash rewards from seller on PaySprint)</p>
+
                             <li class="">
-                                <span class="list-name">PaySprint FX</span>
+                                <span class="list-name">Access Foreign Currency</span>
                                 <span class="icon check"><i class="fas fa-check-circle"></i></span>
                             </li>
+                            <p style="font-size: .8rem">(Create and hold other currencies wallet and hedge against flunctuation in exchange rates)</p>
                             </div>
 
                         </div>

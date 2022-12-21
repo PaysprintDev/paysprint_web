@@ -388,9 +388,9 @@ class SendGridController extends Controller
             // $thisuser = ClientInfo::get();
             
             // $thisuser = ClientInfo::inRandomOrder()->take(2)->get();
-            $thisuser = ClientInfo::where('accountMode', 'test')->get();
+            $thisuser = ClientInfo::where('accountMode', 'test')->inRandomOrder()->take(2)->get();
 
-            dd($thisuser);
+            // dd($thisuser);
 
 
             if (count($thisuser) > 0) {
@@ -434,7 +434,7 @@ class SendGridController extends Controller
                         // "url" => route('home') . '/claimmerchantbusiness?id=' . $user->id,
                     ];
 
-                    $template_id = config('constants.marketplace.claimsbusiness');
+                    $template_id = config('constants.sendgrid.unverified_merchant');
 
                     $response = $this->marketplaceDynamicMail($receiver, $data, $template_id);
 
