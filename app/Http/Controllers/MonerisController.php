@@ -3296,7 +3296,7 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                 $checkexist = MonerisActivity::where('transaction_id', $req->paymentToken)->first();
 
-                if(isset($checkexist)){
+                if (isset($checkexist)) {
 
                     $userInfo = User::select('id', 'code as countryCode', 'ref_code as refCode', 'name', 'email', 'password', 'address', 'telephone', 'city', 'state', 'country', 'zip as zipCode', 'avatar', 'api_token as apiToken', 'approval', 'accountType', 'wallet_balance as walletBalance', 'number_of_withdrawals as numberOfWithdrawal', 'transaction_pin as transactionPin', 'currencyCode', 'currencySymbol')->where('ref_code', $req->ref_code)->first();
 
@@ -3306,7 +3306,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
                     $action = 'success';
 
                     return redirect()->route('epsresponseback', 'status=' . $action . '&message=' . $message)->with($action, $message);
-
                 }
 
 
@@ -7955,6 +7954,14 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
     public function payUtilityBills(Request $req)
     {
 
+        $data = [];
+        $message = "Bill payment is currently not available. Please try again later.";
+        $status = 400;
+
+        $resData = ['data' => $data, 'message' => $message, 'status' => $status];
+
+        return $this->returnJSON($resData, $status);
+
         $thisuser = User::where('api_token', $req->bearerToken())->first();
 
         if ($thisuser->flagged === 1) {
@@ -9241,30 +9248,30 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                 $checkexist = MonerisActivity::where('transaction_id', $req->paymentToken)->first();
 
-                if(isset($checkexist)){
+                if (isset($checkexist)) {
 
                     $userInfo = User::select(
-                    'id',
-                    'code as countryCode',
-                    'ref_code as refCode',
-                    'name',
-                    'email',
-                    'password',
-                    'address',
-                    'telephone',
-                    'city',
-                    'state',
-                    'country',
-                    'zip as zipCode',
-                    'avatar',
-                    'api_token as apiToken',
-                    'approval',
-                    'accountType',
-                    'wallet_balance as walletBalance',
-                    'number_of_withdrawals as numberOfWithdrawal',
-                    'transaction_pin as transactionPin',
-                    'currencyCode',
-                    'currencySymbol'
+                        'id',
+                        'code as countryCode',
+                        'ref_code as refCode',
+                        'name',
+                        'email',
+                        'password',
+                        'address',
+                        'telephone',
+                        'city',
+                        'state',
+                        'country',
+                        'zip as zipCode',
+                        'avatar',
+                        'api_token as apiToken',
+                        'approval',
+                        'accountType',
+                        'wallet_balance as walletBalance',
+                        'number_of_withdrawals as numberOfWithdrawal',
+                        'transaction_pin as transactionPin',
+                        'currencyCode',
+                        'currencySymbol'
                     )->where('api_token', $req->api_token)->first();
 
                     $data = $userInfo;
@@ -9274,7 +9281,6 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
 
                     return redirect()->route('epsresponseback', 'status=' . $action . '&message=' . $message)->with($action, $message);
-
                 }
 
 
@@ -9741,40 +9747,39 @@ $mpgHttpPost  =new mpgHttpsPostStatus($store_id,$api_token,$status_check,$mpgReq
 
                 $checkexist = MonerisActivity::where('transaction_id', $req->paymentToken)->first();
 
-                if(isset($checkexist)){
+                if (isset($checkexist)) {
 
                     $userInfo = User::select(
-                    'id',
-                    'code as countryCode',
-                    'ref_code as refCode',
-                    'name',
-                    'email',
-                    'password',
-                    'address',
-                    'telephone',
-                    'city',
-                    'state',
-                    'country',
-                    'zip as zipCode',
-                    'avatar',
-                    'api_token as apiToken',
-                    'approval',
-                    'accountType',
-                    'wallet_balance as walletBalance',
-                    'number_of_withdrawals as numberOfWithdrawal',
-                    'transaction_pin as transactionPin',
-                    'currencyCode',
-                    'currencySymbol'
-                )->where('ref_code', $thismerchant->user_id)->first();
+                        'id',
+                        'code as countryCode',
+                        'ref_code as refCode',
+                        'name',
+                        'email',
+                        'password',
+                        'address',
+                        'telephone',
+                        'city',
+                        'state',
+                        'country',
+                        'zip as zipCode',
+                        'avatar',
+                        'api_token as apiToken',
+                        'approval',
+                        'accountType',
+                        'wallet_balance as walletBalance',
+                        'number_of_withdrawals as numberOfWithdrawal',
+                        'transaction_pin as transactionPin',
+                        'currencyCode',
+                        'currencySymbol'
+                    )->where('ref_code', $thismerchant->user_id)->first();
 
-                $data = $userInfo;
-                $status = 200;
-                $message = 'You have successfully transferred ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to ' . $thisuser->businessname . '.';
-                $action = 'success';
+                    $data = $userInfo;
+                    $status = 200;
+                    $message = 'You have successfully transferred ' . $req->currencyCode . ' ' . number_format($req->amounttosend, 2) . ' to ' . $thisuser->businessname . '.';
+                    $action = 'success';
 
 
                     return redirect()->route('epsresponseback', 'status=' . $action . '&message=' . $message)->with($action, $message);
-
                 }
 
 

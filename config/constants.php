@@ -25,7 +25,7 @@ return [
         'productlist' => "d-170c383925bf41dc923dd19e282c98b5",
         'sales' => "d-bdd860861ecd4b61b278b391d3d57b72",
     ],
-    
+
     'marketplace' => [
         'baseurl' => 'https://api.sendgrid.com/v3',
         'api_key' => env('sendgridmarketplace_api_key'),
@@ -64,6 +64,13 @@ return [
         'token' => env('VERTOFX_TOKEN'),
         'clientid' => 'XKDSE0RCKR450QQ3CBSSB2Y6CAPR',
         'apikey' => env('VERTOFX_APIKEY'),
+    ],
+     'vtpass' =>[
+        'baseurl' => env('APP_ENV') === 'local' ? env('VTPASS_BASE_URL_DEV') : env('VTPASS_BASE_URL_PROD'),
+        'basic_auth' => env('VTPASS_BASIC_AUTH'),
+        'apiKey' => env('VTPASS_API_KEY'),
+        'publicKey' => env('VTPASS_PUBLIC_KEY'),
+        'secretKey' => env('VTPASS_SECRET_KEY')
     ],
 
 ];
