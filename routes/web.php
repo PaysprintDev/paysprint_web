@@ -388,6 +388,9 @@ Route::post('verifypassport', ['uses' => 'HomeController@verifyPassport', 'as' =
 Route::post('verifybill', ['uses' => 'HomeController@verifyBill', 'as' => 'verify bill']);
 Route::post('verifylicense', ['uses' => 'HomeController@verifyLicense', 'as' => 'verify license']);
 Route::post('verifybvn', ['uses' => 'HomeController@verifyBvn', 'as' => 'verify bvn']);
+Route::post('verifycacdocument', ['uses' => 'HomeController@verifyCacDocument', 'as' => 'verify cac document']);
+Route::post('verifydirectorsdocument', ['uses' => 'HomeController@verifyDirectorDocument', 'as' => 'verify director document']);
+Route::post('verifyshareholderdocument', ['uses' => 'HomeController@verifyShareholderDocument', 'as' => 'verify shareholder document']);
 
 // Terms or USE
 Route::get('terms-of-service', ['uses' => 'HomeController@termsOfUse', 'as' => 'terms of use']);

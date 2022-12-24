@@ -46,8 +46,8 @@
 								<tr>
 									<th>S/N</th>
 									<th>Country</th>
-									<th>TotaL Amount Sent</th>
-									<th>Total Overdraft Balance</th>
+									<th>Total Approved Limit</th>
+									<th>Overdraft Balance</th>
 									<th>Action</th>
 								</tr>
 							</thead>
@@ -60,7 +60,7 @@
 									<td>{{ $data->country }}</td>
 
 									@if($totPay = \App\OverdraftTransaction::where('country',
-									$data->country)->sum('amountToSend'))
+									$data->country)->distinct()->sum('overdraftLimit'))
 									<td style="font-weight: 700;">{{ $data->currencyCode.' '.number_format($totPay, 2)
 										}}</td>
 

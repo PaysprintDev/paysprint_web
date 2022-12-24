@@ -55,4 +55,25 @@ trait AccountCheck
 			return $bvn;
 
   }
+
+  public function checkIncorporationDocument($id)
+  {
+	$details=User::where('id',$id)->first();
+	$incorporatedocument=$details->incorporation_doc_front;
+	return $incorporatedocument;
+  }
+
+  public function checkDirectorsDocument($id)
+  {
+	$details=User::where('id',$id)->first();
+	$directorsdocument=$details->directors_document;
+	return $directorsdocument;
+  }
+
+  public function checkShareholdersDocument($id)
+  {
+	$details=User::where('id',$id)->first();
+	$shareholdersdocument=$details->shareholders_document;
+	return $shareholdersdocument;
+  }
 }
