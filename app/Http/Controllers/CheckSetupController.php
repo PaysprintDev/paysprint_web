@@ -8,9 +8,11 @@ use App\ClientInfo;
 
 use App\User as User;
 
+use App\EscrowAccount;
 use App\Mail\sendEmail;
 use App\Traits\Trulioo;
 use App\FlutterwaveModel;
+use App\Traits\OneSignal;
 use App\Traits\Xwireless;
 use App\AddBank as AddBank;
 use App\AddCard as AddCard;
@@ -20,13 +22,12 @@ use Illuminate\Http\Request;
 use App\Traits\AccountNotify;
 use App\Traits\ExpressPayment;
 use App\Traits\PaymentGateway;
-use App\Traits\OneSignal;
 use App\Statement as Statement;
 use App\FlutterwavePaymentRecord;
 use App\ImportExcel as ImportExcel;
+
+
 use App\Traits\MailChimpNewsLetter;
-
-
 use App\UpgradePlan as UpgradePlan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -2842,6 +2843,58 @@ in the your business category.</p> <p>This means your competitors are receiving 
     }
 
 
+
+    public function yearlyPerformance()
+    {
+        try {
+            $moneris = new MonerisController();
+
+            $users = User::all();
+
+            foreach($users as $user){
+                // Get Statement...
+
+                $topUp = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Added%')->sum('credit');
+
+                $withdrawal = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Withdraw%')->sum('debit');
+
+                $sendMoney = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Transfer%')->sum('debit');
+
+                $received = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Received%')->sum('debit');
+
+                $utility = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Success:%')->sum('debit');
+
+                $paidInvoice = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Payment%')->sum('debit');
+
+                $receivedInvoice = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Invoice%')->sum('credit');
+
+                $reversedFund = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Reversal%')->sum('credit');
+
+                // Check FX Created...
+                $escrowAccount = EscrowAccount::where('user_id', $user->id)->count('country');
+
+                $savings = ($sendMoney * 0.03) + ($utility * 0.03) + ($paidInvoice * 0.03);
+
+                // Generate mail
+
+                $moneris->name = $user->name;
+                $moneris->email = $user->email;
+                $moneris->subject = "Your performance report in ".date('Y');
+
+                $moneris->message = '<p>We are glad that you made it to the new year and we celebrate with you.</p><p>We are also excited to share with you how PaySprint Account has saved you so much more in the Year '.date('Y').'</p><p>Overall Performance: <br><br> PaySprint saves you a total sum of <b>'.$user->currencySymbol.''.number_format($savings, 2).'</b> in fees in '.date('Y').'</p><p>Here are the details:</p><hr><p>Wallet Top Up: <b>'.$user->currencyCode.' '.number_format($topUp, 2).'</b></p><p>Withdrawal: <b>'.$user->currencyCode.' '.number_format($withdrawal, 2).'</b></p><p>Send Money: <b>'.$user->currencyCode.' '.number_format($sendMoney, 2).'</b>. <br><span style="color: navy"> PaySprint saves you <b>'.$user->currencyCode.' '.number_format(($sendMoney * 0.03), 2).'</b></span></p><p>Received Money: <b>'.$user->currencyCode.' '.number_format($received, 2).'</b></p><p>Utility Purchase: <b>'.$user->currencyCode.' '.number_format($utility, 2).'</b>. <br><span style="color: navy">PaySprint saves you <b>'.$user->currencyCode.' '.number_format(($utility * 0.03), 2).'</b></span></p><p>Received Invoice: <b>'.$user->currencyCode.' '.number_format($receivedInvoice, 2).'</b></p><p>Paid Invoice: <b>'.$user->currencyCode.' '.number_format($paidInvoice, 2).'</b></p><p>Reversed Funds: <b>'.$user->currencyCode.' '.number_format($reversedFund, 2).'</b></p><hr><p>Other Activities</p><p>You created <b>'.$escrowAccount.' FX '.($escrowAccount > 1 ? 'wallets' : 'wallet').'</b></p><p>You can save so much more money with PaySprint in <b>'.(date('Y') + 1).'</b>.</p><br><p> Wishing you a prosperous New Year🎄</p><p> Yours</p><p> Customer Success Team @ PaySprint</p>';
+
+
+                $moneris->sendEmail($moneris->email, "Fund remittance");
+
+            }
+
+
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+    }
+
+
     public function testOneSignal()
     {
         // $playerId = "2b0d312a-04ee-430f-91b8-d3a0d3bca40d";
@@ -2856,7 +2909,6 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
 
 
-    // Update Notification Table
     public function notificationTable()
     {
         $data = $this->updateNotificationTable();
@@ -2868,12 +2920,7 @@ in the your business category.</p> <p>This means your competitors are receiving 
     }
 
 
-    // TODO1:: Set an array of key value, country => [prices];
-    // TODO2:: Get all the countries...
-    // TODO3:: Loop through, to get their prices...
-    // TODO4:: Update their prices with the array stack on TODO1..
 
-    
 
 
     public function insStatement($email, $reference_code, $activity, $credit, $debit, $balance, $trans_date, $status, $action, $regards, $state, $statement_route, $auto_deposit)

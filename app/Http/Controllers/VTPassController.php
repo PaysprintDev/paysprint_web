@@ -45,4 +45,11 @@ class VTPassController extends Controller
 
         return $data;
     }
+
+    public function purchaseProduct($bodyData)
+    {
+        $data = $this->productPurcahse($bodyData);
+
+        return $data;
+    }
 }

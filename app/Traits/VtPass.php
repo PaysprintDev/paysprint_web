@@ -15,10 +15,9 @@ trait VtPass
     {
         try {
 
-            $this->vtPassUrl = config('constants.vtpass.baseurl').'/balance';
+            $this->vtPassUrl = config('constants.vtpass.baseurl') . '/balance';
 
             $data = $this->vtPassGetCurl();
-
         } catch (\Throwable $th) {
             $data = [
                 'error' => $th->getMessage()
@@ -32,10 +31,9 @@ trait VtPass
     {
         try {
 
-            $this->vtPassUrl = config('constants.vtpass.baseurl').'/service-categories';
+            $this->vtPassUrl = config('constants.vtpass.baseurl') . '/service-categories';
 
             $data = $this->vtPassGetCurl();
-
         } catch (\Throwable $th) {
             $data = [
                 'error' => $th->getMessage()
@@ -50,10 +48,9 @@ trait VtPass
     {
         try {
 
-            $this->vtPassUrl = config('constants.vtpass.baseurl').'/services?identifier='.$identifier;
+            $this->vtPassUrl = config('constants.vtpass.baseurl') . '/services?identifier=' . $identifier;
 
             $data = $this->vtPassGetCurl();
-
         } catch (\Throwable $th) {
             $data = [
                 'error' => $th->getMessage()
@@ -67,10 +64,9 @@ trait VtPass
     {
         try {
 
-            $this->vtPassUrl = config('constants.vtpass.baseurl').'/service-variations?serviceID='.$serviceId;
+            $this->vtPassUrl = config('constants.vtpass.baseurl') . '/service-variations?serviceID=' . $serviceId;
 
             $data = $this->vtPassGetCurl();
-
         } catch (\Throwable $th) {
             $data = [
                 'error' => $th->getMessage()
@@ -84,10 +80,9 @@ trait VtPass
     {
         try {
 
-            $this->vtPassUrl = config('constants.vtpass.baseurl').'/options?serviceID='.$serviceId.'&name='.$name;
+            $this->vtPassUrl = config('constants.vtpass.baseurl') . '/options?serviceID=' . $serviceId . '&name=' . $name;
 
             $data = $this->vtPassGetCurl();
-
         } catch (\Throwable $th) {
             $data = [
                 'error' => $th->getMessage()
@@ -97,12 +92,69 @@ trait VtPass
         return $data;
     }
 
+    public function productPurcahse($body)
+    {
+        try {
+
+            $this->vtPassUrl = config('constants.vtpass.baseurl') . '/pay';
+
+            switch ($body['type']) {
+                case 'airtime':
+                    $requestData = [
+                        'request_id' => date('YmdHis') . time(),
+                        'serviceID' => $body['serviceID'],
+                        'amount' => $body['amount'],
+                        'phone' => $body['phone']
+                    ];
+                case 'data':
+                    $requestData = [
+                        'request_id' => date('YmdHis') . time(),
+                        'serviceID' => $body['serviceID'],
+                        'billersCode' => $body['billersCode'],
+                        'variation_code' => $body['variation_code'],
+                        'amount' => $body['amount'],
+                        'phone' => $body['phone']
+                    ];
+                case 'tv':
+                    $requestData = [
+                        'request_id' => date('YmdHis') . time(),
+                        'serviceID' => $body['serviceID'],
+                        'billersCode' => $body['billersCode'],
+                        'variation_code' => $body['variation_code'],
+                        'amount' => $body['amount'],
+                        'phone' => $body['phone'],
+                        'subscription_type' => $body['subscription_type'],
+                        'quantity' => $body['quantity']
+                    ];
+                    break;
+
+                default:
+                    $requestData = [];
+                    break;
+            }
+
+            $this->vtPassPost = $requestData;
 
 
-        // CURL Option...
+            $data = $this->vtPassPostCurl();
+        } catch (\Throwable $th) {
+            $data = [
+                'error' => $th->getMessage()
+            ];
+        }
+
+
+        return $data;
+    }
+
+
+
+    // CURL Option...
 
     public function vtPassPostCurl()
     {
+
+
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -116,7 +168,6 @@ trait VtPass
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => $this->vtPassPost,
             CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
                 'Authorization: Basic ' . config('constants.vtpass.basic_auth')
             ),
         ));
