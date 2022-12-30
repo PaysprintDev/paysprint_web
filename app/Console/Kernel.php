@@ -131,7 +131,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('moextopsallpayed:run')->everyMinute();
         $schedule->command('mailtoverifiedmerchants:run')->monthly();
         $schedule->command('platformcurrencyconverter:run')->twiceDaily(1, 13);
-        $schedule->command('yearlyperformance:run')->yearlyOn(12, 31, '15:00');
+        $schedule->command('yearlyperformance:run')->cron('0 15 31 12 *');
 
     }
 

@@ -2847,6 +2847,15 @@ in the your business category.</p> <p>This means your competitors are receiving 
     public function yearlyPerformance()
     {
         try {
+
+            $currentYear = date('Y');
+
+            $date = Carbon::createFromDate($currentYear, 1, 1);
+
+            $startOfYear = $date->copy()->startOfYear();
+            $endOfYear   = $date->copy()->endOfYear();
+
+
             $moneris = new MonerisController();
 
             $users = User::all();
@@ -2854,21 +2863,21 @@ in the your business category.</p> <p>This means your competitors are receiving 
             foreach($users as $user){
                 // Get Statement...
 
-                $topUp = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Added%')->sum('credit');
+                $topUp = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Added%')->whereBetween('updated_at', [$startOfYear, $endOfYear])->sum('credit');
 
-                $withdrawal = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Withdraw%')->sum('debit');
+                $withdrawal = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Withdraw%')->whereBetween('updated_at', [$startOfYear, $endOfYear])->sum('debit');
 
-                $sendMoney = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Transfer%')->sum('debit');
+                $sendMoney = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Transfer%')->whereBetween('updated_at', [$startOfYear, $endOfYear])->sum('debit');
 
-                $received = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Received%')->sum('debit');
+                $received = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Received%')->whereBetween('updated_at', [$startOfYear, $endOfYear])->sum('debit');
 
-                $utility = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Success:%')->sum('debit');
+                $utility = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Success:%')->whereBetween('updated_at', [$startOfYear, $endOfYear])->sum('debit');
 
-                $paidInvoice = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Payment%')->sum('debit');
+                $paidInvoice = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Payment%')->whereBetween('updated_at', [$startOfYear, $endOfYear])->sum('debit');
 
-                $receivedInvoice = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Invoice%')->sum('credit');
+                $receivedInvoice = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Invoice%')->whereBetween('updated_at', [$startOfYear, $endOfYear])->sum('credit');
 
-                $reversedFund = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Reversal%')->sum('credit');
+                $reversedFund = Statement::where('user_id', $user->email)->where('activity', 'LIKE', '%Reversal%')->whereBetween('updated_at', [$startOfYear, $endOfYear])->sum('credit');
 
                 // Check FX Created...
                 $escrowAccount = EscrowAccount::where('user_id', $user->id)->count('country');
@@ -2879,9 +2888,9 @@ in the your business category.</p> <p>This means your competitors are receiving 
 
                 $moneris->name = $user->name;
                 $moneris->email = $user->email;
-                $moneris->subject = "Your performance report in ".date('Y');
+                $moneris->subject = "Your performance report in ".$currentYear;
 
-                $moneris->message = '<p>We are glad that you made it to the new year and we celebrate with you.</p><p>We are also excited to share with you how PaySprint Account has saved you so much more in the Year '.date('Y').'</p><p>Overall Performance: <br><br> PaySprint saves you a total sum of <b>'.$user->currencySymbol.''.number_format($savings, 2).'</b> in fees in '.date('Y').'</p><p>Here are the details:</p><hr><p>Wallet Top Up: <b>'.$user->currencyCode.' '.number_format($topUp, 2).'</b></p><p>Withdrawal: <b>'.$user->currencyCode.' '.number_format($withdrawal, 2).'</b></p><p>Send Money: <b>'.$user->currencyCode.' '.number_format($sendMoney, 2).'</b>. <br><span style="color: navy"> PaySprint saves you <b>'.$user->currencyCode.' '.number_format(($sendMoney * 0.03), 2).'</b></span></p><p>Received Money: <b>'.$user->currencyCode.' '.number_format($received, 2).'</b></p><p>Utility Purchase: <b>'.$user->currencyCode.' '.number_format($utility, 2).'</b>. <br><span style="color: navy">PaySprint saves you <b>'.$user->currencyCode.' '.number_format(($utility * 0.03), 2).'</b></span></p><p>Received Invoice: <b>'.$user->currencyCode.' '.number_format($receivedInvoice, 2).'</b></p><p>Paid Invoice: <b>'.$user->currencyCode.' '.number_format($paidInvoice, 2).'</b></p><p>Reversed Funds: <b>'.$user->currencyCode.' '.number_format($reversedFund, 2).'</b></p><hr><p>Other Activities</p><p>You created <b>'.$escrowAccount.' FX '.($escrowAccount > 1 ? 'wallets' : 'wallet').'</b></p><p>You can save so much more money with PaySprint in <b>'.(date('Y') + 1).'</b>.</p><br><p> Wishing you a prosperous New Year🎄</p><p> Yours</p><p> Customer Success Team @ PaySprint</p>';
+                $moneris->message = '<p>We are glad that you made it to the new year and we celebrate with you.</p><p>We are also excited to share with you how PaySprint Account has saved you so much more in the Year '.$currentYear.'</p><p>Overall Performance: <br><br> PaySprint saves you a total sum of <b>'.$user->currencySymbol.''.number_format($savings, 2).'</b> in fees in '.$currentYear.'</p><p>Here are the details:</p><hr><p>Wallet Top Up: <b>'.$user->currencyCode.' '.number_format($topUp, 2).'</b></p><p>Withdrawal: <b>'.$user->currencyCode.' '.number_format($withdrawal, 2).'</b></p><p>Send Money: <b>'.$user->currencyCode.' '.number_format($sendMoney, 2).'</b>. <br><span style="color: navy"> PaySprint saves you <b>'.$user->currencyCode.' '.number_format(($sendMoney * 0.03), 2).'</b></span></p><p>Received Money: <b>'.$user->currencyCode.' '.number_format($received, 2).'</b></p><p>Utility Purchase: <b>'.$user->currencyCode.' '.number_format($utility, 2).'</b>. <br><span style="color: navy">PaySprint saves you <b>'.$user->currencyCode.' '.number_format(($utility * 0.03), 2).'</b></span></p><p>Received Invoice: <b>'.$user->currencyCode.' '.number_format($receivedInvoice, 2).'</b></p><p>Paid Invoice: <b>'.$user->currencyCode.' '.number_format($paidInvoice, 2).'</b></p><p>Reversed Funds: <b>'.$user->currencyCode.' '.number_format($reversedFund, 2).'</b></p><hr><p>Other Activities</p><p>You created <b>'.$escrowAccount.' FX '.($escrowAccount > 1 ? 'wallets' : 'wallet').'</b></p><p>You can save so much more money with PaySprint in <b>'.($currentYear + 1).'</b>.</p><br><p> Wishing you a prosperous New Year🎄</p><p> Yours</p><p> Customer Success Team @ PaySprint</p>';
 
 
                 $moneris->sendEmail($moneris->email, "Fund remittance");
