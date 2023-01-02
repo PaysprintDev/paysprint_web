@@ -31,7 +31,7 @@
                                 <li class="py-2"><a
                                         class="gr-text-9 text-primary font-weight-bold hover-underline active"
                                         href="mailto:info@paysprint.ca"><i class="fa fa-envelope"
-                                            aria-hidden="true"></i> info@paysprint.ca</a></li>
+                                            aria-hidden="true"></i>support@paysprint.zohodesk.com</a></li>
                             @endif
 
                             <li class="py-2"><a
@@ -231,6 +231,8 @@
                         
                     </div>
                 </div>
+                <img src="{{ asset('images/visa.png') }}" alt="" width="320"
+                    height="70">
             </div>
             <div class="copyright-area border-top pt-9 pb-8">
                 <div class="row align-items-center">
