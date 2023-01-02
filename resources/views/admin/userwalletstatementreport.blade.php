@@ -32,22 +32,28 @@
             </div>
 
               <h3 class="box-title">&nbsp;</h3> <br>
+
+              <div class="row">
+                  <div class="col-md-12">
+                    <select data-show-subtext="true" data-live-search="true" id="country_record" class="form-control selectpicker">
+                        @if (count($thisdata['country']) > 0)
+                        <option value="all" selected>Select Country</option>
+                            @foreach ($thisdata['country'] as $country)
+                                <option value="{{ $country->name }}" data-subtext="">{{ $country->name }}</option>
+                            @endforeach
+                        @else
+                           <option value="" data-subtext="">No Record</option>
+                        @endif
+                    </select>
+                  </div>
+                </div>
+
               <form action="{{ route('user wallet report') }}" method="GET">
                 @csrf
                   <br>
                 <div class="row">
                   <div class="col-md-12">
-                    <select data-show-subtext="true" data-live-search="true" name="user_id" class="form-control selectpicker" id="statement_service">
-                        @if (count($thisdata['allusers']) > 0)
-                          <option value="all" selected>Check All Wallet History</option>
-                            @foreach ($thisdata['allusers'] as $users)
-                            
-                                <option value="{{ $users->email }}" data-subtext="- Account Number: {{ $users->ref_code }}" {{ (Request::get('user_id') == $users->email) ? "selected" : "" }} >{{ $users->name }}</option>
-                            @endforeach
-                        @else
-                           <option value="" data-subtext="">No Record</option> 
-                        @endif
-                    </select>
+                    <select name="user_id" class="form-control" id="statement_service"></select>
                   </div>
                 </div>
                 <br>
@@ -65,11 +71,11 @@
                     {{-- onclick="checkStatement()" --}}
 
                     <button class="btn btn-primary" type="submit">Check Transactions History<img src="https://i.ya-webdesign.com/images/loading-gif-png-5.gif" class="spinner disp-0" style="width: 40px; height: 40px;"></button>
-                    
+
                   </div>
                 </div>
               </form>
-              
+
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -77,9 +83,9 @@
                 <table class="table table-bordered table-striped">
                     <tbody>
                         <tr>
-                            
-                                
-                            
+
+
+
                         <td colspan="3" align="center"><strong style="font-size: 24px;">Wallet Statement for @if (Request::get('user_id') == "all")
                             All Users
                         @else
@@ -102,7 +108,7 @@
                     <button type="submit" class="btn btn-success">Export to Excel</button>
                 </form>
 
-                
+
 
                 <br>
                 <br>
@@ -169,16 +175,16 @@
 
                                     @endif
 
-                                
+
                             </tr>
-        
+
                         @endforeach
                     @endif
                 </tbody>
               </table>
 
 
-              
+
             </div>
             <!-- /.box-body -->
           </div>

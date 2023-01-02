@@ -176,7 +176,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'ajaxgetlinkCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage','merchantUseCase','merchantHome', 'storeAskedQuestions', 'expressResponseback', 'displayCountry', 'displayCountryMerchant', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts', 'rentalManagementAdminviewfacility']]);
+        $this->middleware('auth', ['except' => ['homePage', 'estores', 'merchantIndex', 'index', 'about', 'ajaxregister', 'ajaxlogin', 'contact', 'service', 'loginApi', 'setupBills', 'checkmyBills', 'invoice', 'payment', 'getmyInvoice', 'myreceipt', 'getPayment', 'getmystatement', 'getOrganization', 'contactus', 'ajaxgetBronchure', 'rentalManagement', 'maintenance', 'amenities', 'messages', 'paymenthistory', 'documents', 'otherservices', 'ajaxcreateMaintenance', 'maintenanceStatus', 'maintenanceView', 'maintenancedelete', 'maintenanceEdit', 'updatemaintenance', 'rentalManagementAdmin', 'rentalManagementAdminMaintenance', 'rentalManagementAdminMaintenanceview', 'rentalManagementAdminfacility', 'rentalManagementAdminconsultant', 'rentalManagementassignconsultant', 'rentalManagementConsultant', 'rentalManagementConsultantWorkorder', 'rentalManagementConsultantMaintenance', 'rentalManagementConsultantInvoice', 'rentalManagementAdminviewinvoices', 'rentalManagementAdminviewconsultant', 'rentalManagementAdmineditconsultant', 'rentalManagementConsultantQuote', 'rentalManagementAdminviewquotes', 'rentalManagementAdminnegotiate', 'rentalManagementConsultantNegotiate', 'rentalManagementConsultantMymaintnenance', 'facilityview', 'rentalManagementAdminWorkorder', 'ajaxgetFacility', 'ajaxgetbuildingaddress', 'ajaxgetCommission', 'ajaxgetlinkCommission', 'termsOfUse', 'privacyPolicy', 'ajaxnotifyupdate', 'feeStructure', 'feeStructure2', 'expressUtilities', 'expressBuyUtilities', 'selectCountryUtilityBills', 'myRentalManagementFacility', 'rentalManagementAdminStart', 'haitiDonation', 'paymentFromLink', 'claimedPoints', 'cashAdvance', 'consumerPoints', 'community', 'askQuestion', 'subMessage', 'storeSubMessage','merchantUseCase','merchantHome', 'storeAskedQuestions', 'expressResponseback', 'displayCountry', 'displayCountryMerchant', 'searchCountry', 'ajaxgetwalletBalance', 'getStartedAccounts', 'rentalManagementAdminviewfacility', 'getuserByCountry']]);
 
         $location = $this->myLocation();
 
@@ -230,7 +230,7 @@ class HomeController extends Controller
                     'products' => StoreProducts::get(),
                     'subscription' => $this->minimumBalanceCost(Auth::user()->country, Auth::user()->accountType)
                 );
-                    // dd($data['products']);
+                    
                 $view = 'home';
             } else {
 
@@ -253,15 +253,15 @@ class HomeController extends Controller
                 'continent' => $this->timezone[0],
                 'availablecountry' => $allcountry,
                 'country' => $country,
-                'totaltransactions' => $this->totalTransaction($country),
+                'totaltransactions' => $this->accountReport($country),
                 'code'=> $this->currencyCode($country),
                 'totalusers' => $this->noUsers($country),
                 'totaldays' => $this->totalDays(),
+                'subscription' => 0,
 
             ];
         }
 
-        // dd($data['totaltransactions']);
 
 
 
@@ -506,7 +506,8 @@ class HomeController extends Controller
                     'userdetails' => $this->checkTrial(Auth::id()),
                     'pending' => User::where('id', Auth::id())->where('account_check', 2)->first(),
                     'status' => User::where('id', Auth::id())->where('account_check', '!=', 2)->first(),
-                    'specialpromo' => $this->specialpromoCount()
+                    'specialpromo' => $this->specialpromoCount(),
+                    'subscription' => $this->minimumBalanceCost(Auth::user()->country, Auth::user()->accountType)
 
                 );
             } else {
@@ -1984,9 +1985,14 @@ class HomeController extends Controller
     {
         $data = TransactionCost::where('country', $country)->where('structure', $accountType === 'Merchant' ? 'Merchant Monthly Subscription' : 'Consumer Monthly Subscription')->first();
 
-        $price = (double)$data->fixed;
+        if(isset($data)){
+            $fixed =$data->fixed;
+        }else{
+            $fixed=0;
+        }
 
-        return $price;
+        return (double)$fixed;
+      
     }
 
 
@@ -4865,16 +4871,87 @@ class HomeController extends Controller
         return back()->with("msg", "<div class='alert alert-success'>Bvn Updated Successfully</div>");
     }
 
+    public function verifyCacDocument(Request $req)
+    {
+        $id=Auth::id();
+
+        $user=User::where('id',$id)->first();
+
+
+        $validation=Validator::make($req->all(),[
+            'incorporation_doc_front' => 'required'
+        ]);
+
+          if($req->hasfile('incorporation_doc_front')){
+
+            $this->uploadDocument($user->id, $req->file('incorporation_doc_front'), 'document/incorporation_doc_front', 'incorporation_doc_front');
+
+           $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded your document.");
+           
+        }
+
+        return back()->with("msg", "<div class='alert alert-success'> Cac Document Uploaded Successfully</div>");
+    }
+
+     public function verifyDirectorDocument(Request $req)
+    {
+        
+        $id=Auth::id();
+
+        $user=User::where('id',$id)->first();
+
+
+        $validation=$req->validate([
+            'directors_document' => 'required'
+        ]);
+        
+        
+        if($req->hasfile('directors_document')){
+       
+            $this->uploadDocument($user->id, $req->file('directors_document'), 'document/directors_document','directors_document');
+
+           $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded your document.");
+
+        }
+
+        return back()->with("msg", "<div class='alert alert-success'> Directors Document Uploaded Successfully</div>");
+    }
+
+     public function verifyShareholderDocument(Request $req)
+    {
+        $id=Auth::id();
+
+        $user=User::where('id',$id)->first();
+
+
+        $validation=Validator::make($req->all(),[
+            'shareholders_document' => 'required'
+        ]);
+
+          if($req->hasfile('shareholders_document')){
+           
+
+            $this->uploadDocument($user->id, $req->file('shareholders_document'), 'document/shareholders_document', 'shareholders_document');
+
+           $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded your document.");
+
+        }
+
+        return back()->with("msg", "<div class='alert alert-success'>Shareholders Document Uploaded Successfully</div>");
+    }
+
     public function checkVerification(Request $req)
     {
         $data=[
-          'avatar' =>   $avatar = $this->checkingProfilePicture(Auth::id()),
-       'identitycard' =>  $identitycard = $this->checkingIdentityCard(Auth::id()),
+        'avatar' =>   $avatar = $this->checkingProfilePicture(Auth::id()),
+        'identitycard' =>  $identitycard = $this->checkingIdentityCard(Auth::id()),
         'passport' => $passport= $this->checkingInternationalPassport(Auth::id()),
-       'license' => $license = $this->checkingDrivingLicense(Auth::id()),
+        'license' => $license = $this->checkingDrivingLicense(Auth::id()),
         'bill' => $bill= $this->checkingUtilityBill(Auth::id()),
         'bvn' => $bvn= $this->checkingBvn(Auth::id()),
-
+        'cacdocument' => $cac = $this->checkIncorporationDocument(Auth::id()),
+        'directorsdoc' => $directors = $this->checkDirectorsDocument(Auth::id()),
+        'shareholdersdoc' => $shareholders = $this->checkShareholdersDocument(Auth::id())
         ];
 
         // dd($data);
@@ -4901,8 +4978,16 @@ class HomeController extends Controller
         $license = $this->checkingDrivingLicense(Auth::id());
         $bill= $this->checkingUtilityBill(Auth::id());
         $bvn= $this->checkingBvn(Auth::id());
+        $cac = $this->checkIncorporationDocument(Auth::id());
+        $directors = $this->checkDirectorsDocument(Auth::id());
+        $shareholders = $this->checkShareholdersDocument(Auth::id());
 
         if($avatar == null || ($identitycard == null && $passport == null && $license === null ) || $bill === null){
+            return redirect()->route('check verification page');
+        }
+
+        if(Auth::user()->accountType == 'Merchant' && $cac === null || $directors === null || $shareholders === null)
+        {
             return redirect()->route('check verification page');
         }
 
@@ -7131,6 +7216,37 @@ class HomeController extends Controller
         }
     }
 
+
+
+    // Get Users By Country...
+    public function getuserByCountry(Request $req)
+    {
+        try{
+
+            $data = User::where('country', $req->get('country'))->orderBy('name', 'ASC')->get();
+
+            $status = 200;
+
+            $resData = [
+                'data' => $data,
+                'message' => 'Success'
+            ];
+        }
+        catch(\Throwable $th){
+
+            $status = 400;
+
+            $resData = [
+                'data' => [],
+                'message' => $th->getMessage()
+            ];
+        }
+
+        return $this->returnJSON($resData, $status);
+
+    }
+
+
     public function convertCurrencyRate($foreigncurrency, $localcurrency, $amount)
     {
 
@@ -7608,7 +7724,8 @@ class HomeController extends Controller
         $docPath = "http://" . $_SERVER['HTTP_HOST'] . "/" . $pathWay . "/" . $fileNameToStore;
 
 
-        User::where('id', $id)->update(['' . $rowName . '' => $docPath, 'lastUpdated' => date('Y-m-d H:i:s')]);
+       User::where('id', $id)->update(['' . $rowName . '' => $docPath, 'lastUpdated' => date('Y-m-d H:i:s')]);
+       
 
         $this->updatePoints($id, 'Quick Set Up');
     }

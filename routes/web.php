@@ -250,12 +250,13 @@ Route::get('/clear', function () {
 // Major Routes
 
 
-Route::get('/', ['uses' => 'HomeController@homePage', 'as' => 'home']);
+Route::get('/', ['uses' => 'HomeController@merchantHome', 'as' => 'merchant home']);
+Route::get('/consumer-home', ['uses' => 'HomeController@homePage', 'as' => 'home']);
 Route::get('/userjourney', ['uses' => 'HomeController@userJourney', 'as' => 'user journey']);
 Route::get('/estore', ['uses' => 'HomeController@estores', 'as' => 'paysprint estore']);
 
 Route::get('/merchant-test', ['uses' => 'HomeController@merchantIndex', 'as' => 'merchant test']);
-Route::get('/merchant-home', ['uses' => 'HomeController@merchantHome', 'as' => 'merchant home']);
+// Route::get('/merchant-home', ['uses' => 'HomeController@merchantHome', 'as' => 'merchant home']);
 Route::get('/usecase', ['uses' => 'HomeController@merchantUseCase', 'as' => 'use case']);
 Route::get('/accounts', ['uses' => 'HomeController@getStartedAccounts', 'as' => 'accounts']);
 
@@ -387,6 +388,9 @@ Route::post('verifypassport', ['uses' => 'HomeController@verifyPassport', 'as' =
 Route::post('verifybill', ['uses' => 'HomeController@verifyBill', 'as' => 'verify bill']);
 Route::post('verifylicense', ['uses' => 'HomeController@verifyLicense', 'as' => 'verify license']);
 Route::post('verifybvn', ['uses' => 'HomeController@verifyBvn', 'as' => 'verify bvn']);
+Route::post('verifycacdocument', ['uses' => 'HomeController@verifyCacDocument', 'as' => 'verify cac document']);
+Route::post('verifydirectorsdocument', ['uses' => 'HomeController@verifyDirectorDocument', 'as' => 'verify director document']);
+Route::post('verifyshareholderdocument', ['uses' => 'HomeController@verifyShareholderDocument', 'as' => 'verify shareholder document']);
 
 // Terms or USE
 Route::get('terms-of-service', ['uses' => 'HomeController@termsOfUse', 'as' => 'terms of use']);
@@ -829,6 +833,9 @@ Route::prefix('Admin/wallet')->group(function () {
 	Route::post('actonreturnrefundmoney/{reference_code}', ['uses' => 'AdminController@returnRefundMoney', 'as' => 'act on return refund money']);
 
 	Route::get('balancebycountry', ['uses' => 'AdminController@balanceByCountry', 'as' => 'balance by country']);
+	Route::get('overdraftbycountry', ['uses' => 'AdminController@overdraftByCountry', 'as' => 'overdraft by country']);
+	Route::get('overdraftdetails', ['uses' => 'AdminController@overdraftDetails', 'as' => 'overdraft details']);
+	Route::get('closedbalancebycountry', ['uses' => 'AdminController@closedBalanceByCountry', 'as' => 'close balance by country']);
 	Route::get('maintenancefee', ['uses' => 'AdminController@maintenancefeeDetail', 'as' => 'maintenance fee detail']);
 	Route::get('maintenancefeebycountry', ['uses' => 'AdminController@maintenancefeeByCountry', 'as' => 'maintenance fee by country']);
 
@@ -1091,7 +1098,7 @@ Route::prefix('Admin/')->group(function () {
 	Route::get('viewbeneficiarydetail/{id}', ['uses' => 'AdminController@crossBorderBeneficiaryDetail', 'as' => 'view beneficiary detail']);
 
 	Route::get('userspoint', ['uses' => 'AdminController@usersPoint', 'as' => 'users points']);
-
+	Route::get('/overdraftreport',['uses' => 'AdminController@overdraftReport', 'as' => 'overdraft report']);
 
 
 	Route::get('gatewayactivity', ['uses' => 'AdminController@gatewayActivity', 'as' => 'gateway activity']);
@@ -1378,6 +1385,7 @@ Route::group(['prefix' => 'Ajax'], function () {
 	Route::post('Ajaxregister', ['uses' => 'HomeController@ajaxregister', 'as' => 'Ajaxregister']);
 	Route::post('Ajaxlogin', ['uses' => 'HomeController@ajaxlogin', 'as' => 'Ajaxlogin']);
 	Route::post('contactus', ['uses' => 'HomeController@contactus', 'as' => 'contactus']);
+	Route::get('getuserbycountry', ['uses' => 'HomeController@getuserByCountry', 'as' => 'getuserbycountry']);
 
 
 

@@ -439,6 +439,21 @@ Route::prefix('/v1')->group(function () {
         Route::post('/order/out-for-delivery', ['uses' => 'ShopController@outForDelivery', 'as' => 'out for delivery or pickup']);
 
         Route::post('/processpayout', ['uses' => 'PayoutAgentController@processPayOut', 'as' => 'process payout fee']);
+
+
+        // VTPASS Purchase
+
+
+        Route::prefix('vtpass')->group(function () {
+            Route::get('service',  ['uses' => 'api\v1\ResellerPurchaseController@resellerService']);
+            Route::get('serviceid',  ['uses' => 'api\v1\ResellerPurchaseController@resellerServiceId']);
+            Route::get('variationcodes',  ['uses' => 'api\v1\ResellerPurchaseController@resellerVariationCodes']);
+            Route::get('productoption',  ['uses' => 'api\v1\ResellerPurchaseController@resellerProductOption']);
+
+
+            Route::post('purchase',  ['uses' => 'api\v1\ResellerPurchaseController@resellerPurchase']);
+        });
+
     });
 
 
