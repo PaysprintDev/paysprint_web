@@ -88,15 +88,24 @@ use App\Http\Controllers\User; ?>
 							{!! session('msg') !!}
 							<!-- Credit card form tabs -->
 							<ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
-								@if (Auth::user()->accountType == 'Merchant')
-								<li class="nav-item"> <a data-toggle="pill" href="{{ route('logout') }}"
-										class="nav-link active "> <i class="fas fa-home"></i> Go Back </a>
-								</li>
-								@else
-								<li class="nav-item"> <a data-toggle="pill" href="{{ route('logout') }}"
-										class="nav-link active "> <i class="fas fa-home"></i> Go Back </a>
-								</li>
-								@endif
+
+                                    <div class="col-md-6">
+                                        <a data-toggle="pill" href="{{ route('logout') }}"
+										class="nav-link  btn btn-danger "> <i class="fas fa-home"></i> Logout </a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        @if (Auth::user()->accountType == 'Merchant')
+
+                                        <a type="button" data-toggle="pill" href="{{ route('dashboard') }}"
+										class="nav-link  btn btn-success "> <i class="fas fa-home"></i> Goto Dashboard </a>
+
+                                        @else
+                                        <a type="button" data-toggle="pill" href="{{ route('user home') }}"
+										class="nav-link btn btn-success "> <i class="fas fa-home"></i> Goto Dashboard </a>
+                                        @endif
+                                    </div>
+
+
 
 							</ul>
 

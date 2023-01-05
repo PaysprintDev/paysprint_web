@@ -230,7 +230,7 @@ class HomeController extends Controller
                     'products' => StoreProducts::get(),
                     'subscription' => $this->minimumBalanceCost(Auth::user()->country, Auth::user()->accountType)
                 );
-                    
+
                 $view = 'home';
             } else {
 
@@ -364,6 +364,18 @@ class HomeController extends Controller
 
     public function merchantHome()
     {
+
+        if(Auth::check()){
+
+            if(Auth::user()->accountType === "Individual"){
+                // Redirect to home...
+                return redirect()->route('user home');
+            }else{
+                return redirect()->route('dashboard');
+            }
+
+        }
+
         $allcountry = AllCountries::where('approval', 1)->get();
         $country = $this->myLocation()->country;
         $this->page = 'Merchant';
@@ -1992,7 +2004,7 @@ class HomeController extends Controller
         }
 
         return (double)$fixed;
-      
+
     }
 
 
@@ -4744,8 +4756,8 @@ class HomeController extends Controller
                 $data = array(
                     'continent' => $this->timezone[0]
                 );
-
-                $this->getTickets = CreateEvent::where('user_id', $this->email)->orderBy('created_at', 'DESC')->get();
+                // $this->getTickets = CreateEvent::where('user_id', $this->email)->orderBy('created_at', 'DESC')->get();
+                $getTickets = CreateEvent::where('user_id', $this->email)->orderBy('created_at', 'DESC')->get();
             } else {
                 $this->page = 'Verification Code';
                 $this->name = '';
@@ -4887,7 +4899,7 @@ class HomeController extends Controller
             $this->uploadDocument($user->id, $req->file('incorporation_doc_front'), 'document/incorporation_doc_front', 'incorporation_doc_front');
 
            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded your document.");
-           
+
         }
 
         return back()->with("msg", "<div class='alert alert-success'> Cac Document Uploaded Successfully</div>");
@@ -4895,7 +4907,7 @@ class HomeController extends Controller
 
      public function verifyDirectorDocument(Request $req)
     {
-        
+
         $id=Auth::id();
 
         $user=User::where('id',$id)->first();
@@ -4904,10 +4916,10 @@ class HomeController extends Controller
         $validation=$req->validate([
             'directors_document' => 'required'
         ]);
-        
-        
+
+
         if($req->hasfile('directors_document')){
-       
+
             $this->uploadDocument($user->id, $req->file('directors_document'), 'document/directors_document','directors_document');
 
            $this->createNotification($user->refCode, "Hello " . $user->name . ", You have successfully uploaded your document.");
@@ -4929,7 +4941,7 @@ class HomeController extends Controller
         ]);
 
           if($req->hasfile('shareholders_document')){
-           
+
 
             $this->uploadDocument($user->id, $req->file('shareholders_document'), 'document/shareholders_document', 'shareholders_document');
 
@@ -4982,11 +4994,14 @@ class HomeController extends Controller
         $directors = $this->checkDirectorsDocument(Auth::id());
         $shareholders = $this->checkShareholdersDocument(Auth::id());
 
+
+
         if($avatar == null || ($identitycard == null && $passport == null && $license === null ) || $bill === null){
+
             return redirect()->route('check verification page');
         }
 
-        if(Auth::user()->accountType == 'Merchant' && $cac === null || $directors === null || $shareholders === null)
+        if(Auth::user()->accountType == 'Merchant' && ($cac === null || $directors === null || $shareholders === null))
         {
             return redirect()->route('check verification page');
         }
@@ -7725,7 +7740,7 @@ class HomeController extends Controller
 
 
        User::where('id', $id)->update(['' . $rowName . '' => $docPath, 'lastUpdated' => date('Y-m-d H:i:s')]);
-       
+
 
         $this->updatePoints($id, 'Quick Set Up');
     }

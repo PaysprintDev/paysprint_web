@@ -51,8 +51,8 @@ trait AccountCheck
    public function checkingBvn($id)
   {
 		$details = User::where('id',$id)->first();
-			$bvn=$details->bvn_number;
-			return $bvn;
+        $bvn = $details->country === "Nigeria" ? $details->bvn_number : "1234";
+        return $bvn;
 
   }
 

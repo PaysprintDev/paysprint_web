@@ -816,13 +816,13 @@ use App\Http\Controllers\User; ?>
                                                             @if ($payInv->payment_status == 0)
                                                             <small><span class='badge badge-danger'
                                                                     style='cursor: pointer;'
-                                                                    onclick=location.href='{{ route(' payment',
+                                                                    onclick=location.href='{{ route('payment',
                                                                     $payInv->invoice_no) }}'>Pay
                                                                     Invoice</span></small>
                                                             @elseif($payInv->payment_status == 2)
                                                             <small><span class='badge badge-danger'
                                                                     style='cursor: pointer;'
-                                                                    onclick=location.href='{{ route(' payment',
+                                                                    onclick=location.href='{{ route('payment',
                                                                     $payInv->invoice_no) }}'>Pay
                                                                     Balance</span></small>
                                                             @else
@@ -831,7 +831,7 @@ use App\Http\Controllers\User; ?>
 
                                                             {{-- {!! ($payInv->payment_status == 0) ? "<small><span
                                                                     class='badge badge-danger' style='cursor: pointer;'
-                                                                    onclick=location.href='".route(' payment',
+                                                                    onclick=location.href='".route('payment',
                                                                     $payInv->invoice_no)."'>Pay Invoice</span></small>"
                                                             : "<small><span
                                                                     class='badge badge-success'>Paid</span></small>" !!}
